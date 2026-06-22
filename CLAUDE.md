@@ -13,7 +13,12 @@ Live (testovací) eshop: **https://www.exitshop.cz/shops/28056/** („Zkouška 2
 - Vlastní vzhled jde ovlivnit **jen vložením CSS**: *Administrace → Nastavení
   designu → „Vaše doplňkové CSS"* (dlaždice **„Vzhled"**; podporuje i LESS).
 - Vlastní JS/CSS/HTML přes sekci **„Skripty"** — plný správce položek.
-- Šablona = **Bootstrap 4**, font **Space Grotesk**.
+- Šablona = **Bootstrap 4**, font **Space Grotesk**; aktivní šablona **Next**.
+- **Hodně obsahu jde NATIVNĚ** (homepage slider, sekce obrázek+text, kategorie
+  s obrázky, produktové bloky, logo, bannery, CMS/blog) — viz
+  [reference/administrace-moznosti.md](reference/administrace-moznosti.md).
+  Pravidlo: *obsah* dělej nativně a **nastyluj** ho CSS; *vzhled a vychytávky*
+  nad rámec platformy řeš CSS/JS smyčkou.
 
 ### Sekce „Skripty" (jak se chová)
 
@@ -34,6 +39,7 @@ nutností vybrat variantu. JS i CSS" (Pouze produktový detail). Naše položky 
 ## Struktura repa
 
 ```
+reference/administrace-moznosti.md  # katalog NATIVNÍCH možností administrace (slider, obsah, kategorie, placeholdery, media URL)
 reference/template.css     # ř. 1–29230 původního dumpu = zkompilovaná šablona (jen reference selektorů, NIKDY se nevkládá)
 css                        # PŮVODNÍ kombinovaný dump (956 KB). Plně reprodukován reference/ + src/css/. Bezpečnostní snímek — lze smazat.
 src/css/*.css              # ZDROJ PRAVDY vlastního CSS, číslované kvůli pořadí (cascade)
