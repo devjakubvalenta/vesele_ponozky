@@ -1,0 +1,197 @@
+<script>
+(function () {
+    var CFG = {
+        skipIfHashVariantPresent: true,
+        hashRegex: /^#variant-\d+$/,
+        noteText: 'Nejprve vyberte variantu.',
+        debug: false
+    };
+
+    function log() {
+        if (!CFG.debug) return;
+        console.log.apply(console, ['[force-variant]'].concat([].slice.call(arguments)));
+    }
+
+    function hasVariantHash() {
+        return CFG.hashRegex.test(window.location.hash || '');
+    }
+
+    function getApp() {
+        return document.getElementById('app');
+    }
+
+    function isVariantProduct(app) {
+        if (!app) return false;
+        return !!(
+            app.querySelector('.variant-name') ||
+            app.querySelector('#variant-selector') ||
+            app.querySelector('#configurator-variants')
+        );
+    }
+
+    function getUi(app) {
+        return {
+            app: app,
+            cartWrapper: app.querySelector('.product-add-to-shopping-basket-wrapper'),
+            addToCartBox: app.querySelector('.product-add-to-shopping-basket'),
+            addToCartBtn: app.querySelector('.product-add-to-shopping-basket .btn')
+        };
+    }
+
+    function addNote(ui) {
+        if (!ui.cartWrapper || ui.app.querySelector('.variant-selection-note')) return;
+        var note = document.createElement('div');
+        note.className = 'variant-selection-note';
+        note.textContent = CFG.noteText;
+        ui.cartWrapper.insertBefore(note, ui.cartWrapper.firstChild);
+    }
+
+    function removeNote(ui) {
+        var note = ui.app.querySelector('.variant-selection-note');
+        if (note) note.remove();
+    }
+
+    function lock(ui) {
+        ui.app.classList.add('variant-selection-required');
+
+        if (ui.addToCartBox) {
+            ui.addToCartBox.classList.add('forced-disabled');
+            ui.addToCartBox.setAttribute('aria-disabled', 'true');
+        }
+
+        if (ui.addToCartBtn) {
+            ui.addToCartBtn.setAttribute('aria-disabled', 'true');
+            ui.addToCartBtn.setAttribute('tabindex', '-1');
+        }
+
+        addNote(ui);
+        log('locked');
+    }
+
+    function unlock(ui) {
+        if (!ui.app.classList.contains('variant-selection-required')) return;
+
+        ui.app.classList.remove('variant-selection-required');
+
+        if (ui.addToCartBox) {
+            ui.addToCartBox.classList.remove('forced-disabled');
+            ui.addToCartBox.removeAttribute('aria-disabled');
+        }
+
+        if (ui.addToCartBtn) {
+            ui.addToCartBtn.removeAttribute('aria-disabled');
+            ui.addToCartBtn.removeAttribute('tabindex');
+        }
+
+        removeNote(ui);
+        log('unlocked');
+    }
+
+    function bindBlockAddToCart(ui) {
+        if (!ui.addToCartBox) return;
+
+        ui.addToCartBox.addEventListener('click', function (event) {
+            if (ui.app.classList.contains('variant-selection-required')) {
+                event.preventDefault();
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+            }
+        }, true);
+    }
+
+    function bindUnlockEvents(ui) {
+        var app = ui.app;
+
+        app.addEventListener('click', function (event) {
+            if (!app.classList.contains('variant-selection-required')) return;
+
+            if (
+                event.target.closest('.variant-name') ||
+                event.target.closest('#configurator-variants .configurator-feature-value') ||
+                event.target.closest('#configurator-variants .dd-option')
+            ) {
+                unlock(ui);
+            }
+        }, true);
+
+        var variantSelect = app.querySelector('#variant-selector');
+        if (variantSelect) {
+            variantSelect.addEventListener('change', function () {
+                unlock(ui);
+            }, true);
+        }
+
+        var configurator = app.querySelector('#configurator-variants');
+        if (configurator) {
+            configurator.addEventListener('change', function () {
+                unlock(ui);
+            }, true);
+        }
+
+        window.addEventListener('hashchange', function () {
+            if (hasVariantHash()) unlock(ui);
+        });
+    }
+
+    function init() {
+        var app = getApp();
+        if (!isVariantProduct(app)) return;
+
+        if (CFG.skipIfHashVariantPresent && hasVariantHash()) {
+            log('skip: hash variant present');
+            return;
+        }
+
+        var ui = getUi(app);
+        bindBlockAddToCart(ui);
+        bindUnlockEvents(ui);
+
+        setTimeout(function () {
+            lock(ui);
+        }, 0);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
+
+<style>
+#app .variant-selection-note {
+    margin: 0 0 12px;
+    color: #b02a37;
+    font-weight: 700;
+}
+
+#app .product-add-to-shopping-basket.forced-disabled {
+    pointer-events: none;
+    opacity: .45;
+}
+
+#app.variant-selection-required .product-add-to-shopping-basket .btn {
+    cursor: not-allowed;
+}
+
+#app.variant-selection-required .product-add-to-shopping-basket-quantity {
+    pointer-events: none;
+    opacity: .45;
+}
+
+/* zrušení "tmavší předvybrané" varianty */
+#app.variant-selection-required .variant-name,
+#app.variant-selection-required .variant-row,
+#app.variant-selection-required .variant-name.active,
+#app.variant-selection-required .variant-row.active,
+#app.variant-selection-required .common-tab.active {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    border-color: #d9d9d9 !important;
+    color: inherit !important;
+}
+</style>

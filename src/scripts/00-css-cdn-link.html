@@ -1,0 +1,17 @@
+<!--
+  CDN <link> na sestavené custom.css přes jsDelivr (z GitHub repa).
+  Vkládá se do: Administrace → Skripty → nová položka
+     • Zobrazit na stránkách: Na všech stránkách
+     • Umístit v Head: ANO  (Head = bez FOUC)
+
+  Tohle je VÝVOJOVÁ smyčka: `git push` → jsDelivr aktualizuje CSS → web se sám
+  překreslí (žádné kopírování do administrace). Do PRODUKCE se finální
+  dist/custom.css jednorázově „zapeče" do pole „Vaše doplňkové CSS" a tato
+  položka se pak může odebrat. Viz CLAUDE.md.
+
+  Repo: github.com/devjakubvalenta/vesele_ponozky  (MUSÍ být veřejné — jsDelivr
+  privátní repa neobsluhuje).
+     • @main  = vždy poslední verze (jsDelivr cache ~ purge přes purge URL)
+     • @<commit-hash> = pevná verze (jistá invalidace cache)
+-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/dist/custom.css">
