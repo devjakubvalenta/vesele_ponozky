@@ -780,19 +780,33 @@ header {
   --hdr-soft: #f4f7fa;
   --hdr-text: #0f172a;
   --hdr-muted: #64748b;
-  /* Modré odkazy a zvýraznění mimo košíkovou zónu */
-  --hdr-accent: #2563eb;
-  --hdr-accent-soft: rgba(37, 99, 235, 0.14);
-  /* Ikona košíku, mini-kartu a počítadla zůstávají zelené */
-  --hdr-cart: #15803d;
-  --hdr-cart-strong: #059669;
+  /* Brandové barvy: modrá #1361CF, žlutá #FBBC02 */
+  --hdr-accent: #1361cf;
+  --hdr-accent-soft: rgba(19, 97, 207, 0.14);
+  --hdr-yellow: #fbbc02;
+  /* Košík sjednocen na brandovou modrou (dříve zelená) */
+  --hdr-cart: #1361cf;
+  --hdr-cart-strong: #0f4ea8;
 }
 
 
 
+/* Žlutá promo / notifikační lišta (je mimo <header>, proto literály místo var) */
+#notification-bar {
+  background: #fbbc02 !important;
+  color: #1f2937 !important;
+}
+
+#notification-bar #notification-bar-text,
+#notification-bar #notification-bar-text p,
+#notification-bar a {
+  color: #1f2937 !important;
+}
+
+/* Pruh s menu = plná brandová modrá */
 header .main-nav {
-  background: linear-gradient(180deg, #fff 0%, var(--hdr-soft) 100%);
-  border-bottom: 1px solid var(--hdr-border);
+  background: #1361cf;
+  border-bottom: 1px solid #0f4ea8;
 }
 
 header .main-nav .container {
@@ -820,7 +834,7 @@ header .main-nav .top-cms-menu {
 header .main-nav .top-cms-menu a {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--hdr-muted);
+  color: #fff;
   text-decoration: none;
   padding: 0.2rem 0;
   border-bottom: 1px solid transparent;
@@ -828,14 +842,15 @@ header .main-nav .top-cms-menu a {
 }
 
 header .main-nav .top-cms-menu a:hover {
-  color: var(--hdr-accent);
-  border-bottom-color: rgba(37, 99, 235, 0.38);
+  color: var(--hdr-yellow);
+  border-bottom-color: rgba(251, 188, 2, 0.6);
 }
 
 header .company-info .content_top_additional_info p {
   margin: 0;
   font-size: 0.8125rem;
   line-height: 1.4;
+  color: #fff;
 }
 
 header .company-info .content_top_additional_info {
@@ -848,7 +863,7 @@ header .company-info .content_top_additional_info {
 
 header .company-info a.phone,
 header .company-info a.mail {
-  color: var(--hdr-text);
+  color: #fff;
   text-decoration: none;
   font-weight: 600;
   white-space: nowrap;
@@ -856,7 +871,7 @@ header .company-info a.mail {
 
 header .company-info a.phone:hover,
 header .company-info a.mail:hover {
-  color: var(--hdr-accent);
+  color: var(--hdr-yellow);
 }
 
 
@@ -937,8 +952,8 @@ header .search-div .classic-search button.btn {
 }
 
 header .search-div .classic-search button.btn:hover {
-  background: rgba(37, 99, 235, 0.22) !important;
-  color: #1e40af !important;
+  background: rgba(19, 97, 207, 0.22) !important;
+  color: #0f4ea8 !important;
 }
 
 
@@ -1019,14 +1034,14 @@ header .shopping-basket-items-count {
   min-height: 1.125rem;
   padding: 0 0.28rem;
   border-radius: 999px !important;
-  background: linear-gradient(135deg, var(--hdr-cart), var(--hdr-cart-strong));
+  background: linear-gradient(135deg, var(--hdr-cart), var(--hdr-cart-strong)) !important;
   color: #fff !important;
   font-size: 0.65rem !important;
   font-weight: 700;
   line-height: 1.125rem !important;
   text-align: center;
   border: 2px solid #fff !important;
-  box-shadow: 0 1px 6px rgba(21, 128, 61, 0.35);
+  box-shadow: 0 1px 6px rgba(19, 97, 207, 0.35);
 }
 
 header a.header-cms-icon.cms-mobile {
@@ -1202,6 +1217,7 @@ header .navbar-toggler-top .navbar-toggler {
     border-radius: 8px !important;
     border-bottom-width: 1px !important;
     background: #fff !important;
+    color: var(--hdr-accent) !important;
     transition: border-color 0.15s ease, background 0.15s ease;
   }
 
@@ -1249,6 +1265,7 @@ header .navbar-toggler-top .navbar-toggler {
     border-radius: 9px !important;
     border: 1px solid var(--hdr-border) !important;
     background: #fff !important;
+    color: var(--hdr-accent) !important;
     justify-content: center;
     box-sizing: border-box;
   }
@@ -1427,6 +1444,7 @@ header .navbar-toggler-top .navbar-toggler {
     border: 1px solid var(--hdr-border, #e5e9f0) !important;
     border-radius: 8px !important;
     background: #fff !important;
+    color: var(--hdr-accent) !important;
   }
 
   header .company-info.float-right,
@@ -1499,13 +1517,8 @@ header .navbar-toggler-top .navbar-toggler {
     padding-left: calc(var(--bs-gutter-x, 0.75rem) / 2) !important;
     padding-right: calc(var(--bs-gutter-x, 0.75rem) / 2) !important;
     box-sizing: border-box !important;
-    background: linear-gradient(
-        180deg,
-        #fff 0%,
-        var(--hdr-soft, #f4f7fa) 100%
-      )
-      !important;
-    border-bottom: 1px solid var(--hdr-border, #e5e9f0) !important;
+    background: #1361cf !important;
+    border-bottom: 1px solid #0f4ea8 !important;
     box-shadow: none !important;
   }
 }
@@ -1901,7 +1914,7 @@ header .header-shop-basket-button #hover-cart #hover-cart-products .product-name
 }
 
 header .header-shop-basket-button #hover-cart #hover-cart-products .product-name a:hover {
-  color: var(--hdr-accent, #2563eb);
+  color: var(--hdr-accent, #1361cf);
 }
 
 header .header-shop-basket-button #hover-cart #hover-cart-products > .product-row > .product-info > .product-price {
@@ -1948,7 +1961,7 @@ header .header-shop-basket-button #hover-cart .remaining-to-free-shipping {
   padding: 0.4rem 0.65rem 0.45rem !important;
   border-radius: 12px !important;
   background: var(--hdr-soft, rgba(220, 252, 231, 0.45)) !important;
-  border: 1px solid rgba(21, 128, 61, 0.12) !important;
+  border: 1px solid rgba(19, 97, 207, 0.12) !important;
   font-size: 0.8125rem !important;
   line-height: 1.35 !important;
   color: var(--hdr-muted, #6c757d) !important;
@@ -1967,7 +1980,7 @@ header .header-shop-basket-button #hover-cart .remaining-to-free-shipping .progr
   margin-bottom: 0.35rem !important;
   margin-top: 0 !important;
   border-radius: 999px !important;
-  background: rgba(21, 128, 61, 0.12);
+  background: rgba(19, 97, 207, 0.12);
 }
 
 header .header-shop-basket-button #hover-cart .remaining-to-free-shipping .progress .progress-bar {
