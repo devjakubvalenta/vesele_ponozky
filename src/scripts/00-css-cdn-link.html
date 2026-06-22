@@ -13,5 +13,10 @@
   privátní repa neobsluhuje).
      • @main  = vždy poslední verze (jsDelivr cache ~ purge přes purge URL)
      • @<commit-hash> = pevná verze (jistá invalidace cache)
+
+  ⚠️ POZOR: sekce „Skripty" vkládá obsah DOSLOVA (neobaluje). Vlož tento
+  <link> HOLÝ — NIKDY ho neobaluj do <script>…</script>! <link> uvnitř
+  <script> browser ignoruje (CSS se nenačte). Do <script> patří jen JS;
+  <link>/<style> se vkládají bez něj.
 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/dist/custom.css">

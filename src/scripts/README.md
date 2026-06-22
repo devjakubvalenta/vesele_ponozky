@@ -8,8 +8,13 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 
 | Soubor | Název položky v admin | Zobrazit na stránkách | Umístit v Head | Stav |
 |--------|------------------------|------------------------|----------------|------|
-| `00-css-cdn-link.html` | CSS přes jsDelivr (dev) | Na všech stránkách | **ANO** | ⏳ **vlož do admin** — repo je veřejné, jsDelivr URL ověřena (HTTP 200) |
+| `00-css-cdn-link.html` | github | Na všech stránkách | **ANO** | ✅ **nasazeno** — položka „github", ověřeno živě (CSS jde z CDN) |
 | `10-force-variant-selection.html` | Pokus s nutností vybrat variantu. JS i CSS | Pouze produktový detail | ne (patička) | ✅ **už nasazeno** v admin — tady jen verzovaný zdroj |
+
+> ⚠️ **Sekce „Skripty" vkládá obsah DOSLOVA** (neobaluje ho). `<link>` a
+> `<style>` vkládej **holé** — NIKDY ne uvnitř `<script>…</script>` (browser by
+> je ignoroval). Do `<script>` patří jen JavaScript. (Toto nás jednou zdrželo:
+> `<link>` byl omylem obalený v `<script>` → CSS se nenačítalo.)
 
 ## Už existující položky v administraci (NEPŘEPISOVAT)
 

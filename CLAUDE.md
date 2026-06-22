@@ -19,9 +19,13 @@ Live (testovací) eshop: **https://www.exitshop.cz/shops/28056/** („Zkouška 2
 
 Každá položka má: **název** + **pořadí**, **cílení na stránky** („Na všech
 stránkách" / „Pouze produktový detail" / …), přepínač **„Umístit v Head"**
-(jinak patička; Head řeší **FOUC** u CDN `<link>`). Vkládá se **včetně tagů**
-(`<script>`, `<style>`, `<link>`). Na konverzní stránce jsou zástupné symboly
-(`%v`, `%n`, `%c`, `%email`…) pro data objednávky.
+(jinak patička; Head řeší **FOUC** u CDN `<link>`). Na konverzní stránce jsou
+zástupné symboly (`%v`, `%n`, `%c`, `%email`…) pro data objednávky.
+
+> ⚠️ **Obsah se vkládá DOSLOVA** (neobaluje se). JavaScript dej do
+> `<script>…</script>`, ale **`<link>`/`<style>` vkládej HOLÉ** — `<link>`
+> uvnitř `<script>` browser ignoruje (CSS se nenačte). Tahle past nás jednou
+> zdržela při zapojení CDN.
 
 **Už existující položky (NEPŘEPISOVAT):** „Font" (Na všech stránkách), „Pokus s
 nutností vybrat variantu. JS i CSS" (Pouze produktový detail). Naše položky se
