@@ -8,7 +8,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 
 | Soubor | Název položky v admin | Zobrazit na stránkách | Umístit v Head | Stav |
 |--------|------------------------|------------------------|----------------|------|
-| `00-css-cdn-link.html` | CSS přes jsDelivr (dev) | Na všech stránkách | **ANO** | ⏳ připraveno k vložení (až bude GitHub repo) |
+| `00-css-cdn-link.html` | CSS přes jsDelivr (dev) | Na všech stránkách | **ANO** | ⏳ **vlož do admin** — repo je veřejné, jsDelivr URL ověřena (HTTP 200) |
 | `10-force-variant-selection.html` | Pokus s nutností vybrat variantu. JS i CSS | Pouze produktový detail | ne (patička) | ✅ **už nasazeno** v admin — tady jen verzovaný zdroj |
 
 ## Už existující položky v administraci (NEPŘEPISOVAT)
