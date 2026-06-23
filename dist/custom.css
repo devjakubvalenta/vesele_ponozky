@@ -2179,3 +2179,301 @@ body footer section.eshop-footer a:hover {
   }
 }
 
+/* ==== 40-onas.css ==== */
+
+/* CMS stránka „O nás" — brandový vzhled (modrá #1361cf + žlutá #fbbc02).
+   Scope: vše pod .vp-onas (markup: src/content/onas.html). Nedosáhne na zbytek webu. */
+
+.vp-onas {
+  /* Brand */
+  --onas-blue: #1361cf;
+  --onas-blue-dark: #0f4ea8;
+  --onas-yellow: #fbbc02;
+  --onas-yellow-dark: #e0a800;
+  --onas-text: #0f172a;
+  --onas-muted: #475569;
+  --onas-blue-soft: #eaf1fc;
+  --onas-yellow-soft: #fdf6e0;
+  /* Geometrie */
+  --onas-radius: 18px;
+  --onas-pill: 999px;
+  --onas-gap: clamp(1.25rem, 3vw, 2.5rem);
+  --onas-shadow: 0 12px 40px rgba(15, 23, 42, 0.1);
+  --onas-shadow-sm: 0 4px 18px rgba(15, 23, 42, 0.07);
+
+  color: var(--onas-text);
+  overflow-x: clip; /* pojistka proti horizontálnímu scrollu z full-bleed pruhů (100vw) */
+  box-sizing: border-box;
+}
+
+.vp-onas *,
+.vp-onas *::before,
+.vp-onas *::after {
+  box-sizing: border-box;
+}
+
+.vp-onas img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.vp-onas p {
+  line-height: 1.6;
+  margin: 0 0 0.85rem;
+  color: var(--onas-muted);
+}
+
+.vp-onas a {
+  text-decoration: none;
+}
+
+/* ---- 1. HERO ---- */
+.vp-onas__hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: var(--onas-gap);
+  padding: clamp(1.5rem, 4vw, 3rem) 0;
+}
+
+.vp-onas__title {
+  color: var(--onas-blue);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.1;
+  margin: 0 0 1rem;
+}
+
+.vp-onas__lead {
+  font-size: 1.05rem;
+  color: var(--onas-text);
+}
+
+.vp-onas__hero-media {
+  background: var(--onas-blue);
+  border-radius: var(--onas-radius);
+  padding: clamp(1rem, 3vw, 2rem);
+  box-shadow: var(--onas-shadow);
+}
+
+.vp-onas__hero-img {
+  width: 100%;
+  border-radius: calc(var(--onas-radius) - 6px);
+}
+
+/* ---- 2. ODDĚLOVAČ ---- */
+.vp-onas__divider {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(15, 23, 42, 0.14), transparent);
+  margin: clamp(1rem, 3vw, 2rem) 0;
+}
+
+/* ---- 3. INFO KARTY ---- */
+.vp-onas__cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--onas-gap);
+  padding: clamp(0.5rem, 2vw, 1.5rem) 0;
+}
+
+.vp-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-radius: var(--onas-radius);
+  padding: clamp(1.25rem, 3vw, 2rem);
+  box-shadow: var(--onas-shadow-sm);
+  min-width: 0;
+}
+
+.vp-card--blue {
+  background: var(--onas-blue-soft);
+}
+
+.vp-card--yellow {
+  background: var(--onas-yellow-soft);
+}
+
+.vp-card__body {
+  min-width: 0;
+}
+
+.vp-card__title {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-weight: 800;
+  color: var(--onas-text);
+  margin: 0 0 0.65rem;
+}
+
+.vp-card__thumb {
+  width: clamp(72px, 18%, 120px);
+  flex: 0 0 auto;
+  border-radius: 12px;
+}
+
+/* Žluté pilulkové tlačítko (mailto i submit) */
+.vp-onas__btn {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.7rem 1.4rem;
+  background: var(--onas-yellow);
+  color: var(--onas-text) !important; /* přebít barvu odkazu ze šablony */
+  font-weight: 700;
+  border-radius: var(--onas-pill);
+  border: none;
+  cursor: pointer;
+  word-break: break-word;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+  box-shadow: 0 6px 18px rgba(251, 188, 2, 0.4);
+}
+
+.vp-onas__btn:hover {
+  background: var(--onas-yellow-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(251, 188, 2, 0.5);
+}
+
+.vp-onas__btn:focus-visible {
+  outline: 3px solid var(--onas-blue);
+  outline-offset: 2px;
+}
+
+/* ---- 4. NEWSLETTER (full-bleed modrý) ---- */
+.vp-onas__newsletter {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  background: var(--onas-blue);
+  color: #fff;
+  padding-block: clamp(2rem, 5vw, 4rem);
+}
+
+.vp-onas__newsletter-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  align-items: center;
+  gap: var(--onas-gap);
+}
+
+.vp-onas__newsletter-title {
+  color: #fff;
+  font-weight: 800;
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+}
+
+.vp-onas__newsletter .vp-accent {
+  color: var(--onas-yellow);
+}
+
+.vp-onas__newsletter p {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.vp-onas__form {
+  display: flex;
+  gap: 0.6rem;
+  margin: 1.25rem 0 0.75rem;
+  max-width: 520px;
+}
+
+.vp-onas__email {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.8rem 1.1rem;
+  border-radius: var(--onas-pill);
+  border: 2px solid transparent;
+  font-size: 1rem;
+  background: #fff;
+  color: var(--onas-text);
+}
+
+.vp-onas__email:focus {
+  outline: none;
+  border-color: var(--onas-yellow);
+}
+
+.vp-onas__btn--submit {
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+
+.vp-onas__consent {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.vp-onas__consent a {
+  color: var(--onas-yellow) !important;
+  text-decoration: underline;
+}
+
+.vp-onas__mascot {
+  width: 100%;
+  max-width: 280px;
+  margin-inline: auto;
+}
+
+/* ---- 5. SOCK STRIP (full-bleed žlutý dekor) ---- */
+.vp-onas__sockstrip {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: clamp(2rem, 5vw, 4rem);
+  height: clamp(48px, 8vw, 96px);
+  background-color: var(--onas-yellow);
+  /* ASSET (volitelné): opakovaný motiv ponožek — až dodáš, nastav:
+     background-image: url("…media/files/sockstrip.png");
+     background-repeat: repeat-x; background-position: center; background-size: auto 70%; */
+}
+
+/* ---- Responsivita (Bootstrap 4 breakpointy) ---- */
+@media (max-width: 991.98px) {
+  .vp-onas__hero {
+    grid-template-columns: 1fr;
+  }
+  .vp-onas__hero-media {
+    order: -1;
+  }
+  .vp-onas__newsletter-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .vp-onas__form {
+    margin-inline: auto;
+  }
+  .vp-onas__mascot {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .vp-onas__cards {
+    grid-template-columns: 1fr;
+  }
+  .vp-onas__form {
+    flex-direction: column;
+  }
+  .vp-onas__email,
+  .vp-onas__btn--submit {
+    width: 100%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .vp-card__thumb {
+    display: none;
+  }
+  .vp-onas__title {
+    font-size: 1.5rem;
+  }
+}
+

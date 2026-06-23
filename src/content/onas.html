@@ -1,0 +1,90 @@
+<!--
+  Stránka „O nás" (CMS) — vkládá se do: Administrace → CMS a blog → O nás
+  ⚠️ Vlož přes ZDROJOVÝ režim editoru (tlačítko </>), ne přes WYSIWYG.
+  Styl dodává src/css/40-onas.css (scope .vp-onas) přes CDN — nic dalšího netřeba.
+
+  OBRÁZKY: teď ukazují na DOČASNÉ placeholdery (jsDelivr z repa). Až nahraješ
+  finální obrázky v administraci (media), vyměň src za jejich URL
+  (tvar https://www.exitshop.cz/files/7203/media/files/<jmeno>).
+  NEWSLETTER: form je provider-agnostický skeleton; po dodání e-mailingu
+  doplň action/skrytá pole nebo nahraď embedem (zachovej třídy .vp-onas__*).
+-->
+<div class="vp-onas">
+
+  <!-- ===== 1. HERO ===== -->
+  <section class="vp-onas__hero">
+    <div class="vp-onas__hero-text">
+      <h1 class="vp-onas__title">O FIRMĚ VESELÉ PONOŽKY</h1>
+      <p>Společnost <strong>MODA ČAPEK s.r.o.</strong> jsme založili v roce 2014. Naším původním zaměřením byla obuv, ale čím dál tím více jsme se začali soustředit na ponožky. Ponožky prodáváme opravdu ve velkém množství a v roce 2018 jsme se pustili i do vlastní výroby.</p>
+      <p class="vp-onas__lead"><strong>Jsme rodinná firma s rodinným přístupem.</strong></p>
+      <p>V současné době prodáváme naše zboží do dalších 6 států EU (Slovensko, Maďarsko, Rumunsko, Polsko, Rakousko a Německo) a máme plány na další expanzi.</p>
+    </div>
+    <div class="vp-onas__hero-media">
+      <!-- ASSET: hero fotka krabice na modrém pozadí (placeholder → vyměň) -->
+      <img class="vp-onas__hero-img"
+           src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/placeholders/hero.svg"
+           alt="Krabice Veselé ponožky" loading="lazy" />
+    </div>
+  </section>
+
+  <!-- ===== 2. ODDĚLOVAČ ===== -->
+  <hr class="vp-onas__divider" />
+
+  <!-- ===== 3. INFO KARTY ===== -->
+  <section class="vp-onas__cards">
+
+    <article class="vp-card vp-card--blue">
+      <div class="vp-card__body">
+        <h2 class="vp-card__title">VELKOOBCHODNÍ SPOLUPRÁCE</h2>
+        <p>Pokud byste měli zájem o velkoobchodní spolupráci, neváhejte nás kontaktovat na e-mailu:</p>
+        <a class="vp-onas__btn" href="mailto:david@modacapek.cz">david@modacapek.cz</a>
+      </div>
+      <!-- ASSET: miniatura krabice (placeholder → vyměň) -->
+      <img class="vp-card__thumb"
+           src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/placeholders/box.svg"
+           alt="" loading="lazy" />
+    </article>
+
+    <article class="vp-card vp-card--yellow">
+      <div class="vp-card__body">
+        <h2 class="vp-card__title">JINÉ DOTAZY</h2>
+        <p>S jakýmikoliv jinými dotazy nás můžete kontaktovat na e-mailu:</p>
+        <a class="vp-onas__btn" href="mailto:veseleponozky@modacapek.cz">veseleponozky@modacapek.cz</a>
+      </div>
+      <!-- ASSET: miniatura krabice (placeholder → vyměň) -->
+      <img class="vp-card__thumb"
+           src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/placeholders/box.svg"
+           alt="" loading="lazy" />
+    </article>
+
+  </section>
+
+  <!-- ===== 4. NEWSLETTER (full-bleed modrý) ===== -->
+  <section class="vp-onas__newsletter">
+    <div class="vp-onas__newsletter-inner">
+      <div class="vp-onas__newsletter-text">
+        <h2 class="vp-onas__newsletter-title">NEZMEŠKEJTE ŽÁDNÉ NOVINKY A ZÍSKEJTE <span class="vp-accent">SLEVU 15%</span>!</h2>
+        <p>Přihlaste se k odběru našeho newsletteru a získejte slevu 15 % na váš první nákup veselých ponožek.</p>
+
+        <!-- SKELETON: action/method doplní e-mailing; onsubmit brání reloadu do napojení -->
+        <form class="vp-onas__form" action="#" method="post" onsubmit="return false">
+          <input class="vp-onas__email" type="email" name="email"
+                 placeholder="Váš e-mail" required autocomplete="email" />
+          <button class="vp-onas__btn vp-onas__btn--submit" type="submit">PŘIHLÁSIT SE</button>
+        </form>
+
+        <p class="vp-onas__consent">Odesláním souhlasíte se <a href="#">zpracováním osobních údajů</a>.</p>
+      </div>
+      <div class="vp-onas__newsletter-media">
+        <!-- ASSET: maskot (placeholder → vyměň) -->
+        <img class="vp-onas__mascot"
+             src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/placeholders/mascot.svg"
+             alt="Maskot Veselé ponožky" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 5. SOCK STRIP (full-bleed žlutý dekor) ===== -->
+  <div class="vp-onas__sockstrip" aria-hidden="true">&nbsp;</div>
+
+</div>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360" role="img" aria-label="Náhled – maskot">
+  <circle cx="180" cy="178" r="150" fill="#1361cf"/>
+  <circle cx="136" cy="158" r="26" fill="#ffffff"/>
+  <circle cx="224" cy="158" r="26" fill="#ffffff"/>
+  <circle cx="142" cy="162" r="11" fill="#0f172a"/>
+  <circle cx="230" cy="162" r="11" fill="#0f172a"/>
+  <path d="M126 226 q54 46 108 0" stroke="#fbbc02" stroke-width="13" fill="none" stroke-linecap="round"/>
+  <text x="180" y="312" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="20" fill="#fbbc02">maskot</text>
+</svg>

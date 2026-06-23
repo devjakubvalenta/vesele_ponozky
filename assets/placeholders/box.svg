@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Náhled – krabice">
+  <rect x="34" y="66" width="132" height="104" rx="12" fill="#fbbc02"/>
+  <rect x="24" y="46" width="152" height="30" rx="8" fill="#e9ad00"/>
+  <rect x="92" y="46" width="16" height="124" fill="#e9ad00" opacity="0.55"/>
+  <text x="100" y="132" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-weight="700" font-size="22" fill="#1361cf">box</text>
+</svg>
