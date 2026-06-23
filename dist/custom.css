@@ -2228,6 +2228,12 @@ body footer section.eshop-footer a:hover {
   text-decoration: none;
 }
 
+/* Skrýt nativní nadpis stránky „O nás" nad naším hero
+   (jen na stránkách, kde je náš blok .vp-onas — jiné CMS stránky nedotčeny) */
+.content:has(> .vp-onas) > h1 {
+  display: none;
+}
+
 /* ---- 1. HERO ---- */
 .vp-onas__hero {
   display: grid;
