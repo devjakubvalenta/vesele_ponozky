@@ -2052,13 +2052,18 @@ header .header-shop-basket-button #hover-cart #hover-cart-footer .to-cart .btn.b
 /* ==== 30-footer.css ==== */
 
 body footer {
-  --hdr-accent: #2563eb;
-  --hdr-accent-soft: rgba(37, 99, 235, 0.14);
+  --foot-blue: #1361cf;
+  --foot-blue-dark: #0f4ea8;
+  --foot-yellow: #fbbc02;
+  --foot-text: #0f172a;
+  --foot-muted: #475569;
+  --hdr-accent: #1361cf;
+  --hdr-accent-soft: rgba(19, 97, 207, 0.14);
   margin-top: clamp(2rem, 5vw, 3rem) !important;
-  padding: clamp(2rem, 4vw, 2.75rem) 0 0 !important;
-  background: linear-gradient(180deg, #f8fafb 0%, #f1f5f9 100%) !important;
-  border-top: 1px solid var(--hdr-border, rgba(148, 163, 184, 0.35)) !important;
-  color: var(--hdr-text, #495057) !important;
+  padding: 0 !important;
+  background: #ffffff !important;
+  border-top: 0 !important;
+  color: var(--foot-text, #0f172a) !important;
 }
 
 body footer h2 {
@@ -2093,6 +2098,9 @@ body footer ul.cms_menu a:focus-visible {
 body footer > .container {
   padding-left: max(0.75rem, env(safe-area-inset-left)) !important;
   padding-right: max(0.75rem, env(safe-area-inset-right)) !important;
+  padding-top: clamp(1.5rem, 3.5vw, 2.5rem) !important;
+  padding-bottom: clamp(1rem, 2.5vw, 1.5rem) !important;
+  border-top: 1px solid #eef1f6 !important;
 }
 
 body footer .footer-column {
@@ -2176,6 +2184,258 @@ body footer section.eshop-footer a:hover {
     width: 50% !important;
     max-width: 50% !important;
     flex: 0 0 50% !important;
+  }
+}
+
+/* ===================================================================
+   PŘIDANÝ OBSAH PATIČKY (.vp-foot) — injektuje src/scripts/footer.js
+   =================================================================== */
+.vp-foot {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  overflow-x: clip;
+  background: #fff;
+}
+.vp-foot *,
+.vp-foot *::before,
+.vp-foot *::after {
+  box-sizing: border-box;
+}
+.vp-foot img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Sock strip (full-bleed žlutý pruh) */
+.vp-foot__sockstrip {
+  height: clamp(40px, 6vw, 74px);
+  background: url("https://www.exitshop.cz/files/310/files/Pati%C4%8Dka_desktop.svg") center / cover no-repeat;
+}
+
+.vp-foot__inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: clamp(1.75rem, 4vw, 3rem) 1rem clamp(1rem, 2.5vw, 1.75rem);
+}
+
+/* Recenze */
+.vp-foot__reviews {
+  text-align: center;
+}
+.vp-foot__reviews-title {
+  font-size: clamp(1.25rem, 3vw, 1.9rem) !important;
+  font-weight: 800 !important;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 0 0.35rem !important;
+  color: var(--foot-text) !important;
+  letter-spacing: -0.01em;
+}
+.vp-foot__hl {
+  color: var(--foot-yellow);
+}
+.vp-foot__reviews-sub {
+  color: var(--foot-muted) !important;
+  font-size: 0.95rem !important;
+  margin: 0 0 clamp(1.25rem, 3vw, 2rem) !important;
+}
+.vp-foot__review-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.85rem, 2vw, 1.5rem);
+  text-align: left;
+}
+.vp-foot__review-card {
+  background: #fff;
+  border: 1px solid #eef1f6;
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem 1.25rem;
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06);
+  min-width: 0;
+}
+.vp-foot__stars {
+  height: 18px;
+  width: auto;
+  margin-bottom: 0.6rem;
+}
+.vp-foot__quote {
+  font-style: italic;
+  color: var(--foot-text) !important;
+  font-size: 0.95rem !important;
+  line-height: 1.5 !important;
+  margin: 0 0 1rem !important;
+}
+.vp-foot__reviewer {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.vp-foot__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+.vp-foot__reviewer-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.vp-foot__reviewer-name {
+  font-weight: 700;
+  color: var(--foot-text);
+  font-size: 0.9rem;
+}
+.vp-foot__verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #16a34a;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.vp-foot__check {
+  flex: 0 0 auto;
+}
+
+/* Trust badge */
+.vp-foot__badges {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1rem, 3vw, 2rem);
+  align-items: center;
+  max-width: 780px;
+  margin: clamp(1.5rem, 3.5vw, 2.5rem) auto 0;
+}
+.vp-foot__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+}
+.vp-foot__badge-icon {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+}
+.vp-foot__badge-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.vp-foot__badge-num {
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--foot-blue);
+}
+.vp-foot__badge-label {
+  font-size: 0.82rem;
+  color: var(--foot-muted);
+}
+
+/* Logo */
+.vp-foot__logo {
+  text-align: center;
+  margin: clamp(1.5rem, 3.5vw, 2.5rem) 0 0;
+}
+.vp-foot__logo img {
+  display: inline-block;
+  width: clamp(190px, 38vw, 270px);
+  height: auto;
+}
+
+/* Mobilní kontaktní blok — skrytý na desktopu */
+.vp-foot__contact {
+  display: none;
+}
+
+/* ===== Mobil: stack recenzí/badge, accordion sloupců, kontakt ===== */
+@media (max-width: 767.98px) {
+  .vp-foot__sockstrip {
+    background-image: url("https://www.exitshop.cz/files/310/files/Pati%C4%8Dka_mobil.svg");
+  }
+  .vp-foot__review-cards {
+    grid-template-columns: 1fr;
+  }
+  .vp-foot__badges {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    text-align: left;
+  }
+  .vp-foot__badge {
+    justify-content: flex-start;
+  }
+
+  /* Accordion sloupců */
+  body footer .footer-column .vp-foot__acc-head {
+    cursor: pointer;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: 0 !important;
+    padding: 0.85rem 0 !important;
+    border-bottom: 1px solid #eef1f6 !important;
+    border-top: 0 !important;
+  }
+  body footer .footer-column .vp-foot__acc-head::after {
+    content: "+";
+    font-weight: 700;
+    font-size: 1.35rem;
+    line-height: 1;
+    color: var(--foot-blue);
+  }
+  body footer .footer-column .vp-foot__acc-head.is-open::after {
+    content: "–";
+  }
+  body footer .footer-column .vp-foot__panel {
+    display: none;
+    padding: 0.35rem 0 0.85rem;
+  }
+  body footer .footer-column .vp-foot__acc-head.is-open + .vp-foot__panel {
+    display: block;
+  }
+  body footer .footer-column {
+    margin-bottom: 0 !important;
+  }
+
+  /* Mobilní kontaktní blok */
+  .vp-foot__contact {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 1.1rem 1rem 0.25rem;
+  }
+  .vp-foot__contact-photo {
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    flex: 0 0 auto;
+  }
+  .vp-foot__contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+  .vp-foot__contact-phone {
+    font-weight: 800 !important;
+    color: var(--foot-blue) !important;
+    font-size: 1.05rem;
+  }
+  .vp-foot__contact-hours {
+    color: var(--foot-muted);
+    font-size: 0.82rem;
+  }
+  .vp-foot__contact-mail {
+    color: var(--foot-blue) !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem;
   }
 }
 

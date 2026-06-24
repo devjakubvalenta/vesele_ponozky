@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Náhled – poradkyně">
+  <circle cx="60" cy="60" r="60" fill="#eaf1fc"/>
+  <circle cx="60" cy="48" r="22" fill="#1361cf"/>
+  <path d="M22 104a38 38 0 0 1 76 0z" fill="#1361cf"/>
+  <circle cx="60" cy="60" r="58" fill="none" stroke="#1361cf" stroke-width="3"/>
+</svg>
