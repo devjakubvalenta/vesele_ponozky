@@ -1,58 +1,124 @@
 <!--
-  Stránka „O nás" (CMS) — vkládá se do: Administrace → CMS a blog → O nás
-  ⚠️ Vlož přes ZDROJOVÝ režim editoru (tlačítko </>), ne přes WYSIWYG.
-  Styl dodává src/css/40-onas.css (scope .vp-onas) přes CDN — nic dalšího netřeba.
+  Stránka „O nás" v2 (CMS) — vkládá se do: Administrace → CMS a blog → O nás
+  ⚠️ Vlož přes ZDROJOVÝ režim editoru (</>), ne přes WYSIWYG.
+  Styl dodává src/css/40-onas.css (scope .vp-onas) přes CDN.
 
-  ⚠️ Editor CMS SANITIZUJE HTML — zahazuje <form>/<input>/<button> i <article>
-  (a místy i <section>). Proto je celý markup jen z <div> a reálný odběrový
-  FORMULÁŘ tu NENÍ — doplní se přes „Skripty" (embed e-mailingu). Tady je jen CTA.
-
-  OBRÁZKY: teď ukazují na DOČASNÉ placeholdery (jsDelivr z repa). Až nahraješ
-  finální obrázky v administraci (media), vyměň src za jejich URL
-  (tvar https://www.exitshop.cz/files/7203/media/files/<jmeno>).
+  ⚠️ Editor sanitizuje — proto jen <div>/<img>/<a>. Formulář je NATIVNÍ přes
+  %contact_form% (renderuje ho platforma, my ho jen stylujeme).
+  TEXTY jsou přepsané z mockupu = DRAFT, uprav dle potřeby.
+  FOTKY „rodina/dílna" a „díly" jsou zatím placeholder rámečky.
 -->
 <div class="vp-onas">
 
-  <!-- ===== 1. HERO ===== -->
+  <!-- 1. HERO -->
   <div class="vp-onas__hero">
     <div class="vp-onas__hero-text">
       <h1 class="vp-onas__title">O FIRMĚ VESELÉ PONOŽKY</h1>
-      <p>Společnost <strong>MODA ČAPEK s.r.o.</strong> jsme založili v roce 2014. Naším původním zaměřením byla obuv, ale čím dál tím více jsme se začali soustředit na ponožky. Ponožky prodáváme opravdu ve velkém množství a v roce 2018 jsme se pustili i do vlastní výroby.</p>
-      <p class="vp-onas__lead"><strong>Jsme rodinná firma s rodinným přístupem.</strong></p>
-      <p>V současné době prodáváme naše zboží do dalších 6 států EU (Slovensko, Maďarsko, Rumunsko, Polsko, Rakousko a Německo) a máme plány na další expanzi.</p>
+      <p>Některé věci v životě vnímáme jako naprosto samozřejmé. Každé ráno si je oblékáme, provází nás celým dnem, chrání nás před chladem a často vyjadřují i naši náladu nebo osobnost.</p>
+      <p class="vp-onas__lead"><strong>Ponožky. Pro někoho obyčejný kus textilu, pro nás Veseléponožky.cz vášeň a celoživotní poslání.</strong></p>
+      <p>Náš příběh se nezačal psát v moderních kancelářích nad tabulkami s touhou po rychlém zisku z levného dovozu. Začal se psát v malebné Třeboni, uprostřed jihočeské krajiny, s jasnou vizí: dokázat, že poctivé české řemeslo má i v 21. století své nezastupitelné místo.</p>
+      <p>Chtěli jsme věcem rozumět od úplného základu — znát původ každého vlákna, slyšet rytmus pletacích strojů a vidět za každým hotovým párem konkrétní lidskou tvář. Proto jsme se vydali tou složitější, ale jedinou správnou cestou: vybudovali jsme vlastní výrobu přímo v Třeboni.</p>
     </div>
     <div class="vp-onas__hero-media">
-      <img class="vp-onas__hero-img" src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/placeholders/hero.svg" alt="Krabice Veselé ponožky" loading="lazy" />
+      <img class="vp-onas__hero-img" src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/onas-hero.jpg" alt="Krabice Veselé ponožky" loading="lazy" />
     </div>
   </div>
 
-  <!-- ===== 2. ODDĚLOVAČ ===== -->
-  <hr class="vp-onas__divider" />
-
-  <!-- ===== 3. INFO KARTY ===== -->
-  <div class="vp-onas__cards">
-
-    <div class="vp-card vp-card--blue">
-      <div class="vp-card__body">
-        <h2 class="vp-card__title">VELKOOBCHODNÍ SPOLUPRÁCE</h2>
-        <p>Pokud byste měli zájem o velkoobchodní spolupráci, neváhejte nás kontaktovat na e-mailu:</p>
-        <a class="vp-onas__btn" href="mailto:david@modacapek.cz">david@modacapek.cz</a>
-      </div>
-      <img class="vp-card__thumb" src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/placeholders/box.svg" alt="" loading="lazy" />
+  <!-- 2. SÍLA RODINNÉHO KRUHU -->
+  <div class="vp-onas__family">
+    <div class="vp-onas__photo" data-label="Fotografie: naše rodina / dílna">Fotografie: naše rodina / dílna</div>
+    <div class="vp-onas__family-text">
+      <h2 class="vp-onas__h2 vp-onas__h2--left">Síla rodinného kruhu a poctivé práce</h2>
+      <p>Jsme stoprocentně rodinná firma. To pro nás není jen marketingový štítek na webu, ale každodenní realita. Rodinné podnikání znamená, že o všech nových nápadech, materiálech a vzorech se společně bavíme třeba u nedělního oběda. Všichni táhneme za jeden provaz a každý z nás dává do chodu firmy maximum energie i srdce.</p>
+      <p>Od technického zázemí přes pečlivý výběr materiálů a ladění detailů až po finální kontrolu a odesílání balíčku — vše prochází našima rukama. Když na balíček nalepíme naši etiketu, podepisujeme se pod něj jako rodina. Proto naše ponožky musí být jednoduše lepší, pohodlnější a trvanlivější.</p>
     </div>
-
-    <div class="vp-card vp-card--yellow">
-      <div class="vp-card__body">
-        <h2 class="vp-card__title">JINÉ DOTAZY</h2>
-        <p>S jakýmikoliv jinými dotazy nás můžete kontaktovat na e-mailu:</p>
-        <a class="vp-onas__btn" href="mailto:veseleponozky@modacapek.cz">veseleponozky@modacapek.cz</a>
-      </div>
-      <img class="vp-card__thumb" src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/placeholders/box.svg" alt="" loading="lazy" />
-    </div>
-
   </div>
 
-  <!-- ===== 4. NEWSLETTER (full-bleed modrý) — reálný formulář přijde přes „Skripty" ===== -->
+  <!-- 3. OD KLUBKA BAVLNY (proces) -->
+  <div class="vp-onas__section">
+    <h2 class="vp-onas__h2">Od klubka bavlny až po balíček ve vašich rukou</h2>
+    <p class="vp-onas__section-intro">Naše výroba v Třeboni v sobě spojuje tradiční řemeslnou zručnost s moderními technologiemi. Základem všeho je nekompromisní výběr materiálů — hledáme optimální poměr vláken tak, aby ponožka dokonale seděla na noze, netlačila a zároveň neklouzala.</p>
+    <div class="vp-onas__cols3">
+      <div class="vp-onas__feature">
+        <img class="vp-onas__feature-icon" src="https://www.exitshop.cz/files/310/files/icon1.svg" alt="" loading="lazy" />
+        <h3 class="vp-onas__feature-title">Návrh a design</h3>
+        <p>Sami si vymýšlíme vzory, ladíme barevné kombinace a hrajeme si s detaily, které dělají naše ponožky jedinečnými.</p>
+      </div>
+      <div class="vp-onas__feature">
+        <img class="vp-onas__feature-icon" src="https://www.exitshop.cz/files/310/files/icon2.svg" alt="" loading="lazy" />
+        <h3 class="vp-onas__feature-title">Technické nastavení a pletení</h3>
+        <p>Naše pletací stroje programujeme s milimetrovou přesností. Každý typ vzoru, zesílená pata či špička pro delší životnost jsou vždy pečlivě nastavené předtím, než začne pletení.</p>
+      </div>
+      <div class="vp-onas__feature">
+        <img class="vp-onas__feature-icon" src="https://www.exitshop.cz/files/310/files/icon3.svg" alt="" loading="lazy" />
+        <h3 class="vp-onas__feature-title">Dokončení a kontrola kvality</h3>
+        <p>Každý pár prochází důkladnou kontrolou, než je spárován, zabalen a připraven vydat se za vámi.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. HODNOTY -->
+  <div class="vp-onas__section">
+    <h2 class="vp-onas__h2">Hodnoty, na kterých stojíme</h2>
+    <p class="vp-onas__section-intro">Naše podnikání neroste z touhy po expanzi za každou cenu. Naším hnacím motorem jsou pevné hodnoty, které nehodláme opustit ani v dobách, kdy je trh složitý a nestabilní.</p>
+    <div class="vp-onas__cols3">
+      <div class="vp-onas__feature">
+        <img class="vp-onas__feature-icon" src="https://www.exitshop.cz/files/310/files/icon4.svg" alt="" loading="lazy" />
+        <h3 class="vp-onas__feature-title">Lokálnost a podpora regionu</h3>
+        <p>Třeboňsko je náš domov. Jsme hrdí na to, že dáváme práci lidem v našem regionu. Nákupem u nás zákazníci podporují živou jihočeskou komunitu, ne anonymní kapitál na druhém konci světa.</p>
+      </div>
+      <div class="vp-onas__feature">
+        <img class="vp-onas__feature-icon" src="https://www.exitshop.cz/files/310/files/icon5.svg" alt="" loading="lazy" />
+        <h3 class="vp-onas__feature-title">Udržitelnost a láska ke zdrojům</h3>
+        <p>Výrobou lokálně minimalizujeme uhlíkovou stopu. Věříme v „pomalou módu" — raději méně párů, které ale drží tvar i barvu a neproderou se po třetím vyprání.</p>
+      </div>
+      <div class="vp-onas__feature">
+        <img class="vp-onas__feature-icon" src="https://www.exitshop.cz/files/310/files/icon6.svg" alt="" loading="lazy" />
+        <h3 class="vp-onas__feature-title">Lidský přístup a transparentnost</h3>
+        <p>Na nic si nehrajeme. Naši zákazníci vědí, kdo pro ně ponožky vyrábí. Když nám napíšete nebo zavoláte, mluvíte s reálným člověkem, který žije naším řemeslem každý den.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. POHLED DO BUDOUCNA (modrý blok) -->
+  <div class="vp-onas__future">
+    <div class="vp-onas__future-text">
+      <h2 class="vp-onas__future-title">Pohled do budoucna s úctou k minulosti</h2>
+      <p>Svět kolem nás se mění závratným tempem a i my jdeme s dobou — neustále vylepšujeme náš e-shop, optimalizujeme logistiku a hledáme nové cesty, jak oslovit zákazníky, kterým záleží na původu věcí, jež kupují.</p>
+      <p>Jedna věc se však nezmění nikdy. Vždycky budeme tou rodinnou firmou z Třeboně, která má své srdce v pletařské dílně.</p>
+      <p class="vp-onas__future-thanks"><strong>Děkujeme, že jste součástí našeho příběhu a že s námi pomáháte udržovat poctivé české textilní řemeslo naživu. Každým krokem v našich ponožkách jdete kousek této cesty s námi.</strong></p>
+    </div>
+    <div class="vp-onas__photo vp-onas__photo--on-blue" data-label="Fotografie: dílna / detaily">Fotografie: dílna / detaily</div>
+  </div>
+
+  <!-- 6. KONTAKT / SPOLUPRÁCE -->
+  <div class="vp-onas__contact">
+    <div class="vp-onas__contact-form">
+      <h2 class="vp-onas__h2 vp-onas__h2--left">Máte zájem o spolupráci?</h2>
+      <p>Vyplňte formulář a my se vám ozveme zpět s nabídkou na míru.</p>
+      <div class="vp-onas__form-mount">%contact_form%</div>
+    </div>
+    <div class="vp-onas__contact-info">
+      <div class="vp-onas__info-block">
+        <img class="vp-onas__info-icon" src="https://www.exitshop.cz/files/310/files/kontakt1.svg" alt="" loading="lazy" />
+        <div>
+          <h3 class="vp-onas__info-title">Kontakt</h3>
+          <p class="vp-onas__info-sub">Pro velkoobchodní spolupráci</p>
+          <p>E-mail: <a href="mailto:david@modacapek.cz">david@modacapek.cz</a><br>Telefon: <a href="tel:+420724061774">+420 724 061 774</a></p>
+        </div>
+      </div>
+      <div class="vp-onas__info-block">
+        <img class="vp-onas__info-icon" src="https://www.exitshop.cz/files/310/files/voz%C3%ADk1.svg" alt="" loading="lazy" />
+        <div>
+          <h3 class="vp-onas__info-title">Fakturační údaje</h3>
+          <p>MODA ČAPEK s.r.o.<br>Boženy Němcové 1095, 379 01 Třeboň<br>IČ: 02605104, DIČ: CZ02605104</p>
+          <p class="vp-onas__info-small">Společnost je zapsána v obchodním rejstříku vedeném Krajským soudem v Českých Budějovicích, oddíl C, vložka 22444.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. NEWSLETTER -->
   <div class="vp-onas__newsletter">
     <div class="vp-onas__newsletter-inner">
       <div class="vp-onas__newsletter-text">
@@ -62,12 +128,9 @@
         <p class="vp-onas__consent">Odběrový formulář spustíme po napojení e-mailingu.</p>
       </div>
       <div class="vp-onas__newsletter-media">
-        <img class="vp-onas__mascot" src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/placeholders/mascot.svg" alt="Maskot Veselé ponožky" loading="lazy" />
+        <img class="vp-onas__mascot" src="https://www.exitshop.cz/files/310/files/maskot.svg" alt="Maskot Veselé ponožky" loading="lazy" />
       </div>
     </div>
   </div>
-
-  <!-- ===== 5. SOCK STRIP (full-bleed žlutý dekor) ===== -->
-  <div class="vp-onas__sockstrip" aria-hidden="true">&nbsp;</div>
 
 </div>
