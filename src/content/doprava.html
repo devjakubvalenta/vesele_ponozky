@@ -1,0 +1,102 @@
+<!--
+  Stránka „Doprava a platba" (CMS) — vkládá se do: Administrace → CMS a blog → Doprava a platba (cms/56955-doprava-a-platba)
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor sanitizuje).
+  Styl dodává 85-doprava.css (scope .vp-doprava) přes CDN. Newsletter = kopie bloku z O nás (maskot.svg).
+  Ikony (přiřazení ověřit naživo): doprava-hero.svg = hero ilustrace; dopravainfo/dopravainfo2 = info řádky;
+  doprava1 = Česká pošta, doprava2 = Zásilkovna, doprava3 = PPL; platba1 = karta, platba2 = převod, platba3 = dobírka.
+-->
+<div class="vp-doprava">
+
+  <!-- 1. HERO (nadpis + benefity + ilustrace) -->
+  <div class="vp-doprava__hero">
+    <div class="vp-doprava__hero-text">
+      <h1 class="vp-doprava__title">DOPRAVA A PLATBA</h1>
+      <p class="vp-doprava__lead">Nakupte více než 1000 Kč a dopravu máte od nás zcela zdarma.</p>
+
+      <div class="vp-doprava__info-row">
+        <img class="vp-doprava__info-ic" src="https://www.exitshop.cz/files/310/files/dopravainfo.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-doprava__info-label">Vše máme skladem</p>
+          <p class="vp-doprava__info-desc">Vaše oblíbené ponožky máme připravené a odešleme, takže na radost prostě nemusíte dlouho čekat.</p>
+        </div>
+      </div>
+
+      <div class="vp-doprava__info-row">
+        <img class="vp-doprava__info-ic" src="https://www.exitshop.cz/files/310/files/dopravainfo2.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-doprava__info-label">Doručení do dvou dní</p>
+          <p class="vp-doprava__info-desc">Každou objednávku pečlivě zabalíme a co nejrychleji odešleme, aby k vám dorazila v perfektním stavu.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-doprava__hero-media">
+      <img class="vp-doprava__hero-img" src="https://www.exitshop.cz/files/310/files/doprava-hero.svg" alt="Doprava veselých ponožek" loading="lazy" />
+    </div>
+  </div>
+
+  <!-- 2. ZPŮSOB DOPRAVY -->
+  <div class="vp-doprava__section">
+    <h2 class="vp-doprava__h2">Způsob dopravy</h2>
+    <div class="vp-doprava__methods">
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="https://www.exitshop.cz/files/310/files/doprava1.png" alt="Česká pošta" loading="lazy" />
+        <div class="vp-doprava__method-name">Česká pošta – Balíkovna</div>
+        <div class="vp-doprava__method-price">79 Kč</div>
+      </div>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="https://www.exitshop.cz/files/310/files/doprava1.png" alt="Česká pošta" loading="lazy" />
+        <div class="vp-doprava__method-name">Česká pošta – Balík do ruky</div>
+        <div class="vp-doprava__method-price">119 Kč</div>
+      </div>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="https://www.exitshop.cz/files/310/files/doprava2.png" alt="Zásilkovna" loading="lazy" />
+        <div class="vp-doprava__method-name">Zásilkovna</div>
+        <div class="vp-doprava__method-price">69 Kč</div>
+      </div>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="https://www.exitshop.cz/files/310/files/doprava3.png" alt="PPL" loading="lazy" />
+        <div class="vp-doprava__method-name">PPL</div>
+        <div class="vp-doprava__method-price">99 Kč</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. ZPŮSOB PLATBY -->
+  <div class="vp-doprava__section">
+    <h2 class="vp-doprava__h2">Způsob platby</h2>
+    <div class="vp-doprava__methods">
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="https://www.exitshop.cz/files/310/files/platba1.png" alt="Platba kartou" loading="lazy" />
+        <div class="vp-doprava__method-name">Kartou online – GoPay</div>
+        <div class="vp-doprava__method-price vp-doprava__method-price--free">Zdarma</div>
+      </div>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="https://www.exitshop.cz/files/310/files/platba2.png" alt="Platba převodem" loading="lazy" />
+        <div class="vp-doprava__method-name">Převodem</div>
+        <div class="vp-doprava__method-price vp-doprava__method-price--free">Zdarma</div>
+      </div>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="https://www.exitshop.cz/files/310/files/platba3.png" alt="Dobírka" loading="lazy" />
+        <div class="vp-doprava__method-name">Dobírkou</div>
+        <div class="vp-doprava__method-price">39 Kč</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. NEWSLETTER (modrý blok — kopie z O nás) -->
+  <div class="vp-doprava__newsletter">
+    <div class="vp-doprava__newsletter-inner">
+      <div class="vp-doprava__newsletter-text">
+        <h2 class="vp-doprava__newsletter-title">NEZMEŠKEJTE ŽÁDNÉ NOVINKY A ZÍSKEJTE <span class="vp-accent">SLEVU 15%</span>!</h2>
+        <p>Přihlaste se k odběru našeho newsletteru a získejte slevu 15 % na váš první nákup veselých ponožek.</p>
+        <a class="vp-doprava__btn" href="#">PŘIHLÁSIT SE K ODBĚRU</a>
+        <p class="vp-doprava__consent">Odběrový formulář spustíme po napojení e-mailingu.</p>
+      </div>
+      <div class="vp-doprava__newsletter-media">
+        <img class="vp-doprava__mascot" src="https://www.exitshop.cz/files/310/files/maskot.svg" alt="Maskot Veselé ponožky" loading="lazy" />
+      </div>
+    </div>
+  </div>
+
+</div>
