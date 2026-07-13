@@ -807,10 +807,14 @@
 }
 /* „ZDARMA" z nativního price_span (Google/Apple Pay) — zeleně a jako „Zdarma":
    text v spanu neumí CSS přepsat → skrýt (font-size:0) a dosadit ::after. Ceny (39 Kč…) zůstávají tmavé. */
-.payment-select .label-shipping-text .price_span[data-normal="ZDARMA"],
-.payment-select .label-shipping-text .price_span[data-normal="ZDARMA"] + .price_span_currency {
+.payment-select .label-shipping-text .price_span[data-normal="ZDARMA"] {
   color: #31a831 !important;
   font-size: 0 !important;
+}
+/* prázdný span měny by jako flex položka přidal column-gap → „Zdarma" by bylo odsazenější
+   od pravého kraje než u metod s ::after (QR/karta). Skrýt úplně. */
+.payment-select .label-shipping-text .price_span[data-normal="ZDARMA"] + .price_span_currency {
+  display: none !important;
 }
 .payment-select .label-shipping-text .price_span[data-normal="ZDARMA"]::after {
   content: "Zdarma";
