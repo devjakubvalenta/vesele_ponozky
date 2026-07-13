@@ -572,7 +572,18 @@
 .main-order-form #block-service-20783 .info-warapper > .content > .clearfix {
   display: none !important;
 }
-/* velká ikona vlevo přes celou výšku panelu (CSS background — panel nerenderuje <img>) */
+/* šedé pozadí titulku ze šablony (.content { background:#f5f5f5a1 }) — pryč u všech služeb */
+.main-order-form .additional-service-panel .info-warapper .content,
+.main-order-form .additional-service-row .additional-service-panel .content {
+  background: transparent !important;
+}
+/* nativní malý obrázek služby v titulku (platforma ho renderuje, když má produkt služby
+   obrázek v adminu) — skrýt, velkou ikonu dodává naše CSS níže */
+.main-order-form .additional-service-panel .card-title img {
+  display: none !important;
+}
+
+/* velká ikona vlevo přes celou výšku panelu (vlastní CSS background) */
 .main-order-form #block-service-20780 .info-warapper,
 .main-order-form #block-service-20783 .info-warapper {
   position: relative;
