@@ -528,15 +528,15 @@
 }
 
 /* Ikony u vybraných doplňkových služeb (nativní panely).
-   Balné = nativní třída .packaging_service; Dýško = stabilní #block-service-20783 (service ID).
+   Balné = #block-service-20780, Dýško = #block-service-20783 — oba přes stabilní id panelu (service ID).
    „Produkt číslo 2" (#block-service-20843) záměrně BEZ ikony (placeholder) → žádné pravidlo. */
-.main-order-form .additional-service-panel.packaging_service .info-warapper > .content,
+.main-order-form #block-service-20780 .info-warapper > .content,
 .main-order-form #block-service-20783 .info-warapper > .content {
   display: flex !important;
   align-items: center !important;
   gap: 0.75rem;
 }
-.main-order-form .additional-service-panel.packaging_service .info-warapper > .content > .card-title:not(.add-service-price),
+.main-order-form #block-service-20780 .info-warapper > .content > .card-title:not(.add-service-price),
 .main-order-form #block-service-20783 .info-warapper > .content > .card-title:not(.add-service-price) {
   display: flex !important;
   align-items: center;
@@ -544,17 +544,17 @@
   flex: 1 1 auto;
   min-width: 0;
 }
-.main-order-form .additional-service-panel.packaging_service .info-warapper > .content > .add-service-price,
+.main-order-form #block-service-20780 .info-warapper > .content > .add-service-price,
 .main-order-form #block-service-20783 .info-warapper > .content > .add-service-price {
   margin-left: auto;
   flex: 0 0 auto;
 }
-.main-order-form .additional-service-panel.packaging_service .info-warapper > .content > .clearfix,
+.main-order-form #block-service-20780 .info-warapper > .content > .clearfix,
 .main-order-form #block-service-20783 .info-warapper > .content > .clearfix {
   display: none !important;
 }
 /* samotná ikona (CSS background — panel nerenderuje <img>) */
-.main-order-form .additional-service-panel.packaging_service .card-title:not(.add-service-price)::before,
+.main-order-form #block-service-20780 .card-title:not(.add-service-price)::before,
 .main-order-form #block-service-20783 .card-title:not(.add-service-price)::before {
   content: "";
   flex: 0 0 auto;
@@ -564,7 +564,7 @@
   background-position: center;
   background-size: contain;
 }
-.main-order-form .additional-service-panel.packaging_service .card-title:not(.add-service-price)::before {
+.main-order-form #block-service-20780 .card-title:not(.add-service-price)::before {
   background-image: url("https://www.exitshop.cz/files/310/files/baln%C3%A9.png");
 }
 .main-order-form #block-service-20783 .card-title:not(.add-service-price)::before {
@@ -639,6 +639,37 @@
   font-size: 0.9375rem !important;
   line-height: 1.4 !important;
   color: var(--cx-text);
+}
+
+/* Cena vpravo + tučně. Nativní .price_span má ml-auto → stačí udělat z textu flex.
+   (Platí pro dopravu i platbu — payment <li> má také třídu .shipping-tab.) */
+.shipping-tab .label-shipping-text,
+.payment-select .label-shipping-text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.3rem;
+  row-gap: 0.1rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+}
+.shipping-tab .label-shipping-text .price_span,
+.payment-select .label-shipping-text .price_span {
+  margin-left: auto;
+  font-weight: 800 !important;
+  white-space: nowrap;
+  color: var(--cx-text);
+}
+.shipping-tab .label-shipping-text .price_span_currency,
+.payment-select .label-shipping-text .price_span_currency {
+  font-weight: 800 !important;
+  white-space: nowrap;
+  color: var(--cx-text);
+}
+/* info ikonka (Zásilkovna) ať zůstane hned za cenou, ne odsazená na kraj */
+.shipping-tab .label-shipping-text .shipping-help-info {
+  margin-left: 0.15rem;
 }
 
 
