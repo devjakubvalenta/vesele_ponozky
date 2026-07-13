@@ -18,7 +18,7 @@ header {
    Žlutá lišta, tmavě modrý text; odpočet inline hned za textem: „… 50% - 00:12:39:40". */
 #notification-bar {
   background: #fbbc02 !important;
-  color: #12306e !important;
+  color: #ffffff !important;
 }
 
 #notification-bar .container {
@@ -43,7 +43,7 @@ header {
 #notification-bar #notification-bar-text p,
 #notification-bar #notification-bar-text * ,
 #notification-bar a {
-  color: #12306e !important;
+  color: #ffffff !important;
 }
 
 #notification-bar #notification-bar-text p {
@@ -65,7 +65,7 @@ header {
   line-height: 1;
 }
 #notification-bar #notification-bar-close a {
-  color: rgba(18, 48, 110, 0.75) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
   font-size: 1.25rem;
   text-decoration: none;
 }
@@ -79,7 +79,7 @@ header {
   font-size: clamp(0.78rem, 2vw, 0.98rem) !important;
   font-weight: 800;
   letter-spacing: 0.02em;
-  color: #12306e !important;
+  color: #ffffff !important;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
