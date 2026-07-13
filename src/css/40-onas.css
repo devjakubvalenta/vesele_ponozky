@@ -73,14 +73,16 @@
   text-align: center;
 }
 .vp-onas__section-intro {
-  max-width: 760px;
-  margin: 0 auto clamp(1.5rem, 3.5vw, 2.5rem);
+  max-width: 900px;
+  margin: 0 0 clamp(1.5rem, 3.5vw, 2.5rem);
   color: var(--onas-muted);
+  text-align: left;
 }
 .vp-onas__section-outro {
-  max-width: 820px;
-  margin: clamp(1.5rem, 3.5vw, 2.5rem) auto 0;
+  max-width: 900px;
+  margin: clamp(1.5rem, 3.5vw, 2.5rem) 0 0;
   color: var(--onas-muted);
+  text-align: left;
 }
 
 /* ---- 1. HERO ---- */
@@ -275,6 +277,56 @@
 .vp-onas__form-mount input[type="submit"]:hover {
   background: var(--onas-yellow-dark) !important;
   transform: translateY(-2px);
+}
+
+/* --- Nativní %contact_form% — vzhled dle návrhu --- */
+/* skrýt nativní nadpis „Kontaktní formulář", šedý box, honeypoty, přílohu */
+.vp-onas__form-mount h2 {
+  display: none !important;
+}
+.vp-onas__form-mount .contact_form,
+.vp-onas__form-mount .contact_form.bg-light {
+  background: transparent !important;
+  padding: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.vp-onas__form-mount form > div:not(.messages):not(.controls) {
+  display: none !important;
+}
+.vp-onas__form-mount .form-group:has(input[type="file"]) {
+  display: none !important;
+}
+.vp-onas__form-mount input[name^="halusky"] {
+  display: none !important;
+}
+/* Jméno + E-mail vedle sebe, ostatní pole i tlačítko full-width */
+.vp-onas__form-mount .controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1rem;
+}
+.vp-onas__form-mount .controls > .form-group,
+.vp-onas__form-mount .controls > div {
+  grid-column: 1 / -1;
+  margin-bottom: 0.9rem !important;
+}
+.vp-onas__form-mount .controls > .form-group:has(#cform_name),
+.vp-onas__form-mount .controls > .form-group:has(#cform_email) {
+  grid-column: auto;
+}
+.vp-onas__form-mount .form-label {
+  display: block;
+  font-weight: 600;
+  color: var(--onas-text);
+  margin: 0 0 0.3rem;
+  font-size: 0.9rem;
+}
+.vp-onas__form-mount .btn-send,
+.vp-onas__form-mount button[type="submit"] {
+  display: block !important;
+  width: 100% !important;
+  margin-top: 0.5rem !important;
 }
 
 /* Kontakt info (nadpisy „Kontakt" / „Fakturační údaje" + řádky s ikonami) */

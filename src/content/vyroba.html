@@ -1,0 +1,130 @@
+<!--
+  Stránka „Výroba na zakázku" (CMS) — vkládá se do: Administrace → CMS a blog → Výroba na zakázku
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor sanitizuje).
+  Poptávkový formulář v hero je NATIVNÍ přes %contact_form%. Styl dodává 50-vyroba.css (scope .vp-vyroba) přes CDN.
+  Ilustrace „Co vše zvládneme" = co-zvládneme.jpg. Newsletter = kopie bloku z O nás (maskot.svg).
+-->
+<div class="vp-vyroba">
+
+  <!-- 1. HERO (poptávka + obrázek) -->
+  <div class="vp-vyroba__hero">
+    <div class="vp-vyroba__hero-text">
+      <h1 class="vp-vyroba__title">VÝROBA NA ZAKÁZKU</h1>
+      <p class="vp-vyroba__lead">Ponožky podle vašich představ. Vyrábíme originální ponožky s logem, ikonami nebo motivem přesně podle vašeho zadání. Pošlete nám nezávaznou poptávku a my se vám ozveme s vlastním řešením.</p>
+      <h2 class="vp-vyroba__form-title">Odeslat nezávaznou poptávku</h2>
+      <div class="vp-vyroba__form-mount">%contact_form%</div>
+    </div>
+    <div class="vp-vyroba__hero-media">
+      <img class="vp-vyroba__hero-img" src="https://www.exitshop.cz/files/310/files/na-zak%C3%A1zku-hero.jpg" alt="Ukázka ponožek na zakázku – vaše logo, motivy, barvy i vzory" loading="lazy" />
+    </div>
+  </div>
+
+  <!-- 2. JAK TO FUNGUJE (5 kroků) -->
+  <div class="vp-vyroba__section">
+    <h2 class="vp-vyroba__h2">Jak to funguje?</h2>
+    <div class="vp-vyroba__steps">
+      <div class="vp-vyroba__step">
+        <div class="vp-vyroba__step-icon-wrap">
+          <img class="vp-vyroba__step-icon" src="https://www.exitshop.cz/files/310/files/na-zak%C3%A1zku1.svg" alt="" loading="lazy" />
+          <div class="vp-vyroba__step-num">1</div>
+        </div>
+        <h3 class="vp-vyroba__step-title">Konzultace</h3>
+        <p>Ozvěte se nám se svou představou. Rádi s vámi vše probereme a poradíme.</p>
+      </div>
+      <div class="vp-vyroba__step">
+        <div class="vp-vyroba__step-icon-wrap">
+          <img class="vp-vyroba__step-icon" src="https://www.exitshop.cz/files/310/files/na-zak%C3%A1zku5.svg" alt="" loading="lazy" />
+          <div class="vp-vyroba__step-num">2</div>
+        </div>
+        <h3 class="vp-vyroba__step-title">Návrh</h3>
+        <p>Vytvoříme grafický návrh ponožek přesně podle vašich požadavků.</p>
+      </div>
+      <div class="vp-vyroba__step">
+        <div class="vp-vyroba__step-icon-wrap">
+          <img class="vp-vyroba__step-icon" src="https://www.exitshop.cz/files/310/files/na-zak%C3%A1zku6.svg" alt="" loading="lazy" />
+          <div class="vp-vyroba__step-num">3</div>
+        </div>
+        <h3 class="vp-vyroba__step-title">Vzorek</h3>
+        <p>Na požádání vyrobíme vzorek, abyste si ověřili materiál i kvalitu.</p>
+      </div>
+      <div class="vp-vyroba__step">
+        <div class="vp-vyroba__step-icon-wrap">
+          <img class="vp-vyroba__step-icon" src="https://www.exitshop.cz/files/310/files/na-zak%C3%A1zku2.svg" alt="" loading="lazy" />
+          <div class="vp-vyroba__step-num">4</div>
+        </div>
+        <h3 class="vp-vyroba__step-title">Výroba</h3>
+        <p>Po schválení návrhu spouštíme výrobu včetně kompletace a kontroly kvality.</p>
+      </div>
+      <div class="vp-vyroba__step">
+        <div class="vp-vyroba__step-icon-wrap">
+          <img class="vp-vyroba__step-icon" src="https://www.exitshop.cz/files/310/files/na-zak%C3%A1zku7.svg" alt="" loading="lazy" />
+          <div class="vp-vyroba__step-num">5</div>
+        </div>
+        <h3 class="vp-vyroba__step-title">Doručení</h3>
+        <p>Hotové ponožky zabalíme a doručíme až k vám.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. PROČ U NÁS (4 ikony + CTA) -->
+  <div class="vp-vyroba__section">
+    <h2 class="vp-vyroba__h2">Proč si nechat uplést ponožky právě u nás?</h2>
+    <p class="vp-vyroba__section-intro">Protože jsme přímý výrobce, ne překupníci. Celý proces máme pevně ve svých rukou pod jednou střechou — od prvního návrhu až po zabalení a expedici. Co to pro vás znamená?</p>
+    <div class="vp-vyroba__cols4">
+      <div class="vp-vyroba__feature">
+        <img class="vp-vyroba__feature-icon" src="https://www.exitshop.cz/files/310/files/na-zak%C3%A1zku8.svg" alt="" loading="lazy" />
+        <h3 class="vp-vyroba__feature-title">Naprostá flexibilita</h3>
+        <p>Vyrobíme malé i velké objednávky a přizpůsobíme se vašim požadavkům. Nemáte grafika? Motiv navrhneme a vytvoříme za vás.</p>
+      </div>
+      <div class="vp-vyroba__feature">
+        <img class="vp-vyroba__feature-icon" src="https://www.exitshop.cz/files/310/files/na-zak%C3%A1zku9.svg" alt="" loading="lazy" />
+        <h3 class="vp-vyroba__feature-title">Stoprocentní kontrola kvality</h3>
+        <p>Každý pár prochází důkladnou kontrolou přímo v naší dílně, než ho zabalíme a odešleme.</p>
+      </div>
+      <div class="vp-vyroba__feature">
+        <img class="vp-vyroba__feature-icon" src="https://www.exitshop.cz/files/310/files/na-zak%C3%A1zku10.svg" alt="" loading="lazy" />
+        <h3 class="vp-vyroba__feature-title">Rychlost a spolehlivost</h3>
+        <p>Nezávisíme na dovozu z druhého konce světa. Vyrábíme lokálně, a tak dodáme rychle a spolehlivě.</p>
+      </div>
+      <div class="vp-vyroba__feature">
+        <img class="vp-vyroba__feature-icon" src="https://www.exitshop.cz/files/310/files/na-zak%C3%A1zku11.svg" alt="" loading="lazy" />
+        <h3 class="vp-vyroba__feature-title">Udržitelnost a podpora regionu</h3>
+        <p>Vše tvoříme v Čechách. Podpoříte lokální řemeslo a zároveň šetříte uhlíkovou stopu.</p>
+      </div>
+    </div>
+    <p class="vp-vyroba__cta">Ať už jste velká korporace, lokální sportovní klub, nebo parta nadšenců, dokážeme vaše představy proměnit v realitu. Napište nám a pojďme společně uplést něco výjimečného!</p>
+  </div>
+
+  <!-- 4. CO VŠE ZVLÁDNEME (obrázek + checklist) -->
+  <div class="vp-vyroba__can">
+    <div class="vp-vyroba__can-media">
+      <img class="vp-vyroba__can-img" src="https://www.exitshop.cz/files/310/files/co-zvl%C3%A1dneme.jpg" alt="Návrh ponožek na míru – motivy, barvy a výběr materiálu" loading="lazy" />
+    </div>
+    <div class="vp-vyroba__can-text">
+      <h2 class="vp-vyroba__h2 vp-vyroba__h2--left vp-vyroba__can-title">Co vše zvládneme?</h2>
+      <div class="vp-vyroba__checklist">
+        <div class="vp-vyroba__check-item">Barevné ponožky s logem, ikonami nebo motivem</div>
+        <div class="vp-vyroba__check-item">Výběr materiálů: bavlna, sportovní, bambusové…</div>
+        <div class="vp-vyroba__check-item">Různé délky a velikosti</div>
+        <div class="vp-vyroba__check-item">Minimální objednávka již od 50 párů</div>
+        <div class="vp-vyroba__check-item">Rychlé termíny a férové ceny</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. NEWSLETTER (kopie z O nás) -->
+  <div class="vp-vyroba__newsletter">
+    <div class="vp-vyroba__newsletter-inner">
+      <div class="vp-vyroba__newsletter-text">
+        <h2 class="vp-vyroba__newsletter-title">NEZMEŠKEJTE ŽÁDNÉ NOVINKY A ZÍSKEJTE <span class="vp-accent">SLEVU 15%</span>!</h2>
+        <p>Přihlaste se k odběru našeho newsletteru a získejte slevu 15 % na váš první nákup veselých ponožek.</p>
+        <a class="vp-vyroba__btn" href="#">PŘIHLÁSIT SE K ODBĚRU</a>
+        <p class="vp-vyroba__consent">Odběrový formulář spustíme po napojení e-mailingu.</p>
+      </div>
+      <div class="vp-vyroba__newsletter-media">
+        <img class="vp-vyroba__mascot" src="https://www.exitshop.cz/files/310/files/maskot.svg" alt="Maskot Veselé ponožky" loading="lazy" />
+      </div>
+    </div>
+  </div>
+
+</div>

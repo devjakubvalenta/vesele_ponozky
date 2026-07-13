@@ -1,0 +1,442 @@
+/* CMS stránka „Výroba na zakázku" — brandový vzhled (modrá #1361cf + žlutá #fbbc02).
+   Scope: vše pod .vp-vyroba (markup: src/content/vyroba.html). Nedosáhne na zbytek webu.
+   Sekce: hero (poptávka %contact_form%) · jak to funguje (5 kroků) · proč u nás (4 ikony + CTA)
+          · co vše zvládneme (obrázek + checklist) · newsletter (kopie z O nás). Patička globální. */
+
+.vp-vyroba {
+  --vy-blue: #1361cf;
+  --vy-blue-dark: #0f4ea8;
+  --vy-yellow: #fbbc02;
+  --vy-yellow-dark: #e0a800;
+  --vy-text: #0f172a;
+  --vy-muted: #475569;
+  --vy-blue-soft: #eaf1fc;
+  --vy-yellow-soft: #fdf6e0;
+  --vy-radius: 18px;
+  --vy-pill: 999px;
+  --vy-gap: clamp(1.25rem, 3vw, 2.5rem);
+  --vy-section: clamp(2.25rem, 6vw, 4rem);
+  --vy-shadow: 0 12px 40px rgba(15, 23, 42, 0.1);
+  --vy-shadow-sm: 0 4px 18px rgba(15, 23, 42, 0.07);
+
+  color: var(--vy-text);
+  overflow-x: clip;
+  box-sizing: border-box;
+}
+
+.vp-vyroba *,
+.vp-vyroba *::before,
+.vp-vyroba *::after {
+  box-sizing: border-box;
+}
+
+.vp-vyroba img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.vp-vyroba p {
+  line-height: 1.65;
+  margin: 0 0 0.9rem;
+  color: var(--vy-muted);
+}
+
+.vp-vyroba a {
+  text-decoration: none;
+  color: var(--vy-blue);
+}
+
+/* Skrýt nativní nadpis stránky nad naším hero (jen kde je náš blok) */
+.content:has(> .vp-vyroba) > h1 {
+  display: none;
+}
+
+/* Společné: sekční nadpisy + intro/outro */
+.vp-vyroba__h2 {
+  color: var(--vy-blue) !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.35rem, 3.2vw, 2.1rem) !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.01em;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 0 0.75rem !important;
+  text-align: center;
+}
+.vp-vyroba__h2--left {
+  text-align: left;
+}
+.vp-vyroba__section {
+  margin-top: var(--vy-section);
+  text-align: center;
+}
+.vp-vyroba__section-intro {
+  max-width: 760px;
+  margin: 0 auto clamp(1.5rem, 3.5vw, 2.5rem);
+  color: var(--vy-muted);
+}
+.vp-vyroba__section-outro {
+  max-width: 820px;
+  margin: clamp(1.5rem, 3.5vw, 2.5rem) auto 0;
+  color: var(--vy-muted);
+}
+
+/* ---- 1. HERO (poptávkový formulář + obrázek) ---- */
+.vp-vyroba__hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: start;
+  gap: var(--vy-gap);
+  padding: clamp(1.5rem, 4vw, 3rem) 0 0;
+}
+.vp-vyroba__title {
+  color: var(--vy-blue) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.6rem, 4vw, 2.6rem) !important;
+  line-height: 1.1 !important;
+  margin: 0 0 1rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+}
+.vp-vyroba__lead {
+  font-size: 1.05rem;
+  color: var(--vy-text) !important;
+  margin-bottom: 1.4rem;
+}
+.vp-vyroba__form-title {
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  color: var(--vy-text) !important;
+  margin: 0 0 0.9rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.vp-vyroba__hero-media {
+  background: var(--vy-blue);
+  border-radius: var(--vy-radius);
+  padding: clamp(1rem, 3vw, 2rem);
+  box-shadow: var(--vy-shadow);
+  position: sticky;
+  top: 1rem;
+}
+.vp-vyroba__hero-img {
+  width: 100%;
+  border-radius: calc(var(--vy-radius) - 6px);
+}
+
+/* Nativní %contact_form% — stylujeme obecné prvky uvnitř mount wrapperu */
+.vp-vyroba__form-mount input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+.vp-vyroba__form-mount textarea,
+.vp-vyroba__form-mount select {
+  width: 100% !important;
+  padding: 0.75rem 1rem !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  color: var(--vy-text) !important;
+  font-size: 1rem !important;
+  margin-bottom: 0.85rem !important;
+  box-shadow: none !important;
+}
+.vp-vyroba__form-mount textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+.vp-vyroba__form-mount input:focus,
+.vp-vyroba__form-mount textarea:focus,
+.vp-vyroba__form-mount select:focus {
+  outline: none !important;
+  border-color: var(--vy-blue) !important;
+  box-shadow: 0 0 0 3px rgba(19, 97, 207, 0.15) !important;
+}
+.vp-vyroba__form-mount label {
+  display: block;
+  font-weight: 600;
+  color: var(--vy-text);
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+}
+.vp-vyroba__form-mount button,
+.vp-vyroba__form-mount .btn,
+.vp-vyroba__form-mount input[type="submit"] {
+  display: inline-block !important;
+  padding: 0.8rem 1.7rem !important;
+  background: var(--vy-yellow) !important;
+  color: var(--vy-text) !important;
+  font-weight: 700 !important;
+  border: none !important;
+  border-radius: var(--vy-pill) !important;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(251, 188, 2, 0.4) !important;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+.vp-vyroba__form-mount button:hover,
+.vp-vyroba__form-mount .btn:hover,
+.vp-vyroba__form-mount input[type="submit"]:hover {
+  background: var(--vy-yellow-dark) !important;
+  transform: translateY(-2px);
+}
+
+/* ---- 2. JAK TO FUNGUJE (5 očíslovaných kroků) ---- */
+.vp-vyroba__steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+  margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
+  text-align: center;
+}
+.vp-vyroba__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.vp-vyroba__step-icon-wrap {
+  position: relative;
+  width: clamp(76px, 9vw, 104px);
+  height: clamp(76px, 9vw, 104px);
+  border-radius: 50%;
+  background: var(--vy-blue-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.vp-vyroba__step-icon {
+  width: 54%;
+  height: auto;
+}
+.vp-vyroba__step-num {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--vy-blue);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #fff;
+  box-sizing: content-box;
+}
+.vp-vyroba__step-title {
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: var(--vy-text) !important;
+  margin: 0 0 0.4rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.vp-vyroba__step p {
+  color: var(--vy-muted) !important;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* ---- 3. PROČ U NÁS (4 ikony + CTA) ---- */
+.vp-vyroba__cols4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  text-align: center;
+}
+.vp-vyroba__feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.vp-vyroba__feature-icon {
+  width: clamp(56px, 7vw, 72px);
+  height: auto;
+  margin-bottom: 0.9rem;
+}
+.vp-vyroba__feature-title {
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: var(--vy-text) !important;
+  margin: 0 0 0.5rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.vp-vyroba__feature p {
+  color: var(--vy-muted) !important;
+  font-size: 0.92rem;
+}
+.vp-vyroba__cta {
+  max-width: 820px;
+  margin: clamp(1.75rem, 4vw, 2.75rem) auto 0;
+  text-align: center;
+  color: var(--vy-blue) !important;
+  font-weight: 700;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.6;
+}
+
+/* ---- 4. CO VŠE ZVLÁDNEME (obrázek + checklist) ---- */
+.vp-vyroba__can {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin-top: var(--vy-section);
+  background: var(--vy-yellow-soft);
+  border-radius: clamp(16px, 2.5vw, 28px);
+  padding: clamp(1.75rem, 5vw, 3.5rem);
+}
+.vp-vyroba__can-media {
+  margin: 0;
+}
+.vp-vyroba__can-img {
+  width: 100%;
+}
+.vp-vyroba__can-title {
+  margin-bottom: 1.25rem !important;
+}
+.vp-vyroba__checklist {
+  display: block;
+}
+.vp-vyroba__check-item {
+  position: relative;
+  padding-left: 2.1rem;
+  margin: 0 0 0.85rem;
+  color: var(--vy-text) !important;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.vp-vyroba__check-item::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0.05em;
+  width: 1.45rem;
+  height: 1.45rem;
+  background: var(--vy-blue);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* ---- 5. NEWSLETTER (modrý blok — kopie z O nás) ---- */
+.vp-vyroba__btn {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.7rem 1.4rem;
+  background: var(--vy-yellow);
+  color: var(--vy-text) !important;
+  font-weight: 700;
+  border-radius: var(--vy-pill);
+  border: none;
+  cursor: pointer;
+  word-break: break-word;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+  box-shadow: 0 6px 18px rgba(251, 188, 2, 0.4);
+}
+.vp-vyroba__btn:hover {
+  background: var(--vy-yellow-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(251, 188, 2, 0.5);
+}
+.vp-vyroba__newsletter {
+  background: var(--vy-blue);
+  color: #fff;
+  border-radius: clamp(16px, 2.5vw, 28px);
+  padding: clamp(2.5rem, 6.25vw, 4.4rem);
+  margin-top: var(--vy-section);
+}
+.vp-vyroba__newsletter-inner {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  align-items: center;
+  gap: var(--vy-gap);
+}
+.vp-vyroba__newsletter-title {
+  color: #fff !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem) !important;
+  line-height: 1.15 !important;
+  margin: 0 0 0.75rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.vp-vyroba__newsletter .vp-accent {
+  color: var(--vy-yellow);
+}
+.vp-vyroba__newsletter p {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+.vp-vyroba__consent {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.vp-vyroba__mascot {
+  width: 100%;
+  max-width: 260px;
+  margin-inline: auto;
+}
+
+/* ================= Responsivita (BS4 breakpointy) ================= */
+@media (max-width: 991.98px) {
+  .vp-vyroba__hero,
+  .vp-vyroba__can,
+  .vp-vyroba__newsletter-inner {
+    grid-template-columns: 1fr;
+  }
+  .vp-vyroba__hero-media {
+    order: -1;
+    position: static;
+  }
+  .vp-vyroba__can-media {
+    order: -1;
+    max-width: 520px;
+    margin-inline: auto;
+  }
+  .vp-vyroba__can-title {
+    text-align: center;
+  }
+  .vp-vyroba__newsletter-inner {
+    text-align: center;
+  }
+  .vp-vyroba__mascot {
+    max-width: 200px;
+  }
+  .vp-vyroba__cols4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .vp-vyroba__steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .vp-vyroba__title {
+    font-size: 1.5rem !important;
+  }
+  .vp-vyroba__steps {
+    grid-template-columns: 1fr;
+  }
+  .vp-vyroba__cols4 {
+    grid-template-columns: 1fr;
+  }
+}
