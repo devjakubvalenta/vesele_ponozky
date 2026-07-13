@@ -798,17 +798,18 @@ section.order-recap {
   font-size: 0.875rem !important;
   color: var(--cx-text-muted) !important;
   line-height: 1.45 !important;
-  /* checkbox + text na jednom řádku (text se zalomí jen když se nevejde) */
-  display: flex !important;
-  align-items: flex-start;
-  gap: 0.55rem;
+  /* checkbox + text v jednom řádku: běžný inline tok.
+     (Flex tu NEfunguje — label, odkaz i hvězdička jsou sourozenci, roztrhne je do sloupců.) */
+  display: block !important;
   margin-bottom: 0 !important;
 }
 .order-recap .terms_checkboxes_div input[type="checkbox"] {
-  flex: 0 0 auto;
-  margin-top: 0.1rem;
+  vertical-align: middle;
+  margin-right: 0.5rem;
 }
-.order-recap .terms_checkboxes_div label {
+.order-recap .terms_checkboxes_div label,
+.order-recap .terms_checkboxes_div a {
+  display: inline !important;
   margin: 0 !important;
 }
 .order-recap .terms_checkboxes_div a {
@@ -857,6 +858,20 @@ section.order-recap {
 .main-order-form #submit-form[type="submit"]:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 36px rgba(19, 97, 207, 0.42) !important;
+}
+
+/* Spodní řádek rekapitulace: „Zpět do obchodu" vlevo dole, cena + Objednat vpravo na stejném řádku */
+.order-recap .order-footer {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem !important;
+}
+.order-recap .order-footer .back-to-eshop {
+  margin: 0 !important;
+  flex: 0 0 auto;
 }
 
 /* „Zpět do obchodu" — čistě textový odkaz bez rámečku/pozadí */
