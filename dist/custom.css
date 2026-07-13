@@ -3697,8 +3697,9 @@ body footer section.eshop-footer a:hover {
 /* ---- 3. PROČ SPOLUPRACOVAT (4 ikony) ---- */
 .vp-vo__cols4 {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: clamp(1.25rem, 3vw, 2.25rem);
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1.75rem, 4vw, 3rem) clamp(2rem, 5vw, 4.5rem);
+  margin-top: clamp(1.75rem, 4vw, 2.75rem);
   text-align: center;
 }
 .vp-vo__feature {
@@ -3734,7 +3735,7 @@ body footer section.eshop-footer a:hover {
 /* ---- 4. KONTAKT (formulář + info, jako O nás) ---- */
 .vp-vo__contact {
   display: grid;
-  grid-template-columns: 1.25fr 0.75fr;
+  grid-template-columns: 1fr 1fr;
   gap: clamp(1.5rem, 4vw, 3rem);
   margin-top: var(--vo-section);
   align-items: start;
@@ -3772,7 +3773,7 @@ body footer section.eshop-footer a:hover {
   padding: 0.75rem 1rem !important;
   border: 1px solid #cbd5e1 !important;
   border-radius: 12px !important;
-  background: #fff !important;
+  background: #f1f5f9 !important;
   color: var(--vo-text) !important;
   font-size: 1rem !important;
   margin-bottom: 0.85rem !important;
@@ -3958,10 +3959,6 @@ body footer section.eshop-footer a:hover {
   }
   .vp-vo__mascot {
     max-width: 200px;
-  }
-  .vp-vo__cols4 {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.75rem;
   }
 }
 @media (max-width: 767.98px) {
