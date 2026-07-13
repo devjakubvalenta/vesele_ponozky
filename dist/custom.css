@@ -572,22 +572,86 @@
 .main-order-form #block-service-20783 .info-warapper > .content > .clearfix {
   display: none !important;
 }
-/* samotná ikona (CSS background — panel nerenderuje <img>) */
-.main-order-form #block-service-20780 .card-title:not(.add-service-price)::before,
-.main-order-form #block-service-20783 .card-title:not(.add-service-price)::before {
+/* velká ikona vlevo přes celou výšku panelu (CSS background — panel nerenderuje <img>) */
+.main-order-form #block-service-20780 .info-warapper,
+.main-order-form #block-service-20783 .info-warapper {
+  position: relative;
+  padding: 0.9rem 1rem 0.9rem calc(92px + 2rem) !important;
+  min-height: calc(92px + 1.4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.main-order-form #block-service-20780 .info-warapper::before,
+.main-order-form #block-service-20783 .info-warapper::before {
   content: "";
-  flex: 0 0 auto;
-  width: 42px;
-  height: 42px;
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 92px;
+  height: 92px;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
 }
-.main-order-form #block-service-20780 .card-title:not(.add-service-price)::before {
+.main-order-form #block-service-20780 .info-warapper::before {
   background-image: url("https://www.exitshop.cz/files/310/files/baln%C3%A9.png");
 }
-.main-order-form #block-service-20783 .card-title:not(.add-service-price)::before {
+.main-order-form #block-service-20783 .info-warapper::before {
   background-image: url("https://www.exitshop.cz/files/310/files/d%C3%BD%C5%A1ko.png");
+}
+/* popis hned pod titulkem, zarovnaný vedle ikony (přebíjí globální odsazení panelu) */
+.main-order-form #block-service-20780 .card-body,
+.main-order-form #block-service-20783 .card-body {
+  padding: 0.25rem 0 0 !important;
+  border-top: none !important;
+  margin-top: 0.1rem !important;
+}
+
+/* Vybraná služba → modrý outline + světle modré pozadí.
+   Balné (#block-service-20780) je povinné → zvýrazněné trvale. */
+.main-order-form .additional-service-panel:has(input.additional_service:checked),
+.main-order-form #block-service-20780 {
+  border-color: var(--cx-accent) !important;
+  border-width: 1px !important;
+  box-shadow: 0 0 0 1px var(--cx-accent) !important;
+  background: #eff5fd !important;
+}
+/* Balné: dekorativní „zaškrtnutí" (reálný checkbox skrývá platforma) + neklikat na label,
+   ať skrytý checkbox nejde omylem přepnout */
+.main-order-form #block-service-20780 .card-title label {
+  pointer-events: none;
+}
+.main-order-form #block-service-20780 .card-title label::before {
+  content: "✓";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 0.4rem;
+  border-radius: 4px;
+  background: var(--cx-accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  vertical-align: middle;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 575.98px) {
+  .main-order-form #block-service-20780 .info-warapper,
+  .main-order-form #block-service-20783 .info-warapper {
+    padding-left: calc(64px + 1.6rem) !important;
+    min-height: calc(64px + 1.2rem);
+  }
+  .main-order-form #block-service-20780 .info-warapper::before,
+  .main-order-form #block-service-20783 .info-warapper::before {
+    width: 64px;
+    height: 64px;
+    left: 0.75rem;
+  }
 }
 
 
@@ -715,11 +779,16 @@
    ⚠️ V adminu odstranit „ZDARMA" z názvu metody, jinak bude zobrazené dvakrát. */
 .payment-select label[for="bank_transfer"] .label-shipping-text::after,
 .payment-select label[for="comgate"] .label-shipping-text::after {
-  content: "ZDARMA";
+  content: "Zdarma";
   margin-left: auto;
   font-weight: 800;
   white-space: nowrap;
-  color: var(--cx-text);
+  color: #31a831;
+}
+/* „ZDARMA" z nativního price_span (Google/Apple Pay) — zeleně; ceny (39 Kč…) zůstávají tmavé */
+.payment-select .label-shipping-text .price_span[data-normal="ZDARMA"],
+.payment-select .label-shipping-text .price_span[data-normal="ZDARMA"] + .price_span_currency {
+  color: #31a831 !important;
 }
 
 
