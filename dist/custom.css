@@ -3050,25 +3050,43 @@ body footer section.eshop-footer a:hover {
   padding: 0 !important;
 }
 .vp-vyroba__hero-media {
-  background: var(--vy-blue);
-  border-radius: var(--vy-radius);
-  padding: clamp(1rem, 3vw, 2rem);
-  box-shadow: var(--vy-shadow);
+  align-self: center;
 }
 .vp-vyroba__hero-img {
   width: 100%;
-  border-radius: calc(var(--vy-radius) - 6px);
 }
 
-/* Nativní %contact_form% — stylujeme obecné prvky uvnitř mount wrapperu */
-.vp-vyroba__form-mount input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+/* Nativní %contact_form% — bílá sekce (BG webu), šedá pole, zelené tlačítko.
+   Cílíme na výstup nativního formuláře uvnitř .vp-vyroba__form-mount. */
+.vp-vyroba__form-mount {
+  margin-top: 1.1rem;
+}
+/* skrýt nativní nadpis „Kontaktní formulář", šedý box a honeypoty (přílohu NEskrýváme) */
+.vp-vyroba__form-mount h2 {
+  display: none !important;
+}
+.vp-vyroba__form-mount .contact_form,
+.vp-vyroba__form-mount .contact_form.bg-light {
+  background: transparent !important;
+  padding: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.vp-vyroba__form-mount form > div:not(.messages):not(.controls) {
+  display: none !important;
+}
+.vp-vyroba__form-mount input[name^="halusky"] {
+  display: none !important;
+}
+/* pole – šedé pozadí, jemný okraj (soubory ponecháváme nativní) */
+.vp-vyroba__form-mount input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]),
 .vp-vyroba__form-mount textarea,
 .vp-vyroba__form-mount select {
   width: 100% !important;
   padding: 0.75rem 1rem !important;
-  border: 1px solid #cbd5e1 !important;
+  border: 1px solid #e2e8f0 !important;
   border-radius: 12px !important;
-  background: #fff !important;
+  background: #eff2f6 !important;
   color: var(--vy-text) !important;
   font-size: 1rem !important;
   margin-bottom: 0.85rem !important;
@@ -3083,33 +3101,54 @@ body footer section.eshop-footer a:hover {
 .vp-vyroba__form-mount select:focus {
   outline: none !important;
   border-color: var(--vy-blue) !important;
+  background: #fff !important;
   box-shadow: 0 0 0 3px rgba(19, 97, 207, 0.15) !important;
 }
-.vp-vyroba__form-mount label {
+.vp-vyroba__form-mount label,
+.vp-vyroba__form-mount .form-label {
   display: block;
   font-weight: 600;
   color: var(--vy-text);
-  margin-bottom: 0.3rem;
+  margin: 0 0 0.3rem;
   font-size: 0.9rem;
 }
+/* Jméno + E-mail vedle sebe, ostatní pole i tlačítko full-width */
+.vp-vyroba__form-mount .controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1rem;
+}
+.vp-vyroba__form-mount .controls > .form-group,
+.vp-vyroba__form-mount .controls > div {
+  grid-column: 1 / -1;
+  margin-bottom: 0.9rem !important;
+}
+.vp-vyroba__form-mount .controls > .form-group:has(#cform_name),
+.vp-vyroba__form-mount .controls > .form-group:has(#cform_email) {
+  grid-column: auto;
+}
+/* zelené tlačítko #31A831 – full-width */
+.vp-vyroba__form-mount .btn-send,
 .vp-vyroba__form-mount button,
-.vp-vyroba__form-mount .btn,
+.vp-vyroba__form-mount button[type="submit"],
 .vp-vyroba__form-mount input[type="submit"] {
-  display: inline-block !important;
-  padding: 0.8rem 1.7rem !important;
-  background: var(--vy-yellow) !important;
-  color: var(--vy-text) !important;
+  display: block !important;
+  width: 100% !important;
+  padding: 0.85rem 1.7rem !important;
+  background: #31a831 !important;
+  color: #fff !important;
   font-weight: 700 !important;
   border: none !important;
   border-radius: var(--vy-pill) !important;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(251, 188, 2, 0.4) !important;
+  margin-top: 0.5rem !important;
+  box-shadow: 0 6px 18px rgba(49, 168, 49, 0.35) !important;
   transition: transform 0.12s ease, background 0.15s ease;
 }
+.vp-vyroba__form-mount .btn-send:hover,
 .vp-vyroba__form-mount button:hover,
-.vp-vyroba__form-mount .btn:hover,
 .vp-vyroba__form-mount input[type="submit"]:hover {
-  background: var(--vy-yellow-dark) !important;
+  background: #2b942b !important;
   transform: translateY(-2px);
 }
 
