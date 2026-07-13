@@ -577,9 +577,9 @@
 .main-order-form .additional-service-row .additional-service-panel .content {
   background: transparent !important;
 }
-/* nativní malý obrázek služby v titulku (platforma ho renderuje, když má produkt služby
-   obrázek v adminu) — skrýt, velkou ikonu dodává naše CSS níže */
-.main-order-form .additional-service-panel .card-title img {
+/* nativní malý obrázek služby (platforma ho renderuje, když má produkt služby obrázek
+   v adminu; přesné místo v DOM kolísá) — skrýt kdekoli v panelu, velkou ikonu dodává naše CSS */
+.main-order-form .additional-service-panel img {
   display: none !important;
 }
 
@@ -914,8 +914,9 @@ section.order-recap {
   font-size: 0.875rem !important;
   font-weight: 600 !important;
   color: var(--cx-text-muted) !important;
-  display: inline-block !important;
-  margin-right: 0.5rem !important;
+  /* „Cena celkem" nad částkou (jako v návrhu), blok stojí vedle tlačítka */
+  display: block !important;
+  margin-right: 0 !important;
 }
 .order-recap .order-recap-total-price-value {
   font-size: 2rem !important;
@@ -951,18 +952,35 @@ section.order-recap {
   box-shadow: 0 14px 36px rgba(19, 97, 207, 0.42) !important;
 }
 
-/* Spodní řádek rekapitulace: „Zpět do obchodu" vlevo dole, cena + Objednat vpravo na stejném řádku */
+/* Souhlasy sedí v levém col-sm-6 (pravý sloupec je prázdný) → plná šířka, ať se texty nelámou brzy */
+.order-recap .row > [class*="col-"]:has(.terms_checkboxes_div) {
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+}
+
+/* Spodní řádek rekapitulace (row.order-footer, 2× col-sm-6): „Zpět do obchodu" vlevo,
+   Cena celkem + Objednat vedle sebe u pravého kraje.
+   ⚠️ Žádný gap na .order-footer — je to bootstrap .row (50 % + 50 %), gap shodí pravý sloupec dolů. */
 .order-recap .order-footer {
-  display: flex !important;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 1rem !important;
 }
 .order-recap .order-footer .back-to-eshop {
   margin: 0 !important;
-  flex: 0 0 auto;
+}
+.order-recap .order-footer > .col-sm-6.text-end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem 1.5rem;
+}
+.order-recap .order-footer .order-recap-total-price {
+  margin: 0 !important;
+}
+/* technické inputy (honeypot, časové razítko) ať nevstupují do flex řádku — skryté se odesílají dál */
+.order-recap .order-footer input[name^="halusky"],
+.order-recap .order-footer input[name="c_form_time"] {
+  display: none !important;
 }
 
 /* „Zpět do obchodu" — čistě textový odkaz bez rámečku/pozadí, menší písmo (~jako text tlačítka) */
