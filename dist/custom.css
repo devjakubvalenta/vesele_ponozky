@@ -847,10 +847,13 @@ header {
   text-decoration: none;
 }
 
-/* Odpočet %countdown_mini% (widget .es-countdown) — kompaktně do lišty */
+/* Odpočet v liště — vykresluje src/scripts/countdown-bar.js (platforma %countdown%
+   v liště nerozbaluje). Kontejner .es-countdown, číselné boxy .vp-cd__box. */
 #notification-bar .es-countdown {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 0.3rem;
   padding: 0 !important;
   margin: 0 !important;
@@ -861,8 +864,34 @@ header {
 #notification-bar .es-countdown strong {
   margin: 0 0.25rem 0 0 !important;
   font-weight: 700;
+  white-space: nowrap;
 }
-#notification-bar .es-countdown span {
+/* box = číslo nad jednotkou */
+#notification-bar .vp-cd__box {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  min-width: auto !important;
+  padding: 0.14rem 0.4rem !important;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+}
+#notification-bar .vp-cd__box b {
+  font-weight: 800;
+  color: #fbbc02;
+  font-size: 0.95rem;
+}
+#notification-bar .vp-cd__box i {
+  font-style: normal;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.6rem;
+  text-transform: lowercase;
+  margin-top: 1px;
+}
+/* fallback pro nativní %countdown% (kdyby se použil jinde) */
+#notification-bar .es-countdown > span:not(.vp-cd__box) {
   min-width: auto !important;
   padding: 0.12rem 0.45rem !important;
   background: rgba(255, 255, 255, 0.16);
