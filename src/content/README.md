@@ -9,6 +9,11 @@ přes CDN (scope dle obalové třídy).
 | Soubor | CMS stránka v admin | URL | Scope CSS | Stav |
 |--------|---------------------|-----|-----------|------|
 | `onas.html` | CMS a blog → **O nás** | `cms/56952-o-nas` | `.vp-onas` (`src/css/40-onas.css`) | ⏳ vkládá uživatel (zdrojový `</>` režim) |
+| `gdpr.html` | CMS a blog → **GDPR** | `cms/60951-gdpr` | `.vp-legal` (`src/css/80-legal.css`) | ⏳ vkládá uživatel (zdrojový `</>` režim) |
+| `vop.html` | CMS a blog → **Všeobecné obchodní podmínky** | `cms/60960-vseobecne-obchodni-podminky` | `.vp-legal` (`src/css/80-legal.css`) | ⏳ vkládá uživatel (zdrojový `</>` režim) |
+
+> `gdpr.html` i `vop.html` sdílejí jeden stylopis `src/css/80-legal.css` (scope `.vp-legal`) —
+> jsou to vizuálně stejné textové/právní stránky, liší se jen obsahem.
 
 ## Jak nasadit
 

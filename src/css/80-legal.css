@@ -1,0 +1,215 @@
+/* CMS stránky „GDPR" + „Všeobecné obchodní podmínky" (VOP) — brandový vzhled
+   (modrá #1361cf + žlutá #fbbc02). Sdílený styl pro obě právní/textové stránky.
+   Scope: vše pod .vp-legal (markup: src/content/gdpr.html, src/content/vop.html).
+   Struktura: vycentrovaný modrý titul · tučný podnadpis · modré sekční nadpisy (vlevo)
+              · čitelný odstavcový text · odrážkové/číslované seznamy · tučné run-in
+              vsuvky · newsletter (placeholder jako O nás). Patička je globální. */
+
+.vp-legal {
+  --lg-blue: #1361cf;
+  --lg-blue-dark: #0f4ea8;
+  --lg-yellow: #fbbc02;
+  --lg-yellow-dark: #e0a800;
+  --lg-text: #0f172a;
+  --lg-muted: #475569;
+  --lg-blue-soft: #eaf1fc;
+  --lg-radius: 18px;
+  --lg-pill: 999px;
+  --lg-gap: clamp(1.25rem, 3vw, 2.5rem);
+  --lg-section: clamp(1.75rem, 4.5vw, 3rem);
+
+  color: var(--lg-text);
+  overflow-x: clip;
+  box-sizing: border-box;
+}
+.vp-legal *,
+.vp-legal *::before,
+.vp-legal *::after {
+  box-sizing: border-box;
+}
+.vp-legal img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Skrýt nativní CMS titul nad naším blokem (vlastní <h1> je uvnitř) */
+.content:has(> .vp-legal) > h1 {
+  display: none;
+}
+
+/* ---- Titul (h1) — modrý, tučný, vycentrovaný ---- */
+.vp-legal__title {
+  color: var(--lg-blue) !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.8rem, 4.5vw, 2.9rem) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.01em;
+  text-align: center;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: clamp(1rem, 3vw, 2rem) 0 1.4rem !important;
+}
+
+/* ---- Tučný podnadpis pod titulem (GDPR: „PRAVIDLA OCHRANY SOUKROMÍ…") ---- */
+.vp-legal__subtitle {
+  font-weight: 800 !important;
+  color: var(--lg-text) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.45 !important;
+  font-size: clamp(0.9rem, 1.5vw, 1.02rem) !important;
+  margin: 0 0 1.6rem !important;
+}
+
+/* ---- Úvodní blok (VOP: identifikace firmy pod titulem) ---- */
+.vp-legal__intro {
+  margin: 0 0 var(--lg-section) !important;
+}
+.vp-legal .vp-legal__intro p {
+  margin: 0 0 0.35rem;
+}
+
+/* ---- Sekční nadpisy (h2) — modré, tučné, vlevo ---- */
+.vp-legal__h2 {
+  color: var(--lg-blue) !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.2rem, 2.6vw, 1.6rem) !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.005em;
+  text-align: left;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: var(--lg-section) 0 0.9rem !important;
+}
+
+/* ---- Tučný run-in mezinadpis (GDPR „Funkční:", „Abychom udrželi…") ---- */
+.vp-legal__lead {
+  font-weight: 700 !important;
+  color: var(--lg-text) !important;
+  margin: 1.15rem 0 0.4rem !important;
+  line-height: 1.5;
+}
+
+/* ---- Odstavce / odkazy / zvýraznění ---- */
+.vp-legal p {
+  line-height: 1.7;
+  margin: 0 0 0.95rem;
+  color: var(--lg-muted);
+}
+.vp-legal strong {
+  color: var(--lg-text);
+}
+.vp-legal a {
+  color: var(--lg-blue);
+  text-decoration: none;
+  word-break: break-word;
+}
+.vp-legal a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Seznamy: odrážkové (ul) + číslované (ol) ---- */
+.vp-legal ul,
+.vp-legal ol {
+  margin: 0.2rem 0 1rem;
+  padding-left: 1.5rem;
+  color: var(--lg-muted);
+}
+.vp-legal li {
+  line-height: 1.7;
+  margin: 0 0 0.45rem;
+}
+.vp-legal ul {
+  list-style: disc;
+}
+.vp-legal ol {
+  list-style: decimal;
+}
+.vp-legal li::marker {
+  color: var(--lg-blue);
+}
+/* vnořené seznamy */
+.vp-legal li > ul,
+.vp-legal li > ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ---- Žluté pilulkové tlačítko (newsletter CTA) ---- */
+.vp-legal__btn {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.7rem 1.4rem;
+  background: var(--lg-yellow);
+  color: var(--lg-text) !important;
+  font-weight: 700;
+  border-radius: var(--lg-pill);
+  border: none;
+  cursor: pointer;
+  word-break: break-word;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+  box-shadow: 0 6px 18px rgba(251, 188, 2, 0.4);
+}
+.vp-legal__btn:hover {
+  background: var(--lg-yellow-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(251, 188, 2, 0.5);
+}
+
+/* ---- Newsletter (modrý blok, placeholder jako O nás) ---- */
+.vp-legal__newsletter {
+  background: var(--lg-blue);
+  color: #fff;
+  border-radius: clamp(16px, 2.5vw, 28px);
+  padding: clamp(2.5rem, 6.25vw, 4.4rem);
+  margin-top: var(--lg-section);
+}
+.vp-legal__newsletter-inner {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  align-items: center;
+  gap: var(--lg-gap);
+}
+.vp-legal__newsletter-title {
+  color: #fff !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem) !important;
+  line-height: 1.15 !important;
+  margin: 0 0 0.75rem !important;
+  text-align: left;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.vp-legal__newsletter .vp-accent {
+  color: var(--lg-yellow);
+}
+.vp-legal__newsletter p {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+.vp-legal__consent {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.vp-legal__mascot {
+  width: 100%;
+  max-width: 260px;
+  margin-inline: auto;
+}
+
+/* ================= Responsivita (BS4 breakpointy) ================= */
+@media (max-width: 991.98px) {
+  .vp-legal__newsletter-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .vp-legal__newsletter-title {
+    text-align: center;
+  }
+  .vp-legal__mascot {
+    max-width: 200px;
+  }
+}
