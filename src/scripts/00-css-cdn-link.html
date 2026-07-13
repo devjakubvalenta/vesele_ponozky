@@ -19,4 +19,9 @@
   <script> browser ignoruje (CSS se nenačte). Do <script> patří jen JS;
   <link>/<style> se vkládají bez něj.
 -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/dist/custom.css">
+<!-- Aktuálně v admin: PINNUTÁ verze (jistá invalidace cache). Po každém
+     pushi, který mění dist/custom.css, vyměnit hash v admin položce „github".
+     Zjištěno 2026-07-13: purge @main na jsDelivr nezabíral ani po opakování,
+     proto pin. @main varianta níže v komentáři = zero-touch alternativa. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@8a14ac2/dist/custom.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/dist/custom.css"> -->
