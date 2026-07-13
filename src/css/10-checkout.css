@@ -777,10 +777,19 @@
   white-space: nowrap;
   color: #31a831;
 }
-/* „ZDARMA" z nativního price_span (Google/Apple Pay) — zeleně; ceny (39 Kč…) zůstávají tmavé */
+/* „ZDARMA" z nativního price_span (Google/Apple Pay) — zeleně a jako „Zdarma":
+   text v spanu neumí CSS přepsat → skrýt (font-size:0) a dosadit ::after. Ceny (39 Kč…) zůstávají tmavé. */
 .payment-select .label-shipping-text .price_span[data-normal="ZDARMA"],
 .payment-select .label-shipping-text .price_span[data-normal="ZDARMA"] + .price_span_currency {
   color: #31a831 !important;
+  font-size: 0 !important;
+}
+.payment-select .label-shipping-text .price_span[data-normal="ZDARMA"]::after {
+  content: "Zdarma";
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #31a831;
+  white-space: nowrap;
 }
 
 
@@ -855,7 +864,8 @@ section.order-recap {
 }
 
 .order-recap .terms_checkboxes_div {
-  padding: 0.45rem 0 !important;
+  /* levý padding + záporný margin checkboxu = zalomený řádek se zarovná pod text, ne pod checkbox */
+  padding: 0.45rem 0 0.45rem 1.75rem !important;
   font-size: 0.875rem !important;
   color: var(--cx-text-muted) !important;
   line-height: 1.45 !important;
@@ -866,6 +876,7 @@ section.order-recap {
 }
 .order-recap .terms_checkboxes_div input[type="checkbox"] {
   vertical-align: middle;
+  margin-left: -1.75rem;
   margin-right: 0.5rem;
 }
 .order-recap .terms_checkboxes_div label,
@@ -935,13 +946,14 @@ section.order-recap {
   flex: 0 0 auto;
 }
 
-/* „Zpět do obchodu" — čistě textový odkaz bez rámečku/pozadí */
+/* „Zpět do obchodu" — čistě textový odkaz bez rámečku/pozadí, menší písmo (~jako text tlačítka) */
 .back-to-eshop .btn.btn-light.btn-lg {
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
   padding: 0 !important;
   font-weight: 600 !important;
+  font-size: 1rem !important;
   color: var(--cx-accent) !important;
 }
 .back-to-eshop .btn.btn-light.btn-lg:hover {
