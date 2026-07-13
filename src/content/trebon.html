@@ -1,0 +1,91 @@
+<!--
+  Stránka „Výroba v Třeboni" (CMS) — vkládá se do: Administrace → CMS a blog → Výroba v Třeboni
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor sanitizuje).
+  Odznak „Vyrobeno s láskou v Třeboni" = CSS překryv (ikona Třeboň01 + text) na čisté fotce třeboň.jpg.
+  Newsletter = kopie z O nás. Styl dodává 70-trebon.css (scope .vp-tr) přes CDN.
+-->
+<div class="vp-tr">
+
+  <!-- 1. HERO (citace) -->
+  <div class="vp-tr__hero">
+    <h1 class="vp-tr__hero-quote">„Žádná cesta přes půl světa. Naše ponožky ujedou z pletárny do skladu pouze jedno patro výtahem."</h1>
+    <p class="vp-tr__hero-sub">Tato jediná věta dokonale vystihuje, jak v Třeboni funguje naše výroba. Celý proces od prvního návrhu až po zabalení do krabice se odehrává pod jednou jedinou střechou. Žádná zbytečná logistika, žádné kamiony křižující Evropu, žádná anonymní velkovýroba. Jen poctivé řemeslo, na které si můžeme každý den sáhnout.</p>
+  </div>
+
+  <!-- 2. DVĚ FOTKY (dílna + Třeboň + odznak) -->
+  <div class="vp-tr__photos">
+    <div class="vp-tr__photo">
+      <img src="https://www.exitshop.cz/files/310/files/T%C5%99ebo%C5%88-v%C3%BDroba.jpg" alt="Naše pletařská dílna v Třeboni" loading="lazy" />
+    </div>
+    <div class="vp-tr__photo">
+      <img src="https://www.exitshop.cz/files/310/files/t%C5%99ebo%C5%88.jpg" alt="Třeboň z ptačí perspektivy" loading="lazy" />
+      <div class="vp-tr__badge">
+        <img class="vp-tr__badge-ic" src="https://www.exitshop.cz/files/310/files/T%C5%99ebo%C5%8801.png" alt="" loading="lazy" />
+        <span class="vp-tr__badge-text">Vyrobeno<br>s láskou<br>v Třeboni!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. CO ZNAMENÁ VÝROBA POD JEDNOU STŘECHOU -->
+  <div class="vp-tr__section">
+    <h2 class="vp-tr__h2">Co znamená výroba pod jednou střechou v praxi?</h2>
+    <p class="vp-tr__section-intro">Kompletní výrobní řetězec v jedné budově nám dává obrovskou svobodu, ale především absolutní kontrolu nad výslednou kvalitou. Jak to u nás probíhá?</p>
+    <div class="vp-tr__cols3">
+      <div class="vp-tr__feature">
+        <img class="vp-tr__feature-icon" src="https://www.exitshop.cz/files/310/files/T%C5%99ebo%C5%8802.png" alt="" loading="lazy" />
+        <h3 class="vp-tr__feature-title">Prvotřídní materiál na začátku</h3>
+        <p>Základem naší práce je pečlivě vybraná příze. Nekupujeme hotové anonymní produkty – sami si volíme materiál, ze kterého pleteme, abychom měli jistotu té nejvyšší kvality.</p>
+      </div>
+      <div class="vp-tr__feature">
+        <img class="vp-tr__feature-icon" src="https://www.exitshop.cz/files/310/files/T%C5%99ebo%C5%8803.png" alt="" loading="lazy" />
+        <h3 class="vp-tr__feature-title">Technologická preciznost na strojích</h3>
+        <p>Naše pletací stroje programujeme s milimetrovou přesností. Každý typ vazby, zesílená pata či špička jsou výsledkem desítek hodin ladění a zkoušení.</p>
+      </div>
+      <div class="vp-tr__feature">
+        <img class="vp-tr__feature-icon" src="https://www.exitshop.cz/files/310/files/T%C5%99ebo%C5%8804.png" alt="" loading="lazy" />
+        <h3 class="vp-tr__feature-title">Poctivá ruční práce na konci</h3>
+        <p>Jakmile ponožka sjede ze stroje, nastupují lidské ruce a smysl pro detail. Každý pár projde důkladnou kontrolou, než je sepnut a připraven k zabalení.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. PROČ JE LOKÁLNÍ VÝROBA VÝHODOU (+ CTA) -->
+  <div class="vp-tr__section">
+    <h2 class="vp-tr__h2">Proč je pro vás naše lokální výroba výhodou?</h2>
+    <p class="vp-tr__section-intro">To, že nevyrábíme na druhém konci světa, přináší našim zákazníkům hned několik obrovských výhod:</p>
+    <div class="vp-tr__cols3">
+      <div class="vp-tr__feature">
+        <img class="vp-tr__feature-icon" src="https://www.exitshop.cz/files/310/files/T%C5%99ebo%C5%8805.png" alt="" loading="lazy" />
+        <h3 class="vp-tr__feature-title">Nekompromisní kvalita pod osobním dohledem</h3>
+        <p>Na rozdíl od firem, které jen přeprodávají dovezené zboží, my vidíme každý krok výroby. Pokud se něco nezdá, dokážeme to okamžitě zastavit a napravit.</p>
+      </div>
+      <div class="vp-tr__feature">
+        <img class="vp-tr__feature-icon" src="https://www.exitshop.cz/files/310/files/T%C5%99ebo%C5%8806.png" alt="" loading="lazy" />
+        <h3 class="vp-tr__feature-title">Extrémní rychlost a flexibilita</h3>
+        <p>Když si zákazník přeje nový motiv nebo speciální kolekci, nemusíme čekat měsíce na dopravu z Asie. Dokážeme ho navrhnout, uplést a expedovat v řádu týdnů.</p>
+      </div>
+      <div class="vp-tr__feature">
+        <img class="vp-tr__feature-icon" src="https://www.exitshop.cz/files/310/files/T%C5%99ebo%C5%8807.png" alt="" loading="lazy" />
+        <h3 class="vp-tr__feature-title">Skutečná udržitelnost</h3>
+        <p>Hodně firem o ekologii jen mluví, my ji žijeme přirozeně. Tím, že vyrábíme lokálně, snižujeme přepravu materiálů a produktů na naprosté minimum.</p>
+      </div>
+    </div>
+    <p class="vp-tr__cta">Když si obléknete ponožky od nás, neoblékáte si jen kus látky z globálního řetězce. Obléknete si produkt, který vznikl lokálně, s láskou k řemeslu – a s vědomím, že nejdelší trasa, kterou před cestou k vám urazil, byla ta v našem firemním výtahu.</p>
+  </div>
+
+  <!-- 5. NEWSLETTER (kopie z O nás) -->
+  <div class="vp-tr__newsletter">
+    <div class="vp-tr__newsletter-inner">
+      <div class="vp-tr__newsletter-text">
+        <h2 class="vp-tr__newsletter-title">NEZMEŠKEJTE ŽÁDNÉ NOVINKY A ZÍSKEJTE <span class="vp-accent">SLEVU 15%</span>!</h2>
+        <p>Přihlaste se k odběru našeho newsletteru a získejte slevu 15 % na váš první nákup veselých ponožek.</p>
+        <a class="vp-tr__btn" href="#">PŘIHLÁSIT SE K ODBĚRU</a>
+        <p class="vp-tr__consent">Odběrový formulář spustíme po napojení e-mailingu.</p>
+      </div>
+      <div class="vp-tr__newsletter-media">
+        <img class="vp-tr__mascot" src="https://www.exitshop.cz/files/310/files/maskot.svg" alt="Maskot Veselé ponožky" loading="lazy" />
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,277 @@
+/* CMS stránka „Výroba v Třeboni" — brandový vzhled (modrá #1361cf + žlutá #fbbc02).
+   Scope: vše pod .vp-tr (markup: src/content/trebon.html). Nedosáhne na zbytek webu.
+   Sekce: hero (citace, modrý blok) · dvě fotky (dílna + Třeboň + odznak) · výroba pod střechou (3 ikony)
+          · proč lokální výroba (3 ikony + CTA) · newsletter (jako O nás). Patička globální. */
+
+.vp-tr {
+  --tr-blue: #1361cf;
+  --tr-blue-dark: #0f4ea8;
+  --tr-yellow: #fbbc02;
+  --tr-yellow-dark: #e0a800;
+  --tr-text: #0f172a;
+  --tr-muted: #475569;
+  --tr-blue-soft: #eaf1fc;
+  --tr-radius: 18px;
+  --tr-pill: 999px;
+  --tr-gap: clamp(1.25rem, 3vw, 2.5rem);
+  --tr-section: clamp(2.25rem, 6vw, 4rem);
+  --tr-shadow: 0 12px 40px rgba(15, 23, 42, 0.1);
+
+  color: var(--tr-text);
+  overflow-x: clip;
+  box-sizing: border-box;
+}
+.vp-tr *,
+.vp-tr *::before,
+.vp-tr *::after {
+  box-sizing: border-box;
+}
+.vp-tr img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.vp-tr p {
+  line-height: 1.65;
+  margin: 0 0 0.9rem;
+  color: var(--tr-muted);
+}
+.vp-tr a {
+  text-decoration: none;
+  color: var(--tr-blue);
+}
+.content:has(> .vp-tr) > h1 {
+  display: none;
+}
+
+/* Společné: sekční nadpisy + intro/outro */
+.vp-tr__h2 {
+  color: var(--tr-blue) !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.35rem, 3.2vw, 2.1rem) !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.01em;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 0 0.75rem !important;
+  text-align: center;
+}
+.vp-tr__section {
+  margin-top: var(--tr-section);
+  text-align: center;
+}
+.vp-tr__section-intro {
+  max-width: 780px;
+  margin: 0 auto clamp(1.75rem, 4vw, 2.75rem) !important;
+  color: var(--tr-muted);
+}
+.vp-tr__section-outro {
+  max-width: 860px;
+  margin: clamp(1.75rem, 4vw, 2.75rem) auto 0 !important;
+  color: var(--tr-muted);
+}
+
+/* ---- 1. HERO (citace, modrý blok) ---- */
+.vp-tr__hero {
+  background: var(--tr-blue);
+  color: #fff;
+  border-radius: clamp(16px, 2.5vw, 28px);
+  padding: clamp(2rem, 5.5vw, 3.75rem);
+  text-align: center;
+  margin-top: clamp(1rem, 3vw, 2rem);
+}
+.vp-tr__hero-quote {
+  color: #fff !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.3rem, 3vw, 2.05rem) !important;
+  line-height: 1.3 !important;
+  letter-spacing: -0.01em;
+  max-width: 920px;
+  margin: 0 auto 1.1rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.vp-tr__hero-sub {
+  color: rgba(255, 255, 255, 0.9) !important;
+  max-width: 840px;
+  margin: 0 auto !important;
+  font-size: 1rem;
+}
+
+/* ---- 2. DVĚ FOTKY (dílna + Třeboň + odznak) ---- */
+.vp-tr__photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  margin-top: var(--tr-section);
+}
+.vp-tr__photo {
+  position: relative;
+  border-radius: var(--tr-radius);
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  box-shadow: var(--tr-shadow);
+}
+.vp-tr__photo > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Odznak „Vyrobeno s láskou v Třeboni" v rohu */
+.vp-tr__badge {
+  position: absolute;
+  right: clamp(10px, 1.6vw, 18px);
+  bottom: clamp(10px, 1.6vw, 18px);
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: var(--tr-yellow);
+  border-radius: 14px;
+  padding: 0.5rem 0.85rem 0.5rem 0.55rem;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.25);
+}
+.vp-tr__badge-ic {
+  width: clamp(30px, 4vw, 42px);
+  height: auto;
+  background: #fff;
+  border-radius: 50%;
+  padding: 5px;
+  flex: 0 0 auto;
+}
+.vp-tr__badge-text {
+  font-weight: 800;
+  font-size: clamp(0.6rem, 1vw, 0.78rem);
+  line-height: 1.12;
+  color: var(--tr-text);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: left;
+}
+
+/* ---- 3+4. FEATURE GRID (3 ikony) ---- */
+.vp-tr__cols3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3.5vw, 2.75rem);
+  margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
+  text-align: center;
+}
+.vp-tr__feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.vp-tr__feature-icon {
+  height: clamp(64px, 7.5vw, 82px) !important;
+  width: auto;
+  margin-bottom: 0.9rem;
+}
+.vp-tr__feature-title {
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  color: var(--tr-text) !important;
+  margin: 0 0 0.5rem !important;
+  min-height: 2.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.vp-tr__feature p {
+  color: var(--tr-muted) !important;
+  font-size: 0.95rem;
+}
+.vp-tr__cta {
+  max-width: 860px;
+  margin: clamp(1.75rem, 4vw, 2.75rem) auto 0 !important;
+  text-align: center;
+  color: var(--tr-blue) !important;
+  font-weight: 700;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.6;
+}
+
+/* ---- 5. NEWSLETTER (modrý blok, jako O nás) ---- */
+.vp-tr__btn {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.7rem 1.4rem;
+  background: var(--tr-yellow);
+  color: var(--tr-text) !important;
+  font-weight: 700;
+  border-radius: var(--tr-pill);
+  border: none;
+  cursor: pointer;
+  word-break: break-word;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+  box-shadow: 0 6px 18px rgba(251, 188, 2, 0.4);
+}
+.vp-tr__btn:hover {
+  background: var(--tr-yellow-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(251, 188, 2, 0.5);
+}
+.vp-tr__newsletter {
+  background: var(--tr-blue);
+  color: #fff;
+  border-radius: clamp(16px, 2.5vw, 28px);
+  padding: clamp(2.5rem, 6.25vw, 4.4rem);
+  margin-top: var(--tr-section);
+}
+.vp-tr__newsletter-inner {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  align-items: center;
+  gap: var(--tr-gap);
+}
+.vp-tr__newsletter-title {
+  color: #fff !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem) !important;
+  line-height: 1.15 !important;
+  margin: 0 0 0.75rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.vp-tr__newsletter .vp-accent {
+  color: var(--tr-yellow);
+}
+.vp-tr__newsletter p {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+.vp-tr__consent {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.vp-tr__mascot {
+  width: 100%;
+  max-width: 260px;
+  margin-inline: auto;
+}
+
+/* ================= Responsivita (BS4 breakpointy) ================= */
+@media (max-width: 991.98px) {
+  .vp-tr__newsletter-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .vp-tr__mascot {
+    max-width: 200px;
+  }
+}
+@media (max-width: 767.98px) {
+  .vp-tr__photos {
+    grid-template-columns: 1fr;
+  }
+  .vp-tr__cols3 {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
