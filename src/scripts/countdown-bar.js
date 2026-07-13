@@ -10,7 +10,7 @@
      • Obsah položky (JS musí být v <script>):
          <script src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/src/scripts/countdown-bar.js"></script>
 
-  Styl dodává 20-header.css (#notification-bar .es-countdown / .vp-cd__box) přes CDN.
+  Styl dodává 20-header.css (#notification-bar .es-countdown) přes CDN.
 
   ⚠️ Datum konce akce je zde natvrdo (TARGET). Když v adminu změníte konec akce,
      upravte TARGET i tady a `git push` (nebo si to řekneme a upravím).
@@ -20,31 +20,22 @@
 
   // Konec akce — admin: 14.08.2026 15:00 (Praha, letní čas = +02:00)
   var TARGET = new Date("2026-08-14T15:00:00+02:00").getTime();
-  var LABEL = "Zbývá už jen";
   var ENDED = "Akce byla ukončena.";
 
   function two(n) { return (n < 10 ? "0" : "") + n; }
 
-  function box(value, unit) {
-    return '<span class="vp-cd__box"><b>' + value + "</b><i>" + unit + "</i></span>";
-  }
-
   function tick(cd) {
     var diff = TARGET - Date.now();
     if (diff <= 0) {
-      cd.innerHTML = "<strong>" + ENDED + "</strong>";
+      cd.textContent = ENDED;
       return false; // konec — zastavit interval
     }
     var s = Math.floor(diff / 1000);
     var d = Math.floor(s / 86400); s -= d * 86400;
     var h = Math.floor(s / 3600);  s -= h * 3600;
     var m = Math.floor(s / 60);    s -= m * 60;
-    cd.innerHTML =
-      "<strong>" + LABEL + "</strong>" +
-      box(d, d === 1 ? "den" : (d >= 2 && d <= 4 ? "dny" : "dní")) +
-      box(two(h), "h") +
-      box(two(m), "min") +
-      box(two(s), "s");
+    // formát DD:HH:MM:SS (oddělovač „ - " před odpočtem řeší CSS ::before)
+    cd.textContent = two(d) + ":" + two(h) + ":" + two(m) + ":" + two(s);
     return true;
   }
 

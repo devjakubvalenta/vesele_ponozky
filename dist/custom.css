@@ -836,17 +836,17 @@ header {
 
 
 /* Promo / notifikační lišta s odpočtem (mimo <header>, proto literály místo var).
-   Tmavě modrá kvůli čitelnosti bílého textu; text bílý + za ním odpočet %countdown_mini%. */
+   Žlutá lišta, tmavě modrý text; odpočet inline hned za textem: „… 50% - 00:12:39:40". */
 #notification-bar {
-  background: #0f4ea8 !important;
-  color: #ffffff !important;
+  background: #fbbc02 !important;
+  color: #12306e !important;
 }
 
 #notification-bar .container {
   position: relative;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.25rem 0.9rem;
+  gap: 0.15rem 0.5rem;
   padding-top: 0.45rem !important;
   padding-bottom: 0.45rem !important;
 }
@@ -857,14 +857,14 @@ header {
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.3rem 0.85rem;
+  gap: 0.1rem 0.5rem;
 }
 
 #notification-bar #notification-bar-text,
 #notification-bar #notification-bar-text p,
 #notification-bar #notification-bar-text * ,
 #notification-bar a {
-  color: #ffffff !important;
+  color: #12306e !important;
 }
 
 #notification-bar #notification-bar-text p {
@@ -886,63 +886,27 @@ header {
   line-height: 1;
 }
 #notification-bar #notification-bar-close a {
-  color: rgba(255, 255, 255, 0.85) !important;
+  color: rgba(18, 48, 110, 0.75) !important;
   font-size: 1.25rem;
   text-decoration: none;
 }
 
 /* Odpočet v liště — vykresluje src/scripts/countdown-bar.js (platforma %countdown%
-   v liště nerozbaluje). Kontejner .es-countdown, číselné boxy .vp-cd__box. */
+   v liště nerozbaluje). Prostý inline formát DD:HH:MM:SS, stejný styl jako text. */
 #notification-bar .es-countdown {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.3rem;
+  display: inline;
   padding: 0 !important;
   margin: 0 !important;
-  font-size: clamp(0.82rem, 2vw, 1rem) !important;
-  font-weight: 700;
-  color: #ffffff;
-}
-#notification-bar .es-countdown strong {
-  margin: 0 0.25rem 0 0 !important;
-  font-weight: 700;
+  font-size: clamp(0.78rem, 2vw, 0.98rem) !important;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #12306e !important;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-/* box = číslo nad jednotkou */
-#notification-bar .vp-cd__box {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1;
-  min-width: auto !important;
-  padding: 0.14rem 0.4rem !important;
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 6px;
-}
-#notification-bar .vp-cd__box b {
-  font-weight: 800;
-  color: #fbbc02;
-  font-size: 0.95rem;
-}
-#notification-bar .vp-cd__box i {
-  font-style: normal;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.6rem;
-  text-transform: lowercase;
-  margin-top: 1px;
-}
-/* fallback pro nativní %countdown% (kdyby se použil jinde) */
-#notification-bar .es-countdown > span:not(.vp-cd__box) {
-  min-width: auto !important;
-  padding: 0.12rem 0.45rem !important;
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 6px;
-  font-weight: 800;
-  color: #fbbc02;
-  text-align: center;
+/* oddělovač „ - " před odpočtem */
+#notification-bar .es-countdown::before {
+  content: "- ";
 }
 
 /* Pruh s menu = plná brandová modrá */
