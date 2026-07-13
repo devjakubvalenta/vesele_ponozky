@@ -3188,15 +3188,20 @@ body footer section.eshop-footer a:hover {
   min-width: 0;
 }
 .vp-vyroba__feature-icon {
-  width: clamp(56px, 7vw, 72px);
-  height: auto;
+  height: clamp(54px, 6vw, 64px) !important;
+  width: auto;
   margin-bottom: 0.9rem;
 }
 .vp-vyroba__feature-title {
   font-size: 1.05rem !important;
   font-weight: 800 !important;
+  line-height: 1.25 !important;
   color: var(--vy-text) !important;
   margin: 0 0 0.5rem !important;
+  min-height: 2.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-transform: none !important;
   border: 0 !important;
   padding: 0 !important;
