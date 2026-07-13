@@ -2386,6 +2386,11 @@ header .header-shop-basket-button #hover-cart #hover-cart-footer .to-cart .btn.b
 .content .side-banners {
   --hp-radius: 16px; /* šablona nezaobluje nic; drží vlastní škálu 8–18px (header/onas) */
   --hp-gap: 0px;     /* bez mezer — kompozice jako jeden celistvý blok (gutter šablony je 24px, kdyby se mezery měly vrátit, vrátit i vnitřní paddingy sloupců níže) */
+  /* Overlay Nadpis/Podnadpis (viz sekce níže); zelená = produktové CTA (--pl-green v 25-products.css) */
+  --hp-pad: clamp(14px, 4.5cqw, 30px);
+  --hp-title: #0f172a;
+  --hp-green: #2e9e44;
+  --hp-green-dark: #23843a;
 }
 
 /* Čtverec: šířku slidu určuje owl inline na .owl-item, výška se dopočítá z poměru.
@@ -2409,13 +2414,75 @@ header .header-shop-basket-button #hover-cart #hover-cart-footer .to-cart .btn.b
   margin: 0;
 }
 
-/* Nativní textový overlay bannerů (h2/h3 z názvu banneru v administraci) — grafiky mají
-   texty zapečené v obrázku, overlay je duplicitní a se změněnými výškami vytéká mimo blok
-   (šablonový posun top:-70/-90px počítá s výškou 250px) → skrýt. Pro návrat overlay
-   smazat toto pravidlo a vyřešit jeho pozicování. */
+/* ===== Textový overlay snímků (pole Nadpis/Podnadpis/Odkaz v „Nastavení snímku") =====
+   Obrázky se nahrávají ČISTÉ (bez zapečených textů): Nadpis = sticker vlevo nahoře
+   (tučné kapitálky se silným bílým strokem), Podnadpis = CTA pilulka vpravo dole
+   (zelená sjednocená s produktovým „Přidat do košíku"). Platí pro side-bannery i slidy
+   slideshow. Velikosti se škálují podle šířky snímku (container queries, px fallback).
+   Markup z administrace: <div class='h2_background'><h2>…</h2></div>
+                          <div class='h3_background'><h3>…</h3></div> (jen když je pole vyplněné). */
+.content .side-banners .side-banner,
+.content .slideshow .slideshow-slide {
+  position: relative;
+  container-type: inline-size;
+}
+
 .content .side-banners .h2_background,
-.content .side-banners .h3_background {
-  display: none;
+.content .slideshow .slideshow-slide .h2_background {
+  position: absolute;
+  top: var(--hp-pad);
+  left: var(--hp-pad);
+  margin: 0;
+  max-width: 72%;
+  text-align: left;
+}
+.content .side-banners .h3_background,
+.content .slideshow .slideshow-slide .h3_background {
+  position: absolute;
+  right: var(--hp-pad);
+  bottom: var(--hp-pad);
+  margin: 0;
+}
+
+/* Nadpis — sticker: position:static resetuje šablonový posun top:-70px */
+.content .side-banners .h2_background h2,
+.content .slideshow .slideshow-slide .h2_background h2 {
+  position: static;
+  margin: 0;
+  color: var(--hp-title);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  font-size: 24px;                       /* fallback bez podpory cqw */
+  font-size: clamp(17px, 5.2cqw, 34px);
+  -webkit-text-stroke: 5px #fff;         /* fallback bez podpory cqw */
+  -webkit-text-stroke: clamp(3px, 0.9cqw, 6px) #fff;
+  paint-order: stroke fill;              /* stroke ven, ne přes tahy písma */
+  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+}
+
+/* Podnadpis — CTA pilulka (klikatelný je celý banner/slide, tlačítko je vizuální) */
+.content .side-banners .h3_background h3,
+.content .slideshow .slideshow-slide .h3_background h3 {
+  position: static;
+  display: inline-block;
+  margin: 0;
+  background: var(--hp-green);
+  color: #fff;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  font-size: 13px;                       /* fallback bez podpory cqw */
+  font-size: clamp(11px, 2.6cqw, 16px);
+  padding: 1em 1.9em;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.18);
+  transition: background-color 0.2s ease;
+}
+.content .side-banners > a:hover .h3_background h3 {
+  background: var(--hp-green-dark);
 }
 
 /* ===== Desktop ≥992: dva čtverce vedle sebe ===== */
