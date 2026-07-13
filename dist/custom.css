@@ -632,6 +632,26 @@
   box-shadow: 0 0 0 3px rgba(19, 97, 207, 0.12);
 }
 
+/* Puntík radia — šablonová zelená (#28a745, template :4005) → brandová modrá */
+.shipping-tab input[type="radio"]:checked + label::before,
+.payment-select .shipping-tab input[type="radio"]:checked + label::before {
+  background-color: var(--cx-accent) !important;
+}
+.shipping-tab input[type="radio"]:focus + label::before,
+.payment-select .shipping-tab input[type="radio"]:focus + label::before {
+  border-color: var(--cx-accent) !important;
+}
+
+/* Checkboxy v košíku (kupón, doplňkové služby, souhlasy) — zelený accent-color šablony → modrý */
+.container .content input[type="checkbox"],
+.container .content input[type="checkbox"]:checked {
+  accent-color: var(--cx-accent);
+}
+.container .content .form-check-input:checked {
+  background-color: var(--cx-accent) !important;
+  border-color: var(--cx-accent) !important;
+}
+
 @media (hover: hover) {
   .shipping-tab input[type="radio"]:not(:checked) + label:hover,
   .payment-select .shipping-tab input[type="radio"]:not(:checked) + label:hover {
