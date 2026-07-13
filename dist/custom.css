@@ -4953,7 +4953,6 @@ body footer section.eshop-footer a:hover {
 }
 .vp-recenze img {
   max-width: 100%;
-  height: auto;
   display: block;
 }
 .vp-recenze p {
@@ -5007,8 +5006,8 @@ body footer section.eshop-footer a:hover {
   border-left: 1px solid var(--rec-border);
 }
 .vp-recenze__stat-icon {
-  width: clamp(38px, 4.5vw, 48px);
-  height: clamp(38px, 4.5vw, 48px);
+  width: clamp(38px, 4.5vw, 48px) !important;
+  height: clamp(38px, 4.5vw, 48px) !important;
   flex: 0 0 auto;
 }
 .vp-recenze__stat-text {
@@ -5023,10 +5022,15 @@ body footer section.eshop-footer a:hover {
   font-size: clamp(1.25rem, 2.4vw, 1.6rem);
   color: var(--rec-blue);
 }
+.vp-recenze__rating-num {
+  font-size: clamp(1.4rem, 2.8vw, 1.9rem);
+  line-height: 1;
+  flex: 0 0 auto;
+}
 .vp-recenze__stat-stars {
-  height: 15px;
-  width: auto;
-  margin: 0.2rem 0;
+  height: 16px !important;
+  width: auto !important;
+  margin: 0 0 0.2rem;
 }
 .vp-recenze__stat-label {
   font-size: 0.82rem;
@@ -5051,8 +5055,8 @@ body footer section.eshop-footer a:hover {
   min-width: 0;
 }
 .vp-recenze__stars {
-  height: 18px;
-  width: auto;
+  height: 18px !important;
+  width: auto !important;
   margin-bottom: 0.6rem;
 }
 .vp-recenze__quote {
@@ -5070,8 +5074,8 @@ body footer section.eshop-footer a:hover {
   margin-top: auto;
 }
 .vp-recenze__avatar {
-  width: 44px;
-  height: 44px;
+  width: 44px !important;
+  height: 44px !important;
   border-radius: var(--rec-pill);
   flex: 0 0 auto;
 }
