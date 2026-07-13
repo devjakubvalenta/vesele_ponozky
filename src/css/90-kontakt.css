@@ -1,0 +1,353 @@
+/* CMS stránka „Kontakty" — brandový vzhled (modrá #1361cf + žlutá #fbbc02).
+   Scope: vše pod .vp-kt (markup: src/content/kontakt.html). Nedosáhne na zbytek webu.
+   Sekce: hero (titul + %contact_form% + ilustrace) · info (kontakty | fakturační | mapa)
+          · newsletter (jako O nás). Patička globální. */
+
+.vp-kt {
+  --kt-blue: #1361cf;
+  --kt-blue-dark: #0f4ea8;
+  --kt-yellow: #fbbc02;
+  --kt-yellow-dark: #e0a800;
+  --kt-green: #31a831;
+  --kt-green-dark: #2b942b;
+  --kt-text: #0f172a;
+  --kt-muted: #475569;
+  --kt-blue-soft: #eaf1fc;
+  --kt-radius: 18px;
+  --kt-pill: 999px;
+  --kt-gap: clamp(1.25rem, 3vw, 2.5rem);
+  --kt-section: clamp(2.25rem, 6vw, 4rem);
+  --kt-shadow: 0 12px 40px rgba(15, 23, 42, 0.1);
+
+  color: var(--kt-text);
+  overflow-x: clip;
+  box-sizing: border-box;
+}
+.vp-kt *,
+.vp-kt *::before,
+.vp-kt *::after {
+  box-sizing: border-box;
+}
+.vp-kt img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.vp-kt p {
+  line-height: 1.65;
+  margin: 0 0 0.9rem;
+  color: var(--kt-muted);
+}
+.vp-kt a {
+  text-decoration: none;
+  color: var(--kt-blue);
+}
+.content:has(> .vp-kt) > h1 {
+  display: none;
+}
+
+/* ---- 1. HERO (titul + formulář + ilustrace) ---- */
+.vp-kt__hero {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: center;
+  gap: var(--kt-gap);
+  padding: clamp(1.5rem, 4vw, 3rem) 0 0;
+}
+.vp-kt__title {
+  color: var(--kt-blue) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.8rem, 4.2vw, 2.8rem) !important;
+  line-height: 1.08 !important;
+  margin: 0 0 0.9rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+}
+.vp-kt__lead {
+  font-size: 1.02rem;
+  color: var(--kt-text) !important;
+  margin-bottom: 1.4rem;
+}
+.vp-kt__hero-media {
+  align-self: center;
+}
+.vp-kt__hero-img {
+  width: 100%;
+  max-width: 420px;
+  margin-inline: auto;
+}
+/* Placeholder ilustrace (než dorazí maskot) */
+.vp-kt__hero-ph {
+  border-radius: var(--kt-radius);
+  min-height: clamp(240px, 32vw, 360px);
+  background: #eef2f7;
+  border: 2px dashed #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  padding: 1rem;
+}
+
+/* ---- Nativní %contact_form% — šedá pole, zelené tlačítko, bez nadpisu/boxu/přílohy ---- */
+.vp-kt__form-mount h2 {
+  display: none !important;
+}
+.vp-kt__form-mount .contact_form,
+.vp-kt__form-mount .contact_form.bg-light {
+  background: transparent !important;
+  padding: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.vp-kt__form-mount form > div:not(.messages):not(.controls) {
+  display: none !important;
+}
+.vp-kt__form-mount .form-group:has(input[type="file"]) {
+  display: none !important;
+}
+.vp-kt__form-mount input[name^="halusky"] {
+  display: none !important;
+}
+.vp-kt__form-mount input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]),
+.vp-kt__form-mount textarea,
+.vp-kt__form-mount select {
+  width: 100% !important;
+  padding: 0.75rem 1rem !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  background: #f1f5f9 !important;
+  color: var(--kt-text) !important;
+  font-size: 1rem !important;
+  margin-bottom: 0.85rem !important;
+  box-shadow: none !important;
+}
+.vp-kt__form-mount textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+.vp-kt__form-mount input:focus,
+.vp-kt__form-mount textarea:focus,
+.vp-kt__form-mount select:focus {
+  outline: none !important;
+  border-color: var(--kt-blue) !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 3px rgba(19, 97, 207, 0.15) !important;
+}
+.vp-kt__form-mount label,
+.vp-kt__form-mount .form-label {
+  display: block;
+  font-weight: 600;
+  color: var(--kt-text);
+  margin: 0 0 0.3rem;
+  font-size: 0.9rem;
+}
+.vp-kt__form-mount .controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1rem;
+}
+.vp-kt__form-mount .controls > .form-group,
+.vp-kt__form-mount .controls > div {
+  grid-column: 1 / -1;
+  margin-bottom: 0.9rem !important;
+}
+.vp-kt__form-mount .controls > .form-group:has(#cform_name),
+.vp-kt__form-mount .controls > .form-group:has(#cform_email) {
+  grid-column: auto;
+}
+.vp-kt__form-mount .btn-send,
+.vp-kt__form-mount button,
+.vp-kt__form-mount button[type="submit"],
+.vp-kt__form-mount input[type="submit"] {
+  display: block !important;
+  width: 100% !important;
+  padding: 0.85rem 1.7rem !important;
+  background: var(--kt-green) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  border: none !important;
+  border-radius: var(--kt-pill) !important;
+  cursor: pointer;
+  margin-top: 0.5rem !important;
+  box-shadow: 0 6px 18px rgba(49, 168, 49, 0.35) !important;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+.vp-kt__form-mount .btn-send:hover,
+.vp-kt__form-mount button:hover,
+.vp-kt__form-mount input[type="submit"]:hover {
+  background: var(--kt-green-dark) !important;
+  transform: translateY(-2px);
+}
+
+/* ---- 2. INFO (kontakty | fakturační | mapa) ---- */
+.vp-kt__info {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.1fr;
+  gap: clamp(1.5rem, 3.5vw, 2.75rem);
+  margin-top: var(--kt-section);
+  padding-top: var(--kt-section);
+  border-top: 1px solid #e2e8f0;
+  align-items: start;
+}
+.vp-kt__info-h {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem) !important;
+  font-weight: 800 !important;
+  color: var(--kt-blue) !important;
+  margin: 0 0 1.4rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.vp-kt__row {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+.vp-kt__row:last-child {
+  margin-bottom: 0;
+}
+.vp-kt__row-ic {
+  width: 52px;
+  height: auto;
+  flex: 0 0 auto;
+}
+.vp-kt__row-label {
+  font-weight: 800 !important;
+  color: var(--kt-text) !important;
+  font-size: 0.82rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0 0 0.3rem !important;
+}
+.vp-kt__row-lines {
+  margin: 0 !important;
+  font-size: 0.95rem !important;
+  color: var(--kt-muted) !important;
+  line-height: 1.5 !important;
+}
+.vp-kt__row-lines a {
+  color: var(--kt-blue);
+  font-weight: 600;
+}
+/* Fakturační sloupec — menší ikony */
+.vp-kt__bill .vp-kt__row-ic {
+  width: 40px;
+}
+.vp-kt__bill .vp-kt__row-lines strong {
+  color: var(--kt-text);
+}
+.vp-kt__info-small {
+  font-size: 0.78rem !important;
+  color: var(--kt-muted) !important;
+  margin: 0.3rem 0 0 !important;
+  line-height: 1.5 !important;
+}
+/* Mapa — placeholder (dodá se fotka) */
+.vp-kt__map {
+  border-radius: var(--kt-radius);
+  min-height: clamp(240px, 26vw, 320px);
+  height: 100%;
+  background: #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  padding: 1rem;
+}
+
+/* ---- 3. NEWSLETTER (modrý blok, jako O nás) ---- */
+.vp-kt__btn {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.7rem 1.4rem;
+  background: var(--kt-yellow);
+  color: var(--kt-text) !important;
+  font-weight: 700;
+  border-radius: var(--kt-pill);
+  border: none;
+  cursor: pointer;
+  word-break: break-word;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+  box-shadow: 0 6px 18px rgba(251, 188, 2, 0.4);
+}
+.vp-kt__btn:hover {
+  background: var(--kt-yellow-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(251, 188, 2, 0.5);
+}
+.vp-kt__newsletter {
+  background: var(--kt-blue);
+  color: #fff;
+  border-radius: clamp(16px, 2.5vw, 28px);
+  padding: clamp(2.5rem, 6.25vw, 4.4rem);
+  margin-top: var(--kt-section);
+}
+.vp-kt__newsletter-inner {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  align-items: center;
+  gap: var(--kt-gap);
+}
+.vp-kt__newsletter-title {
+  color: #fff !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem) !important;
+  line-height: 1.15 !important;
+  margin: 0 0 0.75rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.vp-kt__newsletter .vp-accent {
+  color: var(--kt-yellow);
+}
+.vp-kt__newsletter p {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+.vp-kt__consent {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.vp-kt__mascot {
+  width: 100%;
+  max-width: 260px;
+  margin-inline: auto;
+}
+
+/* ================= Responsivita (BS4 breakpointy) ================= */
+@media (max-width: 991.98px) {
+  .vp-kt__hero,
+  .vp-kt__newsletter-inner {
+    grid-template-columns: 1fr;
+  }
+  .vp-kt__hero-media {
+    order: -1;
+    max-width: 340px;
+    margin-inline: auto;
+  }
+  .vp-kt__newsletter-inner {
+    text-align: center;
+  }
+  .vp-kt__mascot {
+    max-width: 200px;
+  }
+  .vp-kt__info {
+    grid-template-columns: 1fr 1fr;
+  }
+  .vp-kt__map {
+    grid-column: 1 / -1;
+    min-height: 260px;
+  }
+}
+@media (max-width: 575.98px) {
+  .vp-kt__info {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,89 @@
+<!--
+  Stránka „Kontakty" (CMS) — vkládá se do: Administrace → CMS a blog → Kontakty
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor sanitizuje).
+  Formulář je NATIVNÍ přes %contact_form%. Mapa = placeholder (dodá se fotka). Ilustrace maskota = placeholder.
+  Newsletter = kopie z O nás. Styl dodává 90-kontakt.css (scope .vp-kt) přes CDN.
+-->
+<div class="vp-kt">
+
+  <!-- 1. HERO (titul + formulář + ilustrace) -->
+  <div class="vp-kt__hero">
+    <div class="vp-kt__hero-text">
+      <h1 class="vp-kt__title">KONTAKTY</h1>
+      <p class="vp-kt__lead">Jsme tu pro vás! Neváhejte se na nás obrátit – rádi vám pomůžeme s výběrem, objednávkou i čímkoliv dalším. Ozveme se vám do 24 hodin.</p>
+      <div class="vp-kt__form-mount">%contact_form%</div>
+    </div>
+    <div class="vp-kt__hero-media">
+      <div class="vp-kt__hero-ph">Ilustrace: maskot s telefonem (dodá se)</div>
+    </div>
+  </div>
+
+  <!-- 2. INFO (kontakty | fakturační | mapa) -->
+  <div class="vp-kt__info">
+
+    <!-- Kontakty -->
+    <div class="vp-kt__contacts">
+      <div class="vp-kt__row">
+        <img class="vp-kt__row-ic" src="https://www.exitshop.cz/files/310/files/kontakt1.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-kt__row-label">Telefon</p>
+          <p class="vp-kt__row-lines"><a href="tel:+420792377714">+420 792 377 714</a><br>Po–Pá 9:00–16:00 hod.</p>
+        </div>
+      </div>
+      <div class="vp-kt__row">
+        <img class="vp-kt__row-ic" src="https://www.exitshop.cz/files/310/files/kontakt2.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-kt__row-label">E-mail</p>
+          <p class="vp-kt__row-lines"><a href="mailto:veseleponozky@modacapek.cz">veseleponozky@modacapek.cz</a><br>Odpovídáme do 24 hodin.</p>
+        </div>
+      </div>
+      <div class="vp-kt__row">
+        <img class="vp-kt__row-ic" src="https://www.exitshop.cz/files/310/files/kontakt3.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-kt__row-label">Pro velkoobchodní spolupráci</p>
+          <p class="vp-kt__row-lines">E-mail: <a href="mailto:david@modacapek.cz">david@modacapek.cz</a><br>Telefon: <a href="tel:+420724061774">+420 724 061 774</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fakturační údaje -->
+    <div class="vp-kt__bill">
+      <h2 class="vp-kt__info-h">Fakturační údaje</h2>
+      <div class="vp-kt__row">
+        <img class="vp-kt__row-ic" src="https://www.exitshop.cz/files/310/files/firma.png" alt="" loading="lazy" />
+        <div><p class="vp-kt__row-lines"><strong>Moda Čapek s.r.o.</strong></p></div>
+      </div>
+      <div class="vp-kt__row">
+        <img class="vp-kt__row-ic" src="https://www.exitshop.cz/files/310/files/location.png" alt="" loading="lazy" />
+        <div><p class="vp-kt__row-lines">Boženy Němcové 1095<br>379 01 Třeboň</p></div>
+      </div>
+      <div class="vp-kt__row">
+        <img class="vp-kt__row-ic" src="https://www.exitshop.cz/files/310/files/info.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-kt__row-lines">IČ: 02605104<br>DIČ: CZ02605104</p>
+          <p class="vp-kt__info-small">Společnost je zapsána v obchodním rejstříku vedeném Krajským soudem v Českých Budějovicích, oddíl C, vložka č. 22444.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mapa (placeholder) -->
+    <div class="vp-kt__map">Mapa – Třeboň (dodá se)</div>
+
+  </div>
+
+  <!-- 3. NEWSLETTER (kopie z O nás) -->
+  <div class="vp-kt__newsletter">
+    <div class="vp-kt__newsletter-inner">
+      <div class="vp-kt__newsletter-text">
+        <h2 class="vp-kt__newsletter-title">NEZMEŠKEJTE ŽÁDNÉ NOVINKY A ZÍSKEJTE <span class="vp-accent">SLEVU 15%</span>!</h2>
+        <p>Přihlaste se k odběru našeho newsletteru a získejte slevu 15 % na váš první nákup veselých ponožek.</p>
+        <a class="vp-kt__btn" href="#">PŘIHLÁSIT SE K ODBĚRU</a>
+        <p class="vp-kt__consent">Odběrový formulář spustíme po napojení e-mailingu.</p>
+      </div>
+      <div class="vp-kt__newsletter-media">
+        <img class="vp-kt__mascot" src="https://www.exitshop.cz/files/310/files/maskot.svg" alt="Maskot Veselé ponožky" loading="lazy" />
+      </div>
+    </div>
+  </div>
+
+</div>
