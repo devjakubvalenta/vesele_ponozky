@@ -710,6 +710,17 @@
 .shipping-tab .label-shipping-text .shipping-help-info {
   margin-left: 0.15rem;
 }
+/* „ZDARMA" vpravo + tučně u plateb, které ho mají jen v názvu (bez .price_span):
+   QR kód/Bankovní převod (#bank_transfer) a Platba kartou online (#comgate).
+   ⚠️ V adminu odstranit „ZDARMA" z názvu metody, jinak bude zobrazené dvakrát. */
+.payment-select label[for="bank_transfer"] .label-shipping-text::after,
+.payment-select label[for="comgate"] .label-shipping-text::after {
+  content: "ZDARMA";
+  margin-left: auto;
+  font-weight: 800;
+  white-space: nowrap;
+  color: var(--cx-text);
+}
 
 
 
@@ -787,6 +798,18 @@ section.order-recap {
   font-size: 0.875rem !important;
   color: var(--cx-text-muted) !important;
   line-height: 1.45 !important;
+  /* checkbox + text na jednom řádku (text se zalomí jen když se nevejde) */
+  display: flex !important;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin-bottom: 0 !important;
+}
+.order-recap .terms_checkboxes_div input[type="checkbox"] {
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+}
+.order-recap .terms_checkboxes_div label {
+  margin: 0 !important;
 }
 .order-recap .terms_checkboxes_div a {
   font-weight: 600;
@@ -836,18 +859,21 @@ section.order-recap {
   box-shadow: 0 14px 36px rgba(19, 97, 207, 0.42) !important;
 }
 
+/* „Zpět do obchodu" — čistě textový odkaz bez rámečku/pozadí */
 .back-to-eshop .btn.btn-light.btn-lg {
-  border-radius: 999px !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
   font-weight: 600 !important;
-  padding-left: 1.25rem !important;
-  padding-right: 1.25rem !important;
-  border: 1px solid var(--cx-border-strong) !important;
-  color: var(--cx-text-muted) !important;
-  background: #fff !important;
+  color: var(--cx-accent) !important;
 }
 .back-to-eshop .btn.btn-light.btn-lg:hover {
-  border-color: #94a3b8 !important;
-  color: var(--cx-text) !important;
+  border: none !important;
+  background: transparent !important;
+  color: var(--cx-accent-hover) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
 }
 
 
