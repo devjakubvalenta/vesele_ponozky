@@ -1,0 +1,420 @@
+/* =====================================================================
+   PRODUKTOVÉ KARTY VE VÝPISECH (.products .product)
+   Platí pro HP bloky (%recommend_block%), výpis kategorie i hlavní výpis.
+   Karusely .itembox (upsell, „také zakoupili") záměrně NEřeší.
+
+   Přebíjí nativní pravidla šablony Next — viz reference/template.css:
+   ř. 1509–1710 (karta), 2738 (badge), 4953–4981 (chipy variant),
+   5392–5459 (tlačítko bez variant), 5559–5566 (HP placeholder).
+   Kde šablona používá !important nebo inline style, přebíjíme
+   !important + vyšší specificitou (prefix .products .product).
+
+   Doplňkový JS: src/scripts/30-product-cards.js (třídy .pc-*):
+   dvouřádkový název, zelené datum doručení, tlačítko „Zobrazit vše".
+   Bez JS vše degraduje elegantně (jednobarevný název, celý řádek
+   doručení černý, žádné Zobrazit vše).
+   ===================================================================== */
+
+/* Tokeny — scopované (konvence repa: nikdy :root). .recommend-block
+   kvůli JS tlačítku .pc-show-all, které je sourozencem gridu. */
+.products,
+.recommend-block {
+  --pl-surface: #ffffff;
+  --pl-border: #e5e9f0;          /* shodné s --cx-border */
+  --pl-border-strong: #cdd5e4;
+  --pl-text: #0f172a;
+  --pl-muted: #64748b;
+  --pl-blue: #1361cf;            /* brand: badge, chipy, 2. řádek názvu */
+  --pl-blue-dark: #0f4ea8;
+  --pl-green: #2e9e44;           /* CTA + hlavní cena */
+  --pl-green-dark: #23843a;      /* hover CTA + datum doručení (kontrast malého textu) */
+  --pl-red: #dc2626;             /* stará přeškrtnutá cena */
+  --pl-radius: 14px;             /* karta — soulad s --cx-radius */
+  --pl-radius-btn: 8px;
+  --pl-radius-chip: 8px;
+  --pl-shadow: 0 1px 2px rgba(15, 23, 42, .05);
+  --pl-shadow-hover: 0 6px 24px rgba(15, 23, 42, .10);
+}
+
+/* ==== Karta ========================================================== */
+
+/* Karta je celá <a> — zrušit podtržení, barvy textů řešíme explicitně */
+.products .product {
+  text-decoration: none !important;
+  display: flex;                 /* equal-height: sloupec natáhne .product-border */
+}
+
+.products .product .product-border {
+  display: flex;
+  flex-direction: column;        /* footer s cenou/CTA umí margin-top:auto */
+  width: 100%;
+  background: var(--pl-surface);
+  border: 1px solid var(--pl-border);       /* nativně #eaecef */
+  border-radius: var(--pl-radius);          /* nativně 0 */
+  overflow: hidden;              /* zaoblí obrázek + ořízne hover zoom */
+  box-shadow: var(--pl-shadow);
+  transition: box-shadow .25s ease, transform .25s ease;
+}
+
+.products .product:hover .product-border {
+  box-shadow: var(--pl-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.products .product .product-text-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: .9em 1em 1em;         /* nativně .8em */
+  margin-bottom: 0;              /* nativně 3em — dělalo prázdný pruh pod CTA */
+}
+
+/* ==== Obrázek + slevový badge ======================================= */
+
+.products .product figure {
+  position: relative;            /* kotva pro absolutní badge */
+}
+
+/* Nativní zoom img:hover scale(1.1)/1s je pomalý a chytá i druhý
+   obrázek hover vrstvy — trigger přesouváme na kartu a zklidňujeme. */
+.products .product figure > img {
+  transition: transform .35s ease;
+}
+.products .product figure img:hover {
+  transform: none !important;
+}
+.products .product:hover figure > img {
+  transform: scale(1.04) !important;
+}
+
+/* Badge má inline style „right:10px;bottom:0" → jen author !important
+   ho přesune nahoru. Barva #3b95f6 → brandová modrá. */
+.products .product figure .discount-percentage {
+  top: 10px !important;
+  bottom: auto !important;
+  right: 10px !important;
+  background-color: var(--pl-blue) !important;
+  color: #fff !important;
+  width: 46px;
+  height: 46px;
+  min-width: 0;                  /* nativně min 50×50 */
+  min-height: 0;
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ==== Chipy velikostí (varianty ve výpisu) ========================== */
+
+/* Kontejner: nativně top:-10px */
+.products .product .show_variants_on_product_list_row-container {
+  top: 0;
+  margin-bottom: .4rem;
+}
+
+/* Řádek chipů: clip mechaniku (fixní výška + overflow:hidden
+   + data-show-more-count) zachováváme, jen výšku sladíme s chipy.
+   Flex gap → nativní marginy chipů nulujeme. */
+.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  height: 28px;                  /* = výška chipu → viditelný přesně 1 řádek */
+  overflow: hidden;
+}
+
+.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  margin: 0 !important;          /* nativně 0 5px 7px 0 — rozbilo by clip */
+  padding: 0 .5rem;
+  background: var(--pl-surface) !important;    /* nativně #eff5ff */
+  border: 1px solid var(--pl-border-strong);
+  border-radius: var(--pl-radius-chip);        /* nativně 3px */
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--pl-muted);
+  transition: border-color .15s ease, color .15s ease;
+}
+
+/* Hover a vybraná velikost: nativně #c6dcff/#99b0d6 s !important */
+.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selectable:hover,
+.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selected {
+  background: var(--pl-surface) !important;
+  border-color: var(--pl-blue) !important;
+  color: var(--pl-blue);
+}
+
+/* Vybraný chip navíc odlišit od hoveru (tlustší modrý rámeček) */
+.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selected {
+  box-shadow: inset 0 0 0 1px var(--pl-blue);
+}
+
+/* ==== Název (2 řádky přes JS spany .pc-*) =========================== */
+
+.products .product .product-content h2 {
+  height: auto;                  /* nativně fixních 2.55em */
+  min-height: 2.7em;             /* zákryt řádků u nesplitnutých názvů */
+  overflow: hidden;              /* pojistka proti 3řádkovým názvům */
+  margin: 0 0 .1rem;
+  font-size: 1rem;
+  line-height: 1.35;
+  font-weight: 700;
+  color: var(--pl-text);         /* <a> jinak podědí modrou odkazu */
+}
+
+.products .product .pc-name-brand {
+  display: block;
+  color: var(--pl-text);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.products .product .pc-name-variant {
+  display: block;
+  color: var(--pl-blue);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* Krátký popisek pod názvem v designu není */
+.products .product .product-content.desc {
+  display: none;
+}
+
+/* Prázdný absolutní kontejner štítků nepotřebujeme */
+.products .product .product-stripes:empty {
+  display: none;
+}
+
+/* ==== Doručení („doručíme 15.07.") ================================== */
+
+/* Nativně zelený bold inline — v designu černý text + zelené datum
+   (datum obaluje JS do .pc-delivery-date) + ikona náklaďáku. */
+.products .product .stored-count {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin: .1rem 0 0;
+  color: var(--pl-text);
+  font-weight: 400;
+  font-size: .85rem;
+}
+
+.products .product .stored-count::before {
+  content: "";
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  /* pozor: diakritika v názvu souboru MUSÍ zůstat URL-encoded */
+  background: url("https://www.exitshop.cz/files/310/files/doru%C4%8Den%C3%AD.svg") center / contain no-repeat;
+}
+
+.products .product .pc-delivery-date {
+  color: var(--pl-green-dark);
+  font-weight: 700;
+}
+
+/* Vyprodáno (.stored-count-out-of-stock) necháváme nativní (červené),
+   jen doladit rytmus řádku */
+.products .product .stored-count-out-of-stock {
+  margin: .1rem 0 0;
+  font-size: .85rem;
+}
+
+/* ==== Ceny ========================================================== */
+
+/* Footer: nativně flex řádek (cena vlevo, tlačítko vpravo) → sloupec,
+   CTA přes celou šířku; margin-top:auto drží ceny+CTA u dna karty */
+.products .product .product-footer {
+  display: flex !important;
+  flex-direction: column;
+  gap: .5rem;
+  margin-top: auto;
+  padding-top: .5rem;
+}
+
+/* Stará a nová cena na jednom řádku (nativně stará nad novou) */
+.products .product .product-footer .product-price {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  margin: 0;
+  overflow: visible;             /* nativně hidden — uřízl by přeškrtnutí */
+}
+
+.products .product .product-footer .product-price .product-price-our {
+  color: var(--pl-green) !important;   /* šablona: #495057 !important */
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.products .product .product-footer .product-price .product-price-currency {
+  font-weight: 800;              /* nativně 300 */
+  font-size: 1em;
+}
+
+/* Stará cena: červená, přeškrtnutí nechává nativní ::before čáru,
+   jen ji barvíme textem a narovnáváme (nativně rotate(-15deg)) */
+.products .product .discount-old-price {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--pl-red);
+}
+.products .product .strikethrough {
+  color: var(--pl-red);
+}
+.products .product .strikethrough::before {
+  background: currentColor;
+  transform: rotate(-8deg);
+}
+
+/* HP placeholder: šablona mu dává top:6px → HP vs kategorie nesedí */
+.products-list-placeholder .discount-old-price {
+  top: 0;
+}
+
+/* Prázdný placeholder staré ceny (&nbsp;) v našem flex řádku jen
+   odsazuje cenu — výšku řádku drží samotná cena, placeholder pryč */
+.products .product .discount-old-price.discount-old-price-placeholder {
+  display: none;
+}
+
+/* ==== Tlačítko „Přidat do košíku" =================================== */
+
+/* Reset obalu: nativně position:relative; top:9px */
+.products .product .product-footer .add-to-cart-group {
+  position: static;
+  top: 0;
+  width: 100%;
+  display: flex;
+}
+
+/* Cílí společnou třídu → variantní (add-to-cart-js-variants) i
+   bez-variantní (product-with-arrows-add-to-cart) tlačítko vypadají
+   stejně. Šablona: padding .37rem .6rem !important (HP), font-size
+   14px !important (arrows), hover #343a40 (šedá!). */
+.products .product .product-footer .product-add-to-shopping-basket.btn.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  width: 100%;
+  height: auto;                  /* arrows varianta má height:38px */
+  background-color: var(--pl-green) !important;
+  color: #fff !important;        /* šablona: #eaecef !important */
+  border: 0;
+  border-radius: var(--pl-radius-btn) !important;
+  padding: .6rem 1rem !important;
+  font-size: .9rem !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  line-height: 1.2;
+  transition: background-color .2s ease;
+}
+
+.products .product .product-footer .product-add-to-shopping-basket.btn.btn-primary:hover,
+.products .product .product-footer .product-add-to-shopping-basket.btn.btn-primary:focus,
+.products .product .product-footer .product-add-to-shopping-basket.btn.btn-primary:active {
+  background-color: var(--pl-green-dark) !important;
+  color: #fff !important;
+}
+
+/* Vlastní ikona košíku (SVG z administrace) místo nativního spritu */
+.products .product .product-footer .product-add-to-shopping-basket.btn.btn-primary::before {
+  content: "";
+  flex: 0 0 18px;
+  width: 18px;
+  height: 17px;
+  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+}
+
+/* Nativní sprite ikona pryč + reset odsazení textu (nativně margin-left:25px) */
+.products .product .product-add-to-shopping-basket .shopping-basket-icon {
+  margin: 0;
+  position: static;
+}
+.products .product .product-add-to-shopping-basket .shopping-basket-icon::before,
+.products .product .product-add-to-shopping-basket.sprite-after::after {
+  content: none !important;
+}
+
+/* Text „Přidat do košíku" u variantních produktů: šablona mu vypíná
+   kapitálky (show_variant_button: text-transform none, weight normal) */
+.products .product .product-footer .add-to-cart-group .show_variant_button {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: inherit;
+  padding: 0;
+}
+
+/* ==== „Zobrazit vše" pod HP blokem (vkládá JS) ====================== */
+
+.recommend-block .pc-show-all {
+  display: table;                /* smrští se na obsah + margin:auto centruje */
+  margin: .5rem auto 2.5rem;
+  background-color: var(--pl-green);
+  color: #fff !important;        /* je to <a> */
+  border-radius: 999px;
+  padding: .7rem 2.4rem;
+  font-size: .9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  text-decoration: none !important;
+  transition: background-color .2s ease;
+}
+
+.recommend-block .pc-show-all:hover {
+  background-color: var(--pl-green-dark);
+  color: #fff !important;
+}
+
+/* ==== Responzivita ================================================== */
+
+/* Střední šířky (3–4 sloupce na užším desktopu): zhustit kartu
+   — viz druhý screenshot zadání (hustý grid kategorie) */
+@media (min-width: 992px) and (max-width: 1399.98px) {
+  .products .product .product-text-content {
+    padding: .75em .8em .85em;
+  }
+  .products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row {
+    gap: 4px;
+    height: 25px;
+  }
+  .products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box {
+    height: 25px;
+    padding: 0 .4rem;
+    font-size: .72rem;
+  }
+  .products .product .product-content h2 {
+    font-size: .92rem;
+  }
+  .products .product .product-footer .product-price .product-price-our {
+    font-size: 1.2rem;
+  }
+  .products .product .product-footer .product-add-to-shopping-basket.btn.btn-primary {
+    padding: .5rem .6rem !important;
+    font-size: .8rem !important;
+    gap: .4rem;
+  }
+  .products .product figure .discount-percentage {
+    width: 40px;
+    height: 40px;
+    font-size: .75rem;
+  }
+}
+
+/* Mobil (1 sloupec — admin „p-view-mob-one_column"): karta je široká,
+   základní velikosti sedí; jen mírně zmenšit obrázkové pole */
+@media (max-width: 575.98px) {
+  .products .product figure {
+    height: 230px;               /* nativně 260px */
+  }
+}

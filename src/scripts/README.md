@@ -12,6 +12,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 | `10-force-variant-selection.html` | Pokus s nutností vybrat variantu. JS i CSS | Pouze produktový detail | ne (patička) | ✅ **už nasazeno** v admin — tady jen verzovaný zdroj |
 | `footer.js` | patička (sock strip + recenze + badge + logo + accordion) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…/src/scripts/footer.js">` |
 | `countdown-bar.js` | Odpočet v liště | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…/src/scripts/countdown-bar.js">`; datum konce akce (TARGET) je v souboru |
+| `30-product-cards.js` | Produktové karty (název, datum, Zobrazit vše) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…/src/scripts/30-product-cards.js">`; mapa „Zobrazit vše" (SHOW_ALL) a prefixy názvů jsou v souboru |
 
 > ⚠️ **Sekce „Skripty" vkládá obsah DOSLOVA** (neobaluje ho). `<link>` a
 > `<style>` vkládej **holé** — NIKDY ne uvnitř `<script>…</script>` (browser by
@@ -26,6 +27,17 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
   přenes do admin položky (CSS přes jsDelivr se jí netýká).
 
 Nové položky vždy **přidáváme**, stávající nepřepisujeme.
+
+## Co dělá `30-product-cards.js`
+
+Doplňky k CSS produktových karet (`src/css/25-products.css`) ve všech
+výpisech `.products`: (1) rozdělí název na 2 řádky — černý typ produktu
++ modrý motiv (dělí se na první „ - ", jinak podle prefixů v
+`NAME_PREFIXES`); (2) obalí datum v „doručíme 15.07." do
+`.pc-delivery-date` (zelené); (3) pod HP produktové bloky přidá tlačítko
+„Zobrazit vše" podle mapy `SHOW_ALL` (`{id bloku: URL}` — blok bez
+záznamu tlačítko nemá). Idempotentní, MutationObserver zpracuje i karty
+dorenderované AJAX filtrováním v kategorii.
 
 ## Co dělá `10-force-variant-selection.html`
 
