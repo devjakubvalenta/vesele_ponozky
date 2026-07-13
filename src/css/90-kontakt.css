@@ -74,7 +74,7 @@
 }
 .vp-kt__hero-img {
   width: 100%;
-  max-width: 420px;
+  max-width: 440px !important;
   margin-inline: auto;
 }
 /* Placeholder ilustrace (než dorazí maskot) */
