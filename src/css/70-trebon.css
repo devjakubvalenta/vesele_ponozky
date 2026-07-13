@@ -126,28 +126,28 @@
   bottom: clamp(10px, 1.6vw, 18px);
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  background: var(--tr-yellow);
-  border-radius: 14px;
-  padding: 0.5rem 0.85rem 0.5rem 0.55rem;
+  gap: 0.7rem;
+  background: #fff6dd;
+  border-radius: 16px;
+  padding: 0.6rem 1rem 0.6rem 0.7rem;
   box-shadow: 0 8px 22px rgba(15, 23, 42, 0.25);
 }
 .vp-tr__badge-ic {
-  width: clamp(30px, 4vw, 42px);
+  width: clamp(40px, 5vw, 56px);
   height: auto;
-  background: #fff;
-  border-radius: 50%;
-  padding: 5px;
   flex: 0 0 auto;
 }
 .vp-tr__badge-text {
   font-weight: 800;
-  font-size: clamp(0.6rem, 1vw, 0.78rem);
-  line-height: 1.12;
-  color: var(--tr-text);
+  font-size: clamp(0.72rem, 1.25vw, 0.95rem);
+  line-height: 1.15;
+  color: #000;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   text-align: left;
+}
+.vp-tr__badge-accent {
+  color: #1265d0;
 }
 
 /* ---- 3+4. FEATURE GRID (3 ikony) ---- */
