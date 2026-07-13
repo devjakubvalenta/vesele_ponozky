@@ -582,6 +582,15 @@
 .main-order-form .additional-service-panel img {
   display: none !important;
 }
+/* Pojistka: starší verze tohoto stylesheetu kreslila malou 42px ikonu přes
+   .card-title::before — pokud se někde ještě načítá (stará položka ve Skriptech /
+   zapečená kopie v „Vaše doplňkové CSS"), tímto ji zneškodníme. */
+.main-order-form .additional-service-panel .card-title:not(.add-service-price)::before,
+.main-order-form .additional-service-panel.packaging_service .card-title:not(.add-service-price)::before {
+  content: none !important;
+  background-image: none !important;
+}
+/* výjimka: dekorativní fajfka u Balného (label::before) zůstává — jiná než card-title::before */
 
 /* velká ikona vlevo přes celou výšku panelu (vlastní CSS background) */
 .main-order-form #block-service-20780 .info-warapper,
