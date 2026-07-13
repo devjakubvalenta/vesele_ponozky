@@ -2391,6 +2391,13 @@ header .header-shop-basket-button #hover-cart #hover-cart-footer .to-cart .btn.b
   --hp-title: #0f172a;
   --hp-green: #2e9e44;
   --hp-green-dark: #23843a;
+  --hp-stroke: 3px; /* viditelná tloušťka bílého obtahu nadpisu — fallback bez podpory cqw */
+}
+@supports (width: 1cqw) {
+  .content .slideshow,
+  .content .side-banners {
+    --hp-stroke: clamp(2px, 0.55cqw, 4px);
+  }
 }
 
 /* Čtverec: šířku slidu určuje owl inline na .owl-item, výška se dopočítá z poměru.
@@ -2471,10 +2478,26 @@ header .header-shop-basket-button #hover-cart #hover-cart-footer .to-cart .btn.b
   letter-spacing: 0.01em;
   font-size: 24px;                       /* fallback bez podpory cqw */
   font-size: clamp(17px, 5.2cqw, 34px);
-  -webkit-text-stroke: 5px #fff;         /* fallback bez podpory cqw */
-  -webkit-text-stroke: clamp(3px, 0.9cqw, 6px) #fff;
-  paint-order: stroke fill;              /* stroke ven, ne přes tahy písma */
-  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+  /* Obtah dilatací: 16 bílých kopií glyfů po kružnici o poloměru --hp-stroke.
+     Záměrně místo -webkit-text-stroke — stroke má ve spojích tahů ostré mitery,
+     kdežto sjednocení posunutých kopií dává kulaté spoje/bevely jako na referenci. */
+  text-shadow:
+    calc(var(--hp-stroke) *  1)     0                              0 #fff,
+    calc(var(--hp-stroke) *  0.924) calc(var(--hp-stroke) *  0.383) 0 #fff,
+    calc(var(--hp-stroke) *  0.707) calc(var(--hp-stroke) *  0.707) 0 #fff,
+    calc(var(--hp-stroke) *  0.383) calc(var(--hp-stroke) *  0.924) 0 #fff,
+    0                               calc(var(--hp-stroke) *  1)     0 #fff,
+    calc(var(--hp-stroke) * -0.383) calc(var(--hp-stroke) *  0.924) 0 #fff,
+    calc(var(--hp-stroke) * -0.707) calc(var(--hp-stroke) *  0.707) 0 #fff,
+    calc(var(--hp-stroke) * -0.924) calc(var(--hp-stroke) *  0.383) 0 #fff,
+    calc(var(--hp-stroke) * -1)     0                              0 #fff,
+    calc(var(--hp-stroke) * -0.924) calc(var(--hp-stroke) * -0.383) 0 #fff,
+    calc(var(--hp-stroke) * -0.707) calc(var(--hp-stroke) * -0.707) 0 #fff,
+    calc(var(--hp-stroke) * -0.383) calc(var(--hp-stroke) * -0.924) 0 #fff,
+    0                               calc(var(--hp-stroke) * -1)     0 #fff,
+    calc(var(--hp-stroke) *  0.383) calc(var(--hp-stroke) * -0.924) 0 #fff,
+    calc(var(--hp-stroke) *  0.707) calc(var(--hp-stroke) * -0.707) 0 #fff,
+    calc(var(--hp-stroke) *  0.924) calc(var(--hp-stroke) * -0.383) 0 #fff;
 }
 
 /* Podnadpis — CTA pilulka (klikatelný je celý banner/slide, tlačítko je vizuální) */
@@ -2496,7 +2519,8 @@ header .header-shop-basket-button #hover-cart #hover-cart-footer .to-cart .btn.b
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.18);
   transition: background-color 0.2s ease;
 }
-.content .side-banners > a:hover .h3_background h3 {
+.content .side-banners > a:hover .h3_background h3,
+.content .slideshow .slider-link:hover .h3_background h3 {
   background: var(--hp-green-dark);
 }
 
