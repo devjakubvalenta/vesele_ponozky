@@ -220,7 +220,7 @@
 /* ---- 6. KONTAKT (formulář + info) ---- */
 .vp-onas__contact {
   display: grid;
-  grid-template-columns: 1.25fr 0.75fr;
+  grid-template-columns: 1fr 1fr;
   gap: clamp(1.5rem, 4vw, 3rem);
   margin-top: var(--onas-section);
   align-items: start;
@@ -238,9 +238,9 @@
 .vp-onas__form-mount select {
   width: 100% !important;
   padding: 0.75rem 1rem !important;
-  border: 1px solid #cbd5e1 !important;
+  border: 1px solid #e2e8f0 !important;
   border-radius: 12px !important;
-  background: #fff !important;
+  background: #f1f5f9 !important;
   color: var(--onas-text) !important;
   font-size: 1rem !important;
   margin-bottom: 0.85rem !important;
