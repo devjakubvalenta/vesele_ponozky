@@ -791,16 +791,85 @@ header {
 
 
 
-/* Žlutá promo / notifikační lišta (je mimo <header>, proto literály místo var) */
+/* Promo / notifikační lišta s odpočtem (mimo <header>, proto literály místo var).
+   Tmavě modrá kvůli čitelnosti bílého textu; text bílý + za ním odpočet %countdown_mini%. */
 #notification-bar {
-  background: #fbbc02 !important;
-  color: #1f2937 !important;
+  background: #0f4ea8 !important;
+  color: #ffffff !important;
+}
+
+#notification-bar .container {
+  position: relative;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 0.9rem;
+  padding-top: 0.45rem !important;
+  padding-bottom: 0.45rem !important;
+}
+
+/* Text + odpočet na jedné řadě, vycentrované */
+#notification-bar #notification-bar-text {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem 0.85rem;
 }
 
 #notification-bar #notification-bar-text,
 #notification-bar #notification-bar-text p,
+#notification-bar #notification-bar-text * ,
 #notification-bar a {
-  color: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+#notification-bar #notification-bar-text p {
+  margin: 0 !important;
+  font-weight: 800;
+  font-size: clamp(0.78rem, 2vw, 0.98rem);
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Křížek zavření vpravo, ať text zůstane vycentrovaný */
+#notification-bar #notification-bar-close {
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0 !important;
+  line-height: 1;
+}
+#notification-bar #notification-bar-close a {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-size: 1.25rem;
+  text-decoration: none;
+}
+
+/* Odpočet %countdown_mini% (widget .es-countdown) — kompaktně do lišty */
+#notification-bar .es-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: clamp(0.82rem, 2vw, 1rem) !important;
+  font-weight: 700;
+  color: #ffffff;
+}
+#notification-bar .es-countdown strong {
+  margin: 0 0.25rem 0 0 !important;
+  font-weight: 700;
+}
+#notification-bar .es-countdown span {
+  min-width: auto !important;
+  padding: 0.12rem 0.45rem !important;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  font-weight: 800;
+  color: #fbbc02;
+  text-align: center;
 }
 
 /* Pruh s menu = plná brandová modrá */
