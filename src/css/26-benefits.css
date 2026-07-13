@@ -1,0 +1,136 @@
+/* Homepage — benefits pás pod bento kompozicí (markup src/content/homepage.html).
+   Scope: .content .benefits — přebíjí šablonová pravidla (template.css ř. 28758–28828:
+   grid 4/2/1 na breakpointech 1000/500 px, li flex s gap 2em, span font-size 1.3rem bold).
+   Položky jsou <li><a><span>ikona</span><span><strong>titulek</strong><small>popis</small></span></a></li>
+   — celá karta je odkaz, hover = žlutý zaoblený box. Šablonové .benefits li span
+   (flex:3, bold) matchuje i spany uvnitř <a>, proto se tu vše explicitně resetuje. */
+
+.content .benefits {
+  --bnf-title: #0d1427;    /* navy z SVG ikon */
+  --bnf-text: #6b7280;     /* šedý podtitulek */
+  --bnf-hover-bg: #fff6de; /* světlý tint brand žluté #fbbc02 */
+  --bnf-divider: #e7eaf1;
+  --bnf-radius: 18px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 2.5rem 0;
+}
+
+.content .benefits li {
+  display: block; /* reset šablonového flex + gap 2em (ten patří až na <a>) */
+  position: relative;
+}
+
+/* Svislý oddělovač mezi kartami — sedí do 10px gapu, mimo hover box */
+.content .benefits li + li::before {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: 18%;
+  height: 64%;
+  width: 1px;
+  background: var(--bnf-divider);
+}
+
+.content .benefits li a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 100%;
+  padding: 16px 18px;
+  border-radius: var(--bnf-radius);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+.content .benefits li a:hover,
+.content .benefits li a:focus-visible {
+  background: var(--bnf-hover-bg);
+  text-decoration: none;
+}
+
+/* Ikona — pevný slot, ať texty všech karet začínají stejně (SVG šířky 89–123 na výšku 100).
+   height potřebuje !important: šablonová .img-responsive-editor (třída z editoru) vnucuje
+   height:auto !important → img by jinak renderoval na intrinsic výšku 100px. */
+.content .benefits li span:first-of-type {
+  flex: 0 0 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.content .benefits li span:first-of-type img {
+  height: 72px !important;
+  width: auto;
+  max-width: 100%;
+}
+
+/* Text — reset šablonového font-size 1.3rem / bold / flex:3 */
+.content .benefits li span:last-of-type {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: left;
+}
+.content .benefits li span:last-of-type strong {
+  color: var(--bnf-title);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.content .benefits li span:last-of-type small {
+  color: var(--bnf-text);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* ===== <992: 2×2, ikona zůstává vlevo, oddělovače pryč ===== */
+@media (max-width: 991.98px) {
+  .content .benefits {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 10px;
+    margin: 2rem 0;
+  }
+  .content .benefits li + li::before {
+    display: none;
+  }
+}
+
+/* ===== <576: 2×2 kompakt — ikona nahoře, text na střed ===== */
+@media (max-width: 575.98px) {
+  .content .benefits {
+    gap: 6px;
+    margin: 1.5rem 0;
+  }
+  .content .benefits li a {
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .content .benefits li span:first-of-type {
+    flex: 0 0 auto;
+  }
+  .content .benefits li span:first-of-type img {
+    height: 64px !important;
+  }
+  .content .benefits li span:last-of-type {
+    align-items: center;
+    text-align: center;
+    gap: 2px;
+  }
+  .content .benefits li span:last-of-type strong {
+    font-size: 13.5px;
+  }
+  .content .benefits li span:last-of-type small {
+    font-size: 12px;
+  }
+}
