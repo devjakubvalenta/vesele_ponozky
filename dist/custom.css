@@ -546,6 +546,50 @@
   margin-top: 0.5rem;
 }
 
+/* Ikony u vybraných doplňkových služeb (nativní panely).
+   Balné = nativní třída .packaging_service; Dýško = stabilní #block-service-20783 (service ID).
+   „Produkt číslo 2" (#block-service-20843) záměrně BEZ ikony (placeholder) → žádné pravidlo. */
+.main-order-form .additional-service-panel.packaging_service .info-warapper > .content,
+.main-order-form #block-service-20783 .info-warapper > .content {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem;
+}
+.main-order-form .additional-service-panel.packaging_service .info-warapper > .content > .card-title:not(.add-service-price),
+.main-order-form #block-service-20783 .info-warapper > .content > .card-title:not(.add-service-price) {
+  display: flex !important;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.main-order-form .additional-service-panel.packaging_service .info-warapper > .content > .add-service-price,
+.main-order-form #block-service-20783 .info-warapper > .content > .add-service-price {
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+.main-order-form .additional-service-panel.packaging_service .info-warapper > .content > .clearfix,
+.main-order-form #block-service-20783 .info-warapper > .content > .clearfix {
+  display: none !important;
+}
+/* samotná ikona (CSS background — panel nerenderuje <img>) */
+.main-order-form .additional-service-panel.packaging_service .card-title:not(.add-service-price)::before,
+.main-order-form #block-service-20783 .card-title:not(.add-service-price)::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.main-order-form .additional-service-panel.packaging_service .card-title:not(.add-service-price)::before {
+  background-image: url("https://www.exitshop.cz/files/310/files/baln%C3%A9.png");
+}
+.main-order-form #block-service-20783 .card-title:not(.add-service-price)::before {
+  background-image: url("https://www.exitshop.cz/files/310/files/d%C3%BD%C5%A1ko.png");
+}
+
 
 
 .shipping_part h4 {
