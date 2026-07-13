@@ -22,8 +22,17 @@
 /* Čtverec: šířku slidu určuje owl inline na .owl-item, výška se dopočítá z poměru.
    Selektor o třídu silnější než šablonový (.row navíc), přebije height:500px i mobilní unset. */
 .content .row .slideshow .slideshow-slides .slideshow-slide {
+  width: 100%; /* slide se v owl kontextu jinak smršťuje na intrinsic šířku obsahu */
   height: auto;
   aspect-ratio: 1 / 1;
+}
+
+/* Slide s vyplněným Odkazem je obalen <a.slider-link> — roztáhnout na celý owl-item,
+   jinak se řetěz šířek přeruší a slide se smrští na intrinsic šířku obrázku (600px)
+   místo šířky sloupce. Druhá půlka produkčního incidentu 2026-07-13. */
+.content .slideshow .slider-link {
+  display: block;
+  width: 100%;
 }
 
 /* Owl dots překryvem dovnitř obrázku — pod obrázkem by při více slidech zvýšily levý
@@ -31,6 +40,10 @@
 .content .slideshow .slideshow-slides {
   position: relative;
   overflow: hidden;
+  /* container pro cqw jednotky overlay na slidech — NIKDY nedávat na .slideshow-slide:
+     slide je shrink-to-fit a inline-size containment mu vynuluje šířku (owl pak celý
+     slideshow složí na 0, viz produkční incident 2026-07-13) */
+  container-type: inline-size;
 }
 .content .slideshow .owl-theme .owl-dots {
   position: absolute;
@@ -47,10 +60,12 @@
    slideshow. Velikosti se škálují podle šířky snímku (container queries, px fallback).
    Markup z administrace: <div class='h2_background'><h2>…</h2></div>
                           <div class='h3_background'><h3>…</h3></div> (jen když je pole vyplněné). */
-.content .side-banners .side-banner,
-.content .slideshow .slideshow-slide {
+.content .side-banners .side-banner {
   position: relative;
   container-type: inline-size;
+}
+.content .slideshow .slideshow-slide {
+  position: relative; /* kotva pro absolutní overlay; container-type sem NEPATŘÍ (viz výše) */
 }
 
 .content .side-banners .h2_background,
@@ -134,6 +149,7 @@
     height: auto; /* místo šablonových 250px */
   }
   .content .row .side-banners > a.side-banner > .side-banner {
+    width: 100%;
     height: 100%;
   }
   /* svislou mezeru řeší gap; BS4 utility má !important, nutno dorovnat */
@@ -173,6 +189,7 @@
     aspect-ratio: 2 / 1;
   }
   .content .row .side-banners > a.side-banner > .side-banner {
+    width: 100%;
     height: 100%;
   }
 
