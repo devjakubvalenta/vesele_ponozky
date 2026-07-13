@@ -218,6 +218,61 @@
   background: #2b942b !important;
   transform: translateY(-2px);
 }
+/* Příloha → řádek „Přiložit soubory" + ikonové tlačítko (nativní input[type=file]) */
+.vp-vyroba__form-mount .form-group:has(#cform_attachment) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.vp-vyroba__form-mount label[for="cform_attachment"] {
+  margin: 0 !important;
+  font-size: 0 !important;
+}
+.vp-vyroba__form-mount label[for="cform_attachment"]::before {
+  content: "Přiložit soubory";
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--vy-text);
+}
+.vp-vyroba__form-mount input[type="file"] {
+  flex: 0 0 auto;
+  width: 60px !important;
+  height: 60px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: none !important;
+}
+.vp-vyroba__form-mount input[type="file"]::file-selector-button,
+.vp-vyroba__form-mount input[type="file"]::-webkit-file-upload-button {
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background-color: #f8fafc;
+  background-image: url("https://www.exitshop.cz/files/310/files/download.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 26px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+  font-size: 0;
+  color: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+}
+.vp-vyroba__form-mount input[type="file"]:hover::file-selector-button,
+.vp-vyroba__form-mount input[type="file"]:hover::-webkit-file-upload-button {
+  background-color: #eef2f7;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+}
 
 /* ---- 2. JAK TO FUNGUJE (5 očíslovaných kroků) ---- */
 .vp-vyroba__steps {
