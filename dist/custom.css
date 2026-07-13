@@ -2370,6 +2370,150 @@ header .header-shop-basket-button #hover-cart #hover-cart-footer .to-cart .btn.b
   }
 }
 
+/* ==== 25-homepage.css ==== */
+
+/* Homepage — slideshow (600×600) + dva side-bannery (600×300) = čtvercová „bento" kompozice.
+   Scope: .content .slideshow / .content .side-banners (nativní markup, jen homepage).
+   Desktop ≥992: sloupce 50/50 (nativně col-lg-8 / col-md-4), vlevo čtverec 1:1, vpravo dva
+   bannery nad sebou dorovnané flexem na výšku čtverce; kulaté jen vnější rohy celku.
+   <992: slideshow plná šířka (čtverec), bannery pod ní vedle sebe 50/50 (2:1); <576 pod sebou.
+   Šablona vnucuje height:500px (slide) a 250px (banner) + overlay h2/h3 top:-70/-90px na
+   banneru 1 — img musí zůstat height:100% boxu, jinak se overlay rozjede.
+   Banner 1 = <a.slider-link.side-banner><div.side-banner.pb-lg-2>…, banner 2 = holý
+   <div.side-banner.pt-lg-2> → třída „side-banner" je na anchoru i na vnitřním divu. */
+
+.content .slideshow,
+.content .side-banners {
+  --hp-radius: 16px; /* šablona nezaobluje nic; drží vlastní škálu 8–18px (header/onas) */
+  --hp-gap: 0px;     /* bez mezer — kompozice jako jeden celistvý blok (gutter šablony je 24px, kdyby se mezery měly vrátit, vrátit i vnitřní paddingy sloupců níže) */
+}
+
+/* Čtverec: šířku slidu určuje owl inline na .owl-item, výška se dopočítá z poměru.
+   Selektor o třídu silnější než šablonový (.row navíc), přebije height:500px i mobilní unset. */
+.content .row .slideshow .slideshow-slides .slideshow-slide {
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+
+/* Owl dots překryvem dovnitř obrázku — pod obrázkem by při více slidech zvýšily levý
+   sloupec a rozbily rovnost výšek s bannery. */
+.content .slideshow .slideshow-slides {
+  position: relative;
+  overflow: hidden;
+}
+.content .slideshow .owl-theme .owl-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  margin: 0;
+}
+
+/* Nativní textový overlay bannerů (h2/h3 z názvu banneru v administraci) — grafiky mají
+   texty zapečené v obrázku, overlay je duplicitní a se změněnými výškami vytéká mimo blok
+   (šablonový posun top:-70/-90px počítá s výškou 250px) → skrýt. Pro návrat overlay
+   smazat toto pravidlo a vyřešit jeho pozicování. */
+.content .side-banners .h2_background,
+.content .side-banners .h3_background {
+  display: none;
+}
+
+/* ===== Desktop ≥992: dva čtverce vedle sebe ===== */
+@media (min-width: 992px) {
+  .content > .row > .slideshow,
+  .content > .row > .side-banners {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  /* bez mezery mezi sloupci: vnitřní paddingy pryč, vnější zůstávají (lícování se zbytkem stránky) */
+  .content > .row > .slideshow { padding-right: 0; }
+  .content > .row > .side-banners { padding-left: 0; }
+
+  /* Pravý sloupec: flex column natáhne oba bannery přesně na výšku čtverce vlevo */
+  .content .side-banners {
+    display: flex;
+    flex-direction: column;
+    gap: var(--hp-gap);
+  }
+  .content .row .side-banners > .side-banner {
+    flex: 1 1 0;
+    min-height: 0;
+    height: auto; /* místo šablonových 250px */
+  }
+  .content .row .side-banners > a.side-banner > .side-banner {
+    height: 100%;
+  }
+  /* svislou mezeru řeší gap; BS4 utility má !important, nutno dorovnat */
+  .content .side-banners .side-banner.pb-lg-2 { padding-bottom: 0 !important; }
+  .content .side-banners .side-banner.pt-lg-2 { padding-top: 0 !important; }
+
+  /* Rohy celku: slideshow levé, bannery pravý horní / pravý dolní.
+     Radius na owl viewport (.owl-stage-outer), ne na img — při přejezdu více slidů
+     by kulaté hrany jednotlivých slidů probleskovaly uprostřed. */
+  .content .slideshow .slideshow-slides,
+  .content .slideshow .owl-stage-outer {
+    border-radius: var(--hp-radius) 0 0 var(--hp-radius);
+  }
+  .content .side-banners > .side-banner:first-child img {
+    border-radius: 0 var(--hp-radius) 0 0;
+  }
+  .content .side-banners > .side-banner:last-child img {
+    border-radius: 0 0 var(--hp-radius) 0;
+  }
+}
+
+/* ===== <992: slideshow plná šířka, bannery pod ní vedle sebe (opravuje i nativně
+   rozbitý rozsah 990–991 px, kde šablona nechává bannery na 1/3 šířky) ===== */
+@media (max-width: 991.98px) {
+  .content > .row > .side-banners {
+    flex: 0 0 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: var(--hp-gap);
+    margin-top: var(--hp-gap);
+  }
+  .content .row .side-banners > .side-banner {
+    flex: 1 1 0;
+    min-width: 0;
+    height: auto; /* místo šablonových 250px */
+    aspect-ratio: 2 / 1;
+  }
+  .content .row .side-banners > a.side-banner > .side-banner {
+    height: 100%;
+  }
+
+  /* Rohy celku: slideshow horní, bannery levý dolní / pravý dolní */
+  .content .slideshow .slideshow-slides,
+  .content .slideshow .owl-stage-outer {
+    border-radius: var(--hp-radius) var(--hp-radius) 0 0;
+  }
+  .content .side-banners > .side-banner:first-child img {
+    border-radius: 0 0 0 var(--hp-radius);
+  }
+  .content .side-banners > .side-banner:last-child img {
+    border-radius: 0 0 var(--hp-radius) 0;
+  }
+}
+
+/* ===== <576: bannery pod sebou ===== */
+@media (max-width: 575.98px) {
+  .content > .row > .side-banners {
+    flex-direction: column;
+  }
+  .content .row .side-banners > .side-banner {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  /* banner 1 je prostřední článek kompozice → bez zaoblení, banner 2 uzavírá spodek */
+  .content .side-banners > .side-banner:first-child img {
+    border-radius: 0;
+  }
+  .content .side-banners > .side-banner:last-child img {
+    border-radius: 0 0 var(--hp-radius) var(--hp-radius);
+  }
+}
+
 /* ==== 25-products.css ==== */
 
 /* =====================================================================
