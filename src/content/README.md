@@ -11,6 +11,8 @@ přes CDN (scope dle obalové třídy).
 | `onas.html` | CMS a blog → **O nás** | `cms/56952-o-nas` | `.vp-onas` (`src/css/40-onas.css`) | ⏳ vkládá uživatel (zdrojový `</>` režim) |
 | `gdpr.html` | CMS a blog → **GDPR** | `cms/60951-gdpr` | `.vp-legal` (`src/css/80-legal.css`) | ⏳ vkládá uživatel (zdrojový `</>` režim) |
 | `vop.html` | CMS a blog → **Všeobecné obchodní podmínky** | `cms/60960-vseobecne-obchodni-podminky` | `.vp-legal` (`src/css/80-legal.css`) | ⏳ vkládá uživatel (zdrojový `</>` režim) |
+| `vraceni.html` | CMS a blog → **Vrácení zboží** (nová stránka) | `cms/<id>-vraceni-zbozi` (doplnit po založení) | `.vp-vraceni` (`src/css/90-vraceni.css`) | ⏳ vkládá uživatel (zdrojový `</>` režim); formuláře přes `%vratka%`/`%reklamace%` |
+| `recenze.html` | CMS a blog → **Recenze** | `cms/60954-recenze` | `.vp-recenze` (`src/css/95-recenze.css`) | ⏳ vkládá uživatel (zdrojový `</>` režim) |
 
 > `gdpr.html` i `vop.html` sdílejí jeden stylopis `src/css/80-legal.css` (scope `.vp-legal`) —
 > jsou to vizuálně stejné textové/právní stránky, liší se jen obsahem.

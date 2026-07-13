@@ -1,0 +1,442 @@
+/* CMS stránka „Vrácení zboží" — brandový vzhled (modrá #1361cf + žlutá #fbbc02).
+   Scope: vše pod .vp-vraceni (markup: src/content/vraceni.html). Nedosáhne na zbytek webu.
+   Sekce: hero (nadpis + kontakt + maskot) · formulář (taby %vratka% / %reklamace%)
+          · jak vrácení probíhá (5 kroků) · newsletter (kopie z Výroba/O nás). Patička globální. */
+
+.vp-vraceni {
+  --vr-blue: #1361cf;
+  --vr-blue-dark: #0f4ea8;
+  --vr-yellow: #fbbc02;
+  --vr-yellow-dark: #e0a800;
+  --vr-text: #0f172a;
+  --vr-muted: #475569;
+  --vr-blue-soft: #eaf1fc;
+  --vr-yellow-soft: #fdf6e0;
+  --vr-radius: 18px;
+  --vr-pill: 999px;
+  --vr-gap: clamp(1.25rem, 3vw, 2.5rem);
+  --vr-section: clamp(2.25rem, 6vw, 4rem);
+  --vr-shadow: 0 12px 40px rgba(15, 23, 42, 0.1);
+  --vr-shadow-sm: 0 4px 18px rgba(15, 23, 42, 0.07);
+
+  color: var(--vr-text);
+  overflow-x: clip;
+  box-sizing: border-box;
+}
+
+.vp-vraceni *,
+.vp-vraceni *::before,
+.vp-vraceni *::after {
+  box-sizing: border-box;
+}
+
+.vp-vraceni img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.vp-vraceni p {
+  line-height: 1.65;
+  margin: 0 0 0.9rem;
+  color: var(--vr-muted);
+}
+
+.vp-vraceni a {
+  text-decoration: none;
+  color: var(--vr-blue);
+}
+
+.vp-vraceni .vp-accent {
+  color: var(--vr-yellow);
+}
+
+/* Skrýt nativní nadpis stránky nad naším hero (jen kde je náš blok) */
+.content:has(> .vp-vraceni) > h1 {
+  display: none;
+}
+
+/* Společné: sekční nadpisy + intro */
+.vp-vraceni__h2 {
+  color: var(--vr-blue) !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.35rem, 3.2vw, 2.1rem) !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.01em;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 0 0.75rem !important;
+  text-align: center;
+}
+.vp-vraceni__section {
+  margin-top: var(--vr-section);
+  text-align: center;
+}
+.vp-vraceni__section-intro {
+  max-width: 760px;
+  /* !important: přebít .vp-vraceni p { margin } (spec. 0,1,1), jinak se auto ztratí a blok sedí vlevo */
+  margin: 0 auto clamp(1.5rem, 3.5vw, 2.5rem) !important;
+  color: var(--vr-muted);
+}
+
+/* ---- 1. HERO (nadpis + kontaktní údaje + maskot) ---- */
+.vp-vraceni__hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: var(--vr-gap);
+  padding: clamp(1.5rem, 4vw, 3rem) 0 0;
+}
+.vp-vraceni__title {
+  color: var(--vr-blue) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.6rem, 4vw, 2.6rem) !important;
+  line-height: 1.1 !important;
+  margin: 0 0 1rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+}
+.vp-vraceni__lead {
+  font-size: 1.05rem;
+  color: var(--vr-text) !important;
+  margin-bottom: 1.6rem;
+}
+.vp-vraceni__hero-media {
+  align-self: center;
+}
+.vp-vraceni__hero-img {
+  width: 100%;
+}
+
+/* Kontaktní řádky (ikona + label + řádky) — převzato z .vp-onas__info-* */
+.vp-vraceni__info-row {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  margin-bottom: 1.1rem;
+  text-align: left;
+}
+.vp-vraceni__info-ic {
+  width: 44px;
+  height: auto;
+  flex: 0 0 auto;
+}
+.vp-vraceni__info-label {
+  font-weight: 800 !important;
+  color: var(--vr-text) !important;
+  font-size: 0.9rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 0 0 0.25rem !important;
+}
+.vp-vraceni__info-lines {
+  margin: 0 !important;
+  font-size: 0.95rem !important;
+  color: var(--vr-text) !important;
+  line-height: 1.45 !important;
+}
+.vp-vraceni__info-lines a {
+  color: var(--vr-blue);
+}
+
+/* ---- 2. FORMULÁŘ (taby Vrácení / Reklamace — čisté CSS :target + :has) ---- */
+.vp-vraceni__tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+.vp-vraceni__tab {
+  display: inline-block;
+  padding: 0.7rem 1.6rem;
+  border-radius: var(--vr-pill);
+  background: var(--vr-blue-soft);
+  color: var(--vr-blue) !important;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+.vp-vraceni__tab:hover {
+  background: #dbe7fb;
+}
+/* aktivní tab = žlutá pilulka. Default (bez hashe) → aktivní je „Vrácení zboží". */
+.vp-vraceni:has(#vp-vratka:target) [href="#vp-vratka"],
+.vp-vraceni:not(:has(.vp-vraceni__panel:target)) [href="#vp-vratka"],
+.vp-vraceni:has(#vp-reklamace:target) [href="#vp-reklamace"] {
+  background: var(--vr-yellow);
+  color: var(--vr-text) !important;
+  box-shadow: 0 6px 18px rgba(251, 188, 2, 0.4);
+}
+
+.vp-vraceni__panel {
+  display: none;
+  scroll-margin-top: 100px;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: left;
+}
+.vp-vraceni__panel:target {
+  display: block;
+}
+/* Default (žádný panel není :target) → zobraz první (vrácení) */
+.vp-vraceni__panels:not(:has(:target)) .vp-vraceni__panel:first-child {
+  display: block;
+}
+
+/* Nativní formulář uvnitř panelu — obecné styly (pole, tlačítko, příloha).
+   ⚠️ %vratka%/%reklamace% mohou mít jiná pole/id než %contact_form%; finální
+   doladění (2sloupcová pole, skrytí nativních nadpisů/boxu) proběhne až proti
+   živě vykreslenému formuláři. Proto zde NEskrýváme „form > div" apod. */
+.vp-vraceni__form-mount {
+  margin-top: 0.5rem;
+}
+.vp-vraceni__form-mount input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]),
+.vp-vraceni__form-mount textarea,
+.vp-vraceni__form-mount select {
+  width: 100% !important;
+  padding: 0.75rem 1rem !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  background: #eff2f6 !important;
+  color: var(--vr-text) !important;
+  font-size: 1rem !important;
+  margin-bottom: 0.85rem !important;
+  box-shadow: none !important;
+}
+.vp-vraceni__form-mount textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+.vp-vraceni__form-mount input:focus,
+.vp-vraceni__form-mount textarea:focus,
+.vp-vraceni__form-mount select:focus {
+  outline: none !important;
+  border-color: var(--vr-blue) !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 3px rgba(19, 97, 207, 0.15) !important;
+}
+.vp-vraceni__form-mount label,
+.vp-vraceni__form-mount .form-label {
+  display: block;
+  font-weight: 600;
+  color: var(--vr-text);
+  margin: 0 0 0.3rem;
+  font-size: 0.9rem;
+}
+/* honeypot (pokud jej formulář používá) */
+.vp-vraceni__form-mount input[name^="halusky"] {
+  display: none !important;
+}
+/* zelené tlačítko #31A831 – full-width */
+.vp-vraceni__form-mount .btn-send,
+.vp-vraceni__form-mount button,
+.vp-vraceni__form-mount button[type="submit"],
+.vp-vraceni__form-mount input[type="submit"] {
+  display: block !important;
+  width: 100% !important;
+  padding: 0.85rem 1.7rem !important;
+  background: #31a831 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  border: none !important;
+  border-radius: var(--vr-pill) !important;
+  cursor: pointer;
+  margin-top: 0.5rem !important;
+  box-shadow: 0 6px 18px rgba(49, 168, 49, 0.35) !important;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+.vp-vraceni__form-mount .btn-send:hover,
+.vp-vraceni__form-mount button:hover,
+.vp-vraceni__form-mount input[type="submit"]:hover {
+  background: #2b942b !important;
+  transform: translateY(-2px);
+}
+/* Příloha → ikonové tlačítko (nativní input[type=file]) */
+.vp-vraceni__form-mount input[type="file"] {
+  flex: 0 0 auto;
+  width: 60px !important;
+  height: 60px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: none !important;
+}
+.vp-vraceni__form-mount input[type="file"]::file-selector-button,
+.vp-vraceni__form-mount input[type="file"]::-webkit-file-upload-button {
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background-color: #f8fafc;
+  background-image: url("https://www.exitshop.cz/files/310/files/download.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 26px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+  font-size: 0;
+  color: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+}
+.vp-vraceni__form-mount input[type="file"]:hover::file-selector-button,
+.vp-vraceni__form-mount input[type="file"]:hover::-webkit-file-upload-button {
+  background-color: #eef2f7;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+}
+
+/* ---- 3. JAK VRÁCENÍ PROBÍHÁ (5 očíslovaných kroků) ---- */
+.vp-vraceni__steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+  margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
+  text-align: center;
+}
+.vp-vraceni__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.vp-vraceni__step-icon-wrap {
+  position: relative;
+  width: clamp(76px, 9vw, 104px);
+  height: clamp(76px, 9vw, 104px);
+  border-radius: 50%;
+  background: var(--vr-blue-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.vp-vraceni__step-icon {
+  width: 54%;
+  height: auto;
+}
+.vp-vraceni__step-num {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--vr-blue);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #fff;
+  box-sizing: content-box;
+}
+.vp-vraceni__step-title {
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: var(--vr-text) !important;
+  margin: 0 0 0.4rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.vp-vraceni__step p {
+  color: var(--vr-muted) !important;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* ---- 4. NEWSLETTER (modrý blok — kopie z Výroba / O nás) ---- */
+.vp-vraceni__btn {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.7rem 1.4rem;
+  background: var(--vr-yellow);
+  color: var(--vr-text) !important;
+  font-weight: 700;
+  border-radius: var(--vr-pill);
+  border: none;
+  cursor: pointer;
+  word-break: break-word;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+  box-shadow: 0 6px 18px rgba(251, 188, 2, 0.4);
+}
+.vp-vraceni__btn:hover {
+  background: var(--vr-yellow-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(251, 188, 2, 0.5);
+}
+.vp-vraceni__newsletter {
+  background: var(--vr-blue);
+  color: #fff;
+  border-radius: clamp(16px, 2.5vw, 28px);
+  padding: clamp(2.5rem, 6.25vw, 4.4rem);
+  margin-top: var(--vr-section);
+}
+.vp-vraceni__newsletter-inner {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  align-items: center;
+  gap: var(--vr-gap);
+}
+.vp-vraceni__newsletter-title {
+  color: #fff !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem) !important;
+  line-height: 1.15 !important;
+  margin: 0 0 0.75rem !important;
+  text-transform: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.vp-vraceni__newsletter p {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+.vp-vraceni__consent {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.vp-vraceni__mascot {
+  width: 100%;
+  max-width: 260px;
+  margin-inline: auto;
+}
+
+/* ================= Responsivita (BS4 breakpointy) ================= */
+@media (max-width: 991.98px) {
+  .vp-vraceni__hero,
+  .vp-vraceni__newsletter-inner {
+    grid-template-columns: 1fr;
+  }
+  .vp-vraceni__newsletter-inner {
+    text-align: center;
+  }
+  .vp-vraceni__mascot {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .vp-vraceni__steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .vp-vraceni__title {
+    font-size: 1.5rem !important;
+  }
+  .vp-vraceni__steps {
+    grid-template-columns: 1fr;
+  }
+}

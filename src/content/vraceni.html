@@ -1,0 +1,124 @@
+<!--
+  Stránka „Vrácení zboží" (CMS) — vkládá se do: Administrace → CMS a blog → Vrácení zboží
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor sanitizuje).
+  Formuláře jsou NATIVNÍ přes placeholdery %vratka% (vrácení) a %reklamace% (reklamace) —
+  přepínají se taby (čisté CSS :target + :has, bez JS). Styl dodává 90-vraceni.css
+  (scope .vp-vraceni) přes CDN. Newsletter = kopie bloku z Výroba/O nás (maskot.svg).
+  Ikony (přiřazení ověřit naživo): Vrácení01.jpg = maskot; vrácení02–04 = kontakt; vrácení05–09 = kroky.
+-->
+<div class="vp-vraceni">
+
+  <!-- 1. HERO (nadpis + kontaktní údaje + maskot s kalendářem 120 DNÍ) -->
+  <div class="vp-vraceni__hero">
+    <div class="vp-vraceni__hero-text">
+      <h1 class="vp-vraceni__title">VRÁCENÍ ZBOŽÍ <span class="vp-accent">DO 120 DNÍ</span></h1>
+      <p class="vp-vraceni__lead">Chceme, abyste byli s nákupem 100% spokojeni. Proto u nás máte na vrácení zboží až 120 dní od jeho převzetí. Bez starostí a zbytečných otázek.</p>
+
+      <div class="vp-vraceni__info-row">
+        <img class="vp-vraceni__info-ic" src="https://www.exitshop.cz/files/310/files/vr%C3%A1cen%C3%AD02.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-vraceni__info-label">Adresa pro vrácení</p>
+          <p class="vp-vraceni__info-lines">Boženy Němcové 1095<br>379 01, Třeboň</p>
+        </div>
+      </div>
+
+      <div class="vp-vraceni__info-row">
+        <img class="vp-vraceni__info-ic" src="https://www.exitshop.cz/files/310/files/vr%C3%A1cen%C3%AD03.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-vraceni__info-label">Telefon</p>
+          <p class="vp-vraceni__info-lines"><a href="tel:+420792377714">+420 792 377 714</a><br>Po–Pá 9:00 – 16:00 hod.</p>
+        </div>
+      </div>
+
+      <div class="vp-vraceni__info-row">
+        <img class="vp-vraceni__info-ic" src="https://www.exitshop.cz/files/310/files/vr%C3%A1cen%C3%AD04.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-vraceni__info-label">E-mail</p>
+          <p class="vp-vraceni__info-lines"><a href="mailto:veseleponozky@modacapek.cz">veseleponozky@modacapek.cz</a><br>Odpovídáme do 24 hodin.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-vraceni__hero-media">
+      <img class="vp-vraceni__hero-img" src="https://www.exitshop.cz/files/310/files/Vr%C3%A1cen%C3%AD01.jpg" alt="Vrácení zboží do 120 dní" loading="lazy" />
+    </div>
+  </div>
+
+  <!-- 2. FORMULÁŘ (taby: Vrácení / Reklamace) — nahrazuje „Formulář ke stažení" -->
+  <div class="vp-vraceni__section">
+    <h2 class="vp-vraceni__h2">Formulář pro vrácení a reklamaci</h2>
+    <p class="vp-vraceni__section-intro">Vyberte, zda chcete zboží vrátit, nebo reklamovat, a vyplňte příslušný formulář. Po odeslání vám dorazí potvrzení e-mailem.</p>
+
+    <div class="vp-vraceni__tabs">
+      <a class="vp-vraceni__tab" href="#vp-vratka">Vrácení zboží</a>
+      <a class="vp-vraceni__tab" href="#vp-reklamace">Reklamace</a>
+    </div>
+    <div class="vp-vraceni__panels">
+      <div class="vp-vraceni__panel vp-vraceni__form-mount" id="vp-vratka">%vratka%</div>
+      <div class="vp-vraceni__panel vp-vraceni__form-mount" id="vp-reklamace">%reklamace%</div>
+    </div>
+  </div>
+
+  <!-- 3. JAK VRÁCENÍ PROBÍHÁ (5 očíslovaných kroků) -->
+  <div class="vp-vraceni__section">
+    <h2 class="vp-vraceni__h2">Jak vrácení probíhá</h2>
+    <div class="vp-vraceni__steps">
+      <div class="vp-vraceni__step">
+        <div class="vp-vraceni__step-icon-wrap">
+          <img class="vp-vraceni__step-icon" src="https://www.exitshop.cz/files/310/files/vr%C3%A1cen%C3%AD05.png" alt="" loading="lazy" />
+          <div class="vp-vraceni__step-num">1</div>
+        </div>
+        <h3 class="vp-vraceni__step-title">Vyplňte formulář</h3>
+        <p>Online formulář pro vrácení nebo reklamaci najdete výše na této stránce.</p>
+      </div>
+      <div class="vp-vraceni__step">
+        <div class="vp-vraceni__step-icon-wrap">
+          <img class="vp-vraceni__step-icon" src="https://www.exitshop.cz/files/310/files/vr%C3%A1cen%C3%AD06.png" alt="" loading="lazy" />
+          <div class="vp-vraceni__step-num">2</div>
+        </div>
+        <h3 class="vp-vraceni__step-title">Zabalte zboží</h3>
+        <p>Zboží zabalte ideálně do původního obalu.</p>
+      </div>
+      <div class="vp-vraceni__step">
+        <div class="vp-vraceni__step-icon-wrap">
+          <img class="vp-vraceni__step-icon" src="https://www.exitshop.cz/files/310/files/vr%C3%A1cen%C3%AD07.png" alt="" loading="lazy" />
+          <div class="vp-vraceni__step-num">3</div>
+        </div>
+        <h3 class="vp-vraceni__step-title">Odešlete balík</h3>
+        <p>Balík odešlete na naši adresu pro vrácení.</p>
+      </div>
+      <div class="vp-vraceni__step">
+        <div class="vp-vraceni__step-icon-wrap">
+          <img class="vp-vraceni__step-icon" src="https://www.exitshop.cz/files/310/files/vr%C3%A1cen%C3%AD08.png" alt="" loading="lazy" />
+          <div class="vp-vraceni__step-num">4</div>
+        </div>
+        <h3 class="vp-vraceni__step-title">Přijmeme a zkontrolujeme</h3>
+        <p>Jakmile balík dorazí, zkontrolujeme jeho stav.</p>
+      </div>
+      <div class="vp-vraceni__step">
+        <div class="vp-vraceni__step-icon-wrap">
+          <img class="vp-vraceni__step-icon" src="https://www.exitshop.cz/files/310/files/vr%C3%A1cen%C3%AD09.png" alt="" loading="lazy" />
+          <div class="vp-vraceni__step-num">5</div>
+        </div>
+        <h3 class="vp-vraceni__step-title">Vrátíme peníze</h3>
+        <p>Peníze vám vrátíme zpět stejným způsobem do 14 dní.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. NEWSLETTER (modrý blok — kopie z Výroba / O nás) -->
+  <div class="vp-vraceni__newsletter">
+    <div class="vp-vraceni__newsletter-inner">
+      <div class="vp-vraceni__newsletter-text">
+        <h2 class="vp-vraceni__newsletter-title">NEZMEŠKEJTE ŽÁDNÉ NOVINKY A ZÍSKEJTE <span class="vp-accent">SLEVU 15%</span>!</h2>
+        <p>Přihlaste se k odběru našeho newsletteru a získejte slevu 15 % na váš první nákup veselých ponožek.</p>
+        <a class="vp-vraceni__btn" href="#">PŘIHLÁSIT SE K ODBĚRU</a>
+        <p class="vp-vraceni__consent">Odběrový formulář spustíme po napojení e-mailingu.</p>
+      </div>
+      <div class="vp-vraceni__newsletter-media">
+        <img class="vp-vraceni__mascot" src="https://www.exitshop.cz/files/310/files/maskot.svg" alt="Maskot Veselé ponožky" loading="lazy" />
+      </div>
+    </div>
+  </div>
+
+</div>
