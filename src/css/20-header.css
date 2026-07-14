@@ -1462,9 +1462,12 @@ header .vp-hdr-cart__ic {
 }
 
 /* ---- Mobil/tablet (<992): zákaznická linka i Heureka skryté ----
-   Layout: řádek 1 = logo | akce (info/account/košík) | hamburger vedle sebe,
-   řádek 2 = vyhledávání přes celou šířku. Grid rozšířen na 3 sloupce, aby se
-   hamburger vešel do prvního řádku (nativně byl pod košíkem). Logo zvětšené. */
+   Layout (dle přání uživatele): řádek 1 = logo | akce (info/account/košík)
+   v jedné linii s logem; řádek 2 = vyhledávání + hamburger vedle sebe (menu
+   k vyhledávání). Hamburger zůstává NATIVNÍ — jeho ikona se kreslí přes CSS,
+   proto na něj nesaháme (background/border-radius by ji přebily) a jen ho
+   umístíme. Selektory s .align-items-center kvůli specificitě nad šablonovým
+   gridem (.row.menu-gutters.align-items-center v pravidlech výše). */
 @media (max-width: 991.98px) {
   header .vp-hdr-care {
     display: none !important;
@@ -1473,28 +1476,33 @@ header .vp-hdr-cart__ic {
   header .vp-hdr-heureka {
     display: none !important;
   }
-  header .header-middle .row.menu-gutters {
-    grid-template-columns: 1fr auto auto !important;
+  header .header-middle .row.menu-gutters.align-items-center {
+    grid-template-columns: 1fr auto !important;
+    align-items: center !important;
   }
-  header .header-middle .row.menu-gutters > .logotype {
+  header .header-middle .row.menu-gutters.align-items-center > .logotype {
     grid-column: 1 !important;
     grid-row: 1 !important;
     max-width: none !important;
   }
-  header .header-middle .row.menu-gutters > .header-shop-basket-button {
+  header .header-middle .row.menu-gutters.align-items-center > .header-shop-basket-button {
     grid-column: 2 !important;
     grid-row: 1 !important;
   }
-  /* hamburger do prvního řádku vedle košíku */
-  header .header-middle .row.menu-gutters > .navbar-toggler-top {
-    grid-column: 3 !important;
-    grid-row: 1 !important;
+  /* řádek 2: vyhledávání vlevo, hamburger vpravo — zarovnané na střed */
+  header .header-middle .row.menu-gutters.align-items-center > .search-div {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
     align-self: center !important;
   }
-  /* vyhledávání přes celou šířku pod tím (dřív jen levá půlka) */
-  header .header-middle .row.menu-gutters > .search-div {
-    grid-column: 1 / -1 !important;
+  header .header-middle .row.menu-gutters.align-items-center > .navbar-toggler-top {
+    grid-column: 2 !important;
     grid-row: 2 !important;
+    align-self: center !important;
+    justify-self: end !important;
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
   }
   /* větší logo */
   header .logotype #logo img {
