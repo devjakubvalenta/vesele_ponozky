@@ -1,11 +1,270 @@
 <!-- Úvodní stránka — celý obsah pole „Úvodní stránka" (Nastavení designu),
      vkládá se ve zdrojovém </> režimu editoru. Styl: src/css/26-benefits.css
-     (scope .content .benefits). %recommend_block_*% jsou nativní produktové bloky. -->
+     (scope .content .benefits) + src/css/27-hp-recenze.css (.vp-recenze--hp,
+     základ z 95-recenze.css). %recommend_block_*% jsou nativní produktové bloky.
+     Recenze = marquee: track se DVĚMA identickými sadami 10 karet (druhá je
+     aria-hidden kopie kvůli bezešvému loopu animace) — při úpravě recenzí
+     upravit OBĚ sady stejně! Zdroj recenzí: src/content/recenze.html. -->
 <ul class="benefits">
-    <li><a href="https://www.exitshop.cz/shops/28056/cms/60954-recenze"><span><img src="https://www.exitshop.cz/files/310/files/ikony1.svg" class="img-responsive-editor" alt=""></span><span><strong>97 % zákazníků doporučuje</strong><small>Spokojenost zákazníků je pro nás nejlepší vizitka.</small></span></a></li>
+    <li><a href="https://www.exitshop.cz/shops/28056/cms/60954-recenze"><span><img src="https://www.exitshop.cz/files/310/files/ikony1.svg" class="img-responsive-editor" alt=""></span><span><strong>99 % zákazníků doporučuje</strong><small>Spokojenost zákazníků je pro nás nejlepší vizitka.</small></span></a></li>
     <li><a href="https://www.exitshop.cz/shops/28056/cms/60948-vyroba"><span><img src="https://www.exitshop.cz/files/310/files/ikony2.svg" class="img-responsive-editor" alt=""></span><span><strong>Výroba v Třeboni</strong><small>Kvalita je u nás na prvním místě.</small></span></a></li>
     <li><a href="https://www.exitshop.cz/shops/28056/cms/60957-vraceni-zbozi"><span><img src="https://www.exitshop.cz/files/310/files/ikony3.svg" class="img-responsive-editor" alt=""></span><span><strong>Vrácení do 120 dní</strong><small>Bez obav, když nesedne velikost.</small></span></a></li>
     <li><a href="https://www.exitshop.cz/shops/28056/cms/56955-doprava-a-platba"><span><img src="https://www.exitshop.cz/files/310/files/ikony4.svg" class="img-responsive-editor" alt=""></span><span><strong>Doprava zdarma</strong><small>Doručení druhý pracovní den.</small></span></a></li>
 </ul>
+<div class="vp-recenze vp-recenze--hp">
+    <h2 class="vp-recenze__heading">Co říkají naši <span class="vp-accent">zákazníci?</span></h2>
+    <p class="vp-recenze__subtitle">Vaše spokojenost je pro nás na prvním místě.</p>
+    <div class="vp-recenze__marquee">
+        <div class="vp-recenze__track">
+            <div class="vp-recenze__set">
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnocení 5 z 5 hvězd" loading="lazy">
+                    <p class="vp-recenze__quote">„Vše v naprostém pořádku. Rychlost. Kvalita. Doporučuji."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Ondra</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnocení 5 z 5 hvězd" loading="lazy">
+                    <p class="vp-recenze__quote">„Rychlé dodání, skvělá komunikace, ochota a vstřícnost."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Blanka</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnocení 5 z 5 hvězd" loading="lazy">
+                    <p class="vp-recenze__quote">„Kvalitní pěkné ponožky."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Lenka</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnocení 5 z 5 hvězd" loading="lazy">
+                    <p class="vp-recenze__quote">„Nakupuji pravidelně, kvalitní materiál, rychlost dodání, spokojenost."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Eliška Vostracká</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnocení 5 z 5 hvězd" loading="lazy">
+                    <p class="vp-recenze__quote">„Rychlost, profesionalita, kvalita."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Roman</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnocení 5 z 5 hvězd" loading="lazy">
+                    <p class="vp-recenze__quote">„Rychle doručeno. Doma fakt radost, když jsme ponožky rozbalili :)"</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Šárka</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnocení 5 z 5 hvězd" loading="lazy">
+                    <p class="vp-recenze__quote">„Velký výběr, rychlé dodání, skvělá komunikace."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Marcela</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnocení 5 z 5 hvězd" loading="lazy">
+                    <p class="vp-recenze__quote">„Objednala jsem poprvé a velice jsem spokojená, děkuji."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Ilona</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnocení 5 z 5 hvězd" loading="lazy">
+                    <p class="vp-recenze__quote">„Kvalitní a krásné s úžasnými motivy."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Alžběta Dixová</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnocení 5 z 5 hvězd" loading="lazy">
+                    <p class="vp-recenze__quote">„Ponožky z tohoto obchodu jsou opravdu velmi kvalitní, pružné a dobře „sedí". Dodání zboží bylo velmi rychlé, za 2 dny od objednávky."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Lenka</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="vp-recenze__set" aria-hidden="true">
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="" loading="lazy">
+                    <p class="vp-recenze__quote">„Vše v naprostém pořádku. Rychlost. Kvalita. Doporučuji."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Ondra</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="" loading="lazy">
+                    <p class="vp-recenze__quote">„Rychlé dodání, skvělá komunikace, ochota a vstřícnost."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Blanka</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="" loading="lazy">
+                    <p class="vp-recenze__quote">„Kvalitní pěkné ponožky."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Lenka</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="" loading="lazy">
+                    <p class="vp-recenze__quote">„Nakupuji pravidelně, kvalitní materiál, rychlost dodání, spokojenost."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Eliška Vostracká</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="" loading="lazy">
+                    <p class="vp-recenze__quote">„Rychlost, profesionalita, kvalita."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Roman</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="" loading="lazy">
+                    <p class="vp-recenze__quote">„Rychle doručeno. Doma fakt radost, když jsme ponožky rozbalili :)"</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Šárka</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="" loading="lazy">
+                    <p class="vp-recenze__quote">„Velký výběr, rychlé dodání, skvělá komunikace."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Marcela</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="" loading="lazy">
+                    <p class="vp-recenze__quote">„Objednala jsem poprvé a velice jsem spokojená, děkuji."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Ilona</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="" loading="lazy">
+                    <p class="vp-recenze__quote">„Kvalitní a krásné s úžasnými motivy."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Alžběta Dixová</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vp-recenze__card">
+                    <img class="vp-recenze__stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="" loading="lazy">
+                    <p class="vp-recenze__quote">„Ponožky z tohoto obchodu jsou opravdu velmi kvalitní, pružné a dobře „sedí". Dodání zboží bylo velmi rychlé, za 2 dny od objednávky."</p>
+                    <div class="vp-recenze__reviewer">
+                        <img class="vp-recenze__avatar" src="https://www.exitshop.cz/files/310/files/emoji_recenze.svg" alt="" loading="lazy">
+                        <div class="vp-recenze__reviewer-meta">
+                            <span class="vp-recenze__reviewer-name">Lenka</span>
+                            <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Ověřený zákazník</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="vp-recenze__stats">
+        <div class="vp-recenze__stat">
+            <img class="vp-recenze__stat-icon" src="https://www.exitshop.cz/files/310/files/customers.svg" alt="" loading="lazy">
+            <div class="vp-recenze__stat-text">
+                <span class="vp-recenze__stat-num">10 000+</span>
+                <span class="vp-recenze__stat-label">Spokojených zákazníků</span>
+            </div>
+        </div>
+        <div class="vp-recenze__stat vp-recenze__stat--rating">
+            <span class="vp-recenze__stat-num vp-recenze__rating-num">4,9/5</span>
+            <div class="vp-recenze__stat-text">
+                <img class="vp-recenze__stat-stars" src="https://www.exitshop.cz/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="" loading="lazy">
+                <span class="vp-recenze__stat-label">Průměrné hodnocení</span>
+            </div>
+        </div>
+        <div class="vp-recenze__stat">
+            <img class="vp-recenze__stat-icon" src="https://www.exitshop.cz/files/310/files/trust_badge.svg" alt="" loading="lazy">
+            <div class="vp-recenze__stat-text">
+                <span class="vp-recenze__stat-num">99 %</span>
+                <span class="vp-recenze__stat-label">Doporučuje naše ponožky</span>
+            </div>
+        </div>
+    </div>
+</div>
 <p>%recommend_block_3224%</p>
 <p>%recommend_block_3236%</p><p><br></p><h2 style="text-align: center;"><strong>Všechny naše produkty</strong></h2>

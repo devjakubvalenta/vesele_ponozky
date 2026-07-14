@@ -1,0 +1,106 @@
+/* Homepage — sekce „Co říkají naši zákazníci?" pod benefits pásem
+   (markup src/content/homepage.html). Staví na 95-recenze.css: karty, reviewer
+   a statistický panel přebírá 1:1 přes třídy .vp-recenze__*, tento soubor je
+   jen moduluje modifikátorem .vp-recenze--hp — nadpis h2 (navy verzálky +
+   modrý akcent), karty jako nekonečný marquee pás a statistiky POD kartami
+   jako plochý světlý pás. Pořadí buildu nevadí (95 jde až po 27): overrides
+   tady mají o třídu vyšší specificitu (.vp-recenze--hp …).
+   Marquee: track = 2 identické sady 10 karet (druhá aria-hidden), animace
+   translateX(-50%) = přesně šířka jedné sady — sada má gap i padding-right
+   stejné velikosti, spoj je proto bezešvý. Hover pás pozastaví;
+   prefers-reduced-motion animaci vypne a pás je ručně scrollovatelný. */
+
+.vp-recenze--hp {
+  margin: clamp(2.25rem, 5vw, 3.5rem) 0 1rem;
+}
+
+/* Nadpis: navy verzálky s modrým akcentem (stránka Recenze má celý h1 modrý).
+   !important zrcadlí __title z 95 — přebíjí šablonové styly nadpisů v .content. */
+.vp-recenze--hp .vp-recenze__heading {
+  margin: 0 0 0.5rem !important;
+  text-align: center;
+  color: var(--rec-text) !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.4rem, 3vw, 2rem) !important;
+  line-height: 1.15 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.vp-recenze--hp .vp-recenze__heading .vp-accent {
+  color: var(--rec-blue);
+}
+
+/* ===== Marquee karet ===== */
+.vp-recenze--hp .vp-recenze__marquee {
+  overflow: hidden;
+  margin-top: clamp(1.4rem, 3vw, 2rem);
+  /* jemné vyběhnutí karet do ztracena na krajích pásu */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+}
+.vp-recenze--hp .vp-recenze__track {
+  display: flex;
+  width: max-content;
+  animation: vp-hprec-marquee 60s linear infinite;
+}
+.vp-recenze--hp .vp-recenze__marquee:hover .vp-recenze__track {
+  animation-play-state: paused;
+}
+.vp-recenze--hp .vp-recenze__set {
+  display: flex;
+  gap: 16px;
+  padding-right: 16px; /* mezera před napojením druhé sady = gap */
+}
+.vp-recenze--hp .vp-recenze__card {
+  width: 320px;
+  flex: 0 0 auto;
+}
+/* Hvězdy vlevo — flex stretch by je roztáhl na šířku karty a SVG (xMidYMid)
+   vycentroval; stránka Recenze je centrované nechává. */
+.vp-recenze--hp .vp-recenze__stars {
+  align-self: flex-start;
+}
+@keyframes vp-hprec-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ===== Statistický panel: plochý světlý pás místo bílé karty se stínem ===== */
+.vp-recenze--hp .vp-recenze__stats {
+  max-width: 1010px;
+  margin-top: clamp(1.4rem, 3vw, 2rem);
+  background: #f2f6fb;
+  border: 0;
+  box-shadow: none;
+}
+/* Výraznější dělítka — --rec-border na světlém podkladu zaniká. border-color
+   (shorthand barev všech stran) pokryje svislé dělítko na desktopu i vodorovné
+   z mobilního stacku v 95 (<768 přepíná border-left → border-top); šířky/styly
+   dál řídí 95. */
+.vp-recenze--hp .vp-recenze__stat + .vp-recenze__stat {
+  border-color: #dde6f2;
+}
+
+/* ===== <576: užší karty ===== */
+@media (max-width: 575.98px) {
+  .vp-recenze--hp .vp-recenze__card {
+    width: 272px;
+  }
+}
+
+/* ===== Přístupnost: bez animace je pás ručně scrollovatelný ===== */
+@media (prefers-reduced-motion: reduce) {
+  .vp-recenze--hp .vp-recenze__track {
+    animation: none;
+    width: auto;
+  }
+  .vp-recenze--hp .vp-recenze__set + .vp-recenze__set {
+    display: none; /* duplikát sady je bez animace zbytečný */
+  }
+  .vp-recenze--hp .vp-recenze__marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
