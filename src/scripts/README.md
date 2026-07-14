@@ -13,6 +13,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 | `footer.js` | patička (sock strip + recenze + badge + logo + accordion) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…/src/scripts/footer.js">` |
 | `countdown-bar.js` | Odpočet v liště | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…/src/scripts/countdown-bar.js">`; datum konce akce (TARGET) je v souboru |
 | `30-product-cards.js` | Produktové karty (název, datum, Zobrazit vše) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…/src/scripts/30-product-cards.js">`; mapa „Zobrazit vše" (SHOW_ALL) a prefixy názvů jsou v souboru |
+| `hp-categories.js` | Kategorie na HP (přesun + barevné dlaždice) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/hp-categories.js">` — **pin hashem** jako u CSS linku, bump jen při změně souboru; styl `src/css/28-hp-kategorie.css` |
 
 > ⚠️ **Sekce „Skripty" vkládá obsah DOSLOVA** (neobaluje ho). `<link>` a
 > `<style>` vkládej **holé** — NIKDY ne uvnitř `<script>…</script>` (browser by
@@ -38,6 +39,21 @@ výpisech `.products`: (1) rozdělí název na 2 řádky — černý typ produkt
 „Zobrazit vše" podle mapy `SHOW_ALL` (`{id bloku: URL}` — blok bez
 záznamu tlačítko nemá). Idempotentní, MutationObserver zpracuje i karty
 dorenderované AJAX filtrováním v kategorii.
+
+## Co dělá `hp-categories.js`
+
+Nativní HP sekci „Titulek a kategorie" (`.category-circle-section`, renderuje
+se mezi bento kompozicí a `#homepage_text`) přesune DOVNITŘ `#homepage_text`
+hned za sekci recenzí `.vp-recenze--hp` (fallback za benefits pás) a zapne
+její restyle na barevné dlaždice
+(`src/css/28-hp-kategorie.css`, scope `.vp-cats`): každé dlaždici přidá
+`vp-cat-c1..c4` (červená → žlutá → modrá → zelená), u víceslovných názvů
+obalí slova 2+ do `.vp-cat-accent` (akcentní barva dle dlaždice). Kategorie
+se dál plně spravují v adminu (multiselect + pořadí v manageru Kategorie).
+Idempotentní; bez skriptu zůstává sekce v nativní pozici i vzhledu. Mobilní
+swipe dodává CSS scroll-snap v `28-hp-kategorie.css` — šablonová třída
+`only-mobile-slider` je na tomto shopu mrtvý hook (Swiper se nenačítá,
+`window.Swiper` je `undefined`, ověřeno i s mobilním UA).
 
 ## Co dělá `10-force-variant-selection.html`
 

@@ -4,7 +4,11 @@
      základ z 95-recenze.css). %recommend_block_*% jsou nativní produktové bloky.
      Recenze = marquee: track se DVĚMA identickými sadami 10 karet (druhá je
      aria-hidden kopie kvůli bezešvému loopu animace) — při úpravě recenzí
-     upravit OBĚ sady stejně! Zdroj recenzí: src/content/recenze.html. -->
+     upravit OBĚ sady stejně! Zdroj recenzí: src/content/recenze.html.
+     POZOR: src/scripts/hp-categories.js kotví přesun nativní HP sekce kategorií
+     hned ZA .vp-recenze--hp (fallback ZA ul.benefits) — když se oba bloky
+     odsud odstraní/přejmenují, kategorie se tiše vrátí do nativní pozice
+     a vzhledu nahoře na HP (barevné dlaždice se nezapnou). -->
 <ul class="benefits">
     <li><a href="https://www.exitshop.cz/shops/28056/cms/60954-recenze"><span><img src="https://www.exitshop.cz/files/310/files/ikony1.svg" class="img-responsive-editor" alt=""></span><span><strong>99 % zákazníků doporučuje</strong><small>Spokojenost zákazníků je pro nás nejlepší vizitka.</small></span></a></li>
     <li><a href="https://www.exitshop.cz/shops/28056/cms/60948-vyroba"><span><img src="https://www.exitshop.cz/files/310/files/ikony2.svg" class="img-responsive-editor" alt=""></span><span><strong>Výroba v Třeboni</strong><small>Kvalita je u nás na prvním místě.</small></span></a></li>

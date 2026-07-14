@@ -1,0 +1,156 @@
+/* Homepage — nativní sekce „Titulek a kategorie na HP" jako barevné dlaždice
+   (červená → žlutá → modrá → zelená, opakuje se po čtyřech). Scope .vp-cats —
+   třídy vp-cats / vp-cats-wrap / vp-cat-c1..c4 / .vp-cat-accent přidává
+   src/scripts/hp-categories.js, který sekci zároveň přesouvá pod benefits pás.
+   Bez skriptu se nic z tohoto souboru neaplikuje (sekce zůstane nativní).
+   Přebíjí template.css ř. 5602–5664: item šířky 10.25rem s margin 1.2rem .4rem,
+   obrázek fixně 7.5rem×7.5rem (div i img!) s radius 5 % + stínem, šedý text
+   POD obrázkem (u nás column-reverse → text NAD obrázkem).
+   Mobil: třída .only-mobile-slider je na tomto shopu MRTVÝ hook — Swiper se
+   nikde nenačítá (ověřeno: window.Swiper undefined, žádný skript třídu nezná,
+   ani s mobilním UA). Swipe na mobilu proto dodává CSS scroll-snap track. */
+
+.category-circle-section.vp-cats {
+  --cat-red: #ec3323;
+  --cat-yellow: #fbbc02;
+  --cat-blue: #1361cf;
+  --cat-green: #3ea436;
+  --cat-radius: 22px;
+  --cat-gap: 18px;
+}
+
+/* Po přesunu sedí sekce uvnitř .content .container → vynulovat vnořené
+   kontejnery, ať dlaždice lícují se šířkou obsahu (benefits/recenze) */
+.vp-cats-wrap {
+  padding-left: 0;
+  padding-right: 0;
+}
+.vp-cats-wrap .container {
+  max-width: none;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* .category-circle-list je flex → .swiper-container jako flex item se smrští
+   na obsah; roztáhnout na plnou šířku obsahu */
+.vp-cats .swiper-container {
+  width: 100%;
+}
+
+/* Titulek sekce (admin pole „Titulek na homepage"): prázdný skrýt, vyplněný
+   sladit s nadpisem sekce recenzí */
+.vp-cats h1:empty {
+  display: none;
+}
+.vp-cats h1 {
+  margin: 0 0 1rem;
+  color: #0d1427;
+  font-weight: 800;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+/* ===== Dlaždice ===== */
+/* celá dlaždice je <a> — globální link styly (modrá + podtržení) pryč ve všech stavech */
+.vp-cats .category-circle-item,
+.vp-cats .category-circle-item:hover,
+.vp-cats .category-circle-item:focus,
+.vp-cats .category-circle-item:visited {
+  color: #fff;
+  text-decoration: none;
+}
+.vp-cats .category-circle-item {
+  margin: 0;
+  width: auto;
+  display: flex;
+  flex-direction: column-reverse; /* DOM: obrázek, text → vizuálně text nahoře */
+  justify-content: space-between;
+  text-align: left;
+  border-radius: var(--cat-radius);
+  padding: 22px 22px 18px;
+  aspect-ratio: 5 / 6;
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.vp-cats .vp-cat-c1 { background: var(--cat-red); }
+.vp-cats .vp-cat-c2 { background: var(--cat-yellow); }
+.vp-cats .vp-cat-c3 { background: var(--cat-blue); }
+.vp-cats .vp-cat-c4 { background: var(--cat-green); }
+
+.vp-cats .category-circle-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.18);
+}
+
+/* Obrázek: pryč fixních 7.5rem (na divu i img), stín, radius i overflow */
+.vp-cats .category-circle-item .category-circle-item-img {
+  width: 66%;
+  height: auto;
+  margin: 12px auto 0;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+}
+.vp-cats .category-circle-item:hover .category-circle-item-img {
+  box-shadow: none;
+}
+.vp-cats .category-circle-item .category-circle-item-img img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Text: bílé verzálky nahoře, akcentní slova 2+ na vlastním řádku */
+.vp-cats .category-circle-item .category-circle-item-text {
+  margin: 0;
+  color: #fff;
+  font-weight: 800;
+  font-size: clamp(17px, 1.7vw, 22px);
+  line-height: 1.18;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.vp-cats .vp-cat-accent {
+  display: block;
+}
+.vp-cats .vp-cat-c1 .vp-cat-accent { color: var(--cat-yellow); }
+.vp-cats .vp-cat-c2 .vp-cat-accent { color: var(--cat-blue); }
+.vp-cats .vp-cat-c3 .vp-cat-accent { color: var(--cat-yellow); }
+.vp-cats .vp-cat-c4 .vp-cat-accent { color: var(--cat-yellow); }
+
+/* ===== Desktop (nad šablonovým slider breakpointem 768): 4 na šířku obsahu ===== */
+@media (min-width: 769px) {
+  .vp-cats .swiper-wrapper {
+    gap: var(--cat-gap);
+    justify-content: flex-start;
+  }
+  .vp-cats .category-circle-item {
+    flex: 0 0 calc(25% - var(--cat-gap) * 3 / 4); /* >4 kategorií → další řada */
+  }
+}
+
+/* ===== Mobil (≤768): swipe přes CSS scroll-snap (Swiper tu neexistuje) ===== */
+@media (max-width: 768px) {
+  .vp-cats .swiper-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+  }
+  .vp-cats .swiper-container::-webkit-scrollbar {
+    display: none;
+  }
+  .vp-cats .swiper-wrapper {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: max-content;
+    gap: 10px;
+  }
+  .vp-cats .category-circle-item {
+    width: 220px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+}
