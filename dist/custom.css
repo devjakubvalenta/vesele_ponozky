@@ -3455,6 +3455,210 @@ header .header-shop-basket-button #hover-cart #hover-cart-footer .to-cart .btn.b
   }
 }
 
+/* ==== 29-hp-vyroba.css ==== */
+
+/* Homepage — sekce „Výroba v Třeboni" (markup v poli Úvodní stránka,
+   src/content/homepage.html, za dárkovými sety %recommend_block_3236%).
+   Scope .vp-hpvyr — nedosáhne na zbytek webu. Vizuálně navazuje na CMS stránku
+   Výroba (src/css/70-trebon.css, scope .vp-tr): stejná placka „Vyrobeno
+   s láskou v Třeboni" (světle žlutý box + ikona domečku Třeboň01.png).
+   Layout: vlevo nadpis + 5 benefitů (kruhová ikona HP1–5 + text), vpravo dvě
+   fotky nad sebou (dílna s plackou + Třeboň z výšky), dole světle žlutý pruh
+   s maskotem HP6 a claimem. Značka: modrá #1361cf + žlutá #fbbc02. */
+
+.vp-hpvyr {
+  --hv-blue: #1361cf;
+  --hv-text: #0f172a;
+  --hv-muted: #475569;
+  --hv-yellow-soft: #fdf3d7; /* kruh pod ikonou */
+  --hv-band: #fff6de;        /* dolní pruh + placka */
+  --hv-radius: 18px;
+  --hv-gap: clamp(1.5rem, 3vw, 2.5rem);
+
+  color: var(--hv-text);
+  box-sizing: border-box;
+  margin: clamp(2.5rem, 6vw, 4rem) 0 clamp(1.5rem, 4vw, 2.5rem);
+}
+.vp-hpvyr *,
+.vp-hpvyr *::before,
+.vp-hpvyr *::after {
+  box-sizing: border-box;
+}
+.vp-hpvyr img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ===== Layout: vlevo benefity, vpravo fotky ===== */
+.vp-hpvyr__grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+/* ---- Nadpis ---- */
+.vp-hpvyr__title {
+  color: var(--hv-blue) !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.5rem, 3vw, 2.2rem) !important;
+  line-height: 1.1 !important;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  text-align: left;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 0 clamp(1.25rem, 2.5vw, 1.75rem) !important;
+}
+
+/* ---- Levý sloupec: 5 benefitů ---- */
+.vp-hpvyr__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+.vp-hpvyr__item {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(0.85rem, 1.5vw, 1.15rem);
+}
+.vp-hpvyr__ic {
+  flex: 0 0 auto;
+  width: clamp(48px, 5.5vw, 60px);
+  height: clamp(48px, 5.5vw, 60px);
+  border-radius: 50%;
+  background: var(--hv-yellow-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vp-hpvyr__ic img {
+  width: 58%;
+  height: auto;
+}
+.vp-hpvyr__txt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 0.15rem;
+}
+.vp-hpvyr__txt strong {
+  color: var(--hv-text);
+  font-weight: 800;
+  font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.vp-hpvyr__txt span {
+  color: var(--hv-muted);
+  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+  line-height: 1.5;
+}
+
+/* ---- Pravý sloupec: dvě fotky nad sebou ---- */
+.vp-hpvyr__right {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+.vp-hpvyr__photo {
+  position: relative;
+  border-radius: var(--hv-radius);
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.1);
+}
+/* jen přímý potomek — jinak by pravidlo přebilo i ikonu v placce
+   (.vp-hpvyr__badge-ic) a roztáhlo ji přes celou fotku */
+.vp-hpvyr__photo > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---- Placka „Vyrobeno s láskou v Třeboni" (princip .vp-tr__badge) ---- */
+.vp-hpvyr__badge {
+  position: absolute;
+  right: clamp(10px, 1.6vw, 18px);
+  bottom: clamp(10px, 1.6vw, 18px);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--hv-band);
+  border-radius: 14px;
+  padding: 0.55rem 0.9rem 0.55rem 0.65rem;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.25);
+}
+.vp-hpvyr__badge-ic {
+  width: clamp(34px, 4.5vw, 48px);
+  height: auto;
+  flex: 0 0 auto;
+}
+.vp-hpvyr__badge-text {
+  font-weight: 800;
+  font-size: clamp(0.68rem, 1.15vw, 0.9rem);
+  line-height: 1.15;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+.vp-hpvyr__badge-accent {
+  color: var(--hv-blue);
+}
+
+/* ===== Dolní pruh: maskot + claim ===== */
+.vp-hpvyr__footer {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  background: var(--hv-band);
+  border-radius: var(--hv-radius);
+  padding: clamp(1.1rem, 2.5vw, 1.6rem) clamp(1.4rem, 3vw, 2.25rem);
+  margin-top: var(--hv-gap);
+}
+.vp-hpvyr__footer-mascot {
+  flex: 0 0 auto;
+  width: clamp(56px, 8vw, 86px);
+  height: auto;
+}
+.vp-hpvyr__footer-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.vp-hpvyr__footer-text strong {
+  color: var(--hv-text);
+  font-weight: 800;
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  line-height: 1.25;
+}
+.vp-hpvyr__footer-text span {
+  color: var(--hv-muted);
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+}
+
+/* ===== Responsivita (BS4 breakpointy) ===== */
+@media (max-width: 767.98px) {
+  .vp-hpvyr__grid {
+    grid-template-columns: 1fr;
+  }
+  /* fotky nad benefity by odsunuly text — necháme benefity první (DOM pořadí),
+     fotky pod nimi jako druhý grid item; přirozené stackování */
+  .vp-hpvyr__footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  .vp-hpvyr__footer-text {
+    align-items: center;
+  }
+}
+
 /* ==== 30-footer.css ==== */
 
 body footer {
