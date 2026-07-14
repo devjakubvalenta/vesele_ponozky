@@ -1,0 +1,19 @@
+<!--
+  Obsah admin pole „Produktový detail" (Administrace → Obsah → Produktový
+  detail → „Na detailu produktu"). Vkládá se CELÝ tento <ul> (bez tohoto
+  komentáře, pokud editor komentáře nebere — jinak nevadí).
+
+  Renderuje se na detailu jako .content-product-detail > ul (platforma může
+  třídu ul přepsat na „benefits" — CSS v 24-product-detail.css proto cílí
+  strukturně a na třídě nezávisí). 4. položka (Doprava zdarma) má žlutou
+  dlaždici přes :nth-child(4) — pořadí položek zachovat.
+
+  Ikony = sdílené ikony1–4.svg (stejné jako HP benefits pás).
+  Pozn.: mockup uvádí „97 %" — HP pás říká 99 %; sjednotit dle reality.
+-->
+<ul class="pd-benefits">
+  <li><a href="https://www.exitshop.cz/shops/28056/cms/60954-recenze"><span><img src="https://www.exitshop.cz/files/310/files/ikony1.svg" class="img-responsive-editor" alt=""></span><span><strong>97 % zákazníků doporučuje</strong><small>Spokojenost zákazníků je pro nás nejlepší vizitka.</small></span></a></li>
+  <li><a href="https://www.exitshop.cz/shops/28056/cms/60948-vyroba"><span><img src="https://www.exitshop.cz/files/310/files/ikony2.svg" class="img-responsive-editor" alt=""></span><span><strong>Výroba v Třeboni</strong><small>Kvalita je u nás na prvním místě.</small></span></a></li>
+  <li><a href="https://www.exitshop.cz/shops/28056/cms/60957-vraceni-zbozi"><span><img src="https://www.exitshop.cz/files/310/files/ikony3.svg" class="img-responsive-editor" alt=""></span><span><strong>Vrácení do 120 dní</strong><small>Bez obav, když nesedne velikost.</small></span></a></li>
+  <li><a href="https://www.exitshop.cz/shops/28056/cms/56955-doprava-a-platba"><span><img src="https://www.exitshop.cz/files/310/files/ikony4.svg" class="img-responsive-editor" alt=""></span><span><strong>Doprava zdarma</strong><small>Doručení druhý pracovní den.</small></span></a></li>
+</ul>

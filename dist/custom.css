@@ -2602,6 +2602,563 @@ header .vp-hdr-cart__ic {
   }
 }
 
+/* ==== 24-product-detail.css ==== */
+
+/* =====================================================================
+   PRODUKTOVÝ DETAIL (#app.product-detail) — redesign dle mockupu
+   Levý sloupec: obrázek + recenze (injektuje 40-product-detail.js)
+   + fotomozaika z dalších obrázků. Pravý sloupec: název → popis →
+   slevový pill → ceny → doručení → velikosti → množství → CTA →
+   benefity 2×2 (obsah = admin pole „Produktový detail").
+
+   Přebíjené šablonové/shop styly (reference/template.css, 1. kopie):
+   ř. 2290–2360 (layout/ceny/stepper), 2738–2777 (badge), 3334–3390
+   (variant kartičky), 28729–29031 (shop overrides: badge #ba1416,
+   delivery #ab1a1d, aktivní varianta #2f3c9b, benefits grid).
+
+   Pořadí prvků řeší ČISTĚ CSS flex order (+ display:contents na
+   .product-price-and-cart-button) — žádné JS přesuny ve Vue stromu.
+
+   Musí respektovat nasazený „force variant" skript (admin položka):
+   #app.variant-selection-required = zamčeno → jeho bílý reset variant
+   a ztlumené CTA mají mít navrch (proto guard :not(...) u aktivního
+   chipu). Třídy .variant-selection-note / .forced-disabled nerušit.
+   ===================================================================== */
+
+#app.product-detail {
+  --pd-blue: #1361cf;
+  --pd-blue-dark: #0f4ea8;
+  --pd-green: #2e9e44;
+  --pd-green-dark: #23843a;
+  --pd-red: #dc2626;
+  --pd-text: #0f172a;
+  --pd-muted: #64748b;
+  --pd-border: #e5e9f0;
+  --pd-border-strong: #cdd5e4;
+  --pd-radius: 14px;
+  --pd-pill: 999px;
+  --pd-yellow-bg: #fff6de;     /* žlutá dlaždice Doprava zdarma */
+  --pd-yellow-border: #f5e3b0;
+}
+
+/* ==== Layout + pořadí (desktop) ===================================== */
+
+#app.product-detail .product-right-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cenový blok rozpustit — jeho děti se stanou flex položkami sloupce,
+   takže jde proložit řádek doručení mezi cenu a velikosti */
+#app.product-detail .product-right-content .product-price-and-cart-button {
+  display: contents;
+}
+
+/* Pořadí: základ pro nepojmenované/neznámé prvky doprostřed */
+#app.product-detail .product-right-content > *,
+#app.product-detail .product-right-content .product-price-and-cart-button > * {
+  order: 60;
+}
+#app.product-detail .product-right-content > h1 { order: 1; }
+#app.product-detail .product-right-content > .short-description { order: 10; }
+#app.product-detail .product-right-content > .pd-discount-pill { order: 20; }
+#app.product-detail .product-right-content .product-price-and-cart-button > .col-md-12 { order: 30; }  /* řádek cen */
+#app.product-detail .product-right-content > .relative { order: 40; }                                  /* doručení */
+#app.product-detail .product-right-content > .product-detail-row { order: 41; }                        /* skladem (viz níže) */
+#app.product-detail .product-right-content .product-price-and-cart-button > p { order: 45; }           /* množstevní sleva */
+#app.product-detail .product-right-content .product-price-and-cart-button > #variant-table-anchor { order: 50; }
+/* košík wrapper (často v bezejmenném obalu) zůstává na order 60 */
+#app.product-detail .product-right-content > .content-product-detail { order: 70; }                    /* benefity */
+#app.product-detail .product-right-content > .short-description-anchor-div { order: 80; }
+#app.product-detail .product-right-content > .nav-tabs { order: 90; }
+#app.product-detail .product-right-content > .tab-content { order: 91; }
+
+/* Levý sloupec: obrázek → recenze (JS) → mozaika */
+#app.product-detail > figure.col-md-6 {
+  display: flex;
+  flex-direction: column;
+}
+#app.product-detail > figure.col-md-6 > * { order: 10; }
+#app.product-detail > figure.col-md-6 > .product-stripes { order: 0; }
+#app.product-detail > figure.col-md-6 > .fancybox { order: 1; }
+#app.product-detail > figure.col-md-6 > .vp-recenze--pd { order: 2; }
+#app.product-detail > figure.col-md-6 > .additional-images { order: 3; }
+
+/* Skrytí duplicit a prvků mimo mockup */
+#app.product-detail .product-right-content > .row.row-cols-2 { display: none !important; }  /* výrobce + prázdný rating */
+#app.product-detail .product-right-content:has(.delivery-date) .product-detail-row:has(.stored-count) { display: none !important; }  /* „doručíme" duplikuje delivery-date; bez delivery-date (vyprodáno) zůstává */
+#app.product-detail .product-right-content .discount-text { display: none !important; }     /* bublina „Nyní … ušetříte" */
+#app.product-detail h1 .v_name { display: none; }                                           /* „ - 35-38" v názvu; velikost říkají chipy */
+
+/* ==== Název + popis ================================================= */
+
+#app.product-detail .product-right-content > h1 {
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--pd-text) !important;      /* šablona: #495057 */
+  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+  line-height: 1.15;
+  margin: 0 0 .75rem;
+}
+
+#app.product-detail .short-description {
+  color: var(--pd-muted);
+  font-size: .95rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+#app.product-detail .short-description-anchor-div {
+  margin-top: .75rem;
+  font-size: .85rem;
+}
+#app.product-detail .short-description-anchor-div a {
+  color: var(--pd-muted);
+  text-decoration: underline;
+}
+
+/* ==== Slevový pill v pravém sloupci (klon vkládá JS) ================ */
+
+#app.product-detail .pd-discount-pill {
+  align-self: flex-start;
+  background: var(--pd-blue);
+  color: #fff;
+  border-radius: var(--pd-pill);
+  padding: .35rem 1.05rem;
+  font-weight: 800;
+  font-size: .95rem;
+  margin-bottom: .6rem;
+  white-space: nowrap;
+}
+#app.product-detail .pd-discount-pill[hidden] { display: none; }
+
+/* ==== Obrázek + badge slevy ========================================= */
+
+/* Kotva badge na samotném obrázku (a.fancybox už position-relative má),
+   šablonové z-index:-1 na obrázku resetovat */
+#app.product-detail figure img.product_detail { z-index: 0; }
+
+#app.product-detail figure .fancybox .discount-percentage {
+  top: 12px !important;
+  right: 12px !important;
+  bottom: auto !important;               /* shop: bottom:50px; right:50px */
+  left: auto !important;
+  width: 56px;
+  height: 56px;
+  min-width: 0;
+  min-height: 0;
+  background-color: var(--pd-blue) !important;   /* shop override: #ba1416 */
+  color: #fff !important;
+  border-radius: var(--pd-pill);
+  font-size: .9rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ==== Ceny ========================================================== */
+
+/* Stará a nová cena na jeden řádek */
+#app.product-detail .wrapper-product-price > div {
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+}
+#app.product-detail .wrapper-product-price .mb-2 { margin: 0 !important; }
+#app.product-detail .wrapper-product-price .mb-2:empty { display: none; }
+
+#app.product-detail .product-price {
+  color: var(--pd-green) !important;     /* šablona: dědí #495057 */
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+#app.product-detail .product-price .product-price-currency { font-weight: 800; }
+
+#app.product-detail .discount-old-price.strikethrough {
+  color: var(--pd-red);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+#app.product-detail .strikethrough::before {
+  background: currentColor;
+  transform: rotate(-8deg);              /* nativně -15° */
+}
+
+/* ==== Doručení ====================================================== */
+
+#app.product-detail .relative { margin: .35rem 0 .85rem; }
+
+#app.product-detail p.delivery-date {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin: 0;
+  color: var(--pd-text) !important;      /* shop override: #ab1a1d bold */
+  font-weight: 400;
+  font-size: .95rem;
+}
+#app.product-detail p.delivery-date::before {
+  content: "";
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  /* pozor: diakritika v názvu souboru MUSÍ zůstat URL-encoded */
+  background: url("https://www.exitshop.cz/files/310/files/doru%C4%8Den%C3%AD.svg") center / contain no-repeat;
+}
+#app.product-detail .order-delivery-date {
+  color: var(--pd-green-dark);
+  font-weight: 700;
+}
+
+/* ==== Velikosti (variant kartičky → chipy) ========================== */
+
+#app.product-detail #variant-table-anchor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: .25rem 0 .5rem;
+}
+#app.product-detail #variant-table-anchor .choose-variant-title {
+  flex: 1 0 100%;
+  font-size: .8rem !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: var(--pd-text);
+  margin: 0 0 .1rem !important;
+}
+#app.product-detail #variant-table-anchor a.variant-name {
+  text-decoration: none !important;
+  margin: 0;
+}
+
+/* Kartička 100×120 s obrázkem → kompaktní chip */
+#app.product-detail #variant-table-anchor .variant-row {
+  width: auto !important;
+  height: auto !important;
+  min-width: 58px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: .5rem .95rem !important;
+  margin: 0 !important;
+  background: #fff;
+  border: 1.5px solid var(--pd-border-strong) !important;
+  border-radius: 12px !important;        /* nativně 25px */
+  box-shadow: none;
+  transition: border-color .15s ease, background-color .15s ease, color .15s ease;
+}
+#app.product-detail #variant-table-anchor .variant-row .img-wrap { display: none !important; }
+#app.product-detail #variant-table-anchor .variant-row .discount-percentage-variant { display: none !important; }
+#app.product-detail #variant-table-anchor .variant-row .var-name {
+  font-size: .9rem;
+  font-weight: 600;
+  color: inherit;
+}
+#app.product-detail #variant-table-anchor .variant-row:hover {
+  border-color: var(--pd-blue) !important;
+  color: var(--pd-blue);
+}
+
+/* Vybraná velikost = plná modrá — ale JEN když neběží zámek force-variant
+   (v zamčeném stavu má jeho bílý reset vyhrát → guard :not) */
+#app.product-detail:not(.variant-selection-required) #variant-table-anchor .variant-row.active {
+  background: var(--pd-blue) !important;
+  border-color: var(--pd-blue) !important;
+  color: #fff !important;
+}
+#app.product-detail:not(.variant-selection-required) #variant-table-anchor .variant-row.active .var-name {
+  color: #fff !important;
+}
+
+/* Vyprodaná varianta */
+#app.product-detail #variant-table-anchor .variant-row.var-no-stock {
+  opacity: .45;
+  border-style: dashed !important;
+}
+
+/* ==== Množství + CTA ================================================ */
+
+#app.product-detail .product-add-to-shopping-basket-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: .6rem;
+  margin: .5rem 0 1rem;
+}
+
+/* Label „Množství" (vkládá JS) — stejný styl jako label velikostí */
+#app.product-detail .pd-qty-label {
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: var(--pd-text);
+  margin: .25rem 0 -.2rem;
+}
+
+#app.product-detail .product-add-to-shopping-basket-quantity {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid var(--pd-border-strong);
+  border-radius: var(--pd-pill);
+  padding: .1rem .4rem;
+}
+#app.product-detail .product-add-to-shopping-basket-quantity .btn {
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: .3rem .7rem;
+}
+#app.product-detail .product-add-to-shopping-basket-quantity input {
+  width: 44px;
+  text-align: center;
+  border: none;
+  font-weight: 700;
+}
+
+/* Zelená pill přes celou šířku s ikonou košíku */
+#app.product-detail .product-add-to-shopping-basket {
+  display: block;
+  width: 100%;
+}
+#app.product-detail .product-add-to-shopping-basket .btn.btn-primary.btn-lg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  width: 100%;
+  background-color: var(--pd-green) !important;
+  color: #fff !important;
+  border: 0;
+  border-radius: var(--pd-pill) !important;
+  padding: .9rem 2rem !important;
+  font-size: 1rem !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  transition: background-color .2s ease;
+}
+#app.product-detail .product-add-to-shopping-basket .btn.btn-primary.btn-lg:hover,
+#app.product-detail .product-add-to-shopping-basket .btn.btn-primary.btn-lg:focus,
+#app.product-detail .product-add-to-shopping-basket .btn.btn-primary.btn-lg:active {
+  background-color: var(--pd-green-dark) !important;  /* šablona hover: #343a40 šedá */
+  color: #fff !important;
+}
+#app.product-detail .product-add-to-shopping-basket .btn.btn-primary.btn-lg::before {
+  content: "";
+  flex: 0 0 20px;
+  width: 20px;
+  height: 19px;
+  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+}
+#app.product-detail .product-add-to-shopping-basket.sprite-after::after { content: none !important; }
+
+/* Akordeon „Možnosti doručení" — jen zklidnit */
+#app.product-detail .shipping-options-wrapper { justify-content: flex-start !important; }
+#app.product-detail #shipping-options-button { font-size: .85rem; color: var(--pd-muted); }
+
+/* ==== Benefity 2×2 (obsah admin pole „Produktový detail") =========== */
+/* Strukturní selektor — ul může mít třídu .benefits (renderer) i vlastní */
+
+#app.product-detail .content-product-detail { margin-top: 1.25rem; }
+
+#app.product-detail .content-product-detail ul {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  list-style: none;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+#app.product-detail .content-product-detail ul li {
+  display: flex;
+  margin: 0 !important;
+  background: #fff;
+  border: 1px solid var(--pd-border);
+  border-radius: var(--pd-radius);
+  padding: 0;
+}
+#app.product-detail .content-product-detail ul li:nth-child(4) {
+  background: var(--pd-yellow-bg);
+  border-color: var(--pd-yellow-border);
+}
+#app.product-detail .content-product-detail ul li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  text-decoration: none !important;
+  color: inherit !important;
+}
+#app.product-detail .content-product-detail ul li span:first-of-type {
+  flex: 0 0 auto !important;
+}
+#app.product-detail .content-product-detail ul li span:first-of-type img {
+  height: 52px !important;               /* přebíjí 26-benefits.css 72px i editor */
+  width: auto !important;
+}
+#app.product-detail .content-product-detail ul li span:last-of-type {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto !important;
+}
+#app.product-detail .content-product-detail ul li strong {
+  font-size: .82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.25;
+  color: var(--pd-text);
+}
+#app.product-detail .content-product-detail ul li small {
+  font-size: .78rem;
+  line-height: 1.35;
+  color: var(--pd-muted);
+}
+
+/* ==== Fotomozaika (další obrázky produktu) ========================== */
+
+#app.product-detail .additional-images.hide-overflowing-images {
+  height: auto !important;               /* vypnout clip mechanismus */
+  overflow: visible !important;
+}
+/* prefix body.body-product nutný — shop override drží display:block
+   s vyšší specificitou (starý mozaikový blok v admin CSS) */
+body.body-product #app.product-detail .additional-images .col-md-12 {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+body.body-product #app.product-detail .additional-images .col-md-12 a {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 1 / 1;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid var(--pd-border) !important;
+  border-radius: var(--pd-radius);
+  overflow: hidden;
+  display: flex !important;
+}
+body.body-product #app.product-detail .additional-images .col-md-12 a img {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  object-fit: cover;
+}
+#app.product-detail #show-overflowing-images-anchor { display: none !important; }
+
+/* ==== NOVINKA pill (štítek, když ho produkt má) ===================== */
+
+#app.product-detail .product-stripes.in-detail {
+  position: static !important;
+  margin: 0 0 .5rem;
+  display: flex;
+  gap: .4rem;
+  font-size: 1rem;
+}
+#app.product-detail .product-stripes:empty { display: none; }
+#app.product-detail .product-stripes.in-detail .new-product-strip,
+#app.product-detail .product-stripes.in-detail .universal-strip {
+  display: inline-block;
+  background: var(--pd-blue) !important;
+  color: #fff !important;
+  border-radius: var(--pd-pill) !important;
+  padding: .3rem .95rem !important;
+  font-weight: 700;
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+#app.product-detail .product-stripes.in-detail .universal-strip::before,
+#app.product-detail .product-stripes.in-detail .universal-strip::after,
+#app.product-detail .product-stripes.in-detail .new-product-strip::before,
+#app.product-detail .product-stripes.in-detail .new-product-strip::after {
+  content: none !important;              /* skew „vlajkové" ozdoby pryč */
+}
+
+/* ==== Recenzní pás (injektuje 40-product-detail.js) ================= */
+/* Karty stylují sdílené třídy .vp-recenze__* z 95-recenze.css */
+
+#app.product-detail .vp-recenze--pd {
+  margin: 2rem 0 .5rem;
+}
+.vp-recenze--pd .vp-recenze__pd-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+}
+.vp-recenze--pd .vp-recenze__pd-stars {
+  height: 22px !important;
+  width: auto !important;
+}
+.vp-recenze--pd .vp-recenze__pd-title {
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem) !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  color: var(--rec-text, #0f172a) !important;
+  text-align: center;
+  margin: 0 !important;
+}
+.vp-recenze--pd .vp-recenze__cards {
+  grid-template-columns: repeat(3, 1fr);
+  gap: .7rem;
+  margin-top: 1rem;
+}
+.vp-recenze--pd .vp-recenze__card {
+  padding: .85rem .95rem 1rem;
+}
+.vp-recenze--pd .vp-recenze__quote {
+  font-size: .82rem !important;
+}
+.vp-recenze--pd .vp-recenze__date { display: none; }
+
+/* ==== Responzivita ================================================== */
+
+/* Užší desktop: recenze 3 karty v polovičním sloupci jsou těsné */
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .vp-recenze--pd .vp-recenze__cards { grid-template-columns: 1fr; }
+  .vp-recenze--pd .vp-recenze__card { flex-direction: column; }
+}
+
+/* Mobil: rozpustit oba sloupce → jeden order-seznam
+   (obrázek → název → popis → pill → cena → doručení → velikosti →
+   košík → benefity → recenze → mozaika → taby) */
+@media (max-width: 767.98px) {
+  #app.product-detail { flex-direction: column; margin-left: 0; margin-right: 0; }
+  #app.product-detail > figure.col-md-6,
+  #app.product-detail > .product-right-content {
+    display: contents;
+  }
+  #app.product-detail > figure.col-md-6 > .product-stripes { order: 0; }
+  #app.product-detail > figure.col-md-6 > .fancybox { order: 1; }
+  #app.product-detail .product-right-content > h1 { order: 2; margin-top: .75rem; }
+  #app.product-detail .product-right-content > .short-description { order: 3; }
+  #app.product-detail .product-right-content > .pd-discount-pill { order: 4; }
+  #app.product-detail .product-right-content .product-price-and-cart-button > .col-md-12 { order: 5; }
+  #app.product-detail .product-right-content > .relative { order: 6; }
+  #app.product-detail .product-right-content > .product-detail-row { order: 7; }
+  #app.product-detail .product-right-content .product-price-and-cart-button > p { order: 8; }
+  #app.product-detail .product-right-content .product-price-and-cart-button > #variant-table-anchor { order: 9; }
+  #app.product-detail .product-right-content .product-price-and-cart-button > *,
+  #app.product-detail .product-right-content > * { order: 10; }   /* košík + neznámé */
+  #app.product-detail .product-right-content > .content-product-detail { order: 12; }
+  #app.product-detail .product-right-content > .short-description-anchor-div { order: 13; }
+  #app.product-detail > figure.col-md-6 > .vp-recenze--pd { order: 20; }
+  #app.product-detail > figure.col-md-6 > .additional-images { order: 21; }
+  #app.product-detail .product-right-content > .nav-tabs { order: 30; }
+  #app.product-detail .product-right-content > .tab-content { order: 31; }
+
+  .vp-recenze--pd .vp-recenze__cards { grid-template-columns: 1fr; }
+  #app.product-detail .product-right-content > h1 { font-size: 1.4rem; }
+}
+
 /* ==== 25-homepage.css ==== */
 
 /* Homepage — slideshow (600×600) + dva side-bannery (600×300) = čtvercová „bento" kompozice.
