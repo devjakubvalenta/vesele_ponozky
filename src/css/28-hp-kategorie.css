@@ -20,10 +20,13 @@
 }
 
 /* Po přesunu sedí sekce uvnitř .content .container → vynulovat vnořené
-   kontejnery, ať dlaždice lícují se šířkou obsahu (benefits/recenze) */
+   kontejnery, ať dlaždice lícují se šířkou obsahu (benefits/recenze).
+   margin-top = odsazení od statistického panelu recenzí zhruba stejné jako
+   mezera pod dlaždicemi k „Novinky" (~96 px na šířce obsahu). */
 .vp-cats-wrap {
   padding-left: 0;
   padding-right: 0;
+  margin-top: clamp(2.5rem, 9.7vw, 6rem);
 }
 .vp-cats-wrap .container {
   max-width: none;
