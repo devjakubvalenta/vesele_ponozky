@@ -1507,3 +1507,61 @@ header .vp-hdr-cart__ic {
     max-height: 46px !important;
   }
 }
+
+/* ---- Mobilní menu: barevné kategorie (nahoře) + CMS položky (dole) ----
+   Přidává je header.js (buildSideMenu) do nativního .navbar-nav. Na desktopu
+   skryté (vodorovné menu + modrá lišta CMS zůstávají beze změny), na mobilu
+   v rozbaleném hamburger menu. Barvy shodné s HP dlaždicemi (28-hp-kategorie). */
+@media (min-width: 992px) {
+  header .vp-menu-cat,
+  header .vp-menu-cms {
+    display: none !important;
+  }
+}
+@media (max-width: 991.98px) {
+  header #navbarSupportedContent .navbar-nav .vp-menu-cat {
+    margin: 0.3rem 0.75rem;
+  }
+  /* #top-menu .navbar-nav prefix = vyšší specificita než nativní
+     `#top-menu .navbar-nav .nav-link{color:…!important}`, jinak by text nebyl bílý */
+  header #top-menu .navbar-nav .vp-menu-cat > .nav-link {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    color: #fff !important;
+    font-weight: 800 !important;
+    font-size: 0.95rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    border-radius: 12px !important;
+    padding: 0.7rem 1rem !important;
+  }
+  header #top-menu .navbar-nav .vp-menu-cat--c1 > .nav-link { background: #ec3323 !important; }
+  header #top-menu .navbar-nav .vp-menu-cat--c2 > .nav-link { background: #fbbc02 !important; }
+  header #top-menu .navbar-nav .vp-menu-cat--c3 > .nav-link { background: #1361cf !important; }
+  header #top-menu .navbar-nav .vp-menu-cat--c4 > .nav-link { background: #3ea436 !important; }
+  /* žlutý pruh: tmavý text — bílá na #fbbc02 má kontrast jen 1,71:1 (nečitelné) */
+  header #top-menu .navbar-nav .vp-menu-cat--c2 > .nav-link { color: #0d1427 !important; }
+  header #top-menu .navbar-nav .vp-menu-cat > .nav-link:hover,
+  header #top-menu .navbar-nav .vp-menu-cat > .nav-link:focus {
+    color: #fff !important;
+    filter: brightness(0.95);
+  }
+  header .vp-menu-cat__arrow {
+    font-size: 1.5rem;
+    line-height: 1;
+    font-weight: 400;
+  }
+  /* CMS položky jako běžné odkazy (odlišené jemnou horní linkou u první).
+     :first-of-type by matchoval první <li> (barevná kategorie), ne první CMS —
+     proto „první CMS po ne-CMS položce" (za poslední hlavní kategorií). */
+  header .vp-menu-cms > .nav-link {
+    color: var(--hdr-text) !important;
+  }
+  header #top-menu .navbar-nav > li:not(.vp-menu-cms) + .vp-menu-cms {
+    border-top: 1px solid var(--hdr-border);
+    margin-top: 0.35rem;
+    padding-top: 0.35rem;
+  }
+}
