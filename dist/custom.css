@@ -3525,18 +3525,16 @@ header .header-shop-basket-button #hover-cart #hover-cart-footer .to-cart .btn.b
   align-items: flex-start;
   gap: clamp(0.85rem, 1.5vw, 1.15rem);
 }
+/* Ikona = čistě obrázek (bez podkladového kroužku), větší */
 .vp-hpvyr__ic {
   flex: 0 0 auto;
-  width: clamp(48px, 5.5vw, 60px);
-  height: clamp(48px, 5.5vw, 60px);
-  border-radius: 50%;
-  background: var(--hv-yellow-soft);
+  width: clamp(52px, 6vw, 72px);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .vp-hpvyr__ic img {
-  width: 58%;
+  width: 100%;
   height: auto;
 }
 .vp-hpvyr__txt {
@@ -3571,6 +3569,11 @@ header .header-shop-basket-button #hover-cart #hover-cart-footer .to-cart .btn.b
   overflow: hidden;
   aspect-ratio: 3 / 2;
   box-shadow: 0 12px 40px rgba(15, 23, 42, 0.1);
+}
+/* spodní fotka (Třeboň z výšky) placatější — height o 20 % nižší než 3/2,
+   ať celá sekce není tak vysoká (viz návrh) */
+.vp-hpvyr__right .vp-hpvyr__photo:last-child {
+  aspect-ratio: 15 / 8;
 }
 /* jen přímý potomek — jinak by pravidlo přebilo i ikonu v placce
    (.vp-hpvyr__badge-ic) a roztáhlo ji přes celou fotku */
