@@ -1333,3 +1333,156 @@ header .header-shop-basket-button #hover-cart #hover-cart-footer .to-cart .btn.b
     left: auto !important;
   }
 }
+
+
+
+/* =====================================================================
+   HLAVIČKA v2 — Heureka odznak + zákaznická linka + vlastní ikona košíku
+   Prvky vkládá src/scripts/header.js (.vp-hdr-*). Kontakt v lince se čte
+   z nativního pole „Doplňující informace" (.company-info), jehož zobrazení
+   nahoře v modré liště tady skrýváme (aby nebyl 2×) — pole ale zůstává
+   zdrojem dat, proto ho v adminu nemazat.
+   ===================================================================== */
+
+/* Kontakt (telefon/e-mail) přesunut do zákaznické linky → nahoře skrýt.
+   Skrytí drží druhý selektor (0,3,3) — přebíjí i in-file is-sticky pravidlo
+   `header.is-sticky .main-nav .company-info` (0,3,1) i mobilní display:block. */
+body header .main-nav .company-info,
+body header nav.main-nav .company-info.float-right {
+  display: none !important;
+}
+
+/* Prázdný slot „Box pod hlavičkou" nepoužíváme (Heureka jde jako vlastní prvek) */
+header .header-middle .content-under-header {
+  display: none !important;
+}
+
+/* ---- Heureka odznak (uvnitř .logotype, vedle loga) ---- */
+/* logo + Heureka jako jeden blok — na desktopu i mobilu drží spolu bez kolize
+   s gridem hlavičky (Heureka je dítě .logotype, ne samostatný grid item) */
+header .logotype {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  flex-wrap: wrap;
+}
+header .vp-hdr-heureka {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+header .vp-hdr-heureka img {
+  height: 46px;
+  width: auto;
+  display: block;
+}
+/* care drží šířku podle obsahu (blokový flex by se jinak roztáhl na celou řádku) */
+header .vp-hdr-care {
+  width: max-content;
+  max-width: max-content;
+}
+
+/* ---- Zákaznická linka (fotka poradkyně + telefon + doba + e-mail) ---- */
+header .vp-hdr-care {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+header .vp-hdr-care__photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 auto;
+  border: 1px solid var(--hdr-border);
+  background: #fff;
+}
+header .vp-hdr-care__info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  min-width: 0;
+}
+header .vp-hdr-care__phone {
+  font-weight: 800;
+  color: var(--hdr-accent);
+  font-size: 1.02rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+header .vp-hdr-care__phone:hover {
+  color: var(--hdr-cart-strong);
+}
+header .vp-hdr-care__hours {
+  font-size: 0.72rem;
+  color: var(--hdr-muted);
+  white-space: nowrap;
+}
+header .vp-hdr-care__mail {
+  font-size: 0.78rem;
+  color: var(--hdr-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+header .vp-hdr-care__mail:hover {
+  color: var(--hdr-accent);
+}
+
+/* ---- Vlastní ikona košíku (cart.svg místo bi-handbag) ---- */
+header a.shopping-basket.vp-hdr-cart .bi-handbag {
+  display: none !important;
+}
+header .vp-hdr-cart__ic {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+/* ---- Desktop rozložení řady: logo | Heureka | search (grow) | linka | košík ---- */
+@media (min-width: 992px) {
+  header .header-middle .menu-gutters {
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 0.5rem 1.25rem;
+  }
+  header .header-middle .menu-gutters > .logotype,
+  header .header-middle .menu-gutters > .header-shop-basket-button {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+  header .header-middle .menu-gutters > .search-div {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+}
+
+/* ---- Mobil/tablet (<992): linka skrytá, Heureka menší vedle loga ---- */
+@media (max-width: 991.98px) {
+  header .vp-hdr-care {
+    display: none !important;
+  }
+  header .vp-hdr-heureka img {
+    height: 34px;
+  }
+  header .logotype {
+    gap: 0.35rem 0.6rem;
+  }
+  /* logotype (logo + Heureka) dostane víc místa v gridu prvního sloupce */
+  header .header-middle .row.menu-gutters > .logotype {
+    max-width: 68% !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  header .vp-hdr-heureka img {
+    height: 26px;
+  }
+  header .logotype #logo img {
+    max-height: 34px;
+  }
+}
