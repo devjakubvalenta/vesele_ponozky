@@ -649,6 +649,12 @@ header .navbar-toggler-top .navbar-toggler {
     min-height: 2.35rem !important;
   }
 
+  /* hamburger sladit velikostí s ikonami účet/košík (2.35rem) — čistá linie */
+  header .navbar-toggler-top .navbar-toggler {
+    width: 2.35rem !important;
+    height: 2.35rem !important;
+  }
+
   header .main-nav,
   header .main-nav .container {
     max-width: 100% !important;
@@ -1462,12 +1468,13 @@ header .vp-hdr-cart__ic {
 }
 
 /* ---- Mobil/tablet (<992): zákaznická linka i Heureka skryté ----
-   Layout (dle přání uživatele): řádek 1 = logo | akce (info/account/košík)
-   v jedné linii s logem; řádek 2 = vyhledávání + hamburger vedle sebe (menu
-   k vyhledávání). Hamburger zůstává NATIVNÍ — jeho ikona se kreslí přes CSS,
-   proto na něj nesaháme (background/border-radius by ji přebily) a jen ho
-   umístíme. Selektory s .align-items-center kvůli specificitě nad šablonovým
-   gridem (.row.menu-gutters.align-items-center v pravidlech výše). */
+   Layout (dle přání uživatele, varianta A): řádek 1 = logo | účet, košík,
+   hamburger — všechny akční prvky v jedné linii s logem (col 1fr auto auto);
+   řádek 2 = vyhledávání přes celou šířku. Info ikonka (a.cms-mobile) skrytá
+   níže. Hamburger zůstává NATIVNÍ — jeho ikona se kreslí přes CSS, proto na
+   něj nesaháme (background/border-radius by ji přebily) a jen ho umístíme.
+   Selektory s .align-items-center kvůli specificitě nad šablonovým gridem
+   (.row.menu-gutters.align-items-center v pravidlech výše). */
 @media (max-width: 991.98px) {
   header .vp-hdr-care {
     display: none !important;
@@ -1476,8 +1483,12 @@ header .vp-hdr-cart__ic {
   header .vp-hdr-heureka {
     display: none !important;
   }
+  /* Info ikonka (i) — dle přání uživatele pryč z hlavičky */
+  header .header-shop-basket-button a.header-cms-icon.cms-mobile {
+    display: none !important;
+  }
   header .header-middle .row.menu-gutters.align-items-center {
-    grid-template-columns: 1fr auto !important;
+    grid-template-columns: 1fr auto auto !important;
     align-items: center !important;
   }
   header .header-middle .row.menu-gutters.align-items-center > .logotype {
@@ -1489,20 +1500,21 @@ header .vp-hdr-cart__ic {
     grid-column: 2 !important;
     grid-row: 1 !important;
   }
-  /* řádek 2: vyhledávání vlevo, hamburger vpravo — zarovnané na střed */
-  header .header-middle .row.menu-gutters.align-items-center > .search-div {
-    grid-column: 1 !important;
-    grid-row: 2 !important;
-    align-self: center !important;
-  }
+  /* hamburger nahoru do řady s ikonami (col 3, řádek 1) */
   header .header-middle .row.menu-gutters.align-items-center > .navbar-toggler-top {
-    grid-column: 2 !important;
-    grid-row: 2 !important;
+    grid-column: 3 !important;
+    grid-row: 1 !important;
     align-self: center !important;
     justify-self: end !important;
     display: flex !important;
     align-items: center !important;
-    margin: 0 !important;
+    margin: 0 0 0 0.3rem !important;
+  }
+  /* vyhledávání přes celou šířku pod ikonami (řádek 2) */
+  header .header-middle .row.menu-gutters.align-items-center > .search-div {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    align-self: center !important;
   }
   /* větší logo */
   header .logotype #logo img {
