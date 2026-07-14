@@ -2497,29 +2497,50 @@ header .vp-hdr-cart__ic {
   }
 }
 
-/* ---- Mobil/tablet (<992): linka skrytá, Heureka menší vedle loga ---- */
+/* ---- Mobil/tablet (<992): zákaznická linka i Heureka skryté ----
+   Layout: řádek 1 = logo | akce (info/account/košík) | hamburger vedle sebe,
+   řádek 2 = vyhledávání přes celou šířku. Grid rozšířen na 3 sloupce, aby se
+   hamburger vešel do prvního řádku (nativně byl pod košíkem). Logo zvětšené. */
 @media (max-width: 991.98px) {
   header .vp-hdr-care {
     display: none !important;
   }
-  header .vp-hdr-heureka img {
-    height: 34px;
+  /* Heureka na mobilu pryč — uvolní místo většímu logu (dle přání uživatele) */
+  header .vp-hdr-heureka {
+    display: none !important;
   }
-  header .logotype {
-    gap: 0.35rem 0.6rem;
+  header .header-middle .row.menu-gutters {
+    grid-template-columns: 1fr auto auto !important;
   }
-  /* logotype (logo + Heureka) dostane víc místa v gridu prvního sloupce */
   header .header-middle .row.menu-gutters > .logotype {
-    max-width: 68% !important;
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    max-width: none !important;
+  }
+  header .header-middle .row.menu-gutters > .header-shop-basket-button {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+  }
+  /* hamburger do prvního řádku vedle košíku */
+  header .header-middle .row.menu-gutters > .navbar-toggler-top {
+    grid-column: 3 !important;
+    grid-row: 1 !important;
+    align-self: center !important;
+  }
+  /* vyhledávání přes celou šířku pod tím (dřív jen levá půlka) */
+  header .header-middle .row.menu-gutters > .search-div {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+  }
+  /* větší logo */
+  header .logotype #logo img {
+    max-height: 52px !important;
   }
 }
 
 @media (max-width: 575.98px) {
-  header .vp-hdr-heureka img {
-    height: 26px;
-  }
   header .logotype #logo img {
-    max-height: 34px;
+    max-height: 46px !important;
   }
 }
 
