@@ -2601,6 +2601,10 @@ header .vp-hdr-cart__ic {
   header .header-middle .row.menu-gutters.align-items-center > .navbar-toggler-top {
     padding-left: 0 !important;
     margin-left: 0 !important;
+    /* PRAVÝ padding = přesně stejný calc jako col padding hledání → pravé
+       hrany hamburgeru a hledání lícují. (Starší blok nuluje `padding:0`,
+       proto ho tu musíme cíleně vrátit s vyšší specificitou.) */
+    padding-right: calc(var(--bs-gutter-x, 0.75rem) * 0.5) !important;
   }
   header .header-middle .header-shop-basket-button {
     gap: 0.4rem !important;
