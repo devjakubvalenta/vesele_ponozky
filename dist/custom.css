@@ -3141,29 +3141,30 @@ header .vp-hdr-cart__ic {
     width: 100%;
     margin-bottom: 0;
   }
-  /* stepper množství ~o 40 % menší */
+  /* stepper množství: nižší + širší → podlouhlá oválná pilulka (ne kolečko) */
   #app.product-detail .product-add-to-shopping-basket-quantity {
     align-self: center;
     flex: 0 0 auto;
     margin: 0;
-    padding: .05rem .2rem;
+    padding: .02rem .35rem;
+    border-radius: 999px;
   }
   #app.product-detail .product-add-to-shopping-basket-quantity .btn {
-    font-size: .85rem;
-    padding: .1rem .4rem;
+    font-size: .95rem;
+    padding: .12rem .55rem;
   }
   #app.product-detail .product-add-to-shopping-basket-quantity input {
-    width: 26px;
+    width: 32px;
   }
-  /* tlačítko dobere zbytek řádku → široká pilulka, ne kolečko */
+  /* tlačítko dobere zbytek řádku → široká pilulka; trošku menší (padding/font) */
   #app.product-detail .product-add-to-shopping-basket {
     flex: 1 1 auto;
     width: auto;
     min-width: 0;
   }
   #app.product-detail .product-add-to-shopping-basket .btn.btn-primary.btn-lg {
-    padding: .8rem 1rem !important;
-    font-size: .9rem !important;
+    padding: .65rem .85rem !important;
+    font-size: .85rem !important;
     white-space: normal;
   }
 }
