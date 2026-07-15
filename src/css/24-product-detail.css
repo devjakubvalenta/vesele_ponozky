@@ -393,6 +393,7 @@
     padding-bottom: 0;
     line-height: 1;
     height: auto;
+    font-size: .9rem;   /* číslo bylo moc velké (dědilo větší font) → ~30 % dolů */
   }
   /* tlačítko dobere zbytek řádku → široká pilulka; trošku menší (padding/font) */
   #app.product-detail .product-add-to-shopping-basket {
