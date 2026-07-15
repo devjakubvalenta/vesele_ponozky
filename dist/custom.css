@@ -1488,6 +1488,17 @@ header #top-menu .navbar-nav .nav-item.active > .nav-link {
     margin-left: 0 !important;
     margin-right: auto !important;
   }
+
+  /* Desktop: dvě čáry kolem menu pryč (dle přání uživatele) — nad menu = spodní
+     border hlavičky (ř. 167), pod menu = border + stín lišty #top-menu (ř. 396).
+     Jen desktop; na mobilu zůstávají. */
+  header .header-middle {
+    border-bottom: 0 !important;
+  }
+  header #top-menu.make-sticky {
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+  }
 }
 
 header #top-menu .navbar-toggler {
