@@ -1672,6 +1672,14 @@ header .vp-hdr-cart__ic {
   header #top-menu .navbar-nav > li:not(.vp-menu-cat) > .nav-link {
     padding-left: 1.75rem !important;
   }
+  /* Hlavní příčina odsazení: šablona v mobilu dává PRÁZDNÉMU icon-wrapu
+     width:25px + margin-right (template.css ~ř. 881), což odsune text kategorií
+     ~o 30px doprava. CMS položky span nemají. Zkolabovat prázdný span na 0, ať
+     kategorie lícují s CMS. :empty = kdyby ikona byla, zůstane zobrazená. */
+  header #top-menu .nav-item .mm-menu-ico-wrap:empty {
+    width: 0 !important;
+    margin-right: 0 !important;
+  }
 
   /* Všechny proužky mezi položkami mobilního menu pryč: border-bottom ze šablony
      (#top-menu .dropdown, template.css ~ř. 940) i moje dělící linka CMS sekce.
