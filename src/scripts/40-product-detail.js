@@ -165,6 +165,55 @@
     }
   }
 
+  /* == 5) Plovoucí „Přidat do košíku" na mobilu ======================== */
+  /* Fixní spodní lišta jen s CTA. Žije v <body> (mimo #app, ať ji nesmaže Vue
+     re-render). IntersectionObserver ji ukáže, když originální CTA vyscrolluje
+     NAD viewport (odscrollováno dolů za tlačítko). Klik se přeposílá na originál
+     — capture-listener boxu (force-variant) tím pádem zámek řeší sám. Vzhled
+     řídí CSS `.pd-sticky-cta` (jen mobil ≤767.98px). */
+  var stickyState = { bar: null, observer: null, observed: null };
+
+  function ensureStickyCta(root) {
+    if (!stickyState.bar) {
+      var bar = document.createElement("div");
+      bar.id = "pd-sticky-cta";
+      bar.className = "pd-sticky-cta";
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "pd-sticky-cta__btn";
+      btn.textContent = "Přidat do košíku";
+      bar.appendChild(btn);
+      document.body.appendChild(bar);
+      // klik → přeposlat na aktuální originální CTA (čerstvý dotaz kvůli re-renderu)
+      btn.addEventListener("click", function () {
+        var r = app();
+        var orig = r && r.querySelector(".product-add-to-shopping-basket .btn");
+        if (orig) orig.click();
+      });
+      stickyState.bar = bar;
+    }
+
+    // zrcadlit zámek varianty (#app.variant-selection-required)
+    stickyState.bar.classList.toggle(
+      "is-locked",
+      root.classList.contains("variant-selection-required")
+    );
+
+    // (re)napojit observer na aktuální CTA box (Vue mohl element vyměnit)
+    if (!("IntersectionObserver" in window)) return;
+    var target = root.querySelector(".product-add-to-shopping-basket");
+    if (!target || target === stickyState.observed) return;
+    if (stickyState.observer) stickyState.observer.disconnect();
+    stickyState.observer = new IntersectionObserver(function (entries) {
+      var e = entries[0];
+      // ukázat lištu jen když je originál odscrollovaný NAHORU z view
+      var pastAbove = !e.isIntersecting && e.boundingClientRect.top < 0;
+      stickyState.bar.classList.toggle("is-visible", pastAbove);
+    }, { threshold: 0 });
+    stickyState.observer.observe(target);
+    stickyState.observed = target;
+  }
+
   /* == Orchestrace ===================================================== */
 
   function runAll() {
@@ -174,6 +223,7 @@
     syncDiscountPill(root);
     injectQtyLabel(root);
     ensureDeliveryDateSpan(root);
+    ensureStickyCta(root);
   }
 
   function init() {

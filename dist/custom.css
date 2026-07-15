@@ -3182,6 +3182,50 @@ header .vp-hdr-cart__ic {
 #app.product-detail .shipping-options-wrapper { justify-content: flex-start !important; }
 #app.product-detail #shipping-options-button { font-size: .85rem; color: var(--pd-muted); }
 
+/* ==== Plovoucí „Přidat do košíku" (mobil) =========================== */
+/* Fixní spodní lišta jen s CTA. Vkládá ji 40-product-detail.js do <body>
+   (proto literální barvy — tokeny --pd-* jsou scopované do #app). JS přidá
+   .is-visible, když originální CTA vyscrolluje nad viewport. Jen mobil. */
+.pd-sticky-cta {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 1030;
+  display: none;
+  padding: .5rem .75rem calc(.5rem + env(safe-area-inset-bottom, 0px));
+  background: #fff;
+  box-shadow: 0 -2px 14px rgba(15, 23, 42, .12);
+}
+.pd-sticky-cta.is-visible { display: block; }
+@media (min-width: 768px) {
+  .pd-sticky-cta { display: none !important; }   /* jen mobil */
+}
+.pd-sticky-cta__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  padding: .9rem 1.5rem;
+  background: #2e9e44;               /* = --pd-green */
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+.pd-sticky-cta__btn:active { background: #23843a; }  /* = --pd-green-dark */
+.pd-sticky-cta__btn::before {
+  content: "";
+  flex: 0 0 20px;
+  width: 20px;
+  height: 19px;
+  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+}
+.pd-sticky-cta.is-locked { opacity: .5; }
+.pd-sticky-cta.is-locked .pd-sticky-cta__btn { pointer-events: none; cursor: not-allowed; }
+
 /* ==== Benefity 2×2 (obsah admin pole „Produktový detail") =========== */
 /* Strukturní selektor — ul může mít třídu .benefits (renderer) i vlastní */
 
