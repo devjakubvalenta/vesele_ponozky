@@ -1502,11 +1502,26 @@ header #top-menu .navbar-nav .nav-item.active > .nav-link {
 
   /* Stín při hoveru pryč — ZDROJ je hoverovaná položka .nav-item:hover
      (template.css ~ř. 852: box-shadow 0 2px 10px rgba(0,0,0,.11)), ne dropdown.
-     Kryjeme obojí (položku i dropdown), border dropdownu ponechán. */
+     Kryjeme obojí (položku i dropdown). */
   header #top-menu .nav-item:hover,
   header #top-menu .yamm-dropdown-menu,
   header #top-menu .dropdown-menu {
     box-shadow: none !important;
+  }
+
+  /* Dropdown: tenký outline pryč (template.css ~ř. 1045: border 1px #eaecef)
+     + skrýt vizuální scrollbar (scroll kolečkem/trackpadem zůstává funkční). */
+  header #top-menu .yamm-dropdown-menu,
+  header #top-menu .dropdown-menu {
+    border: 0 !important;
+    scrollbar-width: none !important;      /* Firefox */
+    -ms-overflow-style: none !important;   /* starší Edge/IE */
+  }
+  header #top-menu .yamm-dropdown-menu::-webkit-scrollbar,
+  header #top-menu .dropdown-menu::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    display: none !important;
   }
 }
 
