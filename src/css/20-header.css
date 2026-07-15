@@ -1518,6 +1518,37 @@ header .vp-hdr-cart__ic {
     grid-row: 2 !important;
     align-self: center !important;
   }
+
+  /* ── DVA HAMBURGERY (past šablony) ──────────────────────────────────
+     Platforma renderuje DVA togglery na stejný cíl #navbarSupportedContent:
+     (1) prázdné tlačítko v .header-middle .navbar-toggler-top — grid ho
+         správně umístí (col3/row1, vedle košíku), ale NEMÁ ikonu → neviditelné;
+     (2) tlačítko ve #top-menu — MÁ ikonu, ale šablona ho absolutně vystřelí
+         (position:absolute; top:-96px; z-index:11111) přes hledání.
+     Řešení: (2) skrýt; (1) dostane ikonu ☰ přes CSS background + vzhled
+     kolečka jako účet/košík. Menu otevírá dál (data-bs-toggle na #1). */
+  header #top-menu .navbar-toggler {
+    display: none !important;
+  }
+  header .header-middle .navbar-toggler-top .navbar-toggler {
+    width: 2.35rem !important;
+    height: 2.35rem !important;
+    min-width: 2.35rem !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+    border: 1px solid var(--hdr-border) !important;
+    background-color: #fff !important;
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%230f172a'%20stroke-width='2'%20stroke-linecap='round'%3E%3Cline%20x1='4'%20y1='7'%20x2='20'%20y2='7'/%3E%3Cline%20x1='4'%20y1='12'%20x2='20'%20y2='12'/%3E%3Cline%20x1='4'%20y1='17'%20x2='20'%20y2='17'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 58% !important;
+    transition: border-color 0.15s ease, background-color 0.15s ease !important;
+  }
+  header .header-middle .navbar-toggler-top .navbar-toggler:hover {
+    border-color: #cbd5e1 !important;
+    background-color: var(--hdr-soft) !important;
+  }
+
   /* větší logo */
   header .logotype #logo img {
     max-height: 52px !important;
