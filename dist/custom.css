@@ -2586,21 +2586,20 @@ header .vp-hdr-cart__ic {
   }
 
   /* ── Doladění mezer + pravého okraje ──────────────────────────────────
-     Rovnoměrná těsná mezera mezi 3 ikonami (účet | košík | hamburger) a
-     pravý okraj hamburgeru zarovnaný s pravým okrajem hledání. Klíč:
-     (a) zrušit šablonový margin-right:20px na účtu (ř. 551 template.css),
-     (b) zrušit col padding u prvků řady (jinak nesedí pravý okraj se search),
-     (c) jednotný gap 0.4rem (mezi účtem/košíkem i mezi košíkem/hamburgerem). */
+     Těsná rovnoměrná mezera mezi 3 ikonami (účet | košík | hamburger) 0.4rem.
+     HLEDÁNÍ si nechává původní col padding (hezky odsazené od krajů) — proto
+     ho tu NEnulujeme; pravou hranu hamburgeru s ním srovnáme tak, že hamburger
+     si taky nechá svůj PRAVÝ col padding (stejný calc jako search). Nulujeme
+     jen: šablonový margin-right:20px na účtu (ř. 551 template.css), pravý
+     padding košíku a levý padding hamburgeru (kvůli těsnému gapu ke košíku). */
   header .header-middle .row.menu-gutters.align-items-center {
     column-gap: 0.4rem !important;
   }
-  header .header-middle .row.menu-gutters.align-items-center > .header-shop-basket-button,
-  header .header-middle .row.menu-gutters.align-items-center > .navbar-toggler-top,
-  header .header-middle .row.menu-gutters.align-items-center > .search-div {
-    padding-left: 0 !important;
+  header .header-middle .row.menu-gutters.align-items-center > .header-shop-basket-button {
     padding-right: 0 !important;
   }
   header .header-middle .row.menu-gutters.align-items-center > .navbar-toggler-top {
+    padding-left: 0 !important;
     margin-left: 0 !important;
   }
   header .header-middle .header-shop-basket-button {
