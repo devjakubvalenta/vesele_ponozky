@@ -1549,6 +1549,31 @@ header .vp-hdr-cart__ic {
     background-color: var(--hdr-soft) !important;
   }
 
+  /* ── Doladění mezer + pravého okraje ──────────────────────────────────
+     Rovnoměrná těsná mezera mezi 3 ikonami (účet | košík | hamburger) a
+     pravý okraj hamburgeru zarovnaný s pravým okrajem hledání. Klíč:
+     (a) zrušit šablonový margin-right:20px na účtu (ř. 551 template.css),
+     (b) zrušit col padding u prvků řady (jinak nesedí pravý okraj se search),
+     (c) jednotný gap 0.4rem (mezi účtem/košíkem i mezi košíkem/hamburgerem). */
+  header .header-middle .row.menu-gutters.align-items-center {
+    column-gap: 0.4rem !important;
+  }
+  header .header-middle .row.menu-gutters.align-items-center > .header-shop-basket-button,
+  header .header-middle .row.menu-gutters.align-items-center > .navbar-toggler-top,
+  header .header-middle .row.menu-gutters.align-items-center > .search-div {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  header .header-middle .row.menu-gutters.align-items-center > .navbar-toggler-top {
+    margin-left: 0 !important;
+  }
+  header .header-middle .header-shop-basket-button {
+    gap: 0.4rem !important;
+  }
+  header .header-middle .customer-button {
+    margin-right: 0 !important;
+  }
+
   /* větší logo */
   header .logotype #logo img {
     max-height: 52px !important;
