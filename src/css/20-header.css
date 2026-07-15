@@ -425,10 +425,33 @@ header #top-menu .navbar-nav .nav-link {
   transition: background 0.15s ease, color 0.15s ease;
 }
 
+/* Hover/aktivní položka menu = plná modrá pilulka, bílý text, BEZ rámečku
+   (dle přání uživatele — screen 2; dřív světle modrá + extra ohraničení). */
 header #top-menu .navbar-nav .nav-link:hover,
-header #top-menu .navbar-nav .nav-link:focus {
-  color: var(--hdr-accent) !important;
-  background: var(--hdr-accent-soft);
+header #top-menu .navbar-nav .nav-link:focus,
+header #top-menu .navbar-nav .nav-item.show > .nav-link,
+header #top-menu .navbar-nav .nav-link.active,
+header #top-menu .navbar-nav .nav-item.active > .nav-link {
+  color: #fff !important;
+  background: var(--hdr-accent) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Desktop: kategorie (Pánské, Dámské…) zarovnat VLEVO — stejně jako modrá CMS
+   lišta (O nás, Doprava…), ne roztažené přes celou šířku. (Kdybys chtěl vpravo
+   nebo na střed, řekni — je to jen změna justify-content/margin.) */
+@media (min-width: 992px) {
+  header #top-menu .navbar-collapse {
+    justify-content: flex-start !important;
+  }
+  header #top-menu .navbar-nav {
+    justify-content: flex-start !important;
+    gap: 0.2rem 1.5rem !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+  }
 }
 
 header #top-menu .navbar-toggler {
@@ -1644,5 +1667,13 @@ header .vp-hdr-cart__ic {
     border-top: 1px solid var(--hdr-border);
     margin-top: 0.35rem;
     padding-top: 0.35rem;
+  }
+
+  /* Proužky mezi jednotlivými položkami mobilního menu pryč — šablona dává
+     border-bottom na #top-menu .dropdown / .nav-item v mobilu (template.css
+     ~ř. 940). Necháváme jen jednu jemnou linku oddělující sekci CMS (výše). */
+  header #top-menu .navbar-nav > li,
+  header #top-menu .navbar-nav > li.dropdown {
+    border-bottom: 0 !important;
   }
 }
