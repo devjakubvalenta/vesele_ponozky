@@ -1499,6 +1499,13 @@ header #top-menu .navbar-nav .nav-item.active > .nav-link {
     border-bottom: 0 !important;
     box-shadow: none !important;
   }
+
+  /* Stín pod dropdown mega-menu při hoveru pryč (template.css ~ř. 1044:
+     box-shadow 0 2px 10px rgba(0,0,0,.11)). Border ponechán. */
+  header #top-menu .yamm-dropdown-menu,
+  header #top-menu .dropdown-menu {
+    box-shadow: none !important;
+  }
 }
 
 header #top-menu .navbar-toggler {
