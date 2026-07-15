@@ -3141,13 +3141,14 @@ header .vp-hdr-cart__ic {
     width: 100%;
     margin-bottom: 0;
   }
-  /* stepper množství: nižší + širší → podlouhlá oválná pilulka (ne kolečko) */
+  /* stepper množství: stejná výška i zaoblení jako tlačítko (stretch + --pd-pill),
+     šířku držíme (uživateli sedí) */
   #app.product-detail .product-add-to-shopping-basket-quantity {
-    align-self: center;
+    align-self: stretch;
     flex: 0 0 auto;
     margin: 0;
-    padding: .02rem .35rem;
-    border-radius: 999px;
+    padding: 0 .35rem;
+    border-radius: var(--pd-pill);
   }
   #app.product-detail .product-add-to-shopping-basket-quantity .btn {
     font-size: .95rem;
