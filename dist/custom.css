@@ -3142,7 +3142,8 @@ header .vp-hdr-cart__ic {
     margin-bottom: 0;
   }
   /* stepper množství: stejná výška i zaoblení jako tlačítko (stretch + --pd-pill),
-     šířku držíme (uživateli sedí) */
+     šířku držíme. Vnitřní obsah zploštit (line-height 1, 0 vertik. padding), ať
+     NEurčuje výšku řádku — výšku má dát tlačítko a stepper se na ni roztáhne. */
   #app.product-detail .product-add-to-shopping-basket-quantity {
     align-self: stretch;
     flex: 0 0 auto;
@@ -3152,10 +3153,16 @@ header .vp-hdr-cart__ic {
   }
   #app.product-detail .product-add-to-shopping-basket-quantity .btn {
     font-size: .95rem;
-    padding: .12rem .55rem;
+    padding: 0 .5rem;
+    line-height: 1;
+    min-height: 0;
   }
   #app.product-detail .product-add-to-shopping-basket-quantity input {
     width: 32px;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 1;
+    height: auto;
   }
   /* tlačítko dobere zbytek řádku → široká pilulka; trošku menší (padding/font) */
   #app.product-detail .product-add-to-shopping-basket {
