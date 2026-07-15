@@ -421,29 +421,56 @@
   inset: auto 0 0 0;
   z-index: 1030;
   display: none;
+  align-items: center;
+  gap: .55rem;
   padding: .5rem .75rem calc(.5rem + env(safe-area-inset-bottom, 0px));
   background: #fff;
   box-shadow: 0 -2px 14px rgba(15, 23, 42, .12);
 }
-.pd-sticky-cta.is-visible { display: block; }
+.pd-sticky-cta.is-visible { display: flex; }
 @media (min-width: 768px) {
   .pd-sticky-cta { display: none !important; }   /* jen mobil */
 }
+
+/* miniatura produktu */
+.pd-sticky-cta__thumb {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f4f7fa;
+}
+
+/* cena = klon .wrapper-product-price z detailu; tokeny --pd-* sem (do <body>)
+   nedosáhnou, proto styl literálně. Původní přeškrtnutá NAD zelenou aktuální. */
+.pd-sticky-cta__price { flex: 0 0 auto; line-height: 1.05; }
+.pd-sticky-cta__price > div { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+.pd-sticky-cta__price .mb-2 { margin: 0 !important; }
+.pd-sticky-cta__price .mb-2:empty { display: none; }
+.pd-sticky-cta__price .product-price { color: #2e9e44; font-weight: 800; font-size: 1.05rem; white-space: nowrap; }
+.pd-sticky-cta__price .discount-old-price { color: #94a3b8; font-weight: 600; font-size: .78rem; text-decoration: line-through; white-space: nowrap; }
+.pd-sticky-cta__price .wholesale-discount { display: none; }
+
+/* tlačítko dobere zbytek řádku */
 .pd-sticky-cta__btn {
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: .6rem;
-  width: 100%;
+  gap: .5rem;
   border: 0;
   border-radius: 999px;
-  padding: .9rem 1.5rem;
+  padding: .8rem 1rem;
   background: #2e9e44;               /* = --pd-green */
   color: #fff;
-  font-size: 1rem;
+  font-size: .9rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .02em;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .pd-sticky-cta__btn:active { background: #23843a; }  /* = --pd-green-dark */
 .pd-sticky-cta__btn::before {
@@ -453,8 +480,6 @@
   height: 19px;
   background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
 }
-.pd-sticky-cta.is-locked { opacity: .5; }
-.pd-sticky-cta.is-locked .pd-sticky-cta__btn { pointer-events: none; cursor: not-allowed; }
 
 /* ==== Benefity 2×2 (obsah admin pole „Produktový detail") =========== */
 /* Strukturní selektor — ul může mít třídu .benefits (renderer) i vlastní */

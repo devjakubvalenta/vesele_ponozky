@@ -178,26 +178,43 @@
       var bar = document.createElement("div");
       bar.id = "pd-sticky-cta";
       bar.className = "pd-sticky-cta";
-      var btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "pd-sticky-cta__btn";
-      btn.textContent = "Přidat do košíku";
-      bar.appendChild(btn);
+      bar.innerHTML =
+        '<img class="pd-sticky-cta__thumb" alt="" loading="lazy">' +
+        '<div class="pd-sticky-cta__price"></div>' +
+        '<button type="button" class="pd-sticky-cta__btn">Přidat do košíku</button>';
       document.body.appendChild(bar);
-      // klik → přeposlat na aktuální originální CTA (čerstvý dotaz kvůli re-renderu)
-      btn.addEventListener("click", function () {
+      // klik: bez vybrané varianty tlačítko zůstává zelené, ale místo
+      // (zablokovaného) přidání pošle uživatele na výběr varianty (jako Northman);
+      // s vybranou variantou přeposílá na originální CTA (čerstvý dotaz kvůli re-renderu)
+      bar.querySelector(".pd-sticky-cta__btn").addEventListener("click", function () {
         var r = app();
-        var orig = r && r.querySelector(".product-add-to-shopping-basket .btn");
+        if (!r) return;
+        if (r.classList.contains("variant-selection-required")) {
+          var picker =
+            r.querySelector("#configurator-variants") ||
+            r.querySelector("#variant-selector") ||
+            r.querySelector(".variant-name");
+          if (picker) picker.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+        var orig = r.querySelector(".product-add-to-shopping-basket .btn");
         if (orig) orig.click();
       });
       stickyState.bar = bar;
     }
 
-    // zrcadlit zámek varianty (#app.variant-selection-required)
-    stickyState.bar.classList.toggle(
-      "is-locked",
-      root.classList.contains("variant-selection-required")
-    );
+    // synchronizovat miniaturu produktu a cenu z detailu (mění se s variantou)
+    var pimg = root.querySelector("figure img.product_detail") || root.querySelector("figure img");
+    var thumb = stickyState.bar.querySelector(".pd-sticky-cta__thumb");
+    if (pimg && pimg.getAttribute("src") && thumb.getAttribute("src") !== pimg.getAttribute("src")) {
+      thumb.setAttribute("src", pimg.getAttribute("src"));
+    }
+    var priceSrc = root.querySelector(".wrapper-product-price");
+    var priceBox = stickyState.bar.querySelector(".pd-sticky-cta__price");
+    if (priceSrc && priceBox.__src !== priceSrc.innerHTML) {
+      priceBox.innerHTML = priceSrc.innerHTML;   // klon cenového bloku (přeškrtnutá + aktuální)
+      priceBox.__src = priceSrc.innerHTML;
+    }
 
     // (re)napojit observer na aktuální CTA box (Vue mohl element vyměnit)
     if (!("IntersectionObserver" in window)) return;
