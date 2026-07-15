@@ -2056,13 +2056,14 @@ header .navbar-toggler-top .navbar-toggler {
 @media (max-width: 991.98px) {
   header .header-middle .row.menu-gutters.align-items-center {
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto !important;
+    /* Varianta A: 3 sloupce (logo | ikony | hamburger); řádek 2 = hledání */
+    grid-template-columns: minmax(0, 1fr) auto auto !important;
     grid-template-rows: auto auto !important;
     column-gap: 0.5rem !important;
     row-gap: 0.55rem !important;
-    
 
-    align-items: stretch !important;
+
+    align-items: center !important;
   }
 
   header .header-middle .row.menu-gutters > [class*="col-"] {
@@ -2097,23 +2098,24 @@ header .navbar-toggler-top .navbar-toggler {
   header .header-middle .row.menu-gutters > .search-div.order-3,
   header .header-middle .row.menu-gutters > .search-div.order-md-0,
   header .header-middle .row.menu-gutters > .search-div {
-    grid-column: 1 !important;
+    grid-column: 1 / -1 !important;
     grid-row: 2 !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     min-width: 0 !important;
     width: 100% !important;
-    align-self: stretch !important;
+    align-self: center !important;
   }
 
   header .header-middle .row.menu-gutters > .navbar-toggler-top {
     display: flex !important;
-    grid-column: 2 !important;
-    grid-row: 2 !important;
+    grid-column: 3 !important;
+    grid-row: 1 !important;
     align-items: center !important;
     justify-content: flex-end !important;
-    align-self: stretch !important;
-    margin: 0 !important;
+    align-self: center !important;
+    justify-self: end !important;
+    margin: 0 0 0 0.3rem !important;
     padding: 0 !important;
     position: relative !important;
     top: auto !important;
