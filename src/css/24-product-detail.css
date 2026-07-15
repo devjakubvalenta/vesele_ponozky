@@ -349,6 +349,37 @@
 }
 #app.product-detail .product-add-to-shopping-basket.sprite-after::after { content: none !important; }
 
+/* Mobil: stepper (množství) + zelené tlačítko na JEDEN řádek vedle sebe
+   (dle přání uživatele). Wrapper → flex row s wrapem; hláška o variantě přes
+   celou šířku nad řádkem, label „Množství" na mobilu skryt (na screenu není,
+   ± stepper je jasný). Stepper drží šířku, tlačítko dobírá zbytek. */
+@media (max-width: 767.98px) {
+  #app.product-detail .product-add-to-shopping-basket-wrapper {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem .6rem;
+  }
+  #app.product-detail .pd-qty-label {
+    display: none;
+  }
+  #app.product-detail .variant-selection-note {
+    flex: 0 0 100%;
+    width: 100%;
+    margin-bottom: 0;
+  }
+  #app.product-detail .product-add-to-shopping-basket-quantity {
+    align-self: center;
+    flex: 0 0 auto;
+    margin: 0;
+  }
+  #app.product-detail .product-add-to-shopping-basket {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+  }
+}
+
 /* Akordeon „Možnosti doručení" — jen zklidnit */
 #app.product-detail .shipping-options-wrapper { justify-content: flex-start !important; }
 #app.product-detail #shipping-options-button { font-size: .85rem; color: var(--pd-muted); }
