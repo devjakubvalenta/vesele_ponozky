@@ -17,6 +17,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 | `header.js` | Hlavička (Heureka + zákaznická linka + cart ikona) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/header.js">` — **pin hashem**; styl `src/css/20-header.css`. Telefon/e-mail v lince se čtou z pole „Doplňující informace" (nemazat ho) |
 | `40-product-detail.js` | Produktový detail (recenze, slevový pill, množství) | **Pouze produktový detail** | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/40-product-detail.js">` — **pin hashem**; styl `src/css/24-product-detail.css`; benefity do admin pole „Produktový detail" = `src/content/product-detail-benefits.html` |
 | `35-listing-sort.js` | Řazení ve výpisech (klikací odkazy) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/35-listing-sort.js">` — **pin hashem**; styl `src/css/26-listing-sort.css` |
+| `36-filter.js` | Filtr — výchozí sbalený na mobilu | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/36-filter.js">` — **pin hashem**; styl `src/css/27-filter.css` |
 
 > ⚠️ **Sekce „Skripty" vkládá obsah DOSLOVA** (neobaluje ho). `<link>` a
 > `<style>` vkládej **holé** — NIKDY ne uvnitř `<script>…</script>` (browser by
@@ -55,6 +56,18 @@ kliknutí. Aktivní volba (`<option selected>`) dostane `.is-active`
 (scope `.vp-sort-row`); JS jen přidá třídy a postaví `<nav.vp-sort>`.
 Idempotentní; mimo výpisy (chybí `select.sorting`) neudělá nic;
 MutationObserver zpracuje i toolbar překreslený AJAX filtrováním v kategorii.
+
+## Co dělá `36-filter.js`
+
+Řídí **výchozí stav filtru** ve výpisu kategorie podle šířky displeje:
+na **mobilu (<768 px)** filtr sbalí (platforma ho jinak renderuje otevřený
+přes inline `style="display:flex"`, který CSS nepřebije), takže se otevírá
+až tlačítkem „Filtr"; na **desktopu (≥768 px)** nedělá nic — vždy otevřený
+sidebar a skryté tlačítko řeší CSS (`src/css/27-filter.css`). Nativní
+toggle (`.filter-button`) funguje dál. Tlačítko přejmenuje na „Filtr".
+Po prvním kliknutí uživatele na toggle se přestane vynucovat sbalení
+(`userToggled`). Idempotentní; mimo výpis kategorie (chybí
+`.category-filters-collapsible`) neudělá nic.
 
 ## Co dělá `header.js`
 

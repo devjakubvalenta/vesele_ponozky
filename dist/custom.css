@@ -4345,6 +4345,63 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   .vp-sort { justify-content: flex-end; }
 }
 
+/* ==== 27-filter.css ==== */
+
+/* =====================================================================
+   FILTR VE VÝPISU KATEGORIE (.category-filters)
+
+   Desktop (≥768 px): filtr je vždy otevřený v levém sidebaru
+   (.col-md-3.filters-block); horní toggle „Filtrování" i šipka pro sbalení
+   se skryjí — nejde zavřít.
+   Mobil (<768 px): filtr je sbalený, otevírá ho tlačítko „Filtr"
+   (nativní toggle). Výchozí sbalený stav nastavuje JS 36-filter.js
+   (platforma ho jinak renderuje otevřený přes inline style, který CSS
+   nepřebije). Tlačítko je nastylované do čisté lišty s ikonou +/−.
+
+   .filter-button-row je v .content (mimo section.products), takže NEMÁ
+   tokeny --pl-*; používáme --cx-* (scope .container .content) s fallbacky.
+   ===================================================================== */
+
+/* ---- Desktop: vždy otevřeno, bez toggle tlačítka ------------------- */
+@media (min-width: 768px) {
+  .filter-button-row { display: none !important; }
+  .category-filters-collapsible { display: flex !important; }
+  .category-filters-arrow { display: none !important; }   /* nejde sbalit */
+}
+
+/* ---- Mobil: tlačítko „Filtr" jako čistá lišta --------------------- */
+@media (max-width: 767.98px) {
+  .filter-button-row { margin: 0 0 1rem; }
+
+  .filter-button-row .filter-button.btn,
+  .filter-button-row .filter-button.btn.btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: #fff !important;
+    color: var(--cx-text, #0f172a) !important;
+    border: 1px solid var(--cx-border, #e5e9f0) !important;
+    box-shadow: var(--cx-shadow-sm, 0 1px 2px rgba(15, 23, 42, .05));
+    font-weight: 600;
+    font-size: 1rem;
+    padding: .7rem 1rem;
+    border-radius: 12px;
+  }
+  /* ikonka +/− vpravo (accordion lišta) */
+  .filter-button-row .filter-button.btn::after {
+    content: "+";
+    font-size: 1.35em;
+    line-height: 1;
+    font-weight: 400;
+    color: var(--cx-accent, #1361cf);
+  }
+  .filter-button-row .filter-button.btn.active::after { content: "\2212"; }  /* − */
+
+  /* Otevřený panel přes celou šířku, ať dýchá */
+  .category-filters-collapsible { width: 100%; }
+}
+
 /* ==== 27-hp-recenze.css ==== */
 
 /* Homepage — sekce „Co říkají naši zákazníci?" pod benefits pásem
