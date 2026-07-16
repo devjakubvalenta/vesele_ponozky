@@ -4402,6 +4402,30 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   .category-filters-collapsible { width: 100%; }
 }
 
+/* ---- Posuvník ceny (noUiSlider): modrá linka + plná kolečka -------- */
+.category-filters .noUi-target {
+  height: 6px !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: var(--cx-border, #e5e9f0) !important;
+}
+.category-filters .noUi-connect {
+  background: var(--cx-accent, #1361cf) !important;
+}
+.category-filters .noUi-handle {
+  width: 18px !important;
+  height: 18px !important;
+  right: -9px !important;        /* vycentrovat 18px kolečko na konec */
+  top: -6px !important;          /* svisle na střed 6px linky */
+  border: none !important;
+  border-radius: 50% !important;
+  background: var(--cx-accent, #1361cf) !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, .3) !important;
+  cursor: pointer;
+}
+.category-filters .noUi-handle::before,
+.category-filters .noUi-handle::after { display: none !important; }
+
 /* ==== 27-hp-recenze.css ==== */
 
 /* Homepage — sekce „Co říkají naši zákazníci?" pod benefits pásem
