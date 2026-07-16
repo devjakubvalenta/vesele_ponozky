@@ -16,6 +16,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 | `hp-categories.js` | Kategorie na HP (přesun + barevné dlaždice) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/hp-categories.js">` — **pin hashem** jako u CSS linku, bump jen při změně souboru; styl `src/css/28-hp-kategorie.css` |
 | `header.js` | Hlavička (Heureka + zákaznická linka + cart ikona) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/header.js">` — **pin hashem**; styl `src/css/20-header.css`. Telefon/e-mail v lince se čtou z pole „Doplňující informace" (nemazat ho) |
 | `40-product-detail.js` | Produktový detail (recenze, slevový pill, množství) | **Pouze produktový detail** | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/40-product-detail.js">` — **pin hashem**; styl `src/css/24-product-detail.css`; benefity do admin pole „Produktový detail" = `src/content/product-detail-benefits.html` |
+| `35-listing-sort.js` | Řazení ve výpisech (klikací odkazy) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/35-listing-sort.js">` — **pin hashem**; styl `src/css/26-listing-sort.css` |
 
 > ⚠️ **Sekce „Skripty" vkládá obsah DOSLOVA** (neobaluje ho). `<link>` a
 > `<style>` vkládej **holé** — NIKDY ne uvnitř `<script>…</script>` (browser by
@@ -41,6 +42,19 @@ výpisech `.products`: (1) rozdělí název na 2 řádky — černý typ produkt
 „Zobrazit vše" podle mapy `SHOW_ALL` (`{id bloku: URL}` — blok bez
 záznamu tlačítko nemá). Idempotentní, MutationObserver zpracuje i karty
 dorenderované AJAX filtrováním v kategorii.
+
+## Co dělá `35-listing-sort.js`
+
+Nativní roletku řazení ve výpisech (`select.sorting` v toolbaru nad
+gridem — kategorie, hlavní výpis, hledání) přestaví na **klikací odkazy
+zarovnané vpravo**; počet položek („Zobrazeno 1–3 z 3") se přesune vlevo.
+Odkazy vznikají z `<option>` (text = popisek, `href` = `option.value`,
+což je cílová URL), takže klik je obyčejná navigace a funguje i bez JS na
+kliknutí. Aktivní volba (`<option selected>`) dostane `.is-active`
+(modrá + podtržení) a `aria-current`. Styl dodává `src/css/26-listing-sort.css`
+(scope `.vp-sort-row`); JS jen přidá třídy a postaví `<nav.vp-sort>`.
+Idempotentní; mimo výpisy (chybí `select.sorting`) neudělá nic;
+MutationObserver zpracuje i toolbar překreslený AJAX filtrováním v kategorii.
 
 ## Co dělá `header.js`
 
