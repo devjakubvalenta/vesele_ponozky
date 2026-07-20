@@ -494,6 +494,7 @@
    Poskytuje jen obrázek/název/cenu; discount/přeškrtnutí až u slevového kusu. */
 
 #app.product-detail #primary_accessories.itembox {
+  position: relative;                        /* kotva pro slevový badge */
   margin: 1.25rem 0 .85rem;
   padding: .85rem 1rem;
   background: #f4f8ff;                        /* jemná modrá jako mockup */
@@ -505,6 +506,8 @@
 
 #app.product-detail #primary_accessories > h2 {
   margin: 0 0 .55rem;
+  padding: 0 !important;                      /* šablona dává h2 padding-top:20px → horní mezera */
+  line-height: 1.15;
   font-size: .95rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -526,6 +529,7 @@
   min-height: 0 !important;
   max-height: none !important;
   transform: none !important;
+  position: static !important;   /* ať slevový badge kotví na kartě, ne na dlaždici */
 }
 #app.product-detail #primary_accessories .owl-stage { display: block !important; }
 #app.product-detail #primary_accessories .owl-item { float: none !important; align-self: start !important; }
@@ -544,6 +548,7 @@
   height: auto !important;      /* šablona dává dlaždici pevnou výšku ~260 px */
   min-height: 0 !important;
   border: 0 !important;         /* šablonový šedý rámeček dlaždice pryč (karta má vlastní) */
+  position: static !important;  /* šablona ji dává relative kvůli badge → přebít, badge kotví na kartě */
 }
 /* šablonový hover stín dlaždice pryč — karta není klikací dlaždice */
 #app.product-detail #primary_accessories .itembox-item:hover {
@@ -572,6 +577,8 @@
   object-fit: contain;
 }
 #app.product-detail #primary_accessories a.product_name {
+  align-self: center !important;             /* na střed obrázku */
+  margin: 0 !important;
   font-weight: 700;
   font-size: .92rem;
   line-height: 1.25;
@@ -579,12 +586,50 @@
   text-decoration: none !important;
 }
 #app.product-detail #primary_accessories .cena {
+  align-self: center !important;             /* stejná linie jako název */
+  margin: 0 !important;
+  line-height: 1.15;
   font-weight: 800;
   font-size: 1.05rem;
   color: var(--pd-green);
   white-space: nowrap;
 }
 #app.product-detail #primary_accessories .itembox-strips:empty { display: none; }
+
+/* Slevové příslušenství: tile má jen aktuální cenu + badge „- 46%"
+   (.itembox-strips > .discount-percentage, nativně absolutní kruh přes cenu).
+   Původní přeškrtnutou cenu tile neposkytuje. Badge → modrý pill v rohu karty. */
+#app.product-detail #primary_accessories .itembox-strips {
+  position: absolute !important;
+  top: .85rem;
+  right: 1rem;
+  margin: 0 !important;
+  width: auto !important;
+  height: auto !important;
+}
+#app.product-detail #primary_accessories .itembox-strips .discount-percentage {
+  position: static !important;
+  top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
+  display: inline-block !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: .22rem .6rem !important;
+  background: var(--pd-blue) !important;
+  color: #fff !important;
+  border-radius: var(--pd-pill) !important;
+  font-size: .72rem !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  text-align: center;
+}
+#app.product-detail #primary_accessories .itembox-strips .discount-percentage::before,
+#app.product-detail #primary_accessories .itembox-strips .discount-percentage::after {
+  content: none !important;                   /* zrušit případné template ozdoby/skew */
+}
 
 /* ==== Benefity 2×2 (obsah admin pole „Produktový detail") =========== */
 /* Strukturní selektor — ul může mít třídu .benefits (renderer) i vlastní */
