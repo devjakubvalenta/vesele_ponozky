@@ -14,7 +14,8 @@
   width: 100vw;
   margin-left: calc(50% - 50vw);
   background: #fff;
-  padding: clamp(1.25rem, 3.5vw, 2.75rem) 1rem 0;
+  /* spodní odsazení = odstup nad žlutým sock-stripem patičky (jinak nalepené) */
+  padding: clamp(1.25rem, 3.5vw, 2.75rem) 1rem;
   overflow-x: clip;
 }
 .vp-nl *,
@@ -151,6 +152,43 @@
   font-size: 0.82rem !important;
 }
 
+/* ---- Input + tlačítko na jeden řádek = spojený pill (jen krok 1, desktop) ----
+   Widget renderuje input a tlačítko jako dva bloky ve sloupci pod sebou.
+   Uděláme ze sloupce flex-řádek: input (roste, zaoblený vlevo) + tlačítko
+   (přisazené vpravo, zaoblené vpravo) → jeden pill. Prázdný titulek pole skryjeme.
+   Krok „po odeslání" (-send) neflexujeme, ať děkovací text zůstane pod sebou. */
+.vp-nl__form .ec-v-forms-label {
+  display: none !important; /* titulek pole je prázdný (nadpis dodává blok) */
+}
+.vp-nl__form .ec-v-form-step:not(.ec-v-form-step-send) .ec-v-form-column {
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+  max-width: 600px !important;
+}
+.vp-nl__form .ec-v-form-input {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.vp-nl__form .ec-v-form-submit {
+  flex: 0 0 auto !important;
+  display: flex !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.vp-nl__form .ec-v-forms-form-control {
+  height: 56px !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.vp-nl__form .ec-v-form-submit button {
+  height: 56px !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
 /* ---- Maskot ---- */
 .vp-nl__media {
   text-align: center;
@@ -185,5 +223,23 @@
   .vp-nl__form button,
   .vp-nl__form input[type="submit"] {
     width: 100%;
+  }
+  /* spojený pill se na úzko nevejde → zpět na stack (plné pilulky pod sebou) */
+  .vp-nl__form .ec-v-form-step:not(.ec-v-form-step-send) .ec-v-form-column {
+    display: block !important;
+    max-width: none !important;
+  }
+  .vp-nl__form .ec-v-form-input {
+    margin-bottom: 0.6rem !important;
+  }
+  .vp-nl__form .ec-v-forms-form-control {
+    border-radius: 999px !important;
+  }
+  .vp-nl__form .ec-v-form-submit {
+    display: block !important;
+  }
+  .vp-nl__form .ec-v-form-submit button {
+    width: 100% !important;
+    border-radius: 999px !important;
   }
 }
