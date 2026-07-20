@@ -3313,6 +3313,11 @@ header .vp-hdr-cart__ic {
   gap: .85rem;
   height: auto !important;      /* šablona dává dlaždici pevnou výšku ~260 px */
   min-height: 0 !important;
+  border: 0 !important;         /* šablonový šedý rámeček dlaždice pryč (karta má vlastní) */
+}
+/* šablonový hover stín dlaždice pryč — karta není klikací dlaždice */
+#app.product-detail #primary_accessories .itembox-item:hover {
+  box-shadow: none !important;
 }
 #app.product-detail #primary_accessories .itembox-item > a:first-of-type {
   display: flex !important;
