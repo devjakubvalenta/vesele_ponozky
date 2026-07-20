@@ -278,6 +278,11 @@ body footer section.eshop-footer a:hover {
   font-size: 1.15rem;
   color: var(--foot-blue);
 }
+.vp-foot__badge-stars {
+  height: 16px;
+  width: auto;
+  margin-bottom: 3px;
+}
 .vp-foot__badge-label {
   font-size: 0.82rem;
   color: var(--foot-muted);

@@ -1,0 +1,182 @@
+/* Newsletter v patičce — jeden globální blok (na všech stránkách).
+   Brandový obal (.vp-nl) injektuje src/scripts/footer.js (buildNewsletter);
+   samotný formulář vykreslí do #f-<formId> oficiální Ecomail embed widget
+   (řeší reCAPTCHA + odeslání inline, žádný odskok — viz paměť ecomail-robotcheck).
+   Sleva 15 % se posílá z Ecomailu (welcome automatizace), ne odsud.
+   Scope: vše pod .vp-nl. Paleta patičky (modrá #1361cf + žlutá #fbbc02).
+   Overrides polí widgetu (níže) míří na ověřené třídy ec-v-* (živě 2026-07). */
+.vp-nl {
+  --nl-blue: #1361cf;
+  --nl-blue-dark: #0f4ea8;
+  --nl-yellow: #fbbc02;
+  --nl-yellow-dark: #e0a800;
+  --nl-text: #0f172a;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  background: #fff;
+  padding: clamp(1.25rem, 3.5vw, 2.75rem) 1rem 0;
+  overflow-x: clip;
+}
+.vp-nl *,
+.vp-nl *::before,
+.vp-nl *::after {
+  box-sizing: border-box;
+}
+.vp-nl img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.vp-nl__inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  background: var(--nl-blue);
+  color: #fff;
+  border-radius: clamp(16px, 2.5vw, 28px);
+  padding: clamp(2rem, 5vw, 3.75rem);
+  display: grid;
+  grid-template-columns: 1.35fr 0.65fr;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.vp-nl__title {
+  color: #fff !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem) !important;
+  line-height: 1.15 !important;
+  text-transform: none !important;
+  letter-spacing: -0.01em !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 0 0.75rem !important;
+}
+.vp-nl__accent {
+  color: var(--nl-yellow);
+}
+.vp-nl__lead {
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-size: clamp(0.95rem, 1.6vw, 1.08rem) !important;
+  line-height: 1.6 !important;
+  margin: 0 0 1.25rem !important;
+}
+
+/* ---- Ecomail widget (renderuje INLINE do .vp-nl__form; třídy ec-v-*) ----
+   Ověřeno živě: widget vkládá vlastní markup (ne iframe). Bílý holder přebíjíme
+   na průhledný, pole/tlačítko stylujeme do pill vzhledu bloku, texty světlé na
+   modrém. !important je nutné — widget nese vlastní styly. */
+.vp-nl__form {
+  max-width: 540px;
+}
+.vp-nl__form [id^="ec_form_"],
+.vp-nl__form form,
+.vp-nl__form .ec-v-form-holder {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+}
+/* Popisky a texty na modrém → světlé */
+.vp-nl__form .ec-v-forms-label,
+.vp-nl__form .ec-v-form-text,
+.vp-nl__form label {
+  color: #fff !important;
+}
+.vp-nl__form a {
+  color: #fff !important;
+  text-decoration: underline !important;
+}
+/* Input (ec-v-forms-form-control) → bílý pill */
+.vp-nl__form .ec-v-forms-form-control {
+  width: 100% !important;
+  height: 52px !important;
+  padding: 0 1.1rem !important;
+  border: 2px solid transparent !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  color: var(--nl-text) !important;
+  font-size: 1rem !important;
+  box-shadow: none !important;
+}
+.vp-nl__form .ec-v-forms-form-control::placeholder {
+  color: #94a3b8 !important;
+}
+.vp-nl__form .ec-v-forms-form-control:focus {
+  outline: none !important;
+  border-color: var(--nl-yellow) !important;
+}
+/* Pojistka: checkbox/radio (souhlas, preference) NEsmí zdědit pill vzhled inputu */
+.vp-nl__form input[type="checkbox"],
+.vp-nl__form input[type="radio"] {
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  accent-color: var(--nl-yellow) !important;
+}
+/* Tlačítko (odeslat i „zpátky do e-shopu" na kroku po odeslání) → žlutý pill */
+.vp-nl__form .ec-v-form-button {
+  text-align: left !important;
+}
+.vp-nl__form button {
+  height: 52px !important;
+  padding: 0 1.6rem !important;
+  background: var(--nl-yellow) !important;
+  color: var(--nl-text) !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  border: none !important;
+  border-radius: 999px !important;
+  cursor: pointer !important;
+  box-shadow: 0 6px 18px rgba(251, 188, 2, 0.4) !important;
+  transition: transform 0.12s ease, background 0.15s ease !important;
+}
+.vp-nl__form button:hover {
+  background: var(--nl-yellow-dark) !important;
+  transform: translateY(-2px) !important;
+}
+/* Chybová hláška (povinné pole apod.) — čitelná na modrém */
+.vp-nl__form .ec-v-form-error {
+  color: #ffe08a !important;
+  font-size: 0.82rem !important;
+}
+
+/* ---- Maskot ---- */
+.vp-nl__media {
+  text-align: center;
+}
+.vp-nl__mascot {
+  width: 100%;
+  max-width: 260px;
+  margin-inline: auto;
+}
+
+/* ================= Responsivita (BS4 breakpointy) ================= */
+@media (max-width: 991.98px) {
+  .vp-nl__inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .vp-nl__form {
+    margin-inline: auto;
+    text-align: left;
+  }
+  .vp-nl__media {
+    order: -1;
+  }
+  .vp-nl__mascot {
+    max-width: 180px;
+  }
+}
+@media (max-width: 575.98px) {
+  .vp-nl__form,
+  .vp-nl__form input[type="email"],
+  .vp-nl__form input[type="text"],
+  .vp-nl__form button,
+  .vp-nl__form input[type="submit"] {
+    width: 100%;
+  }
+}
