@@ -62,7 +62,12 @@
 #app.product-detail .product-right-content .product-price-and-cart-button > p { order: 45; }           /* množstevní sleva */
 #app.product-detail .product-right-content .product-price-and-cart-button > #variant-table-anchor { order: 50; }
 /* košík wrapper (často v bezejmenném obalu) zůstává na order 60 */
-#app.product-detail .product-right-content > .content-product-detail { order: 70; }                    /* benefity */
+/* .content-product-detail rozpuštěno na flex-položky sloupce → karta příslušenství
+   (Výhodné balení) jde NAD velikosti, benefity zůstávají dole. Stejný vzor jako
+   display:contents u .product-price-and-cart-button výše (ř. 48). */
+#app.product-detail .product-right-content > .content-product-detail { display: contents; }
+#app.product-detail .content-product-detail > #primary_accessories { order: 48; }                      /* Výhodné balení (nad velikostmi 50) */
+#app.product-detail .content-product-detail > ul { order: 70; }                                        /* benefity */
 #app.product-detail .product-right-content > .short-description-anchor-div { order: 80; }
 #app.product-detail .product-right-content > .nav-tabs { order: 90; }
 #app.product-detail .product-right-content > .tab-content { order: 91; }
@@ -481,10 +486,106 @@
   background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
 }
 
+/* ==== Výhodné balení (nativní blok „Příslušenství" %primary_accessories%) ====
+   DOM: section#primary_accessories.itembox > h2 (titulek z adminu) +
+   .itembox-content > .owl-carousel… > … > .itembox-item (a.obrázek + a.product_name
+   + .cena). Blok je Owl Carousel (shop JS mu dává inline width/transform) —
+   neutralizujeme a jediný item zobrazíme jako kartu: miniatura + název + cena.
+   Poskytuje jen obrázek/název/cenu; discount/přeškrtnutí až u slevového kusu. */
+
+#app.product-detail #primary_accessories.itembox {
+  margin: 1.25rem 0 .85rem;
+  padding: .85rem 1rem;
+  background: #f4f8ff;                        /* jemná modrá jako mockup */
+  border: 1.5px solid var(--pd-border-strong);
+  border-radius: var(--pd-radius);
+}
+#app.product-detail #primary_accessories > .clearfix,
+#app.product-detail #primary_accessories .itembox-content > .clearfix { display: none; }
+
+#app.product-detail #primary_accessories > h2 {
+  margin: 0 0 .55rem;
+  font-size: .95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  color: var(--pd-blue);
+}
+#app.product-detail #primary_accessories > h2:empty { display: none; }   /* pojistka: prázdný titulek */
+
+/* zabít owl layout → jediný item jako kompaktní blok. Owl (autoHeight/flex stage)
+   nechává celý řetězec obalů ~260 px vysoký a natahuje item; tvrdě zkolabovat
+   výšku a zarovnat na start, ať karta drží jen výšku obsahu (~74 px). */
+#app.product-detail #primary_accessories .itembox-content,
+#app.product-detail #primary_accessories .owl-carousel,
+#app.product-detail #primary_accessories .owl-stage-outer,
+#app.product-detail #primary_accessories .owl-stage,
+#app.product-detail #primary_accessories .owl-item {
+  width: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  transform: none !important;
+}
+#app.product-detail #primary_accessories .owl-stage { display: block !important; }
+#app.product-detail #primary_accessories .owl-item { float: none !important; align-self: start !important; }
+#app.product-detail #primary_accessories .owl-nav,
+#app.product-detail #primary_accessories .owl-dots { display: none !important; }
+
+/* řádek: miniatura vlevo + název + cena vpravo
+   (!important nutné — šablona bere obrázkový odkaz jako plný obrázkový slot
+   dlaždice ~160 px vysoký, čímž natáhne grid řadu; tvrdě ho zkrotíme na 64 px) */
+#app.product-detail #primary_accessories .itembox-item {
+  display: grid !important;
+  grid-template-columns: 64px 1fr auto;
+  grid-auto-rows: min-content;
+  align-items: center !important;
+  gap: .85rem;
+  height: auto !important;      /* šablona dává dlaždici pevnou výšku ~260 px */
+  min-height: 0 !important;
+}
+#app.product-detail #primary_accessories .itembox-item > a:first-of-type {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  align-self: center !important;
+  width: 64px !important;
+  height: 64px !important;
+  min-height: 0 !important;
+  max-height: 64px !important;
+  padding: 4px;
+  background: #fff;
+  border: 1px solid var(--pd-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+#app.product-detail #primary_accessories .img-responsive {
+  width: 56px !important;
+  height: 56px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
+  object-fit: contain;
+}
+#app.product-detail #primary_accessories a.product_name {
+  font-weight: 700;
+  font-size: .92rem;
+  line-height: 1.25;
+  color: var(--pd-text) !important;
+  text-decoration: none !important;
+}
+#app.product-detail #primary_accessories .cena {
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--pd-green);
+  white-space: nowrap;
+}
+#app.product-detail #primary_accessories .itembox-strips:empty { display: none; }
+
 /* ==== Benefity 2×2 (obsah admin pole „Produktový detail") =========== */
 /* Strukturní selektor — ul může mít třídu .benefits (renderer) i vlastní */
 
-#app.product-detail .content-product-detail { margin-top: 1.25rem; }
+/* .content-product-detail je display:contents (ř. 65) → margin-top patří dětem */
+#app.product-detail .content-product-detail > ul { margin-top: 1.25rem; }
 
 #app.product-detail .content-product-detail ul {
   display: grid !important;
@@ -670,7 +771,8 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   #app.product-detail .product-right-content .product-price-and-cart-button > #variant-table-anchor { order: 9; }
   #app.product-detail .product-right-content .product-price-and-cart-button > *,
   #app.product-detail .product-right-content > * { order: 10; }   /* košík + neznámé */
-  #app.product-detail .product-right-content > .content-product-detail { order: 12; }
+  #app.product-detail .content-product-detail > #primary_accessories { order: 8; }   /* karta nad velikostmi (9) */
+  #app.product-detail .content-product-detail > ul { order: 12; }                     /* benefity */
   #app.product-detail .product-right-content > .short-description-anchor-div { order: 13; }
   #app.product-detail > figure.col-md-6 > .vp-recenze--pd { order: 20; }
   #app.product-detail > figure.col-md-6 > .additional-images { order: 21; }
