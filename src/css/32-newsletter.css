@@ -243,3 +243,25 @@
     border-radius: 999px !important;
   }
 }
+
+/* ============================================================
+   Skrýt starší in-content newsletter bloky (placeholdery na CMS
+   stránkách). Newsletter je teď JEDEN globální v patičce (.vp-nl),
+   takže tyhle rozseté kopie skrýváme, ať nejsou na stránce 2×.
+   Bloky zůstávají v HTML CMS stránek, dokud je uživatel nesmaže
+   v administraci — do té doby je řeší tohle pravidlo.
+   Až se HTML odstraní (admin + src/content/*.html), lze smazat i tohle.
+   Mapa: onas / doprava / vyroba / velkoobchod(vo) / trebon(tr) /
+         gdpr+vop(legal) / vraceni / kontakt(kt) / recenze.
+   ============================================================ */
+.vp-onas__newsletter,
+.vp-doprava__newsletter,
+.vp-vyroba__newsletter,
+.vp-vo__newsletter,
+.vp-tr__newsletter,
+.vp-legal__newsletter,
+.vp-vraceni__newsletter,
+.vp-kt__newsletter,
+.vp-recenze__newsletter {
+  display: none !important;
+}
