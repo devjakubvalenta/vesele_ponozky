@@ -5434,7 +5434,7 @@ body footer section.eshop-footer a:hover {
 }
 
 .vp-nl__inner {
-  max-width: 1140px;
+  max-width: 1320px; /* = šířka hlavního obsahu (.container), aby blok nebyl užší */
   margin: 0 auto;
   background: var(--nl-blue);
   color: #fff;
@@ -5482,10 +5482,17 @@ body footer section.eshop-footer a:hover {
   border: 0 !important;
   padding: 0 !important;
   max-width: none !important;
+  min-height: 0 !important; /* widget nese inline minheight (config 444px) → shodit */
 }
-/* Popisky a texty na modrém → světlé */
+/* Krok formuláře má inline height:444px (config minheight) → nechat srazit na obsah */
+.vp-nl__form .ec-v-form-step {
+  height: auto !important;
+  min-height: 0 !important;
+}
+/* Popisky a texty na modrém → světlé (i děkovací krok, který nese vlastní tmavou barvu) */
 .vp-nl__form .ec-v-forms-label,
 .vp-nl__form .ec-v-form-text,
+.vp-nl__form .ec-v-form-text *,
 .vp-nl__form label {
   color: #fff !important;
 }
