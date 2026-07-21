@@ -854,7 +854,10 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
    • menší emoji, ať se meta sloupec vejde na jeden řádek,
    • fajfka + „Ověřený zákazník" na JEDNOM řádku (nezalamovat),
    • fajfka = zelené kolečko s bílou fajfkou (jako reference). */
-.vp-recenze--pd .vp-recenze__stars { margin-left: -5px; }
+/* align-self:flex-start = zabránit roztažení img na šířku karty (flex stretch);
+   jinak se SVG uvnitř vycentruje (preserveAspectRatio) → hvězdy „na středu".
+   margin-left ruší ~5px vnitřní odsazení SVG → první hvězda flush s citací. */
+.vp-recenze--pd .vp-recenze__stars { margin-left: -5px; align-self: flex-start; }
 .vp-recenze--pd .vp-recenze__avatar { width: 34px !important; height: 34px !important; }
 .vp-recenze--pd .vp-recenze__reviewer { gap: .5rem; }
 .vp-recenze--pd .vp-recenze__verified {
