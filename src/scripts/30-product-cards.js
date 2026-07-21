@@ -2,7 +2,9 @@
   Produktové karty ve výpisech — JS doplňky ke stylu v src/css/25-products.css:
     1. dvouřádkový název (černý typ produktu + modrý název motivu),
     2. zeleně zvýrazněné datum v „doručíme 15.07.",
-    3. tlačítko „Zobrazit vše" pod produktovými bloky na HP (nativně neexistuje).
+    3. tlačítko „Zobrazit vše" pod produktovými bloky na HP (nativně neexistuje),
+    4. tlačítko „Zobrazit vše" pod hlavním HP výpisem „Všechny naše produkty"
+       (CSS nechá viditelné jen 4 karty; JS přidá odkaz na Katalog).
 
   Vkládá se do: Administrace → Skripty → nová položka
      • Název: „Produktové karty (název, datum, Zobrazit vše)"
@@ -30,6 +32,13 @@
     // "3224": ""  // Novinky — doplnit URL, až bude kam vést
   };
   var SHOW_ALL_LABEL = "Zobrazit vše";
+
+  // Hlavní HP výpis „Všechny naše produkty" (nativní grid pod #homepage_text):
+  // CSS nechá viditelné jen první 4 karty, JS pod grid přidá tlačítko „Zobrazit
+  // vše" mířící sem. (Pozn.: stránka Katalog teď ukazuje jen část sortimentu —
+  // až bude lepší cíl, stačí přepsat tuto URL.)
+  var HP_ALL_URL = "https://www.exitshop.cz/shops/28056/c/1196952-katalog";
+  var HP_ALL_LIMIT = 4;
 
   // Rozdělení názvu na 2 řádky:
   //  1. obsahuje-li název „ - ", dělí se na první pomlčce (pomlčka se nezobrazí),
@@ -125,12 +134,29 @@
     });
   }
 
+  /* == 4) „Zobrazit vše" pod hlavním HP výpisem ========================= */
+
+  // Grid „Všechny naše produkty" = section.products.row hned za #homepage_text
+  // (existuje jen na HP). CSS skryje 5.+ kartu; sem přidáme odkaz na Katalog.
+  function addHomepageShowAll() {
+    var grid = document.querySelector("#homepage_text + section.products.row");
+    if (!grid) return;                                              // jen HP
+    if (grid.parentNode.querySelector("a.pc-show-all-hp")) return;  // už hotovo
+    if (grid.querySelectorAll(":scope > a.product").length <= HP_ALL_LIMIT) return;
+    var a = document.createElement("a");
+    a.className = "pc-show-all-hp";
+    a.href = HP_ALL_URL;
+    a.textContent = SHOW_ALL_LABEL;
+    grid.insertAdjacentElement("afterend", a);
+  }
+
   /* == Orchestrace ====================================================== */
 
   function runAll() {
     splitName(document);
     wrapDeliveryDate(document);
     addShowAllButtons(document);
+    addHomepageShowAll();
   }
 
   function init() {

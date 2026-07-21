@@ -4466,6 +4466,40 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   color: #fff !important;
 }
 
+/* ==== HP „Všechny naše produkty": jen 4 karty + „Zobrazit vše" ====== */
+
+/* Nativní hlavní výpis na HP (pod #homepage_text) sype všechny produkty.
+   Necháme viditelné jen první 4. Homepage-only přes #homepage_text (na HP
+   existuje jen tam) → výpis kategorie (body-category) i doporučené bloky
+   (section.recommend-block uvnitř #homepage_text) zůstávají netknuté.
+   !important, protože .product má nativně/naším CSS display:flex. */
+#homepage_text + section.products.row > a.product:nth-of-type(n+5) {
+  display: none !important;
+}
+
+/* Tlačítko „Zobrazit vše" pod HP gridem (vkládá JS jako sourozence ZA grid,
+   tj. mimo .recommend-block → vlastní selektor). Vizuál = zelená pilulka jako
+   .pc-show-all výše; tokeny --pl-* sem nedosáhnou, proto napevno. */
+.content > a.pc-show-all-hp {
+  display: table;
+  margin: 1.5rem auto 2.5rem;
+  background-color: #2e9e44;
+  color: #fff !important;
+  border-radius: 999px;
+  padding: .8rem 2.6rem;
+  font-size: .95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  text-decoration: none !important;
+  transition: background-color .2s ease;
+}
+
+.content > a.pc-show-all-hp:hover {
+  background-color: #23843a;
+  color: #fff !important;
+}
+
 /* ==== Responzivita ================================================== */
 
 /* Střední šířky (3–4 sloupce na užším desktopu): zhustit kartu
