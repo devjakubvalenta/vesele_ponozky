@@ -7,7 +7,8 @@
     4. pojistka: zvýraznění data doručení, kdyby chyběl nativní span,
     5. plovoucí „Přidat do košíku" na mobilu,
     6. taby (Popis/Parametry/…) → accordion pod galerií v levém sloupci
-       (klasický, jedna otevřená; nové ouško = automaticky další položka).
+       (klasický: jedna otevřená naráz, defaultně všechny zavřené; nové
+       ouško = automaticky další položka).
 
   Vkládá se do: Administrace → Skripty → nová položka
      • Název: „Produktový detail (recenze, slevový pill, množství)"
@@ -236,7 +237,7 @@
 
   /* == 6) Taby (Popis/Parametry/…) → accordion pod galerií ============= */
   /* Z oušek .nav-tabs + panelů .tab-content postaví klasický accordion
-     (otevřená vždy jen JEDNA sekce, „Popis" po načtení), vloží ho na konec
+     (otevřená vždy jen JEDNA sekce, defaultně VŠECHNY zavřené), vloží ho na konec
      levého sloupce (pod galerii) a originální taby skryje. Iterujeme přes
      ouška → nové ouško = automaticky další rozklikávací položka. Obsah panelu
      KLONUJEME (taby nemají data-v = needitují se s variantou), originál držíme
@@ -263,8 +264,7 @@
         if (!pane || !label || !(pane.innerHTML || "").trim()) return;  // prázdný panel přeskočit
 
         var item = document.createElement("div");
-        item.className = "pd-accordion__item";
-        if (i === 0) item.classList.add("is-open");     // „Popis" otevřený
+        item.className = "pd-accordion__item";          // defaultně VŠECHNY zavřené
 
         var head = document.createElement("button");
         head.type = "button";
