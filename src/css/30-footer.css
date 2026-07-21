@@ -154,10 +154,14 @@ body footer section.eshop-footer a:hover {
   display: block;
 }
 
-/* Sock strip (full-bleed žlutý pruh) */
+/* Sock strip (full-bleed žlutý pruh) — jeden sok (footer_sock.png, průhledné
+   RGBA) dlážděný na plnou výšku; žlutou dodává CSS. `auto 100%` = ponožky vždy
+   celé (nikdy neseříznuté), `repeat-x` = navazují na jakoukoli šířku. Dřív byl
+   `cover` → na širokém displeji ořezával ponožky na výšku. Jedna dlaždice slouží
+   i mobilu (auto-škáluje), proto už není potřeba zvlášť Patička_mobil.svg. */
 .vp-foot__sockstrip {
   height: clamp(40px, 6vw, 74px);
-  background: url("https://www.exitshop.cz/files/310/files/Pati%C4%8Dka_desktop.svg") center / cover no-repeat;
+  background: #fabb01 url("https://www.exitshop.cz/files/310/files/footer_sock.png") left center / auto 100% repeat-x;
 }
 
 .vp-foot__inner {
@@ -306,9 +310,6 @@ body footer section.eshop-footer a:hover {
 
 /* ===== Mobil: stack recenzí/badge, accordion sloupců, kontakt ===== */
 @media (max-width: 767.98px) {
-  .vp-foot__sockstrip {
-    background-image: url("https://www.exitshop.cz/files/310/files/Pati%C4%8Dka_mobil.svg");
-  }
   .vp-foot__review-cards {
     grid-template-columns: 1fr;
   }
