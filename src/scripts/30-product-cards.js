@@ -28,8 +28,8 @@
   // Klíč = číslo z třídy section.recommend-block-{id}. Blok bez záznamu
   // tlačítko nedostane. Na HP jsou teď bloky: 3224 = Novinky, 3236 = Dárkové sety.
   var SHOW_ALL = {
-    "3236": "https://www.exitshop.cz/shops/28056/c/1243139-darkove-sety"
-    // "3224": ""  // Novinky — doplnit URL, až bude kam vést
+    "3224": "https://www.exitshop.cz/shops/28056/c/1196952-katalog/new",  // Novinky
+    "3236": "https://www.exitshop.cz/shops/28056/c/1243139-darkove-sety"  // Dárkové sety
   };
   var SHOW_ALL_LABEL = "Zobrazit vše";
 
