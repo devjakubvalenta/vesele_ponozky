@@ -366,6 +366,51 @@
 }
 #app.product-detail .product-add-to-shopping-basket.sprite-after::after { content: none !important; }
 
+/* Desktop: stepper množství + zelené CTA na JEDEN řádek (jako na mobilu) —
+   zkrátí pravý sloupec o řádek, takže CTA je výš a vidět i na nižších
+   obrazovkách (sticky sloupec). Stepper roztažený na výšku CTA (obsah zploštit,
+   ať výšku řádku určuje CTA, ne stepper); CTA dobírá zbytek šířky (zmenší se
+   jen o stepper + gap). Label a „Možnosti doručení" na vlastní řádek. */
+@media (min-width: 768px) {
+  #app.product-detail .product-add-to-shopping-basket-wrapper {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: .6rem;
+  }
+  #app.product-detail .pd-qty-label { flex: 0 0 100%; margin: 0 0 .15rem; }
+  #app.product-detail .shipping-options-wrapper,
+  #app.product-detail .product-add-to-shopping-basket-wrapper > .collapse { flex: 0 0 100%; width: 100%; }
+
+  #app.product-detail .product-add-to-shopping-basket-quantity {
+    align-self: stretch;
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0 .5rem;
+  }
+  #app.product-detail .product-add-to-shopping-basket-quantity .btn {
+    line-height: 1;
+    min-height: 0;
+    padding: 0 .6rem;
+  }
+  #app.product-detail .product-add-to-shopping-basket-quantity input {
+    line-height: 1;
+    height: auto;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  #app.product-detail .product-add-to-shopping-basket {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+  }
+  #app.product-detail .product-add-to-shopping-basket .btn.btn-primary.btn-lg {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
 /* Mobil: stepper (množství) + zelené tlačítko na JEDEN řádek vedle sebe
    (dle přání uživatele). Wrapper → flex row s wrapem; hláška o variantě přes
    celou šířku nad řádkem, label „Množství" na mobilu skryt (na screenu není,
