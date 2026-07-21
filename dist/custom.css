@@ -4682,6 +4682,106 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   }
 }
 
+/* ==== 26-catalog.css ==== */
+
+/* =====================================================================
+   VÝPIS KATEGORIE / KATALOG — chrome nad rámec produktových karet:
+     1. tlačítko „Zobrazit vše" (.category-show-all) → zelená pilulka
+        jako CTA jinde na webu (nativně btn-light = šedé),
+     2. stránkování .paging → modré kroužky (nativně holé „1 2 > >>"),
+     3. skrytí duplicitních odkazů na kategorie na kořenovém Katalogu
+        (.children_categories bez ikon = totéž co v hlavičce).
+
+   Barvy sladěné s 25-products.css (zelená #2e9e44 / #23843a, modrá
+   #1361cf). Scopované tokeny --pl-* sem nedosáhnou → napevno.
+   Selektory ověřeny živě na /c/1196952-katalog a podstránce kategorie.
+   ===================================================================== */
+
+/* ==== 1) „Zobrazit vše" pod výpisem ================================= */
+
+/* Nativně <button class="btn btn-light … category-show-all"> = šedé.
+   Přebít na zelenou pilulku (btn-light má vlastní bg/border → !important). */
+.category-show-all.btn.btn-light {
+  background-color: #2e9e44 !important;
+  border: 0 !important;
+  color: #fff !important;
+  border-radius: 999px;
+  padding: .7rem 2.2rem;
+  font-size: .9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  transition: background-color .2s ease;
+}
+
+.category-show-all.btn.btn-light:hover,
+.category-show-all.btn.btn-light:focus,
+.category-show-all.btn.btn-light:active {
+  background-color: #23843a !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+/* ==== 2) Stránkování (.paging span > a) ============================= */
+
+.paging {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: .4rem;
+  margin: 1.5rem 0;
+}
+
+/* Šipkové spany (.next/.last/.prev/.first) mají nativně .btn.btn-light.p-0
+   — vynulovat, kroužek dělá vnitřní <a> stejně jako u čísel. */
+.paging span {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.paging span > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 .35rem;
+  border: 1px solid #1361cf;
+  border-radius: 999px;
+  color: #1361cf;
+  font-weight: 600;
+  font-size: .95rem;
+  line-height: 1;
+  text-decoration: none !important;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.paging span > a:hover,
+.paging span > a:focus {
+  background: #1361cf;
+  color: #fff;
+}
+
+/* Aktuální stránka: plný modrý kroužek */
+.paging span.active > a {
+  background: #1361cf;
+  color: #fff;
+  border-color: #1361cf;
+  cursor: default;
+}
+
+/* ==== 3) Skrýt duplicitní odkazy na kategorie (kořenový Katalog) =====
+   Kořenový Katalog vypisuje děti = hlavní kategorie (totéž co hlavička),
+   jejich dlaždice jsou BEZ ikon. Podstránky mají dlaždice S ikonami
+   (užitečná navigace na podkategorie) → necháváme. Rozlišení přes
+   :has(img). Bez podpory :has() se blok jen zobrazí (bezpečná degradace). */
+.children_categories:not(:has(img)) {
+  display: none;
+}
+
 /* ==== 26-listing-sort.css ==== */
 
 /* =====================================================================
