@@ -3562,6 +3562,95 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
 }
 .vp-recenze--pd .vp-recenze__date { display: none; }
 
+/* ==== Accordion (Popis/Parametry/… → rozklikávací pod galerií) =======
+   JS (40-product-detail.js › buildTabsAccordion) postaví .pd-accordion z tabů,
+   vloží na konec levého sloupce (figure) a originální .nav-tabs/.tab-content
+   skryje. Klasický accordion — otevřená vždy jedna sekce (Popis po načtení). */
+
+#app.product-detail > figure.col-md-6 > .pd-accordion { order: 5; }   /* pod galerií (image 1, recenze 2, mozaika 3) */
+
+#app.product-detail .pd-accordion {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--pd-border);
+}
+#app.product-detail .pd-accordion__item { border-bottom: 1px solid var(--pd-border); }
+
+#app.product-detail .pd-accordion__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  margin: 0;
+  padding: 1.05rem .25rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+#app.product-detail .pd-accordion__label {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--pd-text);
+  transition: color .2s ease;
+}
+#app.product-detail .pd-accordion__item.is-open .pd-accordion__label { color: var(--pd-blue); }
+
+/* + / − ikona: dvě čárky, svislá zmizí při otevření */
+#app.product-detail .pd-accordion__icon {
+  position: relative;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+}
+#app.product-detail .pd-accordion__icon::before,
+#app.product-detail .pd-accordion__icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--pd-text);
+  transform: translate(-50%, -50%);
+  transition: opacity .2s ease, background-color .2s ease;
+}
+#app.product-detail .pd-accordion__icon::after { transform: translate(-50%, -50%) rotate(90deg); }
+#app.product-detail .pd-accordion__item.is-open .pd-accordion__icon::before,
+#app.product-detail .pd-accordion__item.is-open .pd-accordion__icon::after { background: var(--pd-blue); }
+#app.product-detail .pd-accordion__item.is-open .pd-accordion__icon::after { opacity: 0; }   /* → mínus */
+
+/* tělo — plynulé rozbalení (grid 0fr → 1fr) */
+#app.product-detail .pd-accordion__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .28s ease;
+}
+#app.product-detail .pd-accordion__item.is-open .pd-accordion__body { grid-template-rows: 1fr; }
+#app.product-detail .pd-accordion__inner { overflow: hidden; }
+#app.product-detail .pd-accordion__content {
+  padding: 0 .25rem 1.15rem;
+  color: var(--pd-muted);
+  font-size: .95rem;
+  line-height: 1.6;
+}
+#app.product-detail .pd-accordion__content h1,
+#app.product-detail .pd-accordion__content h2,
+#app.product-detail .pd-accordion__content h3,
+#app.product-detail .pd-accordion__content h4,
+#app.product-detail .pd-accordion__content strong { color: var(--pd-text); }
+#app.product-detail .pd-accordion__content ul { margin: .5rem 0; padding-left: 1.2rem; }
+#app.product-detail .pd-accordion__content table { width: 100%; border-collapse: collapse; }
+#app.product-detail .pd-accordion__content table td,
+#app.product-detail .pd-accordion__content table th {
+  padding: .45rem .5rem;
+  border-bottom: 1px solid var(--pd-border);
+  text-align: left;
+  vertical-align: top;
+}
+
 /* ==== Responzivita ================================================== */
 
 /* Užší desktop: recenze 3 karty v polovičním sloupci jsou těsné */
@@ -3596,6 +3685,7 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   #app.product-detail .product-right-content > .short-description-anchor-div { order: 13; }
   #app.product-detail > figure.col-md-6 > .vp-recenze--pd { order: 20; }
   #app.product-detail > figure.col-md-6 > .additional-images { order: 21; }
+  #app.product-detail > figure.col-md-6 > .pd-accordion { order: 22; }   /* pod fotomozaikou */
   #app.product-detail .product-right-content > .nav-tabs { order: 30; }
   #app.product-detail .product-right-content > .tab-content { order: 31; }
 
@@ -4495,6 +4585,23 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   .vp-sort-row .item-count-top { order: 1; }
   .vp-sort-row .vp-sort-col { order: 2; }
   .vp-sort { justify-content: flex-end; }
+}
+
+/* ==== 26-subcategories.css ==== */
+
+/* =====================================================================
+   PODKATEGORIE VE VÝPISU KATEGORIE (.children_categories .subcategory-box)
+   Dlaždice s ikonou + názvem podkategorie nad produktovým gridem
+   (Dámské/Pánské/… → Nízké, Vysoké, Thermo, …).
+
+   Nativně: .subcategory-box{border:1px solid #eaecef} bez zaoblení →
+   ostré rohy. Přebíjíme jen poloměr, ať tenký rámeček má round edges.
+   Hover stín (.children_categories a:hover) poloměr respektuje sám.
+   ===================================================================== */
+
+.children_categories .subcategory-box {
+  border-radius: 12px;
+  overflow: hidden;   /* pojistka: ikona/obsah nevykoukne přes zaoblený roh */
 }
 
 /* ==== 27-filter.css ==== */

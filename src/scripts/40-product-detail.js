@@ -4,7 +4,10 @@
     2. klon slevového pillu „-46 %" do pravého sloupce (zdroj na obrázku je
        Vue v-if — klon se synchronizuje MutationObserverem),
     3. label „Množství" nad stepperem,
-    4. pojistka: zvýraznění data doručení, kdyby chyběl nativní span.
+    4. pojistka: zvýraznění data doručení, kdyby chyběl nativní span,
+    5. plovoucí „Přidat do košíku" na mobilu,
+    6. taby (Popis/Parametry/…) → accordion pod galerií v levém sloupci
+       (klasický, jedna otevřená; nové ouško = automaticky další položka).
 
   Vkládá se do: Administrace → Skripty → nová položka
      • Název: „Produktový detail (recenze, slevový pill, množství)"
@@ -231,6 +234,80 @@
     stickyState.observed = target;
   }
 
+  /* == 6) Taby (Popis/Parametry/…) → accordion pod galerií ============= */
+  /* Z oušek .nav-tabs + panelů .tab-content postaví klasický accordion
+     (otevřená vždy jen JEDNA sekce, „Popis" po načtení), vloží ho na konec
+     levého sloupce (pod galerii) a originální taby skryje. Iterujeme přes
+     ouška → nové ouško = automaticky další rozklikávací položka. Obsah panelu
+     KLONUJEME (taby nemají data-v = needitují se s variantou), originál držíme
+     skrytý (kdyby ho Vue re-render vrátil). */
+
+  function buildTabsAccordion(root) {
+    var nav = root.querySelector(".product-right-content > .nav-tabs");
+    var tc = root.querySelector(".product-right-content > .tab-content");
+    var fig = root.querySelector(":scope > figure");
+    if (!nav || !tc || !fig) return;
+
+    var acc = root.querySelector(".pd-accordion");
+    if (!acc) {
+      var links = Array.prototype.slice.call(nav.querySelectorAll("a"));
+      if (!links.length) return;
+
+      acc = document.createElement("div");
+      acc.className = "pd-accordion";
+
+      links.forEach(function (link, i) {
+        var sel = link.getAttribute("href") || link.getAttribute("data-target");
+        var pane = sel && sel.charAt(0) === "#" ? tc.querySelector(sel) : null;
+        var label = (link.textContent || "").trim();
+        if (!pane || !label || !(pane.innerHTML || "").trim()) return;  // prázdný panel přeskočit
+
+        var item = document.createElement("div");
+        item.className = "pd-accordion__item";
+        if (i === 0) item.classList.add("is-open");     // „Popis" otevřený
+
+        var head = document.createElement("button");
+        head.type = "button";
+        head.className = "pd-accordion__head";
+        var lab = document.createElement("span");
+        lab.className = "pd-accordion__label";
+        lab.textContent = label;
+        var ic = document.createElement("span");
+        ic.className = "pd-accordion__icon";
+        ic.setAttribute("aria-hidden", "true");
+        head.appendChild(lab);
+        head.appendChild(ic);
+
+        var body = document.createElement("div");
+        body.className = "pd-accordion__body";
+        var inner = document.createElement("div");
+        inner.className = "pd-accordion__inner";
+        var content = document.createElement("div");
+        content.className = "pd-accordion__content";
+        content.innerHTML = pane.innerHTML;             // klon obsahu panelu
+        inner.appendChild(content);
+        body.appendChild(inner);
+
+        head.addEventListener("click", function () {
+          var willOpen = !item.classList.contains("is-open");
+          var items = acc.querySelectorAll(".pd-accordion__item");
+          for (var k = 0; k < items.length; k++) items[k].classList.remove("is-open");
+          if (willOpen) item.classList.add("is-open");  // jen jedna otevřená
+        });
+
+        item.appendChild(head);
+        item.appendChild(body);
+        acc.appendChild(item);
+      });
+
+      if (!acc.children.length) return;
+      fig.appendChild(acc);            // konec levého sloupce; pozici řeší CSS order
+    }
+
+    nav.style.display = "none";        // originály držet skryté
+    tc.style.display = "none";
+  }
+
   /* == Orchestrace ===================================================== */
 
   function runAll() {
@@ -241,6 +318,7 @@
     injectQtyLabel(root);
     ensureDeliveryDateSpan(root);
     ensureStickyCta(root);
+    buildTabsAccordion(root);
   }
 
   function init() {
