@@ -938,6 +938,58 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   vertical-align: top;
 }
 
+/* ==== YouTube preview (facade — tmavá karta + modro-žluté play tlačítko) ====
+   JS (40-product-detail.js › enhanceYoutube) nahradí nativní iframe facadem;
+   skutečné video se načte až po kliknutí. Video (.yt-video) je MIMO
+   #app.product-detail, kam tokeny --pd-* nedosáhnou → barvy literálně
+   (stejně jako .pd-sticky-cta). .embed-responsive je position:relative
+   (Bootstrap), facade absolutně vyplní jeho 16:9 box. */
+.yt-video .embed-responsive {
+  position: relative;                 /* platforma ji nechává static → kotva pro facade */
+  aspect-ratio: 16 / 9;               /* platforma nemá padding-bottom trik → výška z poměru */
+  border-radius: 14px;
+  overflow: hidden;
+}
+.yt-video .embed-responsive > iframe { width: 100%; height: 100%; }
+.yt-video .pd-yt-facade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  background: #0e1b3d;                 /* tmavá navy jako mockup */
+}
+.yt-video .pd-yt-play {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: #1361cf;                 /* = --pd-blue */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 22px rgba(19, 97, 207, .45);
+  transition: transform .15s ease, background-color .15s ease;
+}
+.yt-video .pd-yt-play::before {        /* žlutý trojúhelník */
+  content: "";
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 11px 0 11px 18px;
+  border-color: transparent transparent transparent #ffc400;
+  margin-left: 4px;
+}
+.yt-video .pd-yt-facade:hover .pd-yt-play,
+.yt-video .pd-yt-facade:focus-visible .pd-yt-play {
+  transform: scale(1.08);
+  background: #0f4ea8;                 /* = --pd-blue-dark */
+}
+
 /* ==== Responzivita ================================================== */
 
 /* Užší desktop: recenze 3 karty v polovičním sloupci jsou těsné */

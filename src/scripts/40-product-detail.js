@@ -8,7 +8,9 @@
     5. plovoucí „Přidat do košíku" na mobilu,
     6. taby (Popis/Parametry/…) → accordion pod galerií v levém sloupci
        (klasický: jedna otevřená naráz, defaultně všechny zavřené; nové
-       ouško = automaticky další položka).
+       ouško = automaticky další položka),
+    7. YouTube preview → tmavá karta s vlastním play tlačítkem (facade;
+       skutečný iframe až po kliknutí).
 
   Vkládá se do: Administrace → Skripty → nová položka
      • Název: „Produktový detail (recenze, slevový pill, množství)"
@@ -308,6 +310,51 @@
     tc.style.display = "none";
   }
 
+  /* == 7) YouTube preview → tmavá karta s vlastním play tlačítkem =======
+     Nativní <iframe> (cross-origin, nejde stylovat zevnitř) nahradíme „facade"
+     — tmavá navy karta + modro-žluté tlačítko. Skutečný iframe (se správným
+     ID + autoplay) se načte až po kliknutí (i výkonový přínos). Bonus: opraví
+     i rozbité embed URL z adminu (embed/https://…/watch?v=ID). Idempotentní. */
+
+  function enhanceYoutube() {
+    /* video je v .content > .row.yt-video, MIMO #app.product-detail → hledáme
+       v celém dokumentu (skript běží jen na produktovém detailu) */
+    var wraps = document.querySelectorAll(".yt-video .embed-responsive");
+    Array.prototype.forEach.call(wraps, function (wrap) {
+      if (wrap.querySelector(".pd-yt-facade")) return;      // už hotovo
+      var iframe = wrap.querySelector('iframe[src*="youtu"]');
+      if (!iframe) return;
+      var src = iframe.getAttribute("src") || "";
+      var m = src.match(/[?&]v=([A-Za-z0-9_-]{11})/)
+           || src.match(/embed\/([A-Za-z0-9_-]{11})(?:[?&/]|$)/)
+           || src.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
+      if (!m) return;
+      var id = m[1];
+
+      var facade = document.createElement("button");
+      facade.type = "button";
+      facade.className = "pd-yt-facade";
+      facade.setAttribute("aria-label", "Přehrát video");
+      var play = document.createElement("span");
+      play.className = "pd-yt-play";
+      facade.appendChild(play);
+
+      facade.addEventListener("click", function () {
+        var real = document.createElement("iframe");
+        real.className = "embed-responsive-item";
+        real.setAttribute("src", "https://www.youtube.com/embed/" + id + "?autoplay=1&rel=0");
+        real.setAttribute("allow", "autoplay; encrypted-media; fullscreen; picture-in-picture");
+        real.setAttribute("allowfullscreen", "");
+        real.setAttribute("frameborder", "0");
+        wrap.innerHTML = "";
+        wrap.appendChild(real);
+      });
+
+      iframe.style.display = "none";
+      wrap.appendChild(facade);
+    });
+  }
+
   /* == Orchestrace ===================================================== */
 
   function runAll() {
@@ -319,6 +366,7 @@
     ensureDeliveryDateSpan(root);
     ensureStickyCta(root);
     buildTabsAccordion(root);
+    enhanceYoutube();
   }
 
   function init() {
