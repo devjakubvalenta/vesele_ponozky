@@ -76,3 +76,15 @@
 }
 .category-filters .noUi-handle::before,
 .category-filters .noUi-handle::after { display: none !important; }
+
+/* ---- Zredukovat filtry na Cena / Velikost / Motiv ------------------
+   Skrýt nepotřebné facety. Blacklist podle data-filter-group-id (facet ID =
+   ID parametru), aby se Cena, Velikosti i „Motiv" (parametr 1006, jakmile se
+   v adminu zapne „Zobrazit ve filtraci") zobrazovaly samy. Kategorie = strom
+   .column-left (samostatný blok, ne facet). */
+.filters-block .filter-group[data-filter-group-id="availability"],  /* Dostupnost */
+.filters-block .filter-group[data-filter-group-id="discount"],      /* Produkty ve slevě */
+.filters-block .filter-group[data-filter-group-id="335"],           /* Je hlavní produkt */
+.filters-block .column-left {                                        /* Kategorie (strom) */
+  display: none !important;
+}
