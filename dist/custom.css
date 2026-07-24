@@ -3467,6 +3467,97 @@ header .vp-hdr-cart__ic {
   content: none !important;                   /* zrušit případné template ozdoby/skew */
 }
 
+/* ==== Zvýhodněné balení (nativní „Doplňkové služby" = additional-services) ===
+   Nová vazba balení (dřív %primary_accessories% owl carousel). Nativní DOM:
+     .additional-services-wrapper
+       > .additional-services-title            "Zvýhodněné balení"
+       > .additional_services_products > .block > .block2 (POZOR: podtržítka)
+           input.product_additional_services   (checkbox)
+           label > img.additional_services_products_image  (miniatura)
+           a.fw-bold                            název setu → odkaz na produkt setu
+           .block2 > .additional-services-price-js "+ 359 Kč" + a.bi-question-circle "?"
+
+   Cíl (mockup): klikací KARTA = proklik na set. Miniatura vlevo, modrý titulek +
+   šedý název, modré pozadí, žlutá při hoveru. BEZ checkboxu / ceny / „?" (přání:
+   jen odkaz). Titulek je v DOM samostatný sourozenec NAD řádkem → miniatura jde
+   position:absolute vlevo + levý padding, ať titulek i název tečou vedle ní. Celá
+   karta klikací přes stretched-link (a.fw-bold::after přes celou position:relative
+   kartu). Předpoklad jedna položka balení (jeden .block). */
+
+#app.product-detail .additional-services-wrapper {
+  position: relative;                          /* kotva pro miniaturu i stretched-link */
+  margin: 1rem 0 .85rem !important;            /* přebít Bootstrap mt-4/mb-1 (!important utils) */
+  padding: 14px 16px 14px 76px;                /* levý padding = místo pro miniaturu (48 + okraje) */
+  background: #f4f8ff;                          /* jemná modrá jako stará karta */
+  border: 1.5px solid var(--pd-border-strong);
+  border-radius: var(--pd-radius);
+  transition: background-color .15s ease, border-color .15s ease;
+}
+#app.product-detail .additional-services-wrapper:hover {
+  background: var(--pd-yellow-bg);             /* „Hoover efekt" — žlutá */
+  border-color: var(--pd-yellow-border);
+}
+
+/* Miniatura setu — absolutně vlevo, vertikálně vycentrovaná proti 2 řádkům.
+   !important přebíjí šablonový .img-fluid (max-width:100%; height:auto). */
+#app.product-detail .additional_services_products_image {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px !important;
+  height: 48px !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
+  object-fit: contain;
+  padding: 3px;
+  background: #fff;
+  border: 1px solid var(--pd-border);
+  border-radius: 10px;
+}
+#app.product-detail .additional_services_products label { margin: 0 !important; }  /* obal miniatury (me-2); img je absolutní → kolabuje */
+
+/* Titulek (řádek 1) — modrý */
+#app.product-detail .additional-services-title {
+  margin: 0 0 2px !important;                  /* přebít mb-3 */
+  font-size: 1rem !important;                  /* nativně fs-5 = 20px */
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--pd-blue);
+}
+
+/* Obal produktů → název na vlastní řádek pod titulkem */
+#app.product-detail .additional_services_products { margin: 0 !important; }
+#app.product-detail .additional_services_products .block,
+#app.product-detail .additional_services_products .block2 { display: block; }
+
+/* Název setu (řádek 2) — šedý; stretched-link přes celou kartu (proklik na set) */
+#app.product-detail .additional_services_products a.fw-bold {
+  display: inline;
+  margin: 0 !important;                        /* přebít me-3 */
+  font-size: .85rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--pd-muted) !important;
+  text-decoration: none !important;
+}
+#app.product-detail .additional_services_products a.fw-bold::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;                                   /* klik kdekoliv na kartě → navigace na set */
+}
+#app.product-detail .additional-services-wrapper:hover .additional_services_products a.fw-bold {
+  color: var(--pd-text) !important;
+}
+
+/* Skrýt nativní add-to-cart prvky (přání: jen proklik).
+   Druhý .block2 (cena + „?") cílíme přes :has (už použito výše, ř. 100). */
+#app.product-detail .additional_services_products input.product_additional_services,
+#app.product-detail .additional_services_products .block2:has(.additional-services-price-js) {
+  display: none !important;
+}
+
 /* ==== Benefity 2×2 (obsah admin pole „Produktový detail") =========== */
 /* Strukturní selektor — ul může mít třídu .benefits (renderer) i vlastní */
 
