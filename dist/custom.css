@@ -2812,14 +2812,23 @@ header .vp-hdr-cart__ic {
   flex-direction: column;
 }
 
-/* Pravý sloupec „lepivý" — drží ve viewportu, dokud levá (delší) strana
-   (galerie + accordion) nedojede dolů, pak se odlepí. Jen desktop (na mobilu
-   je sloupec display:contents). top kryje lepivou hlavičku (~100 px);
+/* Pravý sloupec „lepivý" — SPODNÍ hranou se zastaví u spodní hrany viewportu
+   (aby byl vidět košík + benefity + „Další informace"), zatímco delší levý
+   sloupec (galerie + mozaika + accordion) scrolluje dál; jakmile levý dojede
+   na konec, oba se odlepí a scrollují spolu. Jen desktop (na mobilu je sloupec
+   display:contents).
+
+   Sticky `bottom` drží jen při scrollu NAHORU — pro zastavení SPODNÍ hrany při
+   scrollu DOLŮ je nutný NEGATIVNÍ `top` = viewport − výška sloupce − mezera. Tu
+   (proměnnou --pd-sticky-top) počítá 40-product-detail.js, protože závisí na
+   výšce sloupce (varianta/popis) i viewportu. Fallback 108px = klasický sticky
+   pod hlavičkou, kdyby JS neběžel; u nízkého sloupce JS `top` na 108px capne
+   (drží se pod hlavičkou jako klasický sidebar).
    align-self:flex-start ruší stretch, aby sticky mělo kam „klouzat". */
 @media (min-width: 768px) {
   #app.product-detail .product-right-content {
     position: sticky;
-    top: 108px;
+    top: var(--pd-sticky-top, 108px);
     align-self: flex-start;
   }
 }

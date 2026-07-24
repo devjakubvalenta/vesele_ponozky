@@ -10,7 +10,11 @@
        (klasický: jedna otevřená naráz, defaultně všechny zavřené; nové
        ouško = automaticky další položka),
     7. YouTube preview → tmavá karta s vlastním play tlačítkem (facade;
-       skutečný iframe až po kliknutí).
+       skutečný iframe až po kliknutí),
+    8. sticky offset pravého sloupce — negativní `top` (CSS proměnná
+       --pd-sticky-top), aby se sloupec zastavil SPODNÍ hranou u spodní hrany
+       viewportu (viditelný košík + benefity), dokud levý delší sloupec
+       doscrolluje; přepočet při změně výšky sloupce i viewportu.
 
   Vkládá se do: Administrace → Skripty → nová položka
      • Název: „Produktový detail (recenze, slevový pill, množství)"
@@ -355,6 +359,46 @@
     });
   }
 
+  /* == 8) Sticky offset pravého sloupce (zastavení spodní hranou) =======
+     Pravý sloupec je position:sticky (CSS, jen ≥768px). Aby se ZASTAVIL SPODNÍ
+     hranou u spodní hrany viewportu (viditelný košík + benefity), dokud delší
+     levý sloupec doscrolluje, počítáme NEGATIVNÍ `top`:
+         top = viewport − výška sloupce − mezera
+     (sticky `bottom` drží jen při scrollu NAHORU, proto negativní `top`).
+     Když je sloupec nižší, cap na HEADER_OFFSET → klasický sticky pod hlavičkou.
+     Přepočet při změně výšky sloupce (ResizeObserver: varianta/obrázky/písmo)
+     i viewportu (resize listener v init). Zápis do CSS proměnné je změna atributu
+     style → NEspustí MutationObserver (ten sleduje jen childList/characterData),
+     ani ResizeObserver (top nemění velikost boxu) → žádná smyčka. */
+
+  var HEADER_OFFSET = 108;   // výška lepivé hlavičky (režim nízkého sloupce)
+  var STICKY_GAP = 16;       // mezera pod spodní hranou sloupce
+  var offsetState = { ro: null, observed: null };
+
+  function updateStickyOffset(root) {
+    var right = root.querySelector(".product-right-content");
+    if (!right) return;
+
+    // (re)napojit ResizeObserver na aktuální sloupec (výška se mění s variantou)
+    if ("ResizeObserver" in window && right !== offsetState.observed) {
+      if (offsetState.ro) offsetState.ro.disconnect();
+      offsetState.ro = new ResizeObserver(function () {
+        var r = app();
+        if (r) updateStickyOffset(r);
+      });
+      offsetState.ro.observe(right);
+      offsetState.observed = right;
+    }
+
+    var h = right.offsetHeight;   // 0 na mobilu (display:contents) → přeskočit
+    if (!h) return;
+    var top = Math.min(HEADER_OFFSET, window.innerHeight - h - STICKY_GAP);
+    var val = top + "px";
+    if (right.style.getPropertyValue("--pd-sticky-top") !== val) {
+      right.style.setProperty("--pd-sticky-top", val);
+    }
+  }
+
   /* == Orchestrace ===================================================== */
 
   function runAll() {
@@ -367,6 +411,7 @@
     ensureStickyCta(root);
     buildTabsAccordion(root);
     enhanceYoutube();
+    updateStickyOffset(root);
   }
 
   function init() {
@@ -390,6 +435,16 @@
       });
       mo.observe(app(), { childList: true, subtree: true, characterData: true });
     }
+
+    // změna viewportu → přepočítat sticky offset pravého sloupce (bod 8)
+    var rz = null;
+    window.addEventListener("resize", function () {
+      clearTimeout(rz);
+      rz = setTimeout(function () {
+        var r = app();
+        if (r) updateStickyOffset(r);
+      }, 120);
+    });
   }
 
   if (document.readyState === "loading") {
