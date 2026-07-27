@@ -5165,11 +5165,13 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
 .category-filters .filter-group[data-filter-group-id="52209"] { order: 2; }  /* Velikost */
 .category-filters .filter-group-price                         { order: 3; }  /* Cena */
 
-/* ---- Odsazení mezi jednotlivými položkami (řádky checkboxů) --------
-   Výchozí bylo jen margin-top:5px → řádky Velikost/Motiv byly nalepené.
-   Zvětšit rozestup, ať dýchají a líp se trefují. Selektor drží stejnou
-   specificitu jako šablona (3 třídy), náš CSS je později v pořadí → vyhraje. */
-.category-filters .filter-group-filters .filter-group-filter { margin-top: 20px; }
+/* ---- Mezera MEZI filtračními skupinami (Motiv | Velikost | Cena) ---
+   Skupiny se stackují jako flex-lines v .category-filters-collapsible > .row
+   (každá .filter-group má width:100 %). `row-gap` na tomto flex kontejneru
+   udělá svislou mezeru jen MEZI viditelnými skupinami — skryté display:none
+   skupiny se do gapů nepočítají, nad první ani pod poslední nic nepřidá.
+   (Rozestup jednotlivých hodnot uvnitř skupiny zůstává nativní ~5px.) */
+.category-filters .category-filters-collapsible > .row { row-gap: 22px; }
 
 /* ==== 27-hp-recenze.css ==== */
 
