@@ -5128,6 +5128,11 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   display: none !important;
 }
 
+/* Oddělovací čárky mezi skupinami filtru pryč — po skrytí Dostupnost/Sleva/Je
+   hlavní produkt zůstávaly jejich .separator jako osiřelé linky (pod Cenou se
+   hromadily 3–4 čáry). Filtr je čistší bez nich (skupiny odlišuje nadpis). */
+.category-filters .separator { display: none !important; }
+
 /* ==== 27-hp-recenze.css ==== */
 
 /* Homepage — sekce „Co říkají naši zákazníci?" pod benefits pásem

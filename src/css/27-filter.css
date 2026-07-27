@@ -88,3 +88,8 @@
 .filters-block .column-left {                                        /* Kategorie (strom) */
   display: none !important;
 }
+
+/* Oddělovací čárky mezi skupinami filtru pryč — po skrytí Dostupnost/Sleva/Je
+   hlavní produkt zůstávaly jejich .separator jako osiřelé linky (pod Cenou se
+   hromadily 3–4 čáry). Filtr je čistší bez nich (skupiny odlišuje nadpis). */
+.category-filters .separator { display: none !important; }
