@@ -14,7 +14,10 @@
     8. sticky offset pravého sloupce — negativní `top` (CSS proměnná
        --pd-sticky-top), aby se sloupec zastavil SPODNÍ hranou u spodní hrany
        viewportu (viditelný košík + benefity), dokud levý delší sloupec
-       doscrolluje; přepočet při změně výšky sloupce i viewportu.
+       doscrolluje; přepočet při změně výšky sloupce i viewportu,
+    9. „Zvýhodněné balení" (additional-services) — nativní odkaz na set má
+       target="_blank"; sundáme ho, ať klikací karta (styl v CSS) otevírá set
+       ve STEJNÉM okně.
 
   Vkládá se do: Administrace → Skripty → nová položka
      • Název: „Produktový detail (recenze, slevový pill, množství)"
@@ -399,6 +402,18 @@
     }
   }
 
+  /* == 9) „Zvýhodněné balení" — odkaz na set ve STEJNÉM okně ============
+     Nativní odkaz na produkt setu (.additional_services_products a.fw-bold) má
+     target="_blank" → CSS z něj udělal klikací kartu (stretched-link), ale klik
+     otevíral novou kartu. Přání: stejné okno → sundat target. Idempotentní
+     (po odebrání už selektor [target] nematchne); běží v runAll (přežije Vue
+     re-render, který by target mohl vrátit). */
+
+  function fixAdditionalServicesLink(root) {
+    var links = root.querySelectorAll(".additional_services_products a.fw-bold[target]");
+    for (var i = 0; i < links.length; i++) links[i].removeAttribute("target");
+  }
+
   /* == Orchestrace ===================================================== */
 
   function runAll() {
@@ -412,6 +427,7 @@
     buildTabsAccordion(root);
     enhanceYoutube();
     updateStickyOffset(root);
+    fixAdditionalServicesLink(root);
   }
 
   function init() {
