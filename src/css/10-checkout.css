@@ -1013,5 +1013,26 @@ section.order-recap {
   }
 }
 
+/* ==== Sleva v košíku: modrá pilulka (jako slevový pill na detailu) =====
+   Nativně červený kruhový badge (.discount-strip.discount-percentage) →
+   modrá pilulka #1361cf. Nutno vynulovat nativní min-width/height (jinak
+   zůstane kruh) a přebít červené pozadí (!important). */
+body.body-cart .discount-old-price-modificator.discount-percentage,
+body.body-cart .discount-strip.discount-percentage {
+  display: inline-block !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  background-color: #1361cf !important;   /* nativně červená */
+  color: #fff !important;
+  border-radius: 999px !important;
+  padding: .3rem .85rem !important;
+  font-weight: 800 !important;
+  font-size: .8rem !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+}
+
 
 
