@@ -4643,6 +4643,39 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   }
 }
 
+/* ===== HP: produktové bloky = horizontální slider (jen mobil) =========
+   Novinky / Dárkové sety / „Všechny naše produkty" na mobilu nestohovat pod
+   sebe, ale scroll-snap slider (1 karta + ~půl náhledu další) — stejný princip
+   jako rozcestník kategorií (28-hp-kategorie.css). Scope body.homepage → výpisy
+   kategorií (body-category) netknuté. Cíl .products.row = hlavní grid (section)
+   i inner wrapper recommend bloků; karty jsou přímé děti. Tlačítka „Zobrazit
+   vše" jsou mimo .products.row → zůstávají pod sliderem. Breakpoint 768 jako
+   rozcestník. */
+@media (max-width: 768px) {
+  body.homepage .products.row {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    gap: 12px;
+    margin: 0;                 /* zrušit zápornou marži Bootstrap .row */
+    padding: 0 0 .5rem;        /* místo pod kartami (skrytý scrollbar) */
+    scrollbar-width: none;     /* Firefox */
+  }
+  body.homepage .products.row::-webkit-scrollbar { display: none; }  /* WebKit */
+
+  body.homepage .products.row > .product {
+    flex: 0 0 66%;             /* 1 karta + ~půl náhledu následující (ověřeno živě) */
+    max-width: 66%;
+    width: 66%;
+    margin: 0;                 /* nativně margin-bottom ~1.5em */
+    padding-left: 0;           /* gutter .col řeší gap */
+    padding-right: 0;
+    scroll-snap-align: start;
+  }
+}
+
 /* ==== 26-benefits.css ==== */
 
 /* Homepage — benefits pás pod bento kompozicí (markup src/content/homepage.html).
