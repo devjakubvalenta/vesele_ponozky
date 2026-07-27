@@ -67,11 +67,11 @@
   text-decoration-thickness: 2px;
 }
 
-/* ==== Mobil (< 576 px) — počet nahoře vlevo, odkazy pod ním vpravo === */
+/* ==== Mobil (< 576 px) — počet nahoře vlevo, odkazy pod ním na střed === */
 
 @media (max-width: 575.98px) {
   .vp-sort-row > * { flex: 1 0 100% !important; }
   .vp-sort-row .item-count-top { order: 1; }
   .vp-sort-row .vp-sort-col { order: 2; }
-  .vp-sort { justify-content: flex-end; }
+  .vp-sort { justify-content: center; }   /* řazení na střed (počet zůstává vlevo) */
 }
