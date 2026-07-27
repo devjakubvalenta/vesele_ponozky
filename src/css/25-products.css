@@ -485,3 +485,26 @@
     scroll-snap-align: start;
   }
 }
+
+/* ===== Výpis kategorie: 2 sloupce na mobilu (admin p-view-mob-two_column) =====
+   2 karty vedle sebe nastavuje administrace (mobilní režim → 2 sloupce; karta
+   dostane .p-view-mob-two_column + col-6). Jediná úprava z naší strany: na úzké
+   půlkarty se „Přidat do košíku" (nativně .9rem) zalamuje na 2 řádky — zmenšit
+   font/padding/ikonu + nowrap, ať je na jednom řádku. Míří jen na 2sloupcové
+   karty výpisu kategorie → HP (slidery, one_column) i desktop netknuté. */
+@media (max-width: 768px) {
+  .products .product.p-view-mob-two_column .product-footer .product-add-to-shopping-basket.btn.btn-primary {
+    padding: .55rem .4rem !important;
+    font-size: .72rem !important;
+    gap: .3rem;
+    white-space: nowrap;
+  }
+  .products .product.p-view-mob-two_column .product-add-to-shopping-basket .show_variant_button {
+    white-space: nowrap;
+  }
+  .products .product.p-view-mob-two_column .product-footer .product-add-to-shopping-basket.btn.btn-primary::before {
+    flex: 0 0 15px;            /* menší ikona košíku (nativně 18px) */
+    width: 15px;
+    height: 15px;
+  }
+}
