@@ -5154,6 +5154,23 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
    hromadily 3–4 čáry). Filtr je čistší bez nich (skupiny odlišuje nadpis). */
 .category-filters .separator { display: none !important; }
 
+/* ---- Pořadí skupin: Motiv → Velikost → Cena -----------------------
+   Skupiny jsou flex-items v .category-filters … .row (display:flex;
+   flex-wrap:wrap). .filter-group má width:100 %, takže se stackují pod
+   sebe; pořadí tedy řídíme přes `order`. Cílíme podle data-filter-group-id
+   (shop-globální ID parametru: Motiv=52221, Velikost=52209) a Cenu přes
+   stabilní .filter-group-price. Skryté skupiny (availability/discount) a
+   .separator jsou display:none → do flex layoutu nevstupují. */
+.category-filters .filter-group[data-filter-group-id="52221"] { order: 1; }  /* Motiv */
+.category-filters .filter-group[data-filter-group-id="52209"] { order: 2; }  /* Velikost */
+.category-filters .filter-group-price                         { order: 3; }  /* Cena */
+
+/* ---- Odsazení mezi jednotlivými položkami (řádky checkboxů) --------
+   Výchozí bylo jen margin-top:5px → řádky Velikost/Motiv byly nalepené.
+   Zvětšit rozestup, ať dýchají a líp se trefují. Selektor drží stejnou
+   specificitu jako šablona (3 třídy), náš CSS je později v pořadí → vyhraje. */
+.category-filters .filter-group-filters .filter-group-filter { margin-top: 20px; }
+
 /* ==== 27-hp-recenze.css ==== */
 
 /* Homepage — sekce „Co říkají naši zákazníci?" pod benefits pásem
