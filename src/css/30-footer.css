@@ -118,6 +118,23 @@ body footer section.eshop-footer a:hover {
   text-decoration: underline !important;
 }
 
+/* Atribuce webfontu (CC BY 4.0, onlinewebfonts) — injektuje footer.js.
+   Odkaz musí přebít modrou + weight 600 z pravidla výše (vyšší
+   specificita + !important). */
+body footer section.eshop-footer .vp-foot__attribution {
+  text-align: center !important;
+  font-size: 0.6875rem !important;
+  line-height: 1.5 !important;
+  color: var(--hdr-muted, #94a3b8) !important;
+  margin: 0.35rem auto 0 !important;
+}
+
+body footer section.eshop-footer .vp-foot__attribution a {
+  color: inherit !important;
+  font-weight: 400 !important;
+  text-decoration: underline !important;
+}
+
 @media (max-width: 575.98px) {
   body footer .row > .footer-column[class*="col-"] {
     width: 100% !important;

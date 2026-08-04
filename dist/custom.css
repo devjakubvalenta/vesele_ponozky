@@ -15,6 +15,74 @@
   display: none !important;
 }
 
+/* ==== 05-fonts.css ==== */
+
+/* =====================================================================
+   WEBFONT „Proxima Soft Cond" — jen nadpisy a výrazné prvky.
+   Běžný text zůstává Space Grotesk (admin položka „Font" — nesahat).
+
+   POZOR na váhy: soubor stažený jako „Proxima Soft Cond.woff2" je
+   interně BOLD (OS/2 usWeightClass 700, PS ProximaSoftCond-Bold),
+   „…Medium.woff2" je 500 → deklarujeme 500 + 700, žádný regular 400
+   neexistuje. font-weight:800 v repu spadne na 700, 400 na 500 —
+   prohlížeč nedopočítává faux-bold.
+
+   Hosting: jsDelivr @main (obsah fontů se nemění → cache invalidace
+   netřeba; absolutní URL nutná i kvůli live-preview injektáži <style>).
+   Diakritika ověřena z cmap: ěščřžýáíéúůďťň + verzálky přítomny.
+   Licence: CC BY 4.0 (onlinewebfonts.com) — atribuce v patičce
+   (footer.js → #vp-foot-attribution).
+   ===================================================================== */
+
+@font-face {
+  font-family: "Proxima Soft Cond";
+  src: url("https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/proxima-soft-cond-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Proxima Soft Cond";
+  src: url("https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/proxima-soft-cond-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==== Nadpisy ====================================================
+   Šablona rodinu na h1–h6 nenastavuje (jen body → Space Grotesk),
+   takže stačí globál bez specificity válek. */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: "Proxima Soft Cond", "Space Grotesk", sans-serif;
+}
+
+/* ==== Tlačítka / CTA ============================================= */
+.btn,                      /* Bootstrap: karta, detail, hledání, hover-cart, checkout */
+.pc-show-all,              /* „Zobrazit vše" pod HP bloky (30-product-cards.js) */
+.pc-show-all-hp,           /* „Zobrazit vše" pod hlavním HP výpisem */
+.pd-sticky-cta__btn,       /* mobilní sticky CTA na detailu (žije mimo #app) */
+.vp-nl__form button,       /* Ecomail newsletter submit */
+.pd-accordion__label {     /* accordion detailu (head má font-family: inherit) */
+  font-family: "Proxima Soft Cond", "Space Grotesk", sans-serif;
+}
+
+/* ==== Ceny (děti dědí — stačí kontejnery) ======================== */
+.products .product .product-footer .product-price,
+.products .product .discount-old-price,
+#app.product-detail .product-price,
+#app.product-detail .discount-old-price,
+.pd-sticky-cta__price,
+.main-order-form .cart-product .total_row_price,
+.main-order-form .total-price .table-total-price,
+.order-recap .order-recap-total-price,
+header #hover-cart .product-price,
+header #hover-cart-footer span.total,
+header #hover-cart-footer #hover-cart-total-value {
+  font-family: "Proxima Soft Cond", "Space Grotesk", sans-serif;
+}
+
 /* ==== 10-checkout.css ==== */
 
 .container .content {
@@ -5770,6 +5838,23 @@ body footer section.eshop-footer a {
 }
 
 body footer section.eshop-footer a:hover {
+  text-decoration: underline !important;
+}
+
+/* Atribuce webfontu (CC BY 4.0, onlinewebfonts) — injektuje footer.js.
+   Odkaz musí přebít modrou + weight 600 z pravidla výše (vyšší
+   specificita + !important). */
+body footer section.eshop-footer .vp-foot__attribution {
+  text-align: center !important;
+  font-size: 0.6875rem !important;
+  line-height: 1.5 !important;
+  color: var(--hdr-muted, #94a3b8) !important;
+  margin: 0.35rem auto 0 !important;
+}
+
+body footer section.eshop-footer .vp-foot__attribution a {
+  color: inherit !important;
+  font-weight: 400 !important;
   text-decoration: underline !important;
 }
 

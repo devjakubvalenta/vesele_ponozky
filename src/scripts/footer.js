@@ -124,6 +124,17 @@
     return c;
   }
 
+  // Atribuce webfontu Proxima Soft Cond (onlinewebfonts.com, CC BY 4.0) —
+  // licence vyžaduje uvedení zdroje; vkládá se do právního pásu dole.
+  function buildAttribution() {
+    var d = document.createElement("div");
+    d.className = "vp-foot__attribution";
+    d.id = "vp-foot-attribution";
+    d.innerHTML =
+      'Icons made from <a href="https://www.onlinewebfonts.com/icon">svg icons</a>is licensed by CC BY 4.0';
+    return d;
+  }
+
   // Accordion: zabalí h2 + následující sourozence (do dalšího h2) do panelu
   function setupAccordion(footer) {
     var cols = footer.querySelectorAll(".footer-column");
@@ -213,6 +224,11 @@
     var terms = footer.querySelector("section.eshop-footer");
     if (terms) footer.insertBefore(buildContact(), terms);
     else footer.appendChild(buildContact());
+
+    if (!document.getElementById("vp-foot-attribution")) {
+      var legal = (terms && terms.querySelector(".container")) || terms || footer;
+      legal.appendChild(buildAttribution());
+    }
 
     setupAccordion(footer);
   }
