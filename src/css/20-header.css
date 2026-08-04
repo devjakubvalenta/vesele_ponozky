@@ -1722,11 +1722,12 @@ header .vp-hdr-cart__ic {
   }
   /* Hlavní příčina odsazení: šablona v mobilu dává PRÁZDNÉMU icon-wrapu
      width:25px + margin-right (template.css ~ř. 881), což odsune text kategorií
-     ~o 30px doprava. CMS položky span nemají. Zkolabovat prázdný span na 0, ať
-     kategorie lícují s CMS. :empty = kdyby ikona byla, zůstane zobrazená. */
+     ~o 30px doprava. CMS položky span nemají. :empty = kdyby ikona byla,
+     zůstane zobrazená.
+     `display: none` (ne jen width:0): odkaz je flex kontejner, takže span
+     s nulovou šířkou by pořád byl flex položkou a počítal se do gapu. */
   header #top-menu .nav-item .mm-menu-ico-wrap:empty {
-    width: 0 !important;
-    margin-right: 0 !important;
+    display: none !important;
   }
 
   /* Všechny proužky mezi položkami mobilního menu pryč: border-bottom ze šablony
@@ -1760,48 +1761,43 @@ header .vp-hdr-cart__ic {
     color: #ec3323 !important;
   }
 
-  /* ---- Šipka „›" viditelná u všech položek ------------------------
-     U kategorií šipku renderuje SÁM ŠABLONOVÝ markup jako sourozence
-     odkazu: `<li><a class="nav-link dropdown-toggle">…</a><i class="bi
-     bi-chevron-left"></i><ul class="dropdown-menu">`. Nebyla vidět jen
-     proto, že má `color: #fff` — bílá na bílém. Stačí ji obarvit textem
-     (pseudoprvek nemá smysl: šablona `.dropdown-toggle::after` vypíná
-     přes display:none a vyhrála by specificitou).
-     Otočení: šablona má na ikoně samostatnou vlastnost `rotate: -90deg`
-     (ne `transform`), kterou nejde přebít — obě se skládají. Glyph
-     chevron-left míří vlevo (180°), po šablonovém −90° tedy nahoru;
-     `transform: rotate(-90deg)` to dorovná na 0° = doprava dle návrhu.
-     `pointer-events: none`: tap u pravého kraje má vždy padnout na odkaz
-     (= přechod do kategorie), ne na toggle podkategorií. */
+  /* ---- Šipka „›" u všech položek, z JEDNOHO zdroje ------------------
+     U kategorií renderuje šipku sama šablona jako sourozence odkazu
+     (`<a class="nav-link dropdown-toggle">…</a><i class="bi bi-chevron-left">`),
+     u CMS položek a „Výprodeje" žádná není. Míchat obojí se neosvědčilo:
+     ikona z ikonového fontu vypadala jinak než textový „›" a končila na jiném
+     x (353 vs. 363) → dva různé tvary ve dvou sloupcích.
+     Proto šablonovou ikonu SKRÝVÁME a všem řádkům dáváme stejný pseudoprvek. */
   header #top-menu .navbar-nav > li > i.bi-chevron-left {
-    color: var(--hdr-text) !important;
-    transform: rotate(-90deg) !important;
-    pointer-events: none;
+    display: none !important;
   }
 
-  /* Položky BEZ šablonové ikony: CMS odkazy (staví header.js) a kategorie
-     bez podkategorií (.nav-link-without-children, např. „Výprodej") —
-     tam šipku dodáme pseudoprvkem. `margin-left: auto` drží text vlevo
-     a šipku u pravého kraje. */
-  header #top-menu .navbar-nav > li.vp-menu-cms > .nav-link,
-  header #top-menu .navbar-nav > li > .nav-link.nav-link-without-children {
+  header #top-menu .navbar-nav > li:not(.vp-menu-cat) > .nav-link {
     display: flex !important;
     align-items: center;
-    gap: 0.5rem;
+    /* ŽÁDNÝ gap: prázdný .mm-menu-ico-wrap je pořád flex položkou, takže by
+       gap odsadil text o svou šířku — přesně o to byl „Výprodej" (jediná
+       položka, co má icon-wrap i pseudoprvek) posunutý o 8 px doprava. */
+    gap: 0 !important;
   }
-  header #top-menu .navbar-nav > li.vp-menu-cms > .nav-link::after,
-  header #top-menu .navbar-nav > li > .nav-link.nav-link-without-children::after {
+  header #top-menu .navbar-nav > li:not(.vp-menu-cat) > .nav-link::after {
     content: "›";
     /* `display` MUSÍ být explicitně: šablona (resp. její zapečená kopie
        v adminu) má `header #top-menu .nav-item .nav-link::after
        { display: none }`, kterým vypíná Bootstrapí caret — jinak by nám
        schovala i tenhle pseudoprvek. */
     display: inline-block !important;
+    /* `border: 0` je nutné: Bootstrap kreslí caret u .dropdown-toggle právě
+       přes border, takže by se nad šipkou objevil černý trojúhelník. */
+    border: 0 !important;
+    width: auto !important;
+    height: auto !important;
     font-size: 1.5rem;
     line-height: 1;
     font-weight: 400;
     color: currentColor;
-    margin: 0 0 0 auto !important;
+    vertical-align: baseline;
+    margin: 0 0 0 auto !important;   /* text vlevo, šipka na pravý kraj */
   }
 
   /* Podkategorie se v mobilu nerozbalují — klik vede rovnou na kategorii
