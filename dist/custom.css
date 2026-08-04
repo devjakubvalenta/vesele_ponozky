@@ -2872,6 +2872,50 @@ header .vp-hdr-cart__ic {
   }
 }
 
+/* ---- CMS lišta (O nás, Doprava a platba…) — jednotný vzhled -----------
+   Na tabletu a užších noteboocích (768–1399.98 px) se odkazy dřív
+   přestylovaly na bílé pilulky s rámečkem — dvě starší pravidla je dělala
+   bílým pozadím: `max-width:991.98` (grid dlaždic) a `768–1399.98`
+   (vodorovný scroll). Vypadalo to jako tlačítka a rozbíjelo to modrou lištu,
+   která je nad 1400 px jen s bílými textovými odkazy.
+
+   Sjednocujeme na desktopový vzhled = bílý text bez pozadí, žlutá podtržená
+   linka při hoveru (stejné hodnoty jako základní pravidlo na ř. 119–131).
+   Blok je ZÁMĚRNĚ na konci souboru: obě starší pravidla používají
+   !important, takže o vítězi rozhoduje pořadí v kaskádě.
+
+   Layout: místo vodorovného scrollu necháme odkazy zalomit (flex-wrap).
+   Skrytý vodorovný scroll v hlavičce je snadné přehlédnout; bez pilulek
+   zabírají odkazy míň místa a na jeden řádek se vejdou.
+   Pod 768 px se lišta skrývá úplně (ř. 620) — položky jsou v hamburgeru. */
+@media (min-width: 768px) and (max-width: 1399.98px) {
+  header .main-nav .top-cms-menu {
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+    gap: 0.25rem 1.1rem !important;
+  }
+
+  header .main-nav .top-cms-menu a {
+    flex: 0 0 auto !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-bottom: 1px solid transparent !important;
+    border-radius: 0 !important;
+    color: #fff !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    padding: 0.2rem 0 !important;
+    min-height: 0 !important;
+  }
+
+  header .main-nav .top-cms-menu a:hover,
+  header .main-nav .top-cms-menu a:focus {
+    background: transparent !important;
+    color: var(--hdr-yellow, #fbbc02) !important;
+    border-bottom-color: rgba(251, 188, 2, 0.6) !important;
+  }
+}
+
 /* ==== 24-product-detail.css ==== */
 
 /* =====================================================================
