@@ -18,8 +18,9 @@
 /* ==== 05-fonts.css ==== */
 
 /* =====================================================================
-   WEBFONT „Proxima Soft Cond" — jen nadpisy a výrazné prvky.
-   Běžný text zůstává Space Grotesk (admin položka „Font" — nesahat).
+   WEBFONT „Proxima Soft Cond" — CELOPLOŠNĚ (dle grafického návrhu je
+   i v běžných textech). Space Grotesk (admin položka „Font" — nesahat)
+   zůstává jako fallback během načítání.
 
    POZOR na váhy: soubor stažený jako „Proxima Soft Cond.woff2" je
    interně BOLD (OS/2 usWeightClass 700, PS ProximaSoftCond-Bold),
@@ -50,36 +51,15 @@
   font-display: swap;
 }
 
-/* ==== Nadpisy ====================================================
-   Šablona rodinu na h1–h6 nenastavuje (jen body → Space Grotesk),
-   takže stačí globál bez specificity válek. */
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: "Proxima Soft Cond", "Space Grotesk", sans-serif;
-}
-
-/* ==== Tlačítka / CTA ============================================= */
-.btn,                      /* Bootstrap: karta, detail, hledání, hover-cart, checkout */
-.pc-show-all,              /* „Zobrazit vše" pod HP bloky (30-product-cards.js) */
-.pc-show-all-hp,           /* „Zobrazit vše" pod hlavním HP výpisem */
-.pd-sticky-cta__btn,       /* mobilní sticky CTA na detailu (žije mimo #app) */
-.vp-nl__form button,       /* Ecomail newsletter submit */
-.pd-accordion__label {     /* accordion detailu (head má font-family: inherit) */
-  font-family: "Proxima Soft Cond", "Space Grotesk", sans-serif;
-}
-
-/* ==== Ceny (děti dědí — stačí kontejnery) ======================== */
-.products .product .product-footer .product-price,
-.products .product .discount-old-price,
-#app.product-detail .product-price,
-#app.product-detail .discount-old-price,
-.pd-sticky-cta__price,
-.main-order-form .cart-product .total_row_price,
-.main-order-form .total-price .table-total-price,
-.order-recap .order-recap-total-price,
-header #hover-cart .product-price,
-header #hover-cart-footer span.total,
-header #hover-cart-footer #hover-cart-total-value {
+/* ==== Celý web ===================================================
+   Šablona nastavuje rodinu jen na body (Space Grotesk / Open Sans),
+   všechno ostatní dědí (Bootstrap reboot: input/button/select/
+   textarea mají font-family: inherit). Stačí tedy jediné pravidlo;
+   `html body` = o chlup vyšší specificita než `body` bloky šablony,
+   ať nezávisí na pořadí stylů v hlavičce.
+   Ikony bezpečné: bootstrap-icons mají vlastní font-family s
+   !important, tohle pravidlo je nepřebije. */
+html body {
   font-family: "Proxima Soft Cond", "Space Grotesk", sans-serif;
 }
 
