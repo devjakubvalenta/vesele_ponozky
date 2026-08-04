@@ -1749,7 +1749,13 @@ header .vp-hdr-cart__ic {
 @media (min-width: 768px) and (max-width: 1399.98px) {
   header .main-nav .top-cms-menu {
     flex-wrap: wrap !important;
-    overflow-x: visible !important;
+    /* Reset MUSÍ být na obou osách. Starší pravidlo (ř. ~771) drží
+       `overflow-y: hidden` a podle CSS spec platí, že je-li jedna osa
+       `visible` a druhá `hidden`, ta `visible` se počítá jako `auto` →
+       z lišty se stal scroll kontejner se zmáčknutou výškou (11 px na
+       23 px obsahu) a odkazy se ořízly. Zkráceným `overflow` přebijeme
+       obě osy najednou. */
+    overflow: visible !important;
     gap: 0.25rem 1.1rem !important;
   }
 
