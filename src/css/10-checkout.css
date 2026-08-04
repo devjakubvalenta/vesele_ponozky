@@ -725,16 +725,43 @@
   }
 }
 
+/* Ikona v PEVNÉM boxu — dvě věci najednou:
+   (1) loga dopravců mají různé poměry stran (čtvercové 32×32 vs. PPL 150×40),
+       takže nativně byla některá vizuálně mnohem větší než ostatní;
+   (2) protože box určuje, kde začíná text, měly řádky text na jiném x
+       (195 / 252 / 313 px) — pevná šířka je srovná do jedné linky.
+   Obrázek se do boxu vepíše (max-width/height + object-fit), takže se
+   nedeformuje ani nepřeteče. */
 .shipping-tab input[type="radio"] + label .label-shipping-img,
 .payment-select input[type="radio"] + label .label-shipping-img {
-  flex-shrink: 0 !important;
-  width: auto !important;
+  flex: 0 0 80px !important;
+  width: 80px !important;
+  min-width: 80px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
 .shipping-tab .label-shipping-img img,
 .payment-select .label-shipping-img img {
-  max-height: 40px !important;
+  max-width: 100% !important;
+  max-height: 34px !important;
   width: auto !important;
+  height: auto !important;
   object-fit: contain;
+}
+/* Mobil: užší box, ať na název zbude rozumná šířka (jinak se řádky lámou
+   do 3 řádků a dlaždice narostou ze ~99 px na ~120 px). */
+@media (max-width: 575.98px) {
+  .shipping-tab input[type="radio"] + label .label-shipping-img,
+  .payment-select input[type="radio"] + label .label-shipping-img {
+    flex: 0 0 48px !important;
+    width: 48px !important;
+    min-width: 48px !important;
+  }
+  .shipping-tab .label-shipping-img img,
+  .payment-select .label-shipping-img img {
+    max-height: 26px !important;
+  }
 }
 
 .shipping-tab .label-shipping-text,
@@ -786,23 +813,31 @@
   white-space: nowrap;
   color: #31a831;
 }
-/* „ZDARMA" z nativního price_span (Google/Apple Pay) — zeleně a jako „Zdarma":
-   text v spanu neumí CSS přepsat → skrýt (font-size:0) a dosadit ::after. Ceny (39 Kč…) zůstávají tmavé. */
+/* „ZDARMA" z nativního price_span (Google/Apple Pay) — zeleně a jako „Zdarma".
+
+   Dřív se text schovával přes `font-size: 0` a vedle se dosazoval ::after
+   „Zdarma“ — jenže schování NEFUNGOVALO (ověřeno: computed font-size byl 0,
+   ale textový uzel se dál vykresloval 60×20 px, i při inline stylu), takže
+   se zobrazovalo „ZDARMAZdarma“. Spolehlivě zabíral jen `display: none`,
+   ten by ale zabil i ::after.
+
+   Řešení bez skrývání: nativní text přetypujeme velikostí písmen —
+   `text-transform: lowercase` + `::first-letter { uppercase }` → „Zdarma“.
+   Žádné zdvojení, žádná závislost na generovaných ID metod (clone_2039…).
+   `display: inline-block` je nutný, aby ::first-letter vůbec platilo
+   (funguje jen na blokovém kontejneru). Ceny (39 Kč…) zůstávají tmavé. */
 .payment-select .label-shipping-text .price_span[data-normal="ZDARMA"] {
   color: #31a831 !important;
-  font-size: 0 !important;
+  display: inline-block;
+  text-transform: lowercase;
+}
+.payment-select .label-shipping-text .price_span[data-normal="ZDARMA"]::first-letter {
+  text-transform: uppercase;
 }
 /* prázdný span měny by jako flex položka přidal column-gap → „Zdarma" by bylo odsazenější
    od pravého kraje než u metod s ::after (QR/karta). Skrýt úplně. */
 .payment-select .label-shipping-text .price_span[data-normal="ZDARMA"] + .price_span_currency {
   display: none !important;
-}
-.payment-select .label-shipping-text .price_span[data-normal="ZDARMA"]::after {
-  content: "Zdarma";
-  font-size: 0.9375rem;
-  font-weight: 800;
-  color: #31a831;
-  white-space: nowrap;
 }
 
 
