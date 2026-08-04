@@ -51,6 +51,27 @@
   font-display: swap;
 }
 
+/* ALIAS „Proxima Soft Condensed" — plné jméno rodiny, které vkládá
+   WYSIWYG editor administrace jako inline style do popisů produktů
+   (<span style="font-family:'Proxima Soft Condensed'">). Bez aliasu
+   rodina neexistuje → prohlížeč spadl na výchozí patkové písmo.
+   Váhové rozsahy pokryjí libovolnou váhu z editoru. */
+@font-face {
+  font-family: "Proxima Soft Condensed";
+  src: url("https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/proxima-soft-cond-medium.woff2") format("woff2");
+  font-weight: 100 599;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Proxima Soft Condensed";
+  src: url("https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/proxima-soft-cond-bold.woff2") format("woff2");
+  font-weight: 600 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ==== Celý web ===================================================
    Šablona nastavuje rodinu jen na body (Space Grotesk / Open Sans),
    všechno ostatní dědí (Bootstrap reboot: input/button/select/
@@ -61,6 +82,22 @@
    !important, tohle pravidlo je nepřebije. */
 html body {
   font-family: "Proxima Soft Cond", "Space Grotesk", sans-serif;
+  /* Optická kompenzace kondenzu: Proxima má stejnou x-výšku jako
+     Space Grotesk (aspect 0.49), ale je o ~27 % užší → text působil
+     menší a scvrkávaly se textem řízené bannery. font-size-adjust
+     zvětší VYKRESLENÍ glyfů na 0.56/0.49 ≈ +14 % u veškerého textu
+     bez ohledu na jednotky (px/rem/em). Ladicí knoflík: vyšší číslo
+     = větší písmo. Bonus: fallback při načítání dostane stejnou
+     x-výšku → minimální reflow při swapu. */
+  font-size-adjust: 0.56;
+}
+
+/* Ikonové fonty NEskalovat — bootstrap-icons mají jiný poměr,
+   adjust by je zvětšil/rozhodil. */
+.bi,
+[class^="bi-"],
+[class*=" bi-"] {
+  font-size-adjust: none;
 }
 
 /* ==== 10-checkout.css ==== */
