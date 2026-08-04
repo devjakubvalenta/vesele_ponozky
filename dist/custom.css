@@ -4490,6 +4490,13 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   display: none;
 }
 
+/* Nativní oranžový strip „Tento produkt máte v košíku." (renderuje se
+   server-side při načtení stránky) — nahrazuje ho náš štítek .pc-in-cart,
+   který navíc naskočí hned po AJAX přidání. Nechat obojí = duplicitně. */
+.products .product .already-in-cart-strip {
+  display: none;
+}
+
 /* ==== Doručení („doručíme 15.07.") ================================== */
 
 /* Nativně zelený bold inline — v designu černý text + zelené datum
