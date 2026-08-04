@@ -758,9 +758,15 @@ header .navbar-toggler-top .navbar-toggler {
     justify-content: flex-start !important;
     gap: 0.5rem !important;
     flex-wrap: nowrap !important;
-    max-width: 100% !important;
-    padding-left: 0.85rem !important;
-    padding-right: 0.85rem !important;
+    /* ŽÁDNÝ max-width override — dřív tu bylo `max-width: 100%`, kvůli
+       kterému modrá CMS lišta běžela přes celou šířku okna (levý okraj na
+       0 px), zatímco zbytek webu (logo, menu, obsah) sedí v Bootstrap
+       kontejneru s max-width 720/960/1140 px na střed. Odkazy „O nás…"
+       tak začínaly o desítky px vlevo od loga. Necháme Bootstrap dělat
+       svoje → lišta lícuje s obsahem. Padding 0.75rem = 12 px, stejně
+       jako .container v #top-menu. */
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
   }
 
   header .main-nav .top-cms-menu {
@@ -1778,4 +1784,47 @@ header .vp-hdr-cart__ic {
     color: var(--hdr-yellow, #fbbc02) !important;
     border-bottom-color: rgba(251, 188, 2, 0.6) !important;
   }
+}
+
+/* ---- Kompaktnější hlavní menu (kategorie) -------------------------
+   Šablona má vlastní JS: co se do řádku nevejde, odstěhuje do skryté
+   .js-navbar-placeholder — položka tedy nezalomí, ale úplně ZMIZÍ.
+   Takhle nám pod ~1400 px padal „Výprodej až -90%".
+
+   Místo dopisování JS „more" dropdownu stačilo vyzobat mrtvé místo:
+     • gap mezi položkami 24 → 6 px
+     • padding <li> 9 → 3 px a .nav-link 12 → 8 px
+     • prázdný <span class="mm-menu-ico-wrap"> (šablona ho renderuje i bez
+       ikony) měl margin-right 10 px u KAŽDÉ položky
+   Dohromady ~200 px. Výsledek: všech 5 položek se vejde na jeden řádek
+   i na 992 px (887 z 960 px), takže dropdown není potřeba. */
+@media (min-width: 992px) {
+  header #top-menu .navbar-nav { gap: 3.2px 6px !important; }
+
+  header #top-menu .navbar-nav > li,
+  header #top-menu .navbar-nav > li.dropdown {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+  }
+
+  header #top-menu .navbar-nav > li > .nav-link {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  header #top-menu .navbar-nav .mm-menu-ico-wrap:empty {
+    display: none !important;
+  }
+}
+
+/* ---- „Výprodej" červeně (sale) ------------------------------------
+   Položka nemá vlastní třídu, cílíme přes href kategorie (1243142).
+   Platí i v mobilním menu, proto bez media query. */
+header #top-menu .navbar-nav .nav-link[href*="vyprodej"] {
+  color: #ec3323 !important;
+  font-weight: 700 !important;
+}
+header #top-menu .navbar-nav .nav-link[href*="vyprodej"]:hover,
+header #top-menu .navbar-nav .nav-link[href*="vyprodej"]:focus {
+  color: #c9261a !important;
 }
