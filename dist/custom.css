@@ -4040,6 +4040,65 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   #app.product-detail .product-right-content > h1 { font-size: 1.4rem; }
 }
 
+/* ==== Štítky nad galerií (.product-stripes.in-detail) ================ */
+
+/* Server-side stripy na detailu: „Tento produkt máte v košíku."
+   (nativně oranžový pruh #ff7803) + admin stripy (DOPRAVA ZDARMA,
+   inline barvy). Sjednoceno s pilulkami karet ve výpisu
+   (25-products.css) — v košíku zeleně s ikonou, admin stripy ve své
+   barvě pod ním. */
+#app.product-detail .product-stripes.in-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: .6rem;
+  font-size: 1rem;
+}
+
+#app.product-detail .product-stripes.in-detail > div {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  width: auto;
+  max-width: none;
+  float: none;
+  margin: 0;
+  padding: .32rem .65rem;
+  border-radius: var(--pd-pill) !important;
+  font-size: .7rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+
+/* „Máte v košíku" — zelená pilulka s ikonou (nativní text zůstává) */
+#app.product-detail .product-stripes.in-detail .already-in-cart-strip {
+  background: var(--pd-green);
+  color: #fff;
+}
+#app.product-detail .product-stripes.in-detail .already-in-cart-strip::before {
+  content: "";
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+}
+
+/* Ribbon šipky admin stripů k pilulce nepatří */
+#app.product-detail .product-stripes.in-detail .universal-strip::before,
+#app.product-detail .product-stripes.in-detail .universal-strip::after {
+  content: none !important;
+}
+
+#app.product-detail .product-stripes.in-detail .universal-strip img.strip-icon {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+}
+
 /* ==== 25-homepage.css ==== */
 
 /* Homepage — slideshow (600×600) + dva side-bannery (600×300) = čtvercová „bento" kompozice.
@@ -4341,6 +4400,10 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
 }
 
 .products .product .product-border {
+  position: relative;            /* stabilní kotva pro .product-stripes —
+                                    jinak se štítky bez hoveru měří od <a>
+                                    (vč. gutteru) a s hoverem od borderu
+                                    (transform tvoří containing block) */
   display: flex;
   flex-direction: column;        /* footer s cenou/CTA umí margin-top:auto */
   width: 100%;

@@ -45,6 +45,10 @@
 }
 
 .products .product .product-border {
+  position: relative;            /* stabilní kotva pro .product-stripes —
+                                    jinak se štítky bez hoveru měří od <a>
+                                    (vč. gutteru) a s hoverem od borderu
+                                    (transform tvoří containing block) */
   display: flex;
   flex-direction: column;        /* footer s cenou/CTA umí margin-top:auto */
   width: 100%;
