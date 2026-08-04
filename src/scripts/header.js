@@ -167,6 +167,34 @@
     }
   }
 
+  /* Mobilní menu: klik na kategorii = přechod na kategorii, ne rozbalení
+     podkategorií. Šablona dává těmhle odkazům `data-toggle="dropdown"`,
+     takže Bootstrap na kliknutí zavolá preventDefault a místo navigace
+     rozbalí panel — CSS s tím nic nezmůže.
+
+     Neodstraňujeme atribut (na desktopu má dropdown zůstat funkční), ale
+     zachytíme klik v CAPTURE fázi na samotném odkazu: ta proběhne dřív než
+     Bootstrapův delegovaný handler na documentu, a `stopPropagation()`
+     zajistí, že se k události vůbec nedostane. Nikdo tedy nezavolá
+     preventDefault → prohlížeč normálně následuje href.
+
+     Kontrola šířky je až uvnitř handleru (ne při navazování), takže se to
+     chová správně i po otočení displeje nebo změně velikosti okna. */
+  function keepMobileMenuLinksNavigable() {
+    var links = document.querySelectorAll(
+      "#navbarSupportedContent .navbar-nav > li > a.dropdown-toggle"
+    );
+    for (var i = 0; i < links.length; i++) {
+      if (links[i].getAttribute("data-vp-nav") === "1") continue; // idempotence
+      links[i].setAttribute("data-vp-nav", "1");
+      links[i].addEventListener("click", function (e) {
+        if (window.innerWidth >= 992) return; // desktop: dropdown nechat být
+        if (!this.getAttribute("href")) return;
+        e.stopPropagation();
+      }, true);
+    }
+  }
+
   function init() {
     var middleRow = document.querySelector("header .header-middle .menu-gutters");
     if (!middleRow) middleRow = document.querySelector("header .header-middle .row");
@@ -179,6 +207,7 @@
     insertCareLine(middleRow, searchDiv);
     swapCartIcon();
     buildSideMenu();
+    keepMobileMenuLinksNavigable();
   }
 
   if (document.readyState === "loading") {

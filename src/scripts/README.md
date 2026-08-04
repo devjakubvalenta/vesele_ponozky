@@ -102,6 +102,14 @@ v adminu bez kódu; (3) **vlastní ikonu košíku** (`cart.svg` místo Bootstrap
 v modré liště — **pole „Doplňující informace" ale nechat vyplněné** (je zdroj
 dat pro linku). Zákaznická linka je jen na desktopu (≥992 px). Idempotentní.
 
+Navíc v **mobilním menu (<992 px)** vrací kategoriím normální proklik: šablona
+jim dává `data-toggle="dropdown"`, takže Bootstrap na klik zavolá `preventDefault`
+a místo přechodu rozbalí podkategorie. Atribut neodstraňujeme (na desktopu má
+dropdown fungovat dál) — klik zachytíme v **capture fázi** na odkazu a zavoláme
+`stopPropagation()`, takže se k události Bootstrapův delegovaný handler na
+`document` vůbec nedostane a prohlížeč normálně následuje `href`. Šířka se
+kontroluje až uvnitř handleru, takže to sedí i po otočení displeje.
+
 ## Co dělá `hp-categories.js`
 
 Nativní HP sekci „Titulek a kategorie" (`.category-circle-section`, renderuje

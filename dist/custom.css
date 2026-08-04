@@ -2956,6 +2956,74 @@ header .vp-hdr-cart__ic {
     margin-top: 0.35rem;
     padding-top: 0;
   }
+
+  /* ---- Mobilní menu: bez modré pilulky, šipka vždy vidět ----------
+     Modrá pilulka na hover/aktivní položku (ř. 428–440) je desktopová věc —
+     na dotyku zůstávala „zaseknutá" po tapnutí a rozbíjela jednotný seznam.
+     Barevné dlaždice (.vp-menu-cat) si své pozadí ponechávají. */
+  header #top-menu .navbar-nav > li:not(.vp-menu-cat) > .nav-link:hover,
+  header #top-menu .navbar-nav > li:not(.vp-menu-cat) > .nav-link:focus,
+  header #top-menu .navbar-nav > li:not(.vp-menu-cat).show > .nav-link,
+  header #top-menu .navbar-nav > li:not(.vp-menu-cat) > .nav-link.active,
+  header #top-menu .navbar-nav > li:not(.vp-menu-cat).active > .nav-link {
+    background: transparent !important;
+    color: inherit !important;
+  }
+  /* Výprodej si červenou drží i po vypnutí pilulky. */
+  header #top-menu .navbar-nav > li > .nav-link[href*="vyprodej"]:hover,
+  header #top-menu .navbar-nav > li > .nav-link[href*="vyprodej"]:focus {
+    color: #ec3323 !important;
+  }
+
+  /* ---- Šipka „›" viditelná u všech položek ------------------------
+     U kategorií šipku renderuje SÁM ŠABLONOVÝ markup jako sourozence
+     odkazu: `<li><a class="nav-link dropdown-toggle">…</a><i class="bi
+     bi-chevron-left"></i><ul class="dropdown-menu">`. Nebyla vidět jen
+     proto, že má `color: #fff` — bílá na bílém. Stačí ji obarvit textem
+     (pseudoprvek nemá smysl: šablona `.dropdown-toggle::after` vypíná
+     přes display:none a vyhrála by specificitou).
+     Otočení: šablona má na ikoně samostatnou vlastnost `rotate: -90deg`
+     (ne `transform`), kterou nejde přebít — obě se skládají. Glyph
+     chevron-left míří vlevo (180°), po šablonovém −90° tedy nahoru;
+     `transform: rotate(-90deg)` to dorovná na 0° = doprava dle návrhu.
+     `pointer-events: none`: tap u pravého kraje má vždy padnout na odkaz
+     (= přechod do kategorie), ne na toggle podkategorií. */
+  header #top-menu .navbar-nav > li > i.bi-chevron-left {
+    color: var(--hdr-text) !important;
+    transform: rotate(-90deg) !important;
+    pointer-events: none;
+  }
+
+  /* Položky BEZ šablonové ikony: CMS odkazy (staví header.js) a kategorie
+     bez podkategorií (.nav-link-without-children, např. „Výprodej") —
+     tam šipku dodáme pseudoprvkem. `margin-left: auto` drží text vlevo
+     a šipku u pravého kraje. */
+  header #top-menu .navbar-nav > li.vp-menu-cms > .nav-link,
+  header #top-menu .navbar-nav > li > .nav-link.nav-link-without-children {
+    display: flex !important;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  header #top-menu .navbar-nav > li.vp-menu-cms > .nav-link::after,
+  header #top-menu .navbar-nav > li > .nav-link.nav-link-without-children::after {
+    content: "›";
+    /* `display` MUSÍ být explicitně: šablona (resp. její zapečená kopie
+       v adminu) má `header #top-menu .nav-item .nav-link::after
+       { display: none }`, kterým vypíná Bootstrapí caret — jinak by nám
+       schovala i tenhle pseudoprvek. */
+    display: inline-block !important;
+    font-size: 1.5rem;
+    line-height: 1;
+    font-weight: 400;
+    color: currentColor;
+    margin: 0 0 0 auto !important;
+  }
+
+  /* Podkategorie se v mobilu nerozbalují — klik vede rovnou na kategorii
+     (navigaci vrací header.js). Pojistka, kdyby se panel přesto otevřel. */
+  header #top-menu .navbar-nav > li .dropdown-menu {
+    display: none !important;
+  }
 }
 
 /* ---- CMS lišta (O nás, Doprava a platba…) — jednotný vzhled -----------
