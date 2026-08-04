@@ -105,6 +105,46 @@
   white-space: nowrap;
 }
 
+/* ==== Štítek „V KOŠÍKU" ============================================= */
+
+/* Doplňuje JS (30-product-cards.js) podle cart cookie; sedí vlevo
+   nahoře ve figure (slevový badge je vpravo — nekolidují). */
+.products .product figure .pc-in-cart {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;                    /* nad obrázkem i hover zoomem */
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .32rem .65rem;
+  background: var(--pl-green);
+  color: #fff;
+  border-radius: 999px;
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;          /* klik jde dál na kartu */
+}
+
+.products .product figure .pc-in-cart::before {
+  content: "";
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+}
+
+@media (max-width: 575.98px) {
+  .products .product figure .pc-in-cart {
+    font-size: .62rem;
+    padding: .28rem .5rem;
+  }
+}
+
 /* ==== Chipy velikostí (varianty ve výpisu) ========================== */
 
 /* Kontejner: nativně top:-10px */

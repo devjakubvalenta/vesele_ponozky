@@ -1,0 +1,143 @@
+/* =====================================================================
+   COOKIE LIŠTA (Bootstrap modaly .cookie-modal)
+   #cookie-law-modal          — hlavní banner (title + text + 2 tlačítka
+                                v .modal-footer > .row.row-cols-1.row-cols-sm-2,
+                                tlačítka mají .btn-lg.w-100)
+   #cookie-law-modal-detail   — „Nastavení cookies" (accordion) — sdílí
+                                .cookie-modal, dostane radius/typo/pilulky
+
+   Texty (delší odstavec, „Přijmout vše") se nastavují v administraci —
+   tady jen vzhled. Desktop: zaoblený centrovaný modal, tlačítka vpravo
+   podle obsahu. Mobil (<576): bottom-sheet, tlačítka pod sebou, zelené
+   nahoře. Ověřený DOM viz plán; nativní .cookie-law-box (template.css
+   ř. 3724) se na tomto shopu nepoužívá.
+   ===================================================================== */
+
+.cookie-modal {
+  --ck-surface: #ffffff;
+  --ck-border: #e5e9f0;
+  --ck-border-strong: #cdd5e4;
+  --ck-text: #0f172a;
+  --ck-muted: #64748b;
+  --ck-green: #2e9e44;
+  --ck-green-dark: #23843a;
+  --ck-radius: 16px;
+}
+
+.cookie-modal .modal-content {
+  border: 0;
+  border-radius: var(--ck-radius);
+  box-shadow: 0 12px 48px rgba(15, 23, 42, .18);
+  color: var(--ck-text);
+}
+
+.cookie-modal .modal-header {
+  border-bottom: 0;
+  padding: 1.35rem 1.5rem .35rem;
+}
+
+.cookie-modal .modal-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ck-text);
+}
+
+.cookie-modal .modal-body {
+  padding: .4rem 1.5rem .6rem;
+  font-size: .9rem;
+  line-height: 1.55;
+  color: var(--ck-muted);
+}
+.cookie-modal .modal-body p {
+  margin: 0;
+}
+
+.cookie-modal .modal-footer {
+  border-top: 0;
+  padding: .4rem 1.5rem 1.3rem;
+}
+
+/* Grid .row-cols-* → flex řádek zarovnaný vpravo, šířky podle obsahu */
+.cookie-modal .modal-footer .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 0;
+}
+.cookie-modal .modal-footer .row .col {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+  padding: 0;
+  margin: 0 !important;          /* utility .mb-3 */
+}
+
+/* Pilulky — metriky jako CTA jinde (nativně .btn-lg.w-100) */
+.cookie-modal .modal-footer .btn {
+  width: auto !important;        /* utility .w-100 */
+  border-radius: 999px !important;
+  padding: .6rem 1.5rem !important;
+  font-size: .85rem !important;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+
+/* „Další volby" — outline */
+.cookie-modal .modal-footer .btn-light {
+  background: var(--ck-surface) !important;
+  border: 1px solid var(--ck-border-strong) !important;
+  color: var(--ck-text) !important;
+}
+.cookie-modal .modal-footer .btn-light:hover,
+.cookie-modal .modal-footer .btn-light:focus {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+}
+
+/* „Přijmout (vše)" — zelená (nativně modrá btn-primary) */
+.cookie-modal .modal-footer .btn-primary {
+  background: var(--ck-green) !important;
+  border: 0 !important;
+  color: #fff !important;
+}
+.cookie-modal .modal-footer .btn-primary:hover,
+.cookie-modal .modal-footer .btn-primary:focus {
+  background: var(--ck-green-dark) !important;
+}
+
+/* ==== Mobil (< 576 px) — bottom-sheet dle mockupu =================== */
+
+@media (max-width: 575.98px) {
+  .cookie-modal .modal-dialog {
+    align-items: flex-end;       /* modal-dialog-centered → přišpendlit dolů */
+    margin: 0;
+    max-width: none;
+    min-height: 100%;
+  }
+
+  .cookie-modal .modal-content {
+    border-radius: var(--ck-radius) var(--ck-radius) 0 0;
+  }
+
+  .cookie-modal .btn-close {
+    display: none;               /* mockup bez křížku, volba tlačítky */
+  }
+
+  /* Tlačítka pod sebe na plnou šířku, zelené („Přijmout") nahoře —
+     column-reverse otočí nativní pořadí Další volby | Přijmout */
+  .cookie-modal .modal-footer .row {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+  .cookie-modal .modal-footer .row .col {
+    width: 100%;
+  }
+  .cookie-modal .modal-footer .btn {
+    width: 100% !important;
+    text-align: center;
+  }
+}

@@ -1,0 +1,272 @@
+/* =====================================================================
+   POPUP „PRODUKT BYL PŘIDÁN DO KOŠÍKU" (fancybox .added_to_cart_popup)
+   Renderuje se AJAXem do .fancybox-container po přidání do košíku
+   (výpisy i detail). Scope: .added_to_cart_popup — fancybox se používá
+   i pro galerii na detailu, obecné .fancybox-* třídy nestylovat.
+
+   Nativní stav (reference/template.css ř. 4858: img height 190px,
+   ř. 4679–4697: progress #31e628; zbytek dává fancybox — content
+   padding 44px, min-width, radius 0): úzký sloupec, tmavé CTA,
+   10 doporučených karet přetéká.
+
+   Struktura (ověřeno živě):
+     .row-fluid > h2.added-to-cart-title
+     hr
+     .row > .col-md-6 (h4 název + img) | .col-md-6 (.remaining-to-free-shipping
+             + .progress.free-shipping-progress + .pop-up-buttons)
+     hr
+     .row-fluid > h2 „Doporučené produkty:" + section.recommend-block
+             > .products.row (karty stylují 25-products.css + 30-product-cards.js)
+     button.fancybox-close-small
+
+   Doplňkový JS: src/scripts/45-cart-popup.js (třídy .acp-*):
+   obalí název do .acp-info a doplní „Velikost X · N ks" (.acp-meta)
+   a cenu (.acp-price). Bez JS zůstane nativní jednořádkový název.
+   ===================================================================== */
+
+/* Tokeny — scopované (konvence repa: nikdy :root), hodnoty = --pl-* */
+.added_to_cart_popup {
+  --acp-surface: #ffffff;
+  --acp-border: #e5e9f0;
+  --acp-border-strong: #cdd5e4;
+  --acp-text: #0f172a;
+  --acp-muted: #64748b;
+  --acp-green: #2e9e44;
+  --acp-green-dark: #23843a;
+  --acp-radius: 16px;
+  --acp-radius-btn: 999px;
+}
+
+/* ==== Okno ========================================================== */
+
+.added_to_cart_popup.fancybox-content {
+  width: min(1020px, calc(100vw - 44px));
+  min-width: 0;                  /* přebíjí added_to_cart_popup_min_width */
+  padding: 26px 30px 30px;       /* fancybox default 44px */
+  border-radius: var(--acp-radius);
+  background: var(--acp-surface);
+  text-align: left;              /* fancybox slide centruje text-align:center */
+  color: var(--acp-text);
+}
+
+/* Křížek (fancybox smallBtn uvnitř obsahu) */
+.added_to_cart_popup .fancybox-close-small {
+  top: 8px;
+  right: 8px;
+  color: var(--acp-muted);
+}
+.added_to_cart_popup .fancybox-close-small:hover {
+  color: var(--acp-text);
+}
+
+.added_to_cart_popup .added-to-cart-title {
+  margin: 0;
+  padding-right: 40px;           /* místo pro křížek */
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--acp-text);
+}
+
+.added_to_cart_popup hr {
+  margin: 1.1rem 0;
+  border: 0;
+  border-top: 1px solid var(--acp-border);
+  opacity: 1;
+}
+
+/* ==== Horní řádek: produkt vlevo, doprava zdarma + CTA vpravo ======= */
+
+.added_to_cart_popup > .row {
+  align-items: center;
+}
+
+/* Vlevo: miniatura + textový blok (bez JS jen h4; img má order -1,
+   takže je vždy první) */
+.added_to_cart_popup .row .col-md-6:first-child {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.added_to_cart_popup .row .col-md-6 img {
+  order: -1;
+  width: 96px;
+  height: 96px !important;       /* nativně 190px */
+  object-fit: contain;
+  padding: 6px;
+  background: var(--acp-surface);
+  border: 1px solid var(--acp-border) !important;
+  border-radius: 12px;
+}
+
+.added_to_cart_popup .row h4 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--acp-text);
+}
+
+/* Bloky doplněné JS (45-cart-popup.js) */
+.added_to_cart_popup .acp-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.added_to_cart_popup .acp-meta {
+  font-size: .85rem;
+  color: var(--acp-muted);
+}
+.added_to_cart_popup .acp-price {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--acp-green);
+}
+
+/* Vpravo: text + progress + tlačítka */
+.added_to_cart_popup .row .col-md-6:last-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.added_to_cart_popup .remaining-to-free-shipping {
+  margin-bottom: .5rem;
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--acp-text);
+}
+
+.added_to_cart_popup .progress.free-shipping-progress {
+  height: 8px;
+  margin-bottom: 1rem;
+  background: var(--acp-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.added_to_cart_popup .progress.free-shipping-progress .progress-bar {
+  background-color: var(--acp-green) !important;   /* nativně #31e628 */
+  border-radius: 999px;
+}
+
+.added_to_cart_popup .pop-up-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.added_to_cart_popup .pop-up-buttons .btn {
+  border-radius: var(--acp-radius-btn) !important;
+  padding: .6rem 1.5rem !important;
+  font-size: .85rem !important;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+
+/* „Zpět do obchodu" — outline pilulka */
+.added_to_cart_popup .pop-up-buttons .btn-light {
+  background: var(--acp-surface) !important;
+  border: 1px solid var(--acp-border-strong) !important;
+  color: var(--acp-text) !important;
+}
+.added_to_cart_popup .pop-up-buttons .btn-light:hover,
+.added_to_cart_popup .pop-up-buttons .btn-light:focus {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+}
+
+/* „Dokončit nákup" — zelená pilulka (jako CTA karet) */
+.added_to_cart_popup .pop-up-buttons .btn-primary {
+  background: var(--acp-green) !important;
+  border: 0 !important;
+  color: #fff !important;
+}
+.added_to_cart_popup .pop-up-buttons .btn-primary:hover,
+.added_to_cart_popup .pop-up-buttons .btn-primary:focus {
+  background: var(--acp-green-dark) !important;
+}
+
+/* ==== Doporučené produkty =========================================== */
+
+.added_to_cart_popup .row-fluid h2:not(.added-to-cart-title) {
+  margin: 0 0 .9rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--acp-text);
+}
+
+/* Bootstrap col-* gridem obejít: 4 sloupce, karta 5+ pryč (nativně
+   se renderuje ~10 karet a přetékají) */
+.added_to_cart_popup .recommend-block .products.row {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+.added_to_cart_popup .recommend-block .products .product {
+  width: auto !important;
+  max-width: none !important;    /* col-6/col-lg-3 dává max-width % */
+  padding: 0;
+  margin: 0;
+}
+.added_to_cart_popup .recommend-block .products .product:nth-child(n+5) {
+  display: none;
+}
+
+/* ==== Mobil (< 768 px — pod md se col-md-6 skládají pod sebe) ======= */
+
+@media (max-width: 767.98px) {
+  /* Vertikální vycentrování: nativní inline-block trik (::before height:100%)
+     tu nefunguje — flex jen pro slide s naším popupem (:has), aby se
+     nedotkl galerie na detailu. margin:auto centruje a při přetečení
+     korektně kotví k okraji (slide má overflow:auto). */
+  .fancybox-slide--html:has(.added_to_cart_popup) {
+    display: flex;
+  }
+
+  .added_to_cart_popup.fancybox-content {
+    width: calc(100vw - 28px);
+    margin: auto;
+    padding: 20px 18px;
+  }
+
+  .added_to_cart_popup .added-to-cart-title {
+    margin-bottom: 12px;           /* hr je skryté — mezeru drží titulek */
+    font-size: 1.1rem;
+  }
+
+  .added_to_cart_popup hr {
+    display: none;               /* dle mockupu bez oddělovačů */
+  }
+
+  .added_to_cart_popup .row .col-md-6:first-child {
+    margin-bottom: 14px;
+  }
+
+  .added_to_cart_popup .row .col-md-6 img {
+    width: 76px;
+    height: 76px !important;
+  }
+
+  /* Tlačítka pod sebe, „Dokončit nákup" nahoře */
+  .added_to_cart_popup .pop-up-buttons {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+  .added_to_cart_popup .pop-up-buttons .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Doporučené produkty na mobilu vůbec (mockup) — nadpis, grid
+     i celý wrapper (fallback bez :has skryje aspoň nadpis + grid) */
+  .added_to_cart_popup .row-fluid:has(.recommend-block),
+  .added_to_cart_popup .recommend-block,
+  .added_to_cart_popup .row-fluid h2:not(.added-to-cart-title) {
+    display: none;
+  }
+}

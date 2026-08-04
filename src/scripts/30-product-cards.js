@@ -4,7 +4,9 @@
     2. zeleně zvýrazněné datum v „doručíme 15.07.",
     3. tlačítko „Zobrazit vše" pod produktovými bloky na HP (nativně neexistuje),
     4. tlačítko „Zobrazit vše" pod hlavním HP výpisem „Všechny naše produkty"
-       (CSS nechá viditelné jen 4 karty; JS přidá odkaz na Katalog).
+       (CSS nechá viditelné jen 4 karty; JS přidá odkaz na Katalog),
+    5. štítek „V KOŠÍKU" na kartách produktů, které už v košíku jsou
+       (čte cart cookie shopping_cart_<shopId>; styl .pc-in-cart).
 
   Vkládá se do: Administrace → Skripty → nová položka
      • Název: „Produktové karty (název, datum, Zobrazit vše)"
@@ -150,6 +152,47 @@
     grid.insertAdjacentElement("afterend", a);
   }
 
+  /* == 5) Štítek „V KOŠÍKU" ============================================= */
+
+  // Obsah košíku drží cookie shopping_cart_<shopId> — URL-encoded JSON
+  // {"productId-variantId": "ks"}. Shop id nehardcodovat (produkce má jiné).
+  function cartProductIds() {
+    var m = document.cookie.match(/(?:^|;\s*)shopping_cart_\d+=([^;]*)/);
+    if (!m) return {};
+    var ids = {};
+    try {
+      var cart = JSON.parse(decodeURIComponent(m[1]));
+      Object.keys(cart || {}).forEach(function (k) {
+        ids[k.split("-")[0]] = true;
+      });
+    } catch (e) { /* nečitelná cookie → bez štítků */ }
+    return ids;
+  }
+
+  // Karta je <a href="…/p/<productId>-slug">; štítek se přidává/odebírá
+  // podle aktuální cookie (po vyprázdnění košíku zmizí). Vzhled dodává
+  // .pc-in-cart v src/css/25-products.css.
+  function syncInCartBadges(scope) {
+    var inCart = cartProductIds();
+    var cards = scope.querySelectorAll(".products .product");
+    Array.prototype.forEach.call(cards, function (card) {
+      var fig = card.querySelector("figure");
+      if (!fig) return;
+      var m = (card.getAttribute("href") || "").match(/\/p\/(\d+)/);
+      var badge = fig.querySelector(".pc-in-cart");
+      if (m && inCart[m[1]]) {
+        if (!badge) {
+          badge = document.createElement("span");
+          badge.className = "pc-in-cart";
+          badge.textContent = "V košíku";
+          fig.appendChild(badge);
+        }
+      } else if (badge) {
+        badge.parentNode.removeChild(badge);
+      }
+    });
+  }
+
   /* == Orchestrace ====================================================== */
 
   function runAll() {
@@ -157,10 +200,14 @@
     wrapDeliveryDate(document);
     addShowAllButtons(document);
     addHomepageShowAll();
+    syncInCartBadges(document);
   }
 
   function init() {
     runAll();
+
+    // Návrat z košíku přes bfcache (zpět) — přepočítat štítky „V KOŠÍKU"
+    window.addEventListener("pageshow", function () { runAll(); });
 
     // Pár opakování pro jistotu (obsah se může dorenderovávat)
     var tries = 0;

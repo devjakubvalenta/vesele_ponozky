@@ -16,8 +16,10 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 | `hp-categories.js` | Kategorie na HP (přesun + barevné dlaždice) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/hp-categories.js">` — **pin hashem** jako u CSS linku, bump jen při změně souboru; styl `src/css/28-hp-kategorie.css` |
 | `header.js` | Hlavička (Heureka + zákaznická linka + cart ikona) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/header.js">` — **pin hashem**; styl `src/css/20-header.css`. Telefon/e-mail v lince se čtou z pole „Doplňující informace" (nemazat ho) |
 | `40-product-detail.js` | Produktový detail (recenze, slevový pill, množství) | **Pouze produktový detail** | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/40-product-detail.js">` — **pin hashem**; styl `src/css/24-product-detail.css`; benefity do admin pole „Produktový detail" = `src/content/product-detail-benefits.html` |
+| `45-cart-popup.js` | Popup přidáno do košíku | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/45-cart-popup.js">` — **pin hashem**; styl `src/css/33-cart-popup.css`; texty cookie lišty se nastavují v administraci (styl `src/css/34-cookies.css` je čisté CSS) |
 | `35-listing-sort.js` | Řazení ve výpisech (klikací odkazy) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/35-listing-sort.js">` — **pin hashem**; styl `src/css/26-listing-sort.css` |
 | `36-filter.js` | Filtr — výchozí sbalený na mobilu | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/36-filter.js">` — **pin hashem**; styl `src/css/27-filter.css` |
+| `koloo-wheel.html` | Koloo (kolo štěstí) | Na všech stránkách | ne (patička) | ⏳ vlož obsah `<script>` DOSLOVA (3rd-party async loader, kLicense `UNI-FB75BE3A-1714`). Vzhled/texty/kupóny/trigger se řeší v adminu Koloo (hd.koloo.net), ne v kódu |
 
 > ⚠️ **Sekce „Skripty" vkládá obsah DOSLOVA** (neobaluje ho). `<link>` a
 > `<style>` vkládej **holé** — NIKDY ne uvnitř `<script>…</script>` (browser by
@@ -41,8 +43,27 @@ výpisech `.products`: (1) rozdělí název na 2 řádky — černý typ produkt
 `NAME_PREFIXES`); (2) obalí datum v „doručíme 15.07." do
 `.pc-delivery-date` (zelené); (3) pod HP produktové bloky přidá tlačítko
 „Zobrazit vše" podle mapy `SHOW_ALL` (`{id bloku: URL}` — blok bez
-záznamu tlačítko nemá). Idempotentní, MutationObserver zpracuje i karty
-dorenderované AJAX filtrováním v kategorii.
+záznamu tlačítko nemá); (4) štítek „V KOŠÍKU" (`.pc-in-cart`) na kartách
+produktů, které už v košíku jsou — čte cart cookie
+`shopping_cart_<shopId>` (JSON `{"productId-variantId": "ks"}`, shop id
+se nehardcoduje), páruje přes productId z `href` karty a po vyprázdnění
+košíku štítek zase odebere (`pageshow` pokrývá i návrat zpět přes
+bfcache). Idempotentní, MutationObserver zpracuje i karty dorenderované
+AJAX filtrováním v kategorii a v popupu „přidáno do košíku".
+
+## Co dělá `45-cart-popup.js`
+
+Doplněk k CSS popupu „Produkt byl přidán do košíku"
+(`src/css/33-cart-popup.css`, scope `.added_to_cart_popup` — fancybox):
+rozdělí nativní jednořádkový název „Ponožky - Berušky nízké - 35-38" na
+název + řádek `.acp-meta` „Velikost 35-38 · 1 ks" (počet ks z cart
+cookie) a doplní zelenou cenu `.acp-price` (z `data-product-price`
+naposledy kliknuté varianty, na detailu z `.product-price-our`; když
+cena není zjistitelná, řádek se vynechá). Velikost se odděluje jen když
+sedí na label kliknuté varianty nebo vypadá číselně („35-38") — jiné
+názvy s „ - " se nerozbijí. CSS zároveň omezuje Doporučené produkty na
+4 karty (desktop) a na mobilu je skrývá úplně. Idempotentní; bez JS
+zůstane nativní obsah popupu jen nastylovaný.
 
 ## Co dělá `35-listing-sort.js`
 
