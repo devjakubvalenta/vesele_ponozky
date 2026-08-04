@@ -4401,32 +4401,68 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   white-space: nowrap;
 }
 
-/* ==== Štítek „V KOŠÍKU" ============================================= */
+/* ==== Štítky v levém rohu karty (V KOŠÍKU + nativní stripy) ========= */
 
-/* Doplňuje JS (30-product-cards.js) podle cart cookie; sedí vlevo
-   nahoře ve figure (slevový badge je vpravo — nekolidují). */
-.products .product figure .pc-in-cart {
-  position: absolute;
+/* Kontejner .product-stripes (nativně absolute top/left .7em, stripy
+   pod sebou floatem) nese admin stripy: DOPRAVA ZDARMA = .universal-strip
+   (barvy inline z administrace), NOVINKA = .new-product-strip. JS
+   (30-product-cards.js) do něj PŘEDSAZUJE náš štítek .pc-in-cart →
+   sloupeček pilulek, nic se nepřekrývá: V KOŠÍKU nahoře, stripy pod ním. */
+.products .product .product-stripes {
   top: 10px;
   left: 10px;
+  right: auto;
   z-index: 2;                    /* nad obrázkem i hover zoomem */
-  display: inline-flex;
-  align-items: center;
-  gap: .35rem;
-  padding: .32rem .65rem;
-  background: var(--pl-green);
-  color: #fff;
-  border-radius: 999px;
-  font-size: .7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .03em;
-  line-height: 1;
-  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 1rem;               /* nativně .8em — velikost řídí pilulky */
   pointer-events: none;          /* klik jde dál na kartu */
 }
 
-.products .product figure .pc-in-cart::before {
+/* Společný tvar pilulky pro náš štítek i nativní stripy. Barvy stripů
+   zůstávají z administrace (inline style vyhrává) — „jiná barva než
+   V KOŠÍKU" se řídí tam, bez zásahu do kódu. */
+.products .product .pc-in-cart,
+.products .product .product-stripes > div {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  width: auto;
+  max-width: none;               /* nativně max-width 12em */
+  float: none;
+  margin: 0;                     /* nativně margin-bottom .5ex */
+  padding: .32rem .65rem;
+  border-radius: 999px !important;  /* new-product-strip má nativně 1 roh */
+  font-size: .7rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+
+/* Admin ikona ve stripu (img.strip-icon, nativně 21px) */
+.products .product .universal-strip img.strip-icon {
+  width: 14px;
+  height: 14px;
+  margin: 0;                     /* mezeru dělá gap pilulky */
+}
+
+/* Ribbon šipky nativního stripu (skewX ::before/::after) k pilulce nepatří */
+.products .product .universal-strip::before,
+.products .product .universal-strip::after {
+  content: none !important;
+}
+
+/* Náš štítek: zelený s ikonou košíku */
+.products .product .pc-in-cart {
+  background: var(--pl-green);
+  color: #fff;
+  pointer-events: none;
+}
+.products .product .pc-in-cart::before {
   content: "";
   flex: 0 0 12px;
   width: 12px;
@@ -4434,8 +4470,23 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
 }
 
+/* Fallback: karta bez .product-stripes → JS dá štítek do figure */
+.products .product figure > .pc-in-cart {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+}
+
+/* Nativní „Tento produkt máte v košíku." (renderuje se jen server-side
+   při načtení stránky) nahrazuje náš štítek — nechat obojí = duplicitně */
+.products .product .product-stripes .already-in-cart-strip {
+  display: none;
+}
+
 @media (max-width: 575.98px) {
-  .products .product figure .pc-in-cart {
+  .products .product .pc-in-cart,
+  .products .product .product-stripes > div {
     font-size: .62rem;
     padding: .28rem .5rem;
   }
@@ -4527,12 +4578,8 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   display: none;
 }
 
-/* Nativní oranžový strip „Tento produkt máte v košíku." (renderuje se
-   server-side při načtení stránky) — nahrazuje ho náš štítek .pc-in-cart,
-   který navíc naskočí hned po AJAX přidání. Nechat obojí = duplicitně. */
-.products .product .already-in-cart-strip {
-  display: none;
-}
+/* (štítky rohu karty vč. skrytí .already-in-cart-strip — viz sekce
+   „Štítky v levém rohu karty" níže) */
 
 /* ==== Doručení („doručíme 15.07.") ================================== */
 

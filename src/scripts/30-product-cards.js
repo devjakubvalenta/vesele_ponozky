@@ -170,22 +170,29 @@
   }
 
   // Karta je <a href="…/p/<productId>-slug">; štítek se přidává/odebírá
-  // podle aktuální cookie (po vyprázdnění košíku zmizí). Vzhled dodává
-  // .pc-in-cart v src/css/25-products.css.
+  // podle aktuální cookie (po vyprázdnění košíku zmizí). Jde jako PRVNÍ
+  // do kontejneru .product-stripes (V KOŠÍKU nahoře, admin stripy typu
+  // DOPRAVA ZDARMA pod ním — sloupeček pilulek řeší CSS); bez kontejneru
+  // fallback do figure (absolutní pozici dodá CSS). Vzhled: .pc-in-cart
+  // v src/css/25-products.css.
   function syncInCartBadges(scope) {
     var inCart = cartProductIds();
     var cards = scope.querySelectorAll(".products .product");
     Array.prototype.forEach.call(cards, function (card) {
-      var fig = card.querySelector("figure");
-      if (!fig) return;
       var m = (card.getAttribute("href") || "").match(/\/p\/(\d+)/);
-      var badge = fig.querySelector(".pc-in-cart");
+      var badge = card.querySelector(".pc-in-cart");
       if (m && inCart[m[1]]) {
         if (!badge) {
           badge = document.createElement("span");
           badge.className = "pc-in-cart";
           badge.textContent = "V košíku";
-          fig.appendChild(badge);
+          var stripes = card.querySelector(".product-stripes");
+          var fig = card.querySelector("figure");
+          if (stripes) {
+            stripes.insertBefore(badge, stripes.firstChild);
+          } else if (fig) {
+            fig.appendChild(badge);
+          }
         }
       } else if (badge) {
         badge.parentNode.removeChild(badge);
