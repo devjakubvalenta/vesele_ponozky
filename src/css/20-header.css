@@ -1824,7 +1824,13 @@ header #top-menu .navbar-nav .nav-link[href*="vyprodej"] {
   color: #ec3323 !important;
   font-weight: 700 !important;
 }
+/* Hover/aktivní = modrá pilulka (ř. 428–440), na ní musí být text BÍLÝ —
+   červená na modré je nečitelná. Pokrýváme i .active/.show, ať se to
+   nerozbije na stránce kategorie Výprodej. */
 header #top-menu .navbar-nav .nav-link[href*="vyprodej"]:hover,
-header #top-menu .navbar-nav .nav-link[href*="vyprodej"]:focus {
-  color: #c9261a !important;
+header #top-menu .navbar-nav .nav-link[href*="vyprodej"]:focus,
+header #top-menu .navbar-nav .nav-item.show > .nav-link[href*="vyprodej"],
+header #top-menu .navbar-nav .nav-link[href*="vyprodej"].active,
+header #top-menu .navbar-nav .nav-item.active > .nav-link[href*="vyprodej"] {
+  color: #fff !important;
 }
