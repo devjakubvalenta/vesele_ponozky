@@ -73,7 +73,10 @@
   text-align: left;
   border-radius: var(--cat-radius);
   padding: 22px 22px 18px;
-  aspect-ratio: 5 / 6;
+  /* 5/7.2: výška byla 1,2× šířky, teď 1,44× = o 20 % vyšší dlaždice
+     (dle návrhu). Poměrem, ne pevnou výškou, ať to drží v gridu i ve
+     swipe pásu na mobilu. */
+  aspect-ratio: 5 / 7.2;
   overflow: hidden;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
@@ -95,6 +98,14 @@
   border-radius: 0;
   overflow: visible;
   box-shadow: none;
+  /* Ikona na střed zbylé plochy pod nadpisem. Rodič je column-reverse se
+     `space-between`, takže obrázek jinak sedí natvrdo u spodní hrany
+     (mezera nad ním byla 126 px, pod ním 18 px). `flex: 1` obal roztáhne
+     přes volné místo a `align-items: center` v něm ikonu svisle vycentruje. */
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .vp-cats .category-circle-item:hover .category-circle-item-img {
   box-shadow: none;
