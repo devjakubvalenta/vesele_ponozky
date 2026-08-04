@@ -78,45 +78,50 @@
 
 
 
+/* Záhlaví košíku = jen decentní popisek „ZBOŽÍ" nad kartami (dle návrhu).
+   Dřív to byla šedá lišta s rámečkem a všemi názvy sloupců (Zboží,
+   Dostupnost, Párů, Cena/Pár, Celkem) — spolu s tabulkovými rámečky
+   produktů to dělalo „extra čáry". Obsah sloupců je čitelný sám o sobě
+   (pilulka dostupnosti, +/− stepper, cena), popisky proto nejsou potřeba. */
 .main-order-form .cart-products-heading {
-  font-size: 0.75rem;
-  font-weight: 700 !important;
+  font-size: 0.6875rem;
+  font-weight: 600 !important;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   color: var(--cx-text-muted) !important;
-  background: var(--cx-bg-soft) !important;
-  border: 1px solid var(--cx-border) !important;
-  border-radius: var(--cx-radius-sm) var(--cx-radius-sm) 0 0;
-  padding: 0.75rem 1rem !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0;
+  padding: 0 0.25rem 0.35rem !important;
   margin-bottom: 0 !important;
+}
+
+.main-order-form .cart-products-heading > div:not(:first-child) {
+  display: none !important;
 }
 
 
 
+/* Každá položka = samostatná zaoblená karta (dle návrhu).
+   Dřív byly řádky slepené do tabulky: `border-top: none` + znovu dodaný
+   border mezi sousedy a `border-radius: 0` — vznikaly tak dělicí linky
+   přes celou šířku. Teď má každá karta vlastní rámeček dokola. */
 .main-order-form .cart-product {
   align-items: center !important;
   min-height: 0 !important;
   padding: 1rem 1rem !important;
-  margin-bottom: 0 !important;
+  margin-bottom: 0.5rem !important;
   background: var(--cx-surface) !important;
-  border: 1px solid var(--cx-border);
-  border-top: none !important;
-  border-radius: 0;
+  border: 1px solid var(--cx-border) !important;
+  border-radius: var(--cx-radius) !important;
 }
 
-.main-order-form .cart-product:last-of-type {
-  border-radius: 0 0 var(--cx-radius-sm) var(--cx-radius-sm);
+/* Náhled produktu bez rámečku a šedé podložky — v návrhu je obrázek volně. */
+.main-order-form .cart-product .product-col img {
+  border: 0 !important;
+  background: transparent !important;
 }
 
-.main-order-form .cart-products-heading + .cart-product {
-  border-top: 1px solid var(--cx-border);
-  border-radius: 0 !important;
-}
-
-.main-order-form .cart-product + .cart-product {
-  border-top: 1px solid var(--cx-border) !important;
-  border-radius: 0 !important;
-}
 
 @media (hover: hover) {
   .main-order-form .cart-product:hover {
@@ -129,8 +134,10 @@
 
 
 @media (min-width: 768px) {
+  /* Zbyl jediný popisek („ZBOŽÍ"), takže vlevo — na střed sloupce patřil
+     jen k původnímu tabulkovému záhlaví. */
   .main-order-form .cart-products-heading [class*="col"] {
-    text-align: center !important;
+    text-align: left !important;
   }
 
   .main-order-form .cart-product .product-col {
@@ -168,6 +175,15 @@
     align-items: center !important;
     justify-content: center !important;
     text-align: center !important;
+  }
+
+  /* Sloupec Cena/Pár: `flex-direction: column` dělal z KAŽDÉHO spanu vlastní
+     řádek, takže se částka trhala od měny („139" / „Kč"). Řádkové zalomení
+     drží číslo s měnou pohromadě a přeškrtnutou cenu i slevový štítek
+     odsune nad ni úplně stejně jako dřív. */
+  .main-order-form .cart-product .prices-col {
+    flex-flow: row wrap !important;
+    column-gap: 0.25rem;
   }
 
   .main-order-form .cart-products-heading .text-end,
