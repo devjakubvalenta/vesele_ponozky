@@ -1577,6 +1577,13 @@ header .customer-form .btn.btn-primary {
   font-weight: 600 !important;
 }
 
+/* Tlačítko „Přihlásit" na střed — šablona ho má v obalu s Bootstrap třídou
+   `d-flex justify-content-end`, takže viselo vpravo, zatímco „Zapomenuté
+   heslo" i „Registrovat" jsou centrované. */
+header .customer-form .form-group.justify-content-end {
+  justify-content: center !important;
+}
+
 
 
 header #top-menu.make-sticky {
