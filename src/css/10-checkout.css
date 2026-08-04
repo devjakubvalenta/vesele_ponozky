@@ -856,15 +856,26 @@
   margin-top: 0.65rem !important;
 }
 
+/* Ukazatel „do dopravy zdarma zbývá…"
+   Tenhle blok renderuje šablona i v mini-košíku v HLAVIČCE (hover na ikonu
+   košíku) — tam ale tokeny --cx-* neplatí, protože jsou scopované do
+   `.container .content` (pokladna). `background: var(--cx-bg-soft)` bez
+   fallbacku byl proto neplatná hodnota → průhledné pozadí a lišta byla
+   sice v DOM (i se správnou šířkou), ale NEVIDITELNÁ.
+
+   Dráha je POLOPRŮHLEDNÁ schválně: v pokladně leží na bílé, ale v
+   mini-košíku má obal pozadí #f4f7fa — s pevnou světlou barvou by dráha
+   splynula a zbyla by jen „plovoucí" modrá pilulka. Takhle je čitelná
+   na obou podkladech. */
 .remaining-to-free-shipping .progress {
   height: 0.65rem !important;
   border-radius: 999px !important;
   overflow: hidden;
-  background: var(--cx-bg-soft) !important;
+  background: rgba(15, 23, 42, 0.1) !important;
 }
 .remaining-to-free-shipping .progress-bar {
   border-radius: 999px !important;
-  background: linear-gradient(90deg, var(--cx-accent), #0f4ea8) !important;
+  background: linear-gradient(90deg, var(--cx-accent, #1361cf), #0f4ea8) !important;
 }
 
 

@@ -1834,3 +1834,11 @@ header #top-menu .navbar-nav .nav-link[href*="vyprodej"].active,
 header #top-menu .navbar-nav .nav-item.active > .nav-link[href*="vyprodej"] {
   color: #fff !important;
 }
+
+/* ---- Mini-košík (hover na ikonu košíku): „Dokončit nákup" na 1 řádek ----
+   Tlačítko je v úzkém sloupci (.col-sm-6.to-cart, ~166 px), takže se
+   „Dokončit nákup" lámalo na dva řádky a tlačítko bylo 69 px vysoké.
+   Text se na jeden řádek vejde (142 px, bez přetečení) → jen zakázat zlom. */
+header .header-shop-basket-button .btn.btn-primary {
+  white-space: nowrap !important;
+}
