@@ -106,7 +106,18 @@
    Dřív byly řádky slepené do tabulky: `border-top: none` + znovu dodaný
    border mezi sousedy a `border-radius: 0` — vznikaly tak dělicí linky
    přes celou šířku. Teď má každá karta vlastní rámeček dokola. */
-.main-order-form .cart-product {
+/* ⚠️ Sourozenecké selektory tu MUSÍ zůstat, i když v tomhle souboru už
+   žádné konkurenční pravidlo není. V administraci (Vzhled → „Vaše
+   doplňkové CSS", načítá se jako style.css) je zapečená STARŠÍ kopie
+   tohohle CSS a v ní pořád žije
+     `.cart-products-heading + .cart-product { border-radius: 0 !important }`
+   To je 3 třídy + kombinátor, tedy vyšší specificita než `.cart-product`
+   (2 třídy) — vyhrálo by to bez ohledu na pořadí v kaskádě a karta by
+   zůstala hranatá. Shodnou specificitou + pozdějším pořadím to přebijeme. */
+.main-order-form .cart-product,
+.main-order-form .cart-products-heading + .cart-product,
+.main-order-form .cart-product + .cart-product,
+.main-order-form .cart-product:last-of-type {
   align-items: center !important;
   min-height: 0 !important;
   padding: 1rem 1rem !important;
