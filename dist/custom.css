@@ -5298,6 +5298,43 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   overflow: hidden;   /* pojistka: ikona/obsah nevykoukne přes zaoblený roh */
 }
 
+/* ---- Mobil: 2 dlaždice vedle sebe (místo 1) -----------------------
+   Šablona má .children_categories jako CSS grid a pod 500 px natvrdo
+   `grid-template-columns: 1fr` → jedna dlaždice na řádek a nekonečný
+   scroll, než se uživatel prokliká k produktům. Dáváme 2 sloupce.
+   Stejná specificita jako šablona (1 třída), náš CSS je v pořadí později
+   → vyhraje. */
+@media (max-width: 500px) {
+  .children_categories {
+    grid-template-columns: 1fr 1fr;
+    gap: .6rem;
+  }
+
+  /* Uvnitř dlaždice: ikona nad názvem a na střed. Nativně je řádek
+     col-3 (ikona) + col-9 (název), oba natvrdo width:50 % — na poloviční
+     šířce by na text zbylo ~80 px a názvy jako „Dárkové sety" by se lámaly
+     do 3 řádků. Skládáme je pod sebe, ať je dlaždice čitelná a kompaktní. */
+  .children_categories .subcategory-box {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: .75rem .4rem;
+  }
+  .children_categories .subcategory-box .col-3,
+  .children_categories .subcategory-box .col-9 {
+    width: 100%;
+    padding: 0;
+  }
+  .children_categories .subcategory-box .col-3 { margin-bottom: .4rem; }
+  .children_categories .subcategory-box .child-category-image {
+    max-height: 4.2em;   /* nižší ikona = kratší dlaždice = míň scrollu */
+  }
+  .children_categories .subcategory-box .child_category_name {
+    font-size: .95rem;
+    line-height: 1.25;
+  }
+}
+
 /* ==== 27-filter.css ==== */
 
 /* =====================================================================
@@ -6995,6 +7032,41 @@ body footer section.eshop-footer .vp-foot__attribution a {
     width: 100% !important;
     text-align: center;
   }
+}
+
+/* ==== 35-customer.css ==== */
+
+/* =====================================================================
+   PŘIHLÁŠENÍ / REGISTRACE (/customer, body.body-customer)
+   Nativní hranaté zelené tlačítko (input.btn.btn-primary.btn-block
+   v .customer-form) → zelená pill dle CTA konvence redesignu
+   (viz .product-add-to-shopping-basket v 24-product-detail.css).
+
+   Scope `main` záměrně: stejný input[name=login] je i v hlavičkovém
+   dropdownu — ten už pill je (20-header.css), nesahat.
+   Pokrývá i /customer/register a /customer/forgot (stejné třídy).
+   ===================================================================== */
+
+.body-customer main .content input[type="submit"].btn {
+  display: inline-block;
+  width: auto !important;          /* btn-block 100% → pill podle obsahu */
+  border: 0 !important;
+  border-radius: 999px !important;
+  padding: 0.65rem 2.25rem !important;
+  background-color: #2e9e44 !important;   /* zelená CTA (--pd-green) */
+  color: #fff !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transition: background-color 0.2s ease;
+}
+
+.body-customer main .content input[type="submit"].btn:hover,
+.body-customer main .content input[type="submit"].btn:focus,
+.body-customer main .content input[type="submit"].btn:active {
+  background-color: #23843a !important;   /* --pd-green-dark */
+  color: #fff !important;
 }
 
 /* ==== 40-onas.css ==== */

@@ -1,0 +1,32 @@
+/* =====================================================================
+   PŘIHLÁŠENÍ / REGISTRACE (/customer, body.body-customer)
+   Nativní hranaté zelené tlačítko (input.btn.btn-primary.btn-block
+   v .customer-form) → zelená pill dle CTA konvence redesignu
+   (viz .product-add-to-shopping-basket v 24-product-detail.css).
+
+   Scope `main` záměrně: stejný input[name=login] je i v hlavičkovém
+   dropdownu — ten už pill je (20-header.css), nesahat.
+   Pokrývá i /customer/register a /customer/forgot (stejné třídy).
+   ===================================================================== */
+
+.body-customer main .content input[type="submit"].btn {
+  display: inline-block;
+  width: auto !important;          /* btn-block 100% → pill podle obsahu */
+  border: 0 !important;
+  border-radius: 999px !important;
+  padding: 0.65rem 2.25rem !important;
+  background-color: #2e9e44 !important;   /* zelená CTA (--pd-green) */
+  color: #fff !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transition: background-color 0.2s ease;
+}
+
+.body-customer main .content input[type="submit"].btn:hover,
+.body-customer main .content input[type="submit"].btn:focus,
+.body-customer main .content input[type="submit"].btn:active {
+  background-color: #23843a !important;   /* --pd-green-dark */
+  color: #fff !important;
+}

@@ -1,0 +1,51 @@
+/* =====================================================================
+   PODKATEGORIE VE VÝPISU KATEGORIE (.children_categories .subcategory-box)
+   Dlaždice s ikonou + názvem podkategorie nad produktovým gridem
+   (Dámské/Pánské/… → Nízké, Vysoké, Thermo, …).
+
+   Nativně: .subcategory-box{border:1px solid #eaecef} bez zaoblení →
+   ostré rohy. Přebíjíme jen poloměr, ať tenký rámeček má round edges.
+   Hover stín (.children_categories a:hover) poloměr respektuje sám.
+   ===================================================================== */
+
+.children_categories .subcategory-box {
+  border-radius: 12px;
+  overflow: hidden;   /* pojistka: ikona/obsah nevykoukne přes zaoblený roh */
+}
+
+/* ---- Mobil: 2 dlaždice vedle sebe (místo 1) -----------------------
+   Šablona má .children_categories jako CSS grid a pod 500 px natvrdo
+   `grid-template-columns: 1fr` → jedna dlaždice na řádek a nekonečný
+   scroll, než se uživatel prokliká k produktům. Dáváme 2 sloupce.
+   Stejná specificita jako šablona (1 třída), náš CSS je v pořadí později
+   → vyhraje. */
+@media (max-width: 500px) {
+  .children_categories {
+    grid-template-columns: 1fr 1fr;
+    gap: .6rem;
+  }
+
+  /* Uvnitř dlaždice: ikona nad názvem a na střed. Nativně je řádek
+     col-3 (ikona) + col-9 (název), oba natvrdo width:50 % — na poloviční
+     šířce by na text zbylo ~80 px a názvy jako „Dárkové sety" by se lámaly
+     do 3 řádků. Skládáme je pod sebe, ať je dlaždice čitelná a kompaktní. */
+  .children_categories .subcategory-box {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: .75rem .4rem;
+  }
+  .children_categories .subcategory-box .col-3,
+  .children_categories .subcategory-box .col-9 {
+    width: 100%;
+    padding: 0;
+  }
+  .children_categories .subcategory-box .col-3 { margin-bottom: .4rem; }
+  .children_categories .subcategory-box .child-category-image {
+    max-height: 4.2em;   /* nižší ikona = kratší dlaždice = míň scrollu */
+  }
+  .children_categories .subcategory-box .child_category_name {
+    font-size: .95rem;
+    line-height: 1.25;
+  }
+}
