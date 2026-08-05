@@ -17,6 +17,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 | `header.js` | Hlavička (Heureka + zákaznická linka + cart ikona) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/header.js">` — **pin hashem**; styl `src/css/20-header.css`. Telefon/e-mail v lince se čtou z pole „Doplňující informace" (nemazat ho) |
 | `40-product-detail.js` | Produktový detail (recenze, slevový pill, množství) | **Pouze produktový detail** | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/40-product-detail.js">` — **pin hashem**; styl `src/css/24-product-detail.css`; benefity do admin pole „Produktový detail" = `src/content/product-detail-benefits.html` |
 | `45-cart-popup.js` | Popup přidáno do košíku | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/45-cart-popup.js">` — **pin hashem**; styl `src/css/33-cart-popup.css`; texty cookie lišty se nastavují v administraci (styl `src/css/34-cookies.css` je čisté CSS) |
+| `50-checkout.js` | Pokladna (dopravy a platby) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/50-checkout.js">` — **pin hashem**; styl `src/css/10-checkout.css` (`.vp-lbl*`) |
 | `35-listing-sort.js` | Řazení ve výpisech (klikací odkazy) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/35-listing-sort.js">` — **pin hashem**; styl `src/css/26-listing-sort.css` |
 | `36-filter.js` | Filtr — výchozí sbalený na mobilu | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/36-filter.js">` — **pin hashem**; styl `src/css/27-filter.css` |
 | `koloo-wheel.html` | Koloo (kolo štěstí) | Na všech stránkách | ne (patička) | ⏳ vlož obsah `<script>` DOSLOVA (3rd-party async loader, kLicense `UNI-FB75BE3A-1714`). Vzhled/texty/kupóny/trigger se řeší v adminu Koloo (hd.koloo.net), ne v kódu |
@@ -64,6 +65,23 @@ sedí na label kliknuté varianty nebo vypadá číselně („35-38") — jiné
 názvy s „ - " se nerozbijí. CSS zároveň omezuje Doporučené produkty na
 4 karty (desktop) a na mobilu je skrývá úplně. Idempotentní; bez JS
 zůstane nativní obsah popupu jen nastylovaný.
+
+## Co dělá `50-checkout.js`
+
+Srovná řádky **dopravy a platby** v košíku do podoby „název vlevo, cena
+vpravo" (styl `src/css/10-checkout.css`, třídy `.vp-lbl*`). Název metody je
+v šabloně **holý textový uzel** uvnitř `.label-shipping-text` — ve flexu z něj
+vznikne anonymní flex item, kterému nejde nastavit `min-width: 0`, takže dlouhý
+název („Zásilkovna - výdejní místa a boxy - ZDARMA NAD 999 Kč - ") vytlačil cenu
+na vlastní řádek a dlaždice na mobilu narostla na 3 řádky. Skript text obalí do
+`<span class="vp-lbl">`, poznámku „ZDARMA NAD 999 Kč" (píše se v adminu do názvu
+metody) vyzobne na druhý řádek jako modré `.vp-lbl-free` „Zdarma nad 999 Kč"
+a ořízne osiřelé pomlčky na konci („Na dobírku - " → „Na dobírku"). Když
+platforma cenu přepne na „ZDARMA" (překročený limit), řádek dostane `.vp-free`
+→ zelené „Zdarma" a modrá poznámka se skryje. Idempotentní (`data-vp-lbl`),
+MutationObserver nad `.main-order-form` pokrývá překreslení seznamu po změně
+dopravy/platby. Bez skriptu zůstane nativní chování (text se zalomí, cena spadne
+pod něj).
 
 ## Co dělá `35-listing-sort.js`
 
