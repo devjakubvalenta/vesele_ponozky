@@ -381,10 +381,14 @@ body footer section.eshop-footer .vp-foot__attribution a {
     margin: 0 auto;
     padding: 1.1rem 1rem 0.25rem;
   }
+  /* Stejná fotka jako zákaznická linka v hlavičce (kontakt.svg, 354×496).
+     `object-fit: cover` je nutný — bez něj by se portrét do čtverce natáhl. */
   .vp-foot__contact-photo {
     width: 56px;
     height: 56px;
     border-radius: 999px;
+    object-fit: cover;
+    background: #fff;
     flex: 0 0 auto;
   }
   .vp-foot__contact-info {

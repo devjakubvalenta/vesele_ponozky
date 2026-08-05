@@ -20,8 +20,8 @@
     stars: MEDIA + "Hv%C4%9Bzdi%C4%8Dky.svg",
     emoji: MEDIA + "emoji_recenze.svg",
     mascot: MEDIA + "maskot.svg",
-    // placeholder foto poradkyně (vymění se za reálné)
-    advisor: "https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/placeholders/advisor.svg"
+    // fotka u kontaktu — SHODNÁ s zákaznickou linkou v hlavičce (header.js)
+    advisor: MEDIA + "kontakt.svg"
   };
 
   // Newsletter — oficiální Ecomail embed widget (formulář ID 4, účet witsocks).
