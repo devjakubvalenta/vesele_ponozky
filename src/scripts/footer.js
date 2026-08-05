@@ -41,11 +41,19 @@
     lead: "Přihlaste se k odběru našeho newsletteru a získejte slevu 15 % na váš první nákup veselých ponožek."
   };
 
-  // Obsah recenzí (zatím 3× stejná — uživatel dodá finální)
+  // Obsah recenzí — SHODNÝ se sekcí na HP (src/content/homepage.html).
+  // Jedou v nekonečném pásu, takže jich může být klidně víc než 3.
   var REVIEWS = [
-    { text: "ponožky jsou super, pohodlné a designy úplně boží!", name: "Petra K." },
-    { text: "ponožky jsou super, pohodlné a designy úplně boží!", name: "Petra K." },
-    { text: "ponožky jsou super, pohodlné a designy úplně boží!", name: "Petra K." }
+    { text: "Vše v naprostém pořádku. Rychlost. Kvalita. Doporučuji.", name: "Ondra" },
+    { text: "Rychlé dodání, skvělá komunikace, ochota a vstřícnost.", name: "Blanka" },
+    { text: "Kvalitní pěkné ponožky.", name: "Lenka" },
+    { text: "Nakupuji pravidelně, kvalitní materiál, rychlost dodání, spokojenost.", name: "Eliška Vostracká" },
+    { text: "Rychlost, profesionalita, kvalita.", name: "Roman" },
+    { text: "Rychle doručeno. Doma fakt radost, když jsme ponožky rozbalili :)", name: "Šárka" },
+    { text: "Velký výběr, rychlé dodání, skvělá komunikace.", name: "Marcela" },
+    { text: "Objednala jsem poprvé a velice jsem spokojená, děkuji.", name: "Ilona" },
+    { text: "Kvalitní a krásné s úžasnými motivy.", name: "Alžběta Dixová" },
+    { text: "Ponožky z tohoto obchodu jsou opravdu velmi kvalitní, pružné a dobře „sedí\". Dodání zboží bylo velmi rychlé, za 2 dny od objednávky.", name: "Lenka" }
   ];
   var BADGES = [
     { icon: ASSET.customers, num: "10 000+", label: "Spokojených zákazníků" },
@@ -80,6 +88,20 @@
     );
   }
 
+  /* Nekonečný pás jako na HP: DVĚ identické sady karet vedle sebe. Animace
+     posune track o -50 %, což je přesně šířka jedné sady, takže se pás v
+     okamžiku „přetočení" opticky nezmění. Druhá sada je jen vizuální kopie →
+     aria-hidden, ať ji čtečky nepředčítají dvakrát. Styl: 30-footer.css. */
+  function reviewMarquee() {
+    var set = REVIEWS.map(reviewCard).join("");
+    return (
+      '<div class="vp-foot__marquee"><div class="vp-foot__track">' +
+      '<div class="vp-foot__set">' + set + "</div>" +
+      '<div class="vp-foot__set" aria-hidden="true">' + set + "</div>" +
+      "</div></div>"
+    );
+  }
+
   function badge(b) {
     var top = b.stars
       ? '<img class="vp-foot__badge-stars" src="' + ASSET.stars +
@@ -105,7 +127,7 @@
       '<section class="vp-foot__reviews">' +
       '<h2 class="vp-foot__reviews-title">CO ŘÍKAJÍ NAŠI <span class="vp-foot__hl">ZÁKAZNÍCI</span>?</h2>' +
       '<p class="vp-foot__reviews-sub">Vaše spokojenost je pro nás na prvním místě.</p>' +
-      '<div class="vp-foot__review-cards">' + REVIEWS.map(reviewCard).join("") + "</div>" +
+      reviewMarquee() +
       "</section>" +
       '<section class="vp-foot__badges">' + BADGES.map(badge).join("") + "</section>" +
       '<div class="vp-foot__logo"><img src="' + ASSET.logo + '" alt="Veseléponožky.cz" loading="lazy"></div>' +

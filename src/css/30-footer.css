@@ -201,27 +201,76 @@ body footer section.eshop-footer .vp-foot__attribution a {
   color: var(--foot-text) !important;
   letter-spacing: -0.01em;
 }
+/* „ZÁKAZNÍCI" modře — stejný akcent jako v nadpisu sekce recenzí na HP
+   (.vp-recenze__heading .vp-accent v 27-hp-recenze.css). */
 .vp-foot__hl {
-  color: var(--foot-yellow);
+  color: var(--foot-blue);
 }
 .vp-foot__reviews-sub {
   color: var(--foot-muted) !important;
   font-size: 0.95rem !important;
   margin: 0 0 clamp(1.25rem, 3vw, 2rem) !important;
 }
-.vp-foot__review-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(0.85rem, 2vw, 1.5rem);
+/* Recenze jedou v nekonečném pásu — stejná mechanika jako sekce na HP
+   (27-hp-recenze.css): track = 2 identické sady karet (druhá `aria-hidden`),
+   animace `translateX(-50%)` = přesně šířka jedné sady. Sada má `gap` i
+   `padding-right` stejné velikosti, spoj je proto bezešvý. Hover pás
+   pozastaví, `prefers-reduced-motion` animaci vypne a pás jde scrollovat ručně.
+   Vlastní kopie (a ne reuse .vp-recenze--hp): patička má vlastní tokeny
+   a scope `.vp-foot` — karty jsou tu duplikované už od začátku. */
+.vp-foot__marquee {
+  overflow: hidden;
   text-align: left;
+  /* jemné vyběhnutí karet do ztracena na krajích pásu */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+}
+.vp-foot__track {
+  display: flex;
+  width: max-content;
+  animation: vp-foot-marquee 60s linear infinite;
+}
+.vp-foot__marquee:hover .vp-foot__track {
+  animation-play-state: paused;
+}
+.vp-foot__set {
+  display: flex;
+  gap: 16px;
+  padding-right: 16px; /* mezera před napojením druhé sady = gap */
+}
+@keyframes vp-foot-marquee {
+  to {
+    transform: translateX(-50%);
+  }
 }
 .vp-foot__review-card {
+  width: 320px;
+  flex: 0 0 auto;
   background: #fff;
   border: 1px solid #eef1f6;
   border-radius: 14px;
   padding: 1.1rem 1.25rem 1.25rem;
   box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06);
   min-width: 0;
+}
+@media (max-width: 575.98px) {
+  .vp-foot__review-card {
+    width: 272px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vp-foot__track {
+    animation: none;
+    width: auto;
+  }
+  .vp-foot__set + .vp-foot__set {
+    display: none; /* duplikát sady je bez animace zbytečný */
+  }
+  .vp-foot__marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
 }
 .vp-foot__stars {
   height: 18px;
@@ -327,9 +376,6 @@ body footer section.eshop-footer .vp-foot__attribution a {
 
 /* ===== Mobil: stack recenzí/badge, accordion sloupců, kontakt ===== */
 @media (max-width: 767.98px) {
-  .vp-foot__review-cards {
-    grid-template-columns: 1fr;
-  }
   .vp-foot__badges {
     grid-template-columns: 1fr;
     gap: 0.9rem;
