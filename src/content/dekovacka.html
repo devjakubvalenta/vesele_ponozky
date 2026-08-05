@@ -1,0 +1,61 @@
+<!--
+  Děkovačka (potvrzovací stránka po odeslání objednávky).
+  Vkládá se do: Administrace → Obsah → „Děkovačka / potvrzovací stránka"
+  (pole, kde je dnes jen text „Děkujeme za objednávku").
+
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG — editor sanitizuje, proto jen
+  <div>/<img>/<a>. Fajfku NEKRESLIT inline SVG (editor by ho zahodil) —
+  .vp-dekovacka__check je prázdný <div> a kolečko i háček dělá CSS.
+
+  Renderuje se uvnitř section.thankyou > .container, tedy NAD nativní
+  tabulku zboží a tabulky adres — ty zůstávají a přestyluje je CSS.
+
+  Styl: src/css/12-dekovacka.css (scope .vp-dekovacka) přes CDN.
+
+  Placeholdery (reference/administrace-moznosti.md):
+    %o = číslo objednávky   %k = cena vč. dopravy
+    %e = e-mail             %n = jméno            %u = doména obchodu
+  Pozn.: %x (datum) je zatím NEOVĚŘENÝ — dost možná datum objednávky, ne
+  doručení. Řádek „Předpokládané doručení" proto stojí samostatně, aby šel
+  snadno přejmenovat nebo smazat, až se ověří, co %x reálně vypíše.
+-->
+<div class="vp-dekovacka">
+
+  <div class="vp-dekovacka__art">
+    <img src="https://www.exitshop.cz/files/310/files/thankyou.svg" alt="Maskot Veselé ponožky děkuje za objednávku" loading="lazy" />
+  </div>
+
+  <div class="vp-dekovacka__main">
+
+    <div class="vp-dekovacka__check"></div>
+
+    <div class="vp-dekovacka__title">
+      <strong>DĚKUJEME</strong>
+      <em>ZA OBJEDNÁVKU!</em>
+    </div>
+
+    <div class="vp-dekovacka__lead">
+      Tvoje veselé ponožky už balíme v Třeboni.<br />
+      Potvrzení jsme poslali na <strong>%e</strong>.
+    </div>
+
+    <div class="vp-dekovacka__facts">
+      <div class="vp-dekovacka__fact">
+        <span>Číslo objednávky</span>
+        <strong>%o</strong>
+      </div>
+      <div class="vp-dekovacka__fact">
+        <span>Předpokládané doručení</span>
+        <strong>%x</strong>
+      </div>
+      <div class="vp-dekovacka__fact vp-dekovacka__fact--total">
+        <span>Celkem k úhradě</span>
+        <strong>%k</strong>
+      </div>
+    </div>
+
+    <a class="vp-dekovacka__cta" href="%u">Pokračovat v nákupu</a>
+
+  </div>
+
+</div>
