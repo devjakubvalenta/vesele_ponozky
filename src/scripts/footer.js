@@ -1,6 +1,9 @@
 /* Patička Veselé ponožky — injektovaný obsah + mobilní accordion.
    Vkládá se 1× do Administrace → Skripty jako:
-     <script src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/src/scripts/footer.js"></script>
+     <script src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@<hash>/src/scripts/footer.js"></script>
+   PIN HASHEM jako ostatní položky — @main drží jsDelivr v cache i několik dní
+   a purge @main tady spolehlivě nezabírá (viz CLAUDE.md / paměť projektu),
+   takže se změna v patičce nemusí dlouho projevit.
    (Na všech stránkách; patička/Head je jedno — má DOM-ready guard.)
    Styl dodává src/css/30-footer.css (scope body footer / .vp-foot) přes CDN.
 
