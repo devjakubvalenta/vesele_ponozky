@@ -134,19 +134,64 @@
   align-items: center;
 }
 
-/* Checkbox: o něco větší a v brandové modré (nativně zelená #28a745
-   ze šablony). `accent-color` obarví i fajfku, bez přestavby inputu. */
+/* Checkbox: vlastní rámeček #CCD1D9 dle návrhu. Nativní checkbox barvu
+   rámečku měnit neumí (`accent-color` řídí jen zaškrtnutý stav), proto
+   `appearance: none` a nakreslení vlastního boxu i fajfky. */
 .category-filters .filter-group-filters input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
   width: 19px;
   height: 19px;
+  flex: 0 0 auto;
   margin-right: 0.55rem;
-  accent-color: var(--cx-accent, #1361cf);
+  border: 1px solid #ccd1d9;
+  border-radius: 5px;
+  background: #fff;
+  display: inline-grid;
+  place-content: center;
   cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+/* Fajfka: vyříznutý tvar, škáluje se z 0 → 1 při zaškrtnutí. */
+.category-filters .filter-group-filters input[type="checkbox"]::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  transform: scale(0);
+  transition: transform 0.12s ease-in-out;
+}
+.category-filters .filter-group-filters input[type="checkbox"]:checked {
+  background: var(--cx-accent, #1361cf);
+  border-color: var(--cx-accent, #1361cf);
+}
+.category-filters .filter-group-filters input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+.category-filters .filter-group-filters input[type="checkbox"]:hover {
+  border-color: var(--cx-accent, #1361cf);
+}
+.category-filters .filter-group-filters input[type="checkbox"]:focus-visible {
+  outline: 2px solid rgba(19, 97, 207, 0.4);
+  outline-offset: 2px;
 }
 
+/* Hodnoty filtru „lehčeji". Pozor: Proxima Soft Cond má načtené jen řezy
+   Medium (500) a Bold (700) — `font-weight: 400` proto spadne na Medium
+   a lehčí řez prostě neexistuje (viz 05-fonts.css). Vizuální váhu tedy
+   ubíráme barvou, ne tloušťkou. */
 .category-filters .filter-group-filters .filter-group-filter label {
   cursor: pointer;
   line-height: 1.35;
+  font-weight: 400;
+  color: #475569;
+}
+
+/* Rámečky polí ceny sjednotit na #CCD1D9 (nativně #eaecef). */
+.category-filters .filtering-price-inputs input,
+.category-filters .filter-group-price .filtering-price-inputs .filtering-price-input-group input {
+  border-color: #ccd1d9 !important;
 }
 
 /* Počet kusů u hodnoty ztlumit — v návrhu nekonkuruje názvu. */

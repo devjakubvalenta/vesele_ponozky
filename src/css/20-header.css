@@ -494,6 +494,23 @@ header #top-menu .navbar-nav .nav-item.active > .nav-link {
     height: 0 !important;
     display: none !important;
   }
+
+  /* ---- Mega menu: žlutý hover na dlaždici kategorie ----------------
+     Dlaždice je celé <li class="row … cat-l-second"> (ikona v .col-lg-4 +
+     název v .col-lg-8), takže podbarvujeme <li> — hover pak platí i nad
+     ikonou, ne jen nad textem.
+     Text na žluté MUSÍ být tmavý: bílá na #fbbc02 má kontrast jen 1,71:1
+     (stejná poznámka je u barevných dlaždic mobilního menu). */
+  header #top-menu .yamm-dropdown-menu li.cat-l-second {
+    border-radius: 10px;
+    transition: background-color 0.15s ease;
+  }
+  header #top-menu .yamm-dropdown-menu li.cat-l-second:hover {
+    background: var(--hdr-yellow, #fbbc02);
+  }
+  header #top-menu .yamm-dropdown-menu li.cat-l-second:hover a {
+    color: #0d1427 !important;
+  }
 }
 
 header #top-menu .navbar-toggler {
