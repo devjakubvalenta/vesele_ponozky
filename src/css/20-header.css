@@ -1740,6 +1740,11 @@ header .vp-hdr-cart__ic {
   }
   header #top-menu .navbar-nav > li:not(.vp-menu-cat) > .nav-link {
     padding-left: 1.75rem !important;
+    /* Pravý padding stejný jako levý, aby šipky stály v JEDNÉ LINII
+       s šipkami barevných dlaždic. Ty jsou zúžené vlastním marginem
+       (12px) a mají padding 16px, takže jejich šipka končí o 16px dřív;
+       28px vpravo ten rozdíl přesně dorovná. */
+    padding-right: 1.75rem !important;
   }
   /* Hlavní příčina odsazení: šablona v mobilu dává PRÁZDNÉMU icon-wrapu
      width:25px + margin-right (template.css ~ř. 881), což odsune text kategorií
@@ -1893,15 +1898,33 @@ header .vp-hdr-cart__ic {
 @media (min-width: 992px) {
   header #top-menu .navbar-nav { gap: 3.2px 6px !important; }
 
+  /* Odsazení <li> na 0 — jeho místo dostane padding odkazu, aby modrá
+     pilulka byla širší a řádek přitom nenarostl (viz rozvaha níže). */
   header #top-menu .navbar-nav > li,
   header #top-menu .navbar-nav > li.dropdown {
-    padding-left: 3px !important;
-    padding-right: 3px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 
+  /* Modrá pilulka hoveru byla nalepená na text. Rozšířit ji jde jen
+     v mantinelech: horizontální padding se násobí 5 položkami × 2 strany
+     a na 992 px je řádek skoro plný — jakmile se položky nevejdou,
+     šablonový JS odstěhuje „Výprodej" do skryté zásobárny a zmizí.
+
+     Odměřeno naživo na 992 px (šířka řádku / vejde se Výprodej):
+       padding 16 px → 929 px … NE
+       padding 14 px, mezera 6 px → 917 px … NE
+       padding 14 px, mezera 4 px → 909 px … ano (rezerva 51 px)
+       padding 12 px, mezera 6 px → 897 px … ano (rezerva 63 px)  ← zvoleno
+
+     Místo pro širší pilulku bereme z odsazení <li> (3 → 0 px), takže
+     vizuální mezera mezi pilulkami zůstává. Svislý padding šířku
+     neovlivní, ten proto rovnou na 0.6rem. */
   header #top-menu .navbar-nav > li > .nav-link {
-    padding-left: 8px !important;
-    padding-right: 8px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    padding-top: 0.6rem !important;
+    padding-bottom: 0.6rem !important;
   }
 
   header #top-menu .navbar-nav .mm-menu-ico-wrap:empty {
