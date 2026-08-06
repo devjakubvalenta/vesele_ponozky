@@ -7949,6 +7949,69 @@ body footer section.eshop-footer .vp-foot__attribution a {
   color: #fff !important;
 }
 
+/* ==== 36-back-to-top.css ==== */
+
+/* Tlačítko „nahoru" (.scroll-to-top) — globální plovoucí prvek vpravo dole.
+
+   Nativně je to prázdný <div> 55×55 px, jehož CELÝ vzhled (šedý kruh
+   i bílá šipka) je jediný background-image `sipka_seda.webp`. Obrázek
+   nejde přebarvit, takže ho vypínáme a kruh i šipku kreslíme v CSS —
+   teprve pak jde udělat modrý hover.
+
+   Šipku kreslí ::before přes clip-path (hrot + dřík), ne znak z fontu:
+   ikonový font tu není a textová šipka „↑" má v každém řezu jiný tvar. */
+
+.scroll-to-top {
+  background-image: none !important;
+  background-color: #ccd1d9;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.16);
+  transition: background-color 0.18s ease, transform 0.18s ease,
+              box-shadow 0.18s ease;
+}
+
+.scroll-to-top::before {
+  content: "";
+  width: 17px;
+  height: 19px;
+  background: #fff;
+  /* hrot (0–45 % výšky) + dřík (45–100 %) */
+  clip-path: polygon(50% 0, 100% 45%, 72% 45%, 72% 100%, 28% 100%, 28% 45%, 0 45%);
+  transition: transform 0.18s ease;
+}
+
+.scroll-to-top:hover,
+.scroll-to-top:focus-visible {
+  background-color: var(--cx-accent, #1361cf);
+  box-shadow: 0 6px 18px rgba(19, 97, 207, 0.35);
+  transform: translateY(-2px);
+}
+
+.scroll-to-top:focus-visible {
+  outline: 2px solid rgba(19, 97, 207, 0.45);
+  outline-offset: 3px;
+}
+
+.scroll-to-top:active {
+  transform: translateY(0);
+}
+
+/* ---- Mobilní detail produktu: uhnout sticky liště -------------------
+   Na detailu se dole zobrazuje .pd-sticky-cta (fixed, přes celou šířku),
+   se kterou se tlačítko překrývalo. Zvedáme ho nad ni.
+
+   `:has()` = zvedne se JEN když je lišta opravdu vidět (přidá se jí
+   .is-visible až po odscrollování); jinak zůstane tlačítko dole jako
+   všude jinde. Výška lišty ≈ 46px miniatura + 2×.5rem padding, plus
+   odstup a bezpečná zóna telefonu. */
+@media (max-width: 767.98px) {
+  body:has(.pd-sticky-cta.is-visible) .scroll-to-top {
+    bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
 /* ==== 40-onas.css ==== */
 
 /* CMS stránka „O nás" v2 — brandový vzhled (modrá #1361cf + žlutá #fbbc02).
