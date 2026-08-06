@@ -503,6 +503,10 @@ header #top-menu .navbar-nav .nav-item.active > .nav-link {
      (stejná poznámka je u barevných dlaždic mobilního menu). */
   header #top-menu .yamm-dropdown-menu li.cat-l-second {
     border-radius: 10px;
+    /* Vlastní odsazení, aby žlutá obalila i prostor kolem ikony a názvu —
+       bez něj končila přesně na obsahu a působila menší než dlaždice.
+       Svisle padding, vodorovně jen doplněk k 12px paddingu sloupců. */
+    padding: 0.5rem 0.35rem;
     transition: background-color 0.15s ease;
   }
   header #top-menu .yamm-dropdown-menu li.cat-l-second:hover {
