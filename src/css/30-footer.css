@@ -381,8 +381,10 @@ body footer section.eshop-footer .vp-foot__attribution a {
     gap: 0.9rem;
     text-align: left;
   }
+  /* Na střed — stejně jako statistiky na HP (95-recenze.css); doleva
+     zarovnané řádky s různě dlouhým textem působily roztřepaně. */
   .vp-foot__badge {
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   /* Accordion sloupců */

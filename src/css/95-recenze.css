@@ -256,8 +256,11 @@
     grid-template-columns: 1fr;
     gap: 0.9rem;
   }
+  /* Na střed, ne doleva: řádky mají různě dlouhý text („4,9/5 Průměrné
+     hodnocení" vs „97 % Doporučuje naše ponožky"), takže při zarovnání
+     doleva vypadal sloupec roztřepaně. */
   .vp-recenze__stat {
-    justify-content: flex-start;
+    justify-content: center;
   }
   .vp-recenze__stat + .vp-recenze__stat {
     border-left: 0;

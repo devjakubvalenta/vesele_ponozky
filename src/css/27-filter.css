@@ -112,3 +112,45 @@
    skupiny se do gapů nepočítají, nad první ani pod poslední nic nepřidá.
    (Rozestup jednotlivých hodnot uvnitř skupiny zůstává nativní ~5px.) */
 .category-filters .category-filters-collapsible > .row { row-gap: 22px; }
+
+/* ---- Odlehčení a vzdušnost (dle návrhu) ---------------------------
+   Nativně: nadpis 16px/700 nalepený na první hodnotu (margin-bottom 0),
+   řádky 18px vysoké s mezerou 5px. Návrh je lehčí a vzdušnější —
+   měkčí řez nadpisu, mezera pod ním a víc místa mezi hodnotami. */
+
+/* Nadpis skupiny: o stupeň lehčí (700 → 600) a odsazený od hodnot. */
+.category-filters .filter-group .filter-group-name {
+  font-weight: 600 !important;
+  font-size: 1.0625rem !important;
+  letter-spacing: -0.01em;
+  color: var(--cx-text, #0f172a);
+  margin-bottom: 0.6rem !important;
+}
+
+/* Hodnoty: vyšší řádek = větší klikací plocha i vzdušnost. */
+.category-filters .filter-group-filters .filter-group-filter {
+  margin-top: 0 !important;
+  padding: 0.28rem 0;
+  align-items: center;
+}
+
+/* Checkbox: o něco větší a v brandové modré (nativně zelená #28a745
+   ze šablony). `accent-color` obarví i fajfku, bez přestavby inputu. */
+.category-filters .filter-group-filters input[type="checkbox"] {
+  width: 19px;
+  height: 19px;
+  margin-right: 0.55rem;
+  accent-color: var(--cx-accent, #1361cf);
+  cursor: pointer;
+}
+
+.category-filters .filter-group-filters .filter-group-filter label {
+  cursor: pointer;
+  line-height: 1.35;
+}
+
+/* Počet kusů u hodnoty ztlumit — v návrhu nekonkuruje názvu. */
+.category-filters .filter-value-count {
+  color: var(--cx-text-muted, #94a3b8) !important;
+  font-size: 0.8125rem !important;
+}
