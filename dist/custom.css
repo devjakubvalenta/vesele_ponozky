@@ -4436,6 +4436,14 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
 
 #app.product-detail .vp-recenze--pd {
   margin: 2rem 0 .5rem;
+  /* `min-width: 0` je tu KVŮLI MOBILU: figure.col-md-6 má display:contents
+     (kvůli řízení pořadí), takže se její box rozplyne a tenhle blok se stane
+     přímou flex položkou .row.product-detail. Flex položka má výchozí
+     `min-width: auto` = nesmí se zmenšit pod šířku obsahu, takže marquee
+     s `width: max-content` trackem roztáhl pás na 1627 px a stránka
+     přetékala vodorovně. */
+  min-width: 0;
+  max-width: 100%;
 }
 .vp-recenze--pd .vp-recenze__pd-head {
   display: flex;
@@ -4456,13 +4464,56 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   text-align: center;
   margin: 0 !important;
 }
-.vp-recenze--pd .vp-recenze__cards {
-  grid-template-columns: repeat(3, 1fr);
-  gap: .7rem;
+/* ---- Karty jako marquee pás (jako patička a HP) --------------------
+   Markup staví 40-product-detail.js: __marquee > __track > 2× __set.
+   Animace posouvá track o -50 %, což je přesně šířka jedné sady — proto
+   musí mít sada `padding-right` shodný s `gap`, jinak by se na spoji
+   ztratila mezera a karty by se slepily.
+   Hodnoty zrcadlí 27-hp-recenze.css, jen s užšími kartami: pás sedí
+   v levém sloupci detailu, ne přes celou stránku. */
+.vp-recenze--pd .vp-recenze__marquee {
+  overflow: hidden;
   margin-top: 1rem;
+  /* karty vybíhají na krajích do ztracena */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+}
+.vp-recenze--pd .vp-recenze__track {
+  display: flex;
+  width: max-content;
+  animation: vp-pdrec-marquee 45s linear infinite;
+}
+.vp-recenze--pd .vp-recenze__marquee:hover .vp-recenze__track {
+  animation-play-state: paused;
+}
+.vp-recenze--pd .vp-recenze__set {
+  display: flex;
+  gap: .7rem;
+  padding-right: .7rem;   /* = gap, kvůli bezešvému spoji sad */
 }
 .vp-recenze--pd .vp-recenze__card {
   padding: .85rem .95rem 1rem;
+  width: 260px;
+  flex: 0 0 auto;
+}
+@keyframes vp-pdrec-marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* Bez animace (systémové nastavení) je pás ručně scrollovatelný. */
+@media (prefers-reduced-motion: reduce) {
+  .vp-recenze--pd .vp-recenze__track {
+    animation: none;
+    width: auto;
+  }
+  .vp-recenze--pd .vp-recenze__set + .vp-recenze__set {
+    display: none;         /* duplikát sady je bez animace zbytečný */
+  }
+  .vp-recenze--pd .vp-recenze__marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
 }
 .vp-recenze--pd .vp-recenze__quote {
   font-size: .82rem !important;

@@ -38,7 +38,12 @@
   window.__vpProductDetail = true;
 
   var FILES = "https://www.exitshop.cz/files/310/files/";
-  var STARS = FILES + "Hv%C4%9Bzdi%C4%8Dky.svg";
+  /* Hvězdy na detailu jsou MODRÉ (žluté zůstávají v patičce a na HP).
+     Originál Hvězdičky.svg má jedinou plnou barvu #FBBC02; přebarvit ho přes
+     CSS nejde — je to <img>, takže si vlastní žluté pixely vykreslí přes
+     jakékoli pozadí a maska by tvar jen oříznula. Proto modrá kopie
+     jako asset v repu. */
+  var STARS = "https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/hvezdicky-modre.svg";
   var AVATAR = FILES + "emoji_recenze.svg";
 
   var TITLE = "Přes 500 tisíc prodaných párů";
@@ -113,12 +118,27 @@
     head.appendChild(stars);
     head.appendChild(h);
 
-    var cards = document.createElement("div");
-    cards.className = "vp-recenze__cards";
-    REVIEWS.forEach(function (r) { cards.appendChild(reviewCard(r)); });
+    /* Karty jako nekonečný marquee pás — stejná struktura jako patička
+       (footer.js) a HP (src/content/homepage.html): track = 2 identické
+       sady, animace posune o translateX(-50%), tedy přesně o šířku jedné
+       sady → spoj je bezešvý. Druhá sada je jen vizuální duplikát, proto
+       aria-hidden. Animaci a fallback (ruční scroll) řeší CSS. */
+    var marquee = document.createElement("div");
+    marquee.className = "vp-recenze__marquee";
+    var track = document.createElement("div");
+    track.className = "vp-recenze__track";
+
+    for (var s = 0; s < 2; s++) {
+      var set = document.createElement("div");
+      set.className = "vp-recenze__set";
+      if (s === 1) set.setAttribute("aria-hidden", "true");
+      REVIEWS.forEach(function (r) { set.appendChild(reviewCard(r)); });
+      track.appendChild(set);
+    }
+    marquee.appendChild(track);
 
     wrap.appendChild(head);
-    wrap.appendChild(cards);
+    wrap.appendChild(marquee);
     fig.appendChild(wrap);   // pozici (mezi obrázkem a mozaikou) řeší CSS order
   }
 
