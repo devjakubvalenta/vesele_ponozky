@@ -6911,6 +6911,65 @@ body footer section.eshop-footer a:hover {
   text-decoration: underline !important;
 }
 
+/* ===== Platební loga v patičce (.vp-foot__pay) — injektuje footer.js =====
+   Comgate má v obchodních podmínkách povinnost umístit do patičky webu loga
+   karetních asociací Visa a Mastercard; logo Comgate s odkazem na platební
+   bránu je doporučené. Loga jsou INLINE SVG přímo ve footer.js (oficiální sada
+   Comgate), takže pruh nezávisí na nahrání souborů do médií. Sedí v právním
+   pásu nad větou o obchodních podmínkách. */
+body footer section.eshop-footer .vp-foot__pay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 auto 0.85rem !important;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid #eef1f6;
+}
+body footer section.eshop-footer .vp-foot__pay-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hdr-muted, #94a3b8);
+}
+body footer section.eshop-footer .vp-foot__pay-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+body footer section.eshop-footer .vp-foot__pay-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 0.85rem;
+  background: #fff;
+  border: 1px solid #e6eaf1;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+/* Loga mají různé poměry stran (Comgate 4,3:1 · Visa 3,1:1 · Mastercard 1,6:1),
+   proto se výška ladí po jednom — opticky pak sedí v jedné řadě. */
+body footer section.eshop-footer .vp-foot__pay-logo svg {
+  display: block;
+  width: auto;
+  height: 17px;
+}
+body footer section.eshop-footer .vp-foot__pay-logo--mc svg {
+  height: 24px;
+}
+body footer section.eshop-footer a.vp-foot__pay-logo {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+body footer section.eshop-footer a.vp-foot__pay-logo:hover {
+  border-color: var(--foot-blue, #1361cf);
+  box-shadow: 0 6px 16px rgba(19, 97, 207, 0.14);
+  transform: translateY(-1px);
+}
+
 /* Atribuce webfontu (CC BY 4.0, onlinewebfonts) — injektuje footer.js.
    Odkaz musí přebít modrou + weight 600 z pravidla výše (vyšší
    specificita + !important). */
@@ -10086,7 +10145,8 @@ body footer section.eshop-footer .vp-foot__attribution a {
 /* CMS stránka „Doprava a platba" — brandový vzhled (modrá #1361cf + žlutá #fbbc02).
    Scope: vše pod .vp-doprava (markup: src/content/doprava.html). Nedosáhne na zbytek webu.
    Sekce: hero (nadpis + benefity + ilustrace) · způsob dopravy (seznam) · způsob platby (seznam)
-          · newsletter (kopie z O nás). Patička globální (footer.js). */
+          · platební brána Comgate · jak platba probíhá · kontakt na Comgate.
+          Patička globální (footer.js). */
 
 .vp-doprava {
   --dp-blue: #1361cf;
@@ -10259,8 +10319,237 @@ body footer section.eshop-footer .vp-foot__attribution a {
 .vp-doprava__method-price--free {
   color: #31a831;
 }
+/* Podnadpis skupiny („Doručení domů" / „Výdejní místa a boxy") — stejné
+   členění, jaké vidí zákazník v košíku (shipping-tab v 10-checkout.css). */
+.vp-doprava__methods-group {
+  margin: 0 0 0.25rem !important;
+  padding-top: 1rem;
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--dp-muted) !important;
+}
+.vp-doprava__methods-group:first-child {
+  padding-top: 0;
+}
+/* Poznámka „Zdarma nad 999 Kč" — modře jako .vp-lbl-free v košíku */
+.vp-doprava__method-note {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--dp-blue);
+}
 
-/* ---- 4. NEWSLETTER (modrý blok — kopie z O nás) ---- */
+/* ---- 4. PLATEBNÍ BRÁNA COMGATE ----
+   Comgate vyžaduje (obchodní podmínky) loga Visa a Mastercard v patičce webu
+   a doporučuje na stránce o dopravě a platbě uvést údaje o poskytovateli
+   brány + logo Comgate s odkazem na www.comgate.eu. Loga jsou oficiální SVG
+   z Comgate sady (assets/pay/*.svg → nahrát do médií). */
+.vp-doprava__gateway {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  max-width: 880px;
+  margin: 0 auto;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--dp-blue-soft);
+  border-radius: var(--dp-radius);
+  text-align: left;
+}
+.vp-doprava__gateway-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.vp-doprava__paylogo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  min-width: 88px;
+  padding: 0 1rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: var(--dp-shadow-sm);
+}
+/* Loga mají hodně různé poměry stran (Comgate 4,3:1 · Visa 3,1:1 ·
+   Mastercard 1,6:1), výška se proto ladí po jednom, ať v řadě opticky sedí. */
+.vp-doprava__paylogo img {
+  width: auto;
+  height: 22px;
+}
+.vp-doprava__paylogo--cg img {
+  height: 21px;
+}
+.vp-doprava__paylogo--mc img {
+  height: 29px;
+}
+a.vp-doprava__paylogo {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+a.vp-doprava__paylogo:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--dp-shadow);
+}
+.vp-doprava__gateway-text p:last-of-type {
+  margin-bottom: 0.5rem;
+}
+.vp-doprava__link {
+  font-weight: 700;
+  color: var(--dp-blue) !important;
+  border-bottom: 2px solid var(--dp-yellow);
+}
+.vp-doprava__link:hover {
+  color: var(--dp-blue-dark) !important;
+}
+
+/* ---- 5. JAK PLATBA PROBÍHÁ (dvě karty s očíslovanými kroky) ----
+   Očíslované kroky = stejný jazyk jako „Jak vrácení probíhá" (90-vraceni.css),
+   jen v kompaktní řádkové podobě, aby se vešly dvě karty vedle sebe. */
+.vp-doprava__flow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  text-align: left;
+}
+.vp-doprava__flow-card {
+  background: #fff;
+  border: 1px solid #eef2f7;
+  border-radius: var(--dp-radius);
+  box-shadow: var(--dp-shadow-sm);
+  padding: clamp(1.25rem, 3vw, 1.85rem);
+  min-width: 0;
+}
+.vp-doprava__flow-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+.vp-doprava__flow-ic {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--dp-blue-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vp-doprava__flow-ic img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+.vp-doprava__flow-title {
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: var(--dp-text) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  text-transform: none !important;
+}
+.vp-doprava__step {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  padding: 0.6rem 0;
+  border-top: 1px solid #f1f5f9;
+}
+.vp-doprava__step:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+.vp-doprava__step-num {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--dp-blue);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.1rem;
+}
+/* Titulek kroku je taky <p> — musí přebít `.vp-doprava__step p` níž
+   (stejná !important, rozhoduje specificita), proto dvojtřídní selektor. */
+.vp-doprava__step .vp-doprava__step-title {
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  color: var(--dp-text) !important;
+  margin: 0 0 0.15rem !important;
+  padding: 0 !important;
+  border: 0 !important;
+  text-transform: none !important;
+}
+.vp-doprava__step p {
+  margin: 0 !important;
+  font-size: 0.9rem !important;
+  line-height: 1.55 !important;
+}
+/* Žlutá poznámka pod kartami (Google Pay / Apple Pay) */
+.vp-doprava__note {
+  max-width: 880px;
+  margin: clamp(1rem, 2.5vw, 1.5rem) auto 0 !important;
+  padding: 0.85rem 1.15rem;
+  background: var(--dp-yellow-soft);
+  border-radius: var(--dp-radius);
+  color: var(--dp-text) !important;
+  font-size: 0.92rem !important;
+  text-align: left;
+}
+
+/* ---- 6. KONTAKT NA POSKYTOVATELE BRÁNY ---- */
+.vp-doprava__provider {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid #eef2f7;
+  border-radius: var(--dp-radius);
+  box-shadow: var(--dp-shadow-sm);
+  text-align: left;
+}
+.vp-doprava__provider-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  margin-top: 1.1rem;
+}
+.vp-doprava__provider-item {
+  min-width: 0;
+}
+.vp-doprava__provider-label {
+  margin: 0 0 0.2rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dp-muted) !important;
+}
+.vp-doprava__provider-value {
+  margin: 0 !important;
+  font-weight: 700;
+  color: var(--dp-text) !important;
+  font-size: 0.98rem !important;
+  overflow-wrap: anywhere;
+}
+.vp-doprava__provider-value a {
+  color: var(--dp-blue) !important;
+  font-weight: 700;
+}
+.vp-doprava__provider-value a:hover {
+  text-decoration: underline;
+}
+
+/* ---- 7. NEWSLETTER (modrý blok — kopie z O nás) ---- */
 .vp-doprava__btn {
   display: inline-block;
   margin-top: 0.35rem;
@@ -10319,8 +10608,17 @@ body footer section.eshop-footer .vp-foot__attribution a {
 /* ================= Responsivita (BS4 breakpointy) ================= */
 @media (max-width: 991.98px) {
   .vp-doprava__hero,
-  .vp-doprava__newsletter-inner {
+  .vp-doprava__newsletter-inner,
+  .vp-doprava__flow {
     grid-template-columns: 1fr;
+  }
+  /* Comgate blok: loga nad text, vše na střed */
+  .vp-doprava__gateway {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .vp-doprava__gateway-logos {
+    justify-content: center;
   }
   .vp-doprava__hero-media {
     order: -1;
@@ -10335,6 +10633,14 @@ body footer section.eshop-footer .vp-foot__attribution a {
   }
 }
 
+@media (max-width: 767.98px) {
+  /* Kontakt na Comgate — pod sebe, ať se dlouhý e-mail a adresa nelámou */
+  .vp-doprava__provider-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
 @media (max-width: 575.98px) {
   .vp-doprava__title {
     font-size: 1.5rem !important;
@@ -10346,6 +10652,10 @@ body footer section.eshop-footer .vp-foot__attribution a {
     flex-basis: 52px;
     width: 52px;
     height: 34px;
+  }
+  .vp-doprava__paylogo {
+    height: 40px;
+    padding: 0 0.7rem;
   }
 }
 
