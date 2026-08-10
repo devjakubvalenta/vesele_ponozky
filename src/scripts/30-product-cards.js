@@ -26,20 +26,36 @@
 
   /* == Konfigurace ======================================================= */
 
-  // Mapa HP produktových bloků → URL pro tlačítko „Zobrazit vše".
+  // Web běží na dvou doménách se dvěma tvary cest:
+  //   produkce  www.veseleponozky.cz/c/1243142-…            (bez prefixu)
+  //   test      www.exitshop.cz/shops/28056/c/1243142-…      (s prefixem shopu)
+  // ID kategorií jsou na obou stejná, liší se jen prefix → URL držíme jako
+  // cesty od kořene a prefix dopočítáme za běhu. NIKDY sem nedávat absolutní
+  // URL s doménou — na produkci by odkaz odvedl návštěvníka na testovací web.
+  var SHOP_BASE = (location.pathname.match(/^\/shops\/\d+/) || [""])[0];
+  function shopUrl(path) { return SHOP_BASE + path; }
+
+  // Mapa HP produktových bloků → cesta pro tlačítko „Zobrazit vše".
   // Klíč = číslo z třídy section.recommend-block-{id}. Blok bez záznamu
-  // tlačítko nedostane. Na HP jsou teď bloky: 3224 = Novinky, 3236 = Dárkové sety.
+  // tlačítko nedostane. Na HP jsou teď bloky:
+  //   3224 = „To nejlepší právě v akci", 3236 = „Dárkové sety".
+  // Pozn.: 3224 dřív mířil na /c/1196952-katalog/new (= jen řazení „Nejnovější"
+  // na rootu Katalog). Root Katalog servíruje staré facety 334 „Velikosti" +
+  // 335 „Je hlavní produkt" místo Motiv/Velikost, takže tam chybí filtrace
+  // podle Povolání. Kategorie Výprodej (1243142) obsahuje přesně ty zlevněné
+  // kusy, které blok ukazuje, a má správné filtry Motiv → Velikost → Cena.
   var SHOW_ALL = {
-    "3224": "https://www.exitshop.cz/shops/28056/c/1196952-katalog/new",  // Novinky
-    "3236": "https://www.exitshop.cz/shops/28056/c/1243139-darkove-sety"  // Dárkové sety
+    "3224": "/c/1243142-vyprodej-az-90",  // To nejlepší právě v akci
+    "3236": "/c/1243139-darkove-sety"     // Dárkové sety
   };
   var SHOW_ALL_LABEL = "Zobrazit vše";
 
   // Hlavní HP výpis „Všechny naše produkty" (nativní grid pod #homepage_text):
   // CSS nechá viditelné jen první 4 karty, JS pod grid přidá tlačítko „Zobrazit
-  // vše" mířící sem. (Pozn.: stránka Katalog teď ukazuje jen část sortimentu —
-  // až bude lepší cíl, stačí přepsat tuto URL.)
-  var HP_ALL_URL = "https://www.exitshop.cz/shops/28056/c/1196952-katalog";
+  // vše" mířící sem. Root Katalog je jediný výpis celého sortimentu (358 kusů),
+  // ale ve filtraci má legacy parametry 334/335 místo Motiv (52221) + Velikost
+  // (52209) — čeká na přenastavení parametrů v administraci.
+  var HP_ALL_PATH = "/c/1196952-katalog";
   var HP_ALL_LIMIT = 4;
 
   // Rozdělení názvu na 2 řádky:
@@ -130,7 +146,7 @@
       if (!m || !SHOW_ALL[m[1]]) return;
       var a = document.createElement("a");
       a.className = "pc-show-all";
-      a.href = SHOW_ALL[m[1]];
+      a.href = shopUrl(SHOW_ALL[m[1]]);
       a.textContent = SHOW_ALL_LABEL;
       block.appendChild(a);
     });
@@ -147,7 +163,7 @@
     if (grid.querySelectorAll(":scope > a.product").length <= HP_ALL_LIMIT) return;
     var a = document.createElement("a");
     a.className = "pc-show-all-hp";
-    a.href = HP_ALL_URL;
+    a.href = shopUrl(HP_ALL_PATH);
     a.textContent = SHOW_ALL_LABEL;
     grid.insertAdjacentElement("afterend", a);
   }

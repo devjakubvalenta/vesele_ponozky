@@ -79,9 +79,16 @@
 
 /* ---- Zredukovat filtry na Cena / Velikost / Motiv ------------------
    Skrýt nepotřebné facety. Blacklist podle data-filter-group-id (facet ID =
-   ID parametru), aby se Cena, Velikosti i „Motiv" (parametr 1006, jakmile se
-   v adminu zapne „Zobrazit ve filtraci") zobrazovaly samy. Kategorie = strom
-   .column-left (samostatný blok, ne facet). */
+   ID parametru), aby se Cena, Velikost (52209) i Motiv (52221) zobrazovaly
+   samy. Kategorie = strom .column-left (samostatný blok, ne facet).
+
+   POZOR — root kategorie Katalog (1196952, cíl tlačítka „Zobrazit vše" pod
+   HP výpisem) servíruje JINOU dvojici parametrů než všechny ostatní
+   kategorie: 334 „Velikosti" (hodnoty „velikost 35-38"…) + 335 „Je hlavní
+   produkt". Motiv/Velikost tam v HTML vůbec nejsou → chybí filtrace podle
+   Povolání (= hodnota parametru Motiv). Vykresluje to server, CSS to
+   nespraví — musí se přenastavit parametry v administraci (vypnout filtraci
+   u 334 a 335, zapnout Motiv 52221 + Velikost 52209 i pro root). */
 .filters-block .filter-group[data-filter-group-id="availability"],  /* Dostupnost */
 .filters-block .filter-group[data-filter-group-id="discount"],      /* Produkty ve slevě */
 .filters-block .filter-group[data-filter-group-id="335"],           /* Je hlavní produkt */
@@ -103,6 +110,7 @@
    .separator jsou display:none → do flex layoutu nevstupují. */
 .category-filters .filter-group[data-filter-group-id="52221"] { order: 1; }  /* Motiv */
 .category-filters .filter-group[data-filter-group-id="52209"] { order: 2; }  /* Velikost */
+.category-filters .filter-group[data-filter-group-id="334"]   { order: 2; }  /* Velikosti — legacy facet na rootu Katalog (stejný slot) */
 .category-filters .filter-group-price                         { order: 3; }  /* Cena */
 
 /* ---- Mezera MEZI filtračními skupinami (Motiv | Velikost | Cena) ---

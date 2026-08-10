@@ -13,7 +13,9 @@
 (function () {
   "use strict";
 
-  var MEDIA = "https://www.exitshop.cz/files/310/files/";
+  // Cesta k médiím je na obou doménách stejná (produkce veseleponozky.cz
+  // i test exitshop.cz) → bez domény, ať se nic neváže na testovací web.
+  var MEDIA = "/files/310/files/";
   var ASSET = {
     heureka: MEDIA + "heureka_banner.png",
     cart: MEDIA + "cart.svg",

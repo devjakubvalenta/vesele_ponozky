@@ -4,6 +4,12 @@ Sekce **Administrace → Skripty** je správce položek (ne jedno pole). Každý
 zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</script>`,
 `<style>…</style>`, `<link>`). Soubor zkopíruj celý do pole položky.
 
+> ⚠️ **Žádné URL s doménou.** Eshop běží na produkci **www.veseleponozky.cz**
+> i na technické adrese `www.exitshop.cz/shops/28056/` (jeden shop, dvě
+> domény). Média mají na obou stejnou cestu → `"/files/310/files/…"`.
+> Kategorie/CMS mají na technické adrese navíc prefix `/shops/28056` →
+> odkazy skládej přes `SHOP_BASE` (viz `30-product-cards.js`), ne natvrdo.
+
 ## Mapa souborů → položky
 
 | Soubor | Název položky v admin | Zobrazit na stránkách | Umístit v Head | Stav |
@@ -44,13 +50,24 @@ výpisech `.products`: (1) rozdělí název na 2 řádky — černý typ produkt
 `NAME_PREFIXES`); (2) obalí datum v „doručíme 15.07." do
 `.pc-delivery-date` (zelené); (3) pod HP produktové bloky přidá tlačítko
 „Zobrazit vše" podle mapy `SHOW_ALL` (`{id bloku: URL}` — blok bez
-záznamu tlačítko nemá); (4) štítek „V KOŠÍKU" (`.pc-in-cart`) na kartách
+záznamu tlačítko nemá) a pod hlavní HP výpis odkaz na `HP_ALL_URL`;
+(4) štítek „V KOŠÍKU" (`.pc-in-cart`) na kartách
 produktů, které už v košíku jsou — čte cart cookie
 `shopping_cart_<shopId>` (JSON `{"productId-variantId": "ks"}`, shop id
 se nehardcoduje), páruje přes productId z `href` karty a po vyprázdnění
 košíku štítek zase odebere (`pageshow` pokrývá i návrat zpět přes
 bfcache). Idempotentní, MutationObserver zpracuje i karty dorenderované
 AJAX filtrováním v kategorii a v popupu „přidáno do košíku".
+
+> **Cíle „Zobrazit vše" — past platformy.** Root kategorie Katalog
+> (1196952) vykresluje ve filtraci staré parametry `334` „Velikosti" +
+> `335` „Je hlavní produkt" místo `52221` Motiv + `52209` Velikost, které
+> mají všechny ostatní kategorie — proto tam **chybí filtrace podle
+> Povolání** (Povolání je hodnota parametru Motiv). Je to server-side,
+> CSS/JS to nespraví; opravuje se přenastavením parametrů v administraci.
+> Suffix `/new` u kategorie **není jiný výpis**, jen řazení „Nejnovější"
+> (dál `/price`, `/price_desc`). Proto blok „To nejlepší právě v akci"
+> (3224) míří na kategorii **Výprodej** (1243142), ne na `…/katalog/new`.
 
 ## Co dělá `45-cart-popup.js`
 

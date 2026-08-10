@@ -224,7 +224,7 @@
   width: 20px;
   height: 20px;
   /* pozor: diakritika v názvu souboru MUSÍ zůstat URL-encoded */
-  background: url("https://www.exitshop.cz/files/310/files/doru%C4%8Den%C3%AD.svg") center / contain no-repeat;
+  background: url("/files/310/files/doru%C4%8Den%C3%AD.svg") center / contain no-repeat;
 }
 #app.product-detail .order-delivery-date {
   color: var(--pd-green-dark);
@@ -371,7 +371,7 @@
   flex: 0 0 20px;
   width: 20px;
   height: 19px;
-  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
 }
 #app.product-detail .product-add-to-shopping-basket.sprite-after::after { content: none !important; }
 
@@ -549,7 +549,7 @@
   flex: 0 0 20px;
   width: 20px;
   height: 19px;
-  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
 }
 
 /* ==== Výhodné balení (nativní blok „Příslušenství" %primary_accessories%) ====
@@ -1259,7 +1259,7 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   flex: 0 0 12px;
   width: 12px;
   height: 12px;
-  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
 }
 
 /* Ribbon šipky admin stripů k pilulce nepatří */

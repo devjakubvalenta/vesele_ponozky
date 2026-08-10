@@ -37,7 +37,9 @@
   if (window.__vpProductDetail) return;
   window.__vpProductDetail = true;
 
-  var FILES = "https://www.exitshop.cz/files/310/files/";
+  // Cesta k médiím je na obou doménách stejná (produkce veseleponozky.cz
+  // i test exitshop.cz) → bez domény, ať se nic neváže na testovací web.
+  var FILES = "/files/310/files/";
   /* Hvězdy na detailu jsou MODRÉ (žluté zůstávají v patičce a na HP).
      Originál Hvězdičky.svg má jedinou plnou barvu #FBBC02; přebarvit ho přes
      CSS nejde — je to <img>, takže si vlastní žluté pixely vykreslí přes

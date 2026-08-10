@@ -4,7 +4,22 @@ Verzovaný **zdroj pravdy** pro vlastní CSS a skripty eshopu. Cíl: konec
 „pastování naslepo" — upravuje se zde, builduje, živě se náhleduje a teprve
 ověřená změna se vkládá do administrace.
 
-Live (testovací) eshop: **https://www.exitshop.cz/shops/28056/** („Zkouška 2").
+**Produkce: https://www.veseleponozky.cz/** — ostrý eshop pro zákazníky.
+Technická adresa téhož shopu (28056): https://www.exitshop.cz/shops/28056/
+(„Zkouška 2"). Je to **jeden shop na dvou doménách**, liší se jen tvar cest:
+
+| | produkce | technická adresa |
+|---|---|---|
+| kategorie | `/c/1243142-…` | `/shops/28056/c/1243142-…` |
+| CMS | `/cms/60954-…` | `/shops/28056/cms/60954-…` |
+| média | `/files/310/files/…` | `/files/310/files/…` (stejné) |
+
+> ⚠️ **Nikdy nehardcoduj doménu.** Absolutní URL na `exitshop.cz` odvede
+> zákazníka z produkce na technickou adresu. V CSS a v obsahu pro admin piš
+> cesty od kořene (`/files/…`, `/cms/…`, `/c/…`); v JS, kde musí odkaz fungovat
+> na obou, dopočítej prefix za běhu — viz `SHOP_BASE` v
+> [src/scripts/30-product-cards.js](src/scripts/30-product-cards.js).
+> ID kategorií, produktů i CMS stránek jsou na obou doménách stejná.
 
 ## Omezení platformy exitshop.cz (uzavřený SaaS)
 

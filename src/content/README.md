@@ -27,4 +27,13 @@ přes CDN (scope dle obalové třídy).
 3. Při změně textu uprav i soubor tady (konzistence repo ↔ admin).
 
 > Obrázky: nahraj v administraci (media), nahraď `PLACEHOLDER-*` URL skutečnými
-> (`https://www.exitshop.cz/files/7203/media/files/<jmeno>`).
+> (`/files/7203/media/files/<jmeno>`).
+
+> **URL bez domény.** Eshop běží na produkční doméně **www.veseleponozky.cz**
+> (technická adresa téhož shopu je `www.exitshop.cz/shops/28056/`). Odkazy i
+> obrázky proto piš vždy od kořene — `/cms/60954-recenze`, `/c/1243142-…`,
+> `/files/310/files/…` — nikdy s doménou. Absolutní URL na `exitshop.cz`
+> odvedou zákazníka z produkce na technickou adresu. Cesta `/files/…` je na
+> obou stejná; `/cms/` a `/c/` mají na technické adrese navíc prefix
+> `/shops/28056`, takže tam tyhle odkazy nefungují — obsah náhleduj na
+> produkční doméně.

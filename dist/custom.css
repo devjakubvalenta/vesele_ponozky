@@ -728,10 +728,10 @@ html body {
   background-size: contain;
 }
 .main-order-form #block-service-20780 .info-warapper::before {
-  background-image: url("https://www.exitshop.cz/files/310/files/baln%C3%A9.png");
+  background-image: url("/files/310/files/baln%C3%A9.png");
 }
 .main-order-form #block-service-20783 .info-warapper::before {
-  background-image: url("https://www.exitshop.cz/files/310/files/d%C3%BD%C5%A1ko.png");
+  background-image: url("/files/310/files/d%C3%BD%C5%A1ko.png");
 }
 /* popis hned pod titulkem, zarovnaný vedle ikony (přebíjí globální odsazení panelu) */
 .main-order-form #block-service-20780 .card-body,
@@ -3788,7 +3788,7 @@ header .header-shop-basket-button .btn.btn-primary {
   width: 20px;
   height: 20px;
   /* pozor: diakritika v názvu souboru MUSÍ zůstat URL-encoded */
-  background: url("https://www.exitshop.cz/files/310/files/doru%C4%8Den%C3%AD.svg") center / contain no-repeat;
+  background: url("/files/310/files/doru%C4%8Den%C3%AD.svg") center / contain no-repeat;
 }
 #app.product-detail .order-delivery-date {
   color: var(--pd-green-dark);
@@ -3935,7 +3935,7 @@ header .header-shop-basket-button .btn.btn-primary {
   flex: 0 0 20px;
   width: 20px;
   height: 19px;
-  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
 }
 #app.product-detail .product-add-to-shopping-basket.sprite-after::after { content: none !important; }
 
@@ -4113,7 +4113,7 @@ header .header-shop-basket-button .btn.btn-primary {
   flex: 0 0 20px;
   width: 20px;
   height: 19px;
-  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
 }
 
 /* ==== Výhodné balení (nativní blok „Příslušenství" %primary_accessories%) ====
@@ -4823,7 +4823,7 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   flex: 0 0 12px;
   width: 12px;
   height: 12px;
-  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
 }
 
 /* Ribbon šipky admin stripů k pilulce nepatří */
@@ -5269,7 +5269,7 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   flex: 0 0 12px;
   width: 12px;
   height: 12px;
-  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
 }
 
 /* Fallback: karta bez .product-stripes → JS dá štítek do figure */
@@ -5403,7 +5403,7 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   width: 18px;
   height: 18px;
   /* pozor: diakritika v názvu souboru MUSÍ zůstat URL-encoded */
-  background: url("https://www.exitshop.cz/files/310/files/doru%C4%8Den%C3%AD.svg") center / contain no-repeat;
+  background: url("/files/310/files/doru%C4%8Den%C3%AD.svg") center / contain no-repeat;
 }
 
 .products .product .pc-delivery-date {
@@ -5524,7 +5524,7 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   flex: 0 0 18px;
   width: 18px;
   height: 17px;
-  background: url("https://www.exitshop.cz/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
 }
 
 /* Nativní sprite ikona pryč + reset odsazení textu (nativně margin-left:25px) */
@@ -6171,9 +6171,16 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
 
 /* ---- Zredukovat filtry na Cena / Velikost / Motiv ------------------
    Skrýt nepotřebné facety. Blacklist podle data-filter-group-id (facet ID =
-   ID parametru), aby se Cena, Velikosti i „Motiv" (parametr 1006, jakmile se
-   v adminu zapne „Zobrazit ve filtraci") zobrazovaly samy. Kategorie = strom
-   .column-left (samostatný blok, ne facet). */
+   ID parametru), aby se Cena, Velikost (52209) i Motiv (52221) zobrazovaly
+   samy. Kategorie = strom .column-left (samostatný blok, ne facet).
+
+   POZOR — root kategorie Katalog (1196952, cíl tlačítka „Zobrazit vše" pod
+   HP výpisem) servíruje JINOU dvojici parametrů než všechny ostatní
+   kategorie: 334 „Velikosti" (hodnoty „velikost 35-38"…) + 335 „Je hlavní
+   produkt". Motiv/Velikost tam v HTML vůbec nejsou → chybí filtrace podle
+   Povolání (= hodnota parametru Motiv). Vykresluje to server, CSS to
+   nespraví — musí se přenastavit parametry v administraci (vypnout filtraci
+   u 334 a 335, zapnout Motiv 52221 + Velikost 52209 i pro root). */
 .filters-block .filter-group[data-filter-group-id="availability"],  /* Dostupnost */
 .filters-block .filter-group[data-filter-group-id="discount"],      /* Produkty ve slevě */
 .filters-block .filter-group[data-filter-group-id="335"],           /* Je hlavní produkt */
@@ -6195,6 +6202,7 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
    .separator jsou display:none → do flex layoutu nevstupují. */
 .category-filters .filter-group[data-filter-group-id="52221"] { order: 1; }  /* Motiv */
 .category-filters .filter-group[data-filter-group-id="52209"] { order: 2; }  /* Velikost */
+.category-filters .filter-group[data-filter-group-id="334"]   { order: 2; }  /* Velikosti — legacy facet na rootu Katalog (stejný slot) */
 .category-filters .filter-group-price                         { order: 3; }  /* Cena */
 
 /* ---- Mezera MEZI filtračními skupinami (Motiv | Velikost | Cena) ---
@@ -6963,7 +6971,7 @@ body footer section.eshop-footer .vp-foot__attribution a {
    i mobilu (auto-škáluje), proto už není potřeba zvlášť Patička_mobil.svg. */
 .vp-foot__sockstrip {
   height: clamp(40px, 6vw, 74px);
-  background: #fabb01 url("https://www.exitshop.cz/files/310/files/footer_sock.png") left center / auto 100% repeat-x;
+  background: #fabb01 url("/files/310/files/footer_sock.png") left center / auto 100% repeat-x;
 }
 
 .vp-foot__inner {
@@ -8787,7 +8795,7 @@ body footer section.eshop-footer .vp-foot__attribution a {
   border: 0;
   border-radius: 16px;
   background-color: #f8fafc;
-  background-image: url("https://www.exitshop.cz/files/310/files/download.svg");
+  background-image: url("/files/310/files/download.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 26px;
@@ -10978,7 +10986,7 @@ body footer section.eshop-footer .vp-foot__attribution a {
   border: 0;
   border-radius: 16px;
   background-color: #f8fafc;
-  background-image: url("https://www.exitshop.cz/files/310/files/download.svg");
+  background-image: url("/files/310/files/download.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 26px;
