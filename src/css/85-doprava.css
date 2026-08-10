@@ -257,10 +257,10 @@ a.vp-doprava__paylogo:hover {
 .vp-doprava__link {
   font-weight: 700;
   color: var(--dp-blue) !important;
-  border-bottom: 2px solid var(--dp-yellow);
 }
 .vp-doprava__link:hover {
   color: var(--dp-blue-dark) !important;
+  text-decoration: underline;
 }
 
 /* ---- 5. JAK PLATBA PROBÍHÁ (dvě karty s očíslovanými kroky) ----
