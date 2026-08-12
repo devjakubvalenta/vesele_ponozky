@@ -2100,9 +2100,19 @@ header #top-menu .navbar-nav .nav-item.active > .nav-link {
   /* ---- Mega menu: žlutý hover na dlaždici kategorie ----------------
      Dlaždice je celé <li class="row … cat-l-second"> (ikona v .col-lg-4 +
      název v .col-lg-8), takže podbarvujeme <li> — hover pak platí i nad
-     ikonou, ne jen nad textem.
-     Text na žluté MUSÍ být tmavý: bílá na #fbbc02 má kontrast jen 1,71:1
-     (stejná poznámka je u barevných dlaždic mobilního menu). */
+     ikonou, ne jen nad textem. */
+
+  /* Názvy kategorií webovou modrou (šablona jim dává vlastní tmavě modrou
+     #2f3c9b přes `header #top-menu .dropdown-menu a`) a modré ZŮSTÁVAJÍ
+     i při hoveru — dřív se překlápěly do skoro černé.
+     ⚠️ Modrá na žluté dlaždici má kontrast 3,38:1 (WCAG AA chce 4,5:1 pro
+     běžný text). Kdyby vadilo, stačí hover podbarvit světle žlutou
+     #fdf6e0 (brandový token z 85-doprava.css) → 5,2:1. */
+  header #top-menu .yamm-dropdown-menu li.cat-l-second a,
+  header #top-menu .yamm-dropdown-menu li.cat-l-second:hover a {
+    color: var(--hdr-accent, #1361cf) !important;
+  }
+
   header #top-menu .yamm-dropdown-menu li.cat-l-second {
     border-radius: 10px;
     /* Vlastní odsazení, aby žlutá obalila i prostor kolem ikony a názvu —
@@ -2113,9 +2123,6 @@ header #top-menu .navbar-nav .nav-item.active > .nav-link {
   }
   header #top-menu .yamm-dropdown-menu li.cat-l-second:hover {
     background: var(--hdr-yellow, #fbbc02);
-  }
-  header #top-menu .yamm-dropdown-menu li.cat-l-second:hover a {
-    color: #0d1427 !important;
   }
 }
 
