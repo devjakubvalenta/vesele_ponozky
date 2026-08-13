@@ -6311,6 +6311,34 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   font-size: 0.8125rem !important;
 }
 
+/* ---- Velikost: hodnoty do dvou sloupců ----------------------------
+   Velikostí je hodně (16 u dospělých, u dětských kategorií i přes 20)
+   a v jednom sloupci kvůli nim bylo nutné scrollovat přes celý sidebar.
+
+   Multi-column (`columns`), ne grid: sloupce se plní PO SLOUPCÍCH
+   (35–40 vlevo, 41–46 vpravo), což u číselné řady čte přirozeně —
+   grid by hodnoty střídal po řádcích (35 | 36 / 37 | 38). Sloupce se
+   navíc samy vyváží, takže lichý počet hodnot nevadí.
+
+   Cílíme jen na `.show`: `.filter-group-filters` je Bootstrap `.collapse`,
+   bez `.show` musí zůstat `display: none` — jinak by se po sbalení skupiny
+   hodnoty neschovaly. Motiv (52221) necháváme v jednom sloupci, názvy
+   („Zdravotnictví", „Povolání") by se do půlky sidebaru nevešly. */
+.category-filters .filter-group[data-filter-group-id="52209"] .filter-group-filters.show {
+  columns: 2;
+  column-gap: 1rem;
+}
+/* Ať se řádek (checkbox + název + počet) nerozlomí mezi sloupce.
+   `position: relative` je tu nutnost: šablona dává počtu kusů
+   `position: absolute; right: 9px` a bez vlastního kontextu se všechny počty
+   zaklesnou na pravý okraj CELÉ skupiny — v jednom sloupci to náhodou vyšlo,
+   ve dvou by se naskládaly přes sebe. Takhle se každý počet drží svého řádku
+   (a tím i svého sloupce). */
+.category-filters .filter-group[data-filter-group-id="52209"] .filter-group-filter {
+  break-inside: avoid;
+  position: relative;
+}
+
 /* ==== 27-hp-recenze.css ==== */
 
 /* Homepage — sekce „Co říkají naši zákazníci?" pod benefits pásem
