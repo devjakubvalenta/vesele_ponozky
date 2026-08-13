@@ -8,7 +8,9 @@
     5. plovoucí „Přidat do košíku" na mobilu,
     6. taby (Popis/Parametry/…) → accordion pod galerií v levém sloupci
        (klasický: jedna otevřená naráz, defaultně všechny zavřené; nové
-       ouško = automaticky další položka),
+       ouško = automaticky další položka) + statické sekce z `TAB_STATIC`
+       (Materiál a péče, Doprava a vrácení, Časté dotazy, Hodnocení) —
+       TEXTY SE DOPLŇUJÍ TAM, pořadí řídí `TAB_ORDER`,
     7. YouTube preview → tmavá karta s vlastním play tlačítkem (facade;
        skutečný iframe až po kliknutí),
     8. sticky offset pravého sloupce — negativní `top` (CSS proměnná
@@ -272,7 +274,39 @@
      levého sloupce (pod galerii) a originální taby skryje. Iterujeme přes
      ouška → nové ouško = automaticky další rozklikávací položka. Obsah panelu
      KLONUJEME (taby nemají data-v = needitují se s variantou), originál držíme
-     skrytý (kdyby ho Vue re-render vrátil). */
+     skrytý (kdyby ho Vue re-render vrátil).
+
+     Kromě nativních tabů se přidávají STATICKÉ sekce (TAB_STATIC) — texty, které
+     jsou u všech produktů stejné a platforma pro ně žádný tab nemá. */
+
+  // Přejmenování nativních oušek. Klíč = co posílá platforma, hodnota = co má
+  // stát v accordionu. (Nativní název se dá změnit i v administraci; tady je to
+  // jen proto, aby se text nemusel hlídat na dvou místech.)
+  var TAB_RENAME = {
+    "Popis": "Popis a složení"
+  };
+
+  // Statické sekce accordionu — stejné u všech produktů.
+  // `html` je zatím prázdné = sekce se vykreslí a jde rozkliknout, jen nemá
+  // obsah. AŽ DORAZÍ TEXTY, stačí je vepsat sem (HTML: <p>, <ul>, <strong>…)
+  // a bumpnout hash skriptu v admin položce „Produktový detail".
+  var TAB_STATIC = [
+    { label: "Materiál a péče", html: "" },
+    { label: "Doprava a vrácení", html: "" },
+    { label: "Časté dotazy", html: "" },
+    { label: "Hodnocení", html: "" }
+  ];
+
+  // Pořadí sekcí. Co v seznamu není (třeba nový nativní tab z administrace),
+  // se zařadí na konec v původním pořadí — nic se nikdy neztratí.
+  var TAB_ORDER = [
+    "Popis a složení",
+    "Materiál a péče",
+    "Doprava a vrácení",
+    "Časté dotazy",
+    "Hodnocení",
+    "Parametry"
+  ];
 
   function buildTabsAccordion(root) {
     var nav = root.querySelector(".product-right-content > .nav-tabs");
@@ -285,24 +319,44 @@
       var links = Array.prototype.slice.call(nav.querySelectorAll("a"));
       if (!links.length) return;
 
-      acc = document.createElement("div");
-      acc.className = "pd-accordion";
-
-      links.forEach(function (link, i) {
+      // 1) posbírat sekce: nativní taby (prázdný panel přeskočit) + statické
+      var sections = [];
+      links.forEach(function (link) {
         var sel = link.getAttribute("href") || link.getAttribute("data-target");
         var pane = sel && sel.charAt(0) === "#" ? tc.querySelector(sel) : null;
         var label = (link.textContent || "").trim();
-        if (!pane || !label || !(pane.innerHTML || "").trim()) return;  // prázdný panel přeskočit
+        if (!pane || !label || !(pane.innerHTML || "").trim()) return;  // prázdný nativní panel přeskočit
+        sections.push({ label: TAB_RENAME[label] || label, html: pane.innerHTML });
+      });
+      TAB_STATIC.forEach(function (t) {
+        // statická sekce se vykreslí i prázdná (čeká na text), ale ne dvakrát,
+        // kdyby stejně pojmenovaný tab přibyl i v administraci
+        if (sections.some(function (s) { return s.label === t.label; })) return;
+        sections.push({ label: t.label, html: t.html || "" });
+      });
+      if (!sections.length) return;
 
+      // 2) seřadit podle TAB_ORDER; neznámé popisky na konec (stabilně)
+      sections.forEach(function (s, i) {
+        var rank = TAB_ORDER.indexOf(s.label);
+        s._sort = (rank === -1 ? TAB_ORDER.length : rank) * 1000 + i;
+      });
+      sections.sort(function (a, b) { return a._sort - b._sort; });
+
+      acc = document.createElement("div");
+      acc.className = "pd-accordion";
+
+      sections.forEach(function (sec) {
         var item = document.createElement("div");
         item.className = "pd-accordion__item";          // defaultně VŠECHNY zavřené
+        if (!sec.html.trim()) item.classList.add("is-empty");   // sekce čekající na text
 
         var head = document.createElement("button");
         head.type = "button";
         head.className = "pd-accordion__head";
         var lab = document.createElement("span");
         lab.className = "pd-accordion__label";
-        lab.textContent = label;
+        lab.textContent = sec.label;
         var ic = document.createElement("span");
         ic.className = "pd-accordion__icon";
         ic.setAttribute("aria-hidden", "true");
@@ -315,7 +369,7 @@
         inner.className = "pd-accordion__inner";
         var content = document.createElement("div");
         content.className = "pd-accordion__content";
-        content.innerHTML = pane.innerHTML;             // klon obsahu panelu
+        content.innerHTML = sec.html;                   // klon obsahu panelu / statický text
         inner.appendChild(content);
         body.appendChild(inner);
 
@@ -331,7 +385,6 @@
         acc.appendChild(item);
       });
 
-      if (!acc.children.length) return;
       fig.appendChild(acc);            // konec levého sloupce; pozici řeší CSS order
     }
 
