@@ -67,6 +67,23 @@
   text-decoration-thickness: 2px;
 }
 
+/* ==== Vyhledávání (body.body-search) ================================
+   Stránka výsledků hledání renderuje TÝŽ toolbar jinak než kategorie:
+   sloupec s roletkou má INLINE `position:relative; top:15px`, počet
+   položek má navíc .text-center a nad řádkem chybí odsazení od nadpisu
+   „Vyhledávání: …" → odkazy se lepí na nadpis i na první řadu karet.
+   Inline `top` jde přebít jen !important. */
+
+body.body-search .vp-sort-row {
+  margin: 1.25rem 0 .85rem;
+}
+body.body-search .vp-sort-row > .vp-sort-col {
+  top: 0 !important;                 /* nativní inline posun o 15 px dolů */
+}
+body.body-search .vp-sort-row .item-count-top {
+  text-align: left;                  /* nativní .text-center */
+}
+
 /* ==== Mobil (< 576 px) — počet nahoře vlevo, odkazy pod ním na střed === */
 
 @media (max-width: 575.98px) {

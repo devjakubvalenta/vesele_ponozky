@@ -4283,16 +4283,17 @@ header .header-shop-basket-button .btn.btn-primary {
            .block2 > .additional-services-price-js "+ 359 Kč" + a.bi-question-circle "?"
 
    Cíl (mockup): klikací KARTA = proklik na set. Miniatura vlevo, modrý titulek +
-   šedý název, modré pozadí, žlutá při hoveru. BEZ checkboxu / ceny / „?" (přání:
-   jen odkaz). Titulek je v DOM samostatný sourozenec NAD řádkem → miniatura jde
+   šedý název, cena balení vpravo, modré pozadí, žlutá při hoveru. BEZ checkboxu
+   a „?" tooltipu. Titulek je v DOM samostatný sourozenec NAD řádkem → miniatura jde
    position:absolute vlevo + levý padding, ať titulek i název tečou vedle ní. Celá
    karta klikací přes stretched-link (a.fw-bold::after přes celou position:relative
-   kartu). Předpoklad jedna položka balení (jeden .block). */
+   kartu). Předpoklad jedna položka balení (jeden .block).
+   Pozici karty (POD tlačítkem do košíku) řeší `order` — viz níže. */
 
 #app.product-detail .additional-services-wrapper {
-  position: relative;                          /* kotva pro miniaturu i stretched-link */
+  position: relative;                          /* kotva pro miniaturu, cenu i stretched-link */
   margin: 1rem 0 .85rem !important;            /* přebít Bootstrap mt-4/mb-1 (!important utils) */
-  padding: 14px 16px 14px 76px;                /* levý padding = místo pro miniaturu (48 + okraje) */
+  padding: 14px 92px 14px 76px;                /* levý padding = miniatura (48 + okraje), pravý = cena */
   background: #f4f8ff;                          /* jemná modrá jako stará karta */
   border: 1.5px solid var(--pd-border-strong);
   border-radius: var(--pd-radius);
@@ -4356,11 +4357,33 @@ header .header-shop-basket-button .btn.btn-primary {
   color: var(--pd-text) !important;
 }
 
-/* Skrýt nativní add-to-cart prvky (přání: jen proklik).
-   Druhý .block2 (cena + „?") cílíme přes :has (už použito výše, ř. 100). */
+/* Skrýt nativní add-to-cart prvky (přání: jen proklik + cena). */
 #app.product-detail .additional_services_products input.product_additional_services,
-#app.product-detail .additional_services_products .block2:has(.additional-services-price-js) {
+#app.product-detail .additional_services_products a.bi-question-circle {
   display: none !important;
+}
+
+/* Cena balení („+ 359 Kč") — vpravo v kartě, svisle na střed proti dvěma
+   řádkům textu. Je to druhý .block2 (cílíme přes :has jako výše, ř. 100);
+   bez podpory :has() zůstane cena v toku pod názvem = bezpečná degradace. */
+#app.product-detail .additional_services_products .block2:has(.additional-services-price-js) {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0 !important;
+}
+#app.product-detail .additional-services-price-js {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--pd-blue);
+  white-space: nowrap;
+}
+
+/* Pozice karty: POD tlačítkem „Přidat do košíku" (košík má order 60 / mobil 10,
+   karta je v DOM před ním → bez tohoto by seděla nad ním). */
+#app.product-detail .product-right-content .product-price-and-cart-button > .additional-services-wrapper {
+  order: 65;
 }
 
 /* ==== Benefity 2×2 (obsah admin pole „Produktový detail") =========== */
@@ -4519,56 +4542,19 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   text-align: center;
   margin: 0 !important;
 }
-/* ---- Karty jako marquee pás (jako patička a HP) --------------------
-   Markup staví 40-product-detail.js: __marquee > __track > 2× __set.
-   Animace posouvá track o -50 %, což je přesně šířka jedné sady — proto
-   musí mít sada `padding-right` shodný s `gap`, jinak by se na spoji
-   ztratila mezera a karty by se slepily.
-   Hodnoty zrcadlí 27-hp-recenze.css, jen s užšími kartami: pás sedí
-   v levém sloupci detailu, ne přes celou stránku. */
-.vp-recenze--pd .vp-recenze__marquee {
-  overflow: hidden;
-  margin-top: 1rem;
-  /* karty vybíhají na krajích do ztracena */
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
-}
-.vp-recenze--pd .vp-recenze__track {
-  display: flex;
-  width: max-content;
-  animation: vp-pdrec-marquee 45s linear infinite;
-}
-.vp-recenze--pd .vp-recenze__marquee:hover .vp-recenze__track {
-  animation-play-state: paused;
-}
+/* ---- Karty staticky vedle sebe ------------------------------------
+   Na rozdíl od patičky a HP (marquee) je pás na detailu STATICKÝ — dle
+   návrhu 3 karty na desktopu, 2 na mobilu (třetí se skryje). Markup staví
+   40-product-detail.js: __pd-head + jedna __set se 3 kartami. */
 .vp-recenze--pd .vp-recenze__set {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: .7rem;
-  padding-right: .7rem;   /* = gap, kvůli bezešvému spoji sad */
+  margin-top: 1rem;
 }
 .vp-recenze--pd .vp-recenze__card {
   padding: .85rem .95rem 1rem;
-  width: 260px;
-  flex: 0 0 auto;
-}
-@keyframes vp-pdrec-marquee {
-  to { transform: translateX(-50%); }
-}
-
-/* Bez animace (systémové nastavení) je pás ručně scrollovatelný. */
-@media (prefers-reduced-motion: reduce) {
-  .vp-recenze--pd .vp-recenze__track {
-    animation: none;
-    width: auto;
-  }
-  .vp-recenze--pd .vp-recenze__set + .vp-recenze__set {
-    display: none;         /* duplikát sady je bez animace zbytečný */
-  }
-  .vp-recenze--pd .vp-recenze__marquee {
-    overflow-x: auto;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
+  width: auto;
 }
 .vp-recenze--pd .vp-recenze__quote {
   font-size: .82rem !important;
@@ -4728,8 +4714,9 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   vertical-align: top;
 }
 
-/* ==== YouTube preview (facade — tmavá karta + modro-žluté play tlačítko) ====
-   JS (40-product-detail.js › enhanceYoutube) nahradí nativní iframe facadem;
+/* ==== YouTube preview (facade — náhled z YT + modrý přeliv + play) ====
+   JS (40-product-detail.js › enhanceYoutube) nahradí nativní iframe facadem
+   a nasadí mu jako pozadí náhledový obrázek videa (img.youtube.com/…/hqdefault.jpg);
    skutečné video se načte až po kliknutí. Video (.yt-video) je MIMO
    #app.product-detail, kam tokeny --pd-* nedosáhnou → barvy literálně
    (stejně jako .pd-sticky-cta). .embed-responsive je position:relative
@@ -4752,9 +4739,28 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   padding: 0;
   border: 0;
   cursor: pointer;
-  background: #0e1b3d;                 /* tmavá navy jako mockup */
+  /* Náhled videa: obrázek nasazuje JS (background-image), tady jen rámec.
+     hqdefault je 480×360 (4:3) s černými pruhy — `cover` je ořízne. */
+  background-color: #0e1b3d;           /* tmavá navy, než se náhled načte */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+/* Modrý přeliv přes náhled (dřív plná navy plocha): brandová modrá nahoře,
+   navy dole — náhled prosvítá, tlačítko drží kontrast. */
+.yt-video .pd-yt-facade::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(19, 97, 207, .46), rgba(14, 27, 61, .62));
+  transition: opacity .15s ease;
+}
+.yt-video .pd-yt-facade:hover::before,
+.yt-video .pd-yt-facade:focus-visible::before {
+  opacity: .78;                        /* při najetí náhled prosvitne víc */
 }
 .yt-video .pd-yt-play {
+  position: relative;                  /* nad modrým přelivem (::before) */
   width: 66px;
   height: 66px;
   border-radius: 50%;
@@ -4786,6 +4792,9 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
 @media (min-width: 768px) and (max-width: 1199.98px) {
   .vp-recenze--pd .vp-recenze__cards { grid-template-columns: 1fr; }
   .vp-recenze--pd .vp-recenze__card { flex-direction: column; }
+  /* Pás recenzí: 3 karty by měly ~145 px (citace na 5 řádků) → radši 2, jako na mobilu */
+  .vp-recenze--pd .vp-recenze__set { grid-template-columns: repeat(2, 1fr); }
+  .vp-recenze--pd .vp-recenze__set > .vp-recenze__card:nth-child(n+3) { display: none; }
 }
 
 /* Mobil: rozpustit oba sloupce → jeden order-seznam
@@ -4810,6 +4819,7 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   #app.product-detail .product-right-content .product-price-and-cart-button > *,
   #app.product-detail .product-right-content > * { order: 10; }   /* košík + neznámé */
   #app.product-detail .content-product-detail > #primary_accessories { order: 8; }   /* karta nad velikostmi (9) */
+  #app.product-detail .product-right-content .product-price-and-cart-button > .additional-services-wrapper { order: 11; }  /* balení pod košíkem (10) */
   #app.product-detail .content-product-detail > ul { order: 12; }                     /* benefity */
   #app.product-detail .product-right-content > .short-description-anchor-div { order: 13; }
   #app.product-detail > figure.col-md-6 > .vp-recenze--pd { order: 20; }
@@ -4819,6 +4829,9 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   #app.product-detail .product-right-content > .tab-content { order: 31; }
 
   .vp-recenze--pd .vp-recenze__cards { grid-template-columns: 1fr; }
+  /* Recenzní pás: na mobilu 2 karty vedle sebe (dle návrhu), třetí pryč */
+  .vp-recenze--pd .vp-recenze__set { grid-template-columns: repeat(2, 1fr); }
+  .vp-recenze--pd .vp-recenze__set > .vp-recenze__card:nth-child(n+3) { display: none; }
   #app.product-detail .product-right-content > h1 { font-size: 1.4rem; }
 }
 
@@ -5492,17 +5505,20 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   transition: border-color .15s ease, color .15s ease;
 }
 
-/* Hover a vybraná velikost: nativně #c6dcff/#99b0d6 s !important */
-.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selectable:hover,
-.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selected {
+/* Hover: nativně #c6dcff/#99b0d6 s !important */
+.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selectable:hover {
   background: var(--pl-surface) !important;
   border-color: var(--pl-blue) !important;
   color: var(--pl-blue);
 }
 
-/* Vybraný chip navíc odlišit od hoveru (tlustší modrý rámeček) */
-.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selected {
-  box-shadow: inset 0 0 0 1px var(--pl-blue);
+/* Vybraná velikost = plná modrá, stejně jako chip na detailu
+   (24-product-detail.css → #variant-table-anchor .variant-row.active) */
+.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selected,
+.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selectable.variant-box-selected:hover {
+  background: var(--pl-blue) !important;
+  border-color: var(--pl-blue) !important;
+  color: #fff !important;
 }
 
 /* ==== Název (2 řádky přes JS spany .pc-*) =========================== */
@@ -5764,6 +5780,23 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
 .content > a.pc-show-all-hp:hover {
   background-color: #23843a;
   color: #fff !important;
+}
+
+/* ==== HP: obrazová plocha karet 1:1 ==================================
+   Šablona dává figure pevných 260 px výšky (template.css:1545), takže
+   poměr plochy určuje šířka karty — na HP z toho vychází ležatý obdélník
+   (~4:3) místo čtverce. Fixní výšku nahrazujeme poměrem; obrázek se do ní
+   vejde celý (contain). Scope body.homepage → platí pro doporučené bloky
+   i pro hlavní výpis „Všechny naše produkty" (aby byly stejné), výpis
+   kategorie zůstává na nativní výšce. */
+body.homepage .products .product figure {
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+body.homepage .products .product figure > img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 /* ==== Responzivita ================================================== */
@@ -6104,6 +6137,15 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   display: none;
 }
 
+/* ==== 4) Skrýt SEO blok „Nejlevnější …" pod výpisem ==================
+   Platforma pod stránkování většiny kategorií (i kořenového Katalogu)
+   sype `.product-similar-categories` — sloupec holých odkazů s ikonou
+   složky na `/c/<id>-…/price`. Vizuálně nezapadá a duplikuje navigaci.
+   Necháváme ho v DOM (odkazy zůstávají pro roboty), jen ho neukazujeme. */
+.product-similar-categories {
+  display: none;
+}
+
 /* ==== 26-listing-sort.css ==== */
 
 /* =====================================================================
@@ -6173,6 +6215,23 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   text-decoration: underline;
   text-underline-offset: 4px;
   text-decoration-thickness: 2px;
+}
+
+/* ==== Vyhledávání (body.body-search) ================================
+   Stránka výsledků hledání renderuje TÝŽ toolbar jinak než kategorie:
+   sloupec s roletkou má INLINE `position:relative; top:15px`, počet
+   položek má navíc .text-center a nad řádkem chybí odsazení od nadpisu
+   „Vyhledávání: …" → odkazy se lepí na nadpis i na první řadu karet.
+   Inline `top` jde přebít jen !important. */
+
+body.body-search .vp-sort-row {
+  margin: 1.25rem 0 .85rem;
+}
+body.body-search .vp-sort-row > .vp-sort-col {
+  top: 0 !important;                 /* nativní inline posun o 15 px dolů */
+}
+body.body-search .vp-sort-row .item-count-top {
+  text-align: left;                  /* nativní .text-center */
 }
 
 /* ==== Mobil (< 576 px) — počet nahoře vlevo, odkazy pod ním na střed === */

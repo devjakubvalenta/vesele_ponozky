@@ -94,7 +94,7 @@
     { text: "Ponožky z tohoto obchodu jsou opravdu velmi kvalitní, pružné a dobře „sedí\". Dodání zboží bylo velmi rychlé, za 2 dny od objednávky.", name: "Lenka" }
   ];
   var BADGES = [
-    { icon: ASSET.customers, num: "10 000+", label: "Spokojených zákazníků" },
+    { icon: ASSET.customers, num: "130 000+", label: "Spokojených zákazníků" },
     { icon: ASSET.rating, stars: true, label: "Průměrné hodnocení" },
     { icon: ASSET.trust, num: "97 %", label: "Doporučuje naše ponožky" }
   ];

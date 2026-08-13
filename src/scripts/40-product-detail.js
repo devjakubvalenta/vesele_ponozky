@@ -4,7 +4,8 @@
     2. klon slevového pillu „-46 %" do pravého sloupce (zdroj na obrázku je
        Vue v-if — klon se synchronizuje MutationObserverem),
     3. label „Množství" nad stepperem,
-    4. pojistka: zvýraznění data doručení, kdyby chyběl nativní span,
+    4. datum doručení — u neponožkového zboží „Zboží bude u vás" místo
+       nativního „Ponožky budou u vás"; + pojistka zvýraznění data,
     5. plovoucí „Přidat do košíku" na mobilu,
     6. taby → accordion pod galerií v levém sloupci (klasický: jedna otevřená
        naráz, po načtení `TAB_OPEN` = Složení) + statické sekce z `TAB_STATIC`
@@ -21,7 +22,9 @@
        ve STEJNÉM okně,
    10. „Zákazníci také nakupují" — nativní owl karusel s ochuzenými dlaždicemi
        přestavíme na STEJNÉ karty jako ve výpisu kategorie (vč. tlačítka
-       „Přidat do košíku") ve vlastním scroll-snap slideru se šipkami.
+       „Přidat do košíku") ve vlastním scroll-snap slideru se šipkami,
+   11. cena zůstává jednotková i při zvýšení množství (odpojení nativního
+       přepočtu `do_recalculate_price`).
 
   Vkládá se do: Administrace → Skripty → nová položka
      • Název: „Produktový detail (recenze, slevový pill, množství)"
@@ -52,7 +55,7 @@
   var STARS = "https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/hvezdicky-modre.svg";
   var AVATAR = FILES + "emoji_recenze.svg";
 
-  var TITLE = "Přes 500 tisíc prodaných párů";
+  var TITLE = "Přes 130 000 spokojených zákazníků";
   var REVIEWS = [
     { name: "Ondra",            quote: "„Vše v naprostém pořádku. Rychlost. Kvalita. Doporučuji." },
     { name: "Blanka",           quote: "„Rychlé dodání, skvělá komunikace, ochota a vstřícnost." },
@@ -124,27 +127,15 @@
     head.appendChild(stars);
     head.appendChild(h);
 
-    /* Karty jako nekonečný marquee pás — stejná struktura jako patička
-       (footer.js) a HP (src/content/homepage.html): track = 2 identické
-       sady, animace posune o translateX(-50%), tedy přesně o šířku jedné
-       sady → spoj je bezešvý. Druhá sada je jen vizuální duplikát, proto
-       aria-hidden. Animaci a fallback (ruční scroll) řeší CSS. */
-    var marquee = document.createElement("div");
-    marquee.className = "vp-recenze__marquee";
-    var track = document.createElement("div");
-    track.className = "vp-recenze__track";
-
-    for (var s = 0; s < 2; s++) {
-      var set = document.createElement("div");
-      set.className = "vp-recenze__set";
-      if (s === 1) set.setAttribute("aria-hidden", "true");
-      REVIEWS.forEach(function (r) { set.appendChild(reviewCard(r)); });
-      track.appendChild(set);
-    }
-    marquee.appendChild(track);
+    /* Karty staticky vedle sebe (dle návrhu): desktop 3, mobil 2 — žádný
+       marquee jako v patičce a na HP. Rozložení řeší CSS gridem nad
+       .vp-recenze--pd .vp-recenze__set, třetí karta se na mobilu skryje. */
+    var set = document.createElement("div");
+    set.className = "vp-recenze__set";
+    REVIEWS.forEach(function (r) { set.appendChild(reviewCard(r)); });
 
     wrap.appendChild(head);
-    wrap.appendChild(marquee);
+    wrap.appendChild(set);
     fig.appendChild(wrap);   // pozici (mezi obrázkem a mozaikou) řeší CSS order
   }
 
@@ -183,7 +174,32 @@
     wrapper.insertBefore(label, qty);
   }
 
-  /* == 4) Pojistka: zvýraznění data doručení =========================== */
+  /* == 4) Datum doručení: zvýraznění + text podle druhu zboží ==========
+     Platforma píše natvrdo „Ponožky budou u vás: 17.08." i u triček,
+     boxerek nebo dárkových setů. U neponožkového zboží text měníme na
+     „Zboží bude u vás:". Rozhodujeme podle názvu produktu (H1) — kategorii
+     na detailu spolehlivě k dispozici nemáme. Datum (span) zůstává. */
+
+  var SOCK_RE = /ponožk|podkolenk/i;
+
+  function fixDeliveryLabel(root) {
+    var dd = root.querySelector("p.delivery-date");
+    if (!dd) return;
+    var h1 = root.querySelector(".product-right-content h1") || root.querySelector("h1");
+    var name = h1 ? (h1.textContent || "") : "";
+    if (!name || SOCK_RE.test(name)) return;      // ponožky → nativní text sedí
+
+    var nodes = Array.prototype.slice.call(dd.childNodes);
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      if (node.nodeType !== 3) continue;          // jen textové uzly, span s datem neřešíme
+      if (node.nodeValue.indexOf("Ponožky budou u vás") === -1) continue;
+      node.nodeValue = node.nodeValue.replace("Ponožky budou u vás", "Zboží bude u vás");
+      break;
+    }
+  }
+
+  /* == 4b) Pojistka: zvýraznění data doručení ========================== */
 
   function ensureDeliveryDateSpan(root) {
     var dd = root.querySelector("p.delivery-date");
@@ -448,6 +464,11 @@
       facade.type = "button";
       facade.className = "pd-yt-facade";
       facade.setAttribute("aria-label", "Přehrát video");
+      /* Náhledový obrázek přímo z YouTube; modrý přeliv přes něj kreslí CSS
+         (.pd-yt-facade::before). hqdefault existuje u každého videa —
+         maxresdefault u starších ne a vrátil by šedou placeholder grafiku. */
+      facade.style.backgroundImage =
+        'url("https://img.youtube.com/vi/' + id + '/hqdefault.jpg")';
       var play = document.createElement("span");
       play.className = "pd-yt-play";
       facade.appendChild(play);
@@ -728,6 +749,55 @@
     alsoSyncNav(section);
   }
 
+  /* == 11) Cena zůstává jednotková i při změně množství =================
+     Platforma při změně množství pošle na server přepočet
+       POST /recalculate_price/<pid>/<qty>            (produkt bez variant)
+       POST /recalculate_price_variant/<pid>-<vid>/<qty>  (varianta)
+     a odpovědí přepíše cenu, takže místo ceny za kus svítí cena za celé
+     množství (i přeškrtnutá původní). Přání: cena zůstává jednotková.
+
+     Odpojit handler nestačí — u variant zapisuje cenu přímo Vue z odpovědi
+     (ověřeno živě: `$(document).off("do_recalculate_price")` i
+     `off("configurator_price_changed")` cenu nezastaví). Proto místo boje
+     o zápis měníme DOTAZ: množství v URL přepisujeme na 1, takže server
+     vrátí jednotkovou cenu a všechno ostatní (Vue, přeškrtnutá cena,
+     text slevy) zůstává konzistentní — žádné přepisování ani problikávání.
+     Do košíku jde množství z inputu, to se nemění.
+
+     Patchujeme XHR i fetch (nevíme, čím platforma request pošle) — jednou,
+     idempotentně. */
+
+  var QTY_URL_RE = /(\/recalculate_price(?:_variant)?\/[^/?#]+\/)\d+/;
+
+  function freezeQtyInUrl(url) {
+    return typeof url === "string" ? url.replace(QTY_URL_RE, "$11") : url;
+  }
+
+  function freezeUnitPrice() {
+    if (window.__vpUnitPriceFrozen) return;
+    window.__vpUnitPriceFrozen = true;
+
+    var open = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function () {
+      var args = Array.prototype.slice.call(arguments);
+      args[1] = freezeQtyInUrl(args[1]);
+      return open.apply(this, args);
+    };
+
+    if (typeof window.fetch === "function") {
+      var fetch0 = window.fetch;
+      window.fetch = function (input, init) {
+        if (typeof input === "string") {
+          input = freezeQtyInUrl(input);
+        } else if (input && typeof input.url === "string" && typeof Request === "function") {
+          var frozen = freezeQtyInUrl(input.url);
+          if (frozen !== input.url) input = new Request(frozen, input);
+        }
+        return fetch0.call(this, input, init);
+      };
+    }
+  }
+
   /* == Orchestrace ===================================================== */
 
   function runAll() {
@@ -736,7 +806,9 @@
     injectReviews(root);
     syncDiscountPill(root);
     injectQtyLabel(root);
+    fixDeliveryLabel(root);
     ensureDeliveryDateSpan(root);
+    freezeUnitPrice();
     ensureStickyCta(root);
     buildTabsAccordion(root);
     enhanceYoutube();

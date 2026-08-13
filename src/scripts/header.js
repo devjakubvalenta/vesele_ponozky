@@ -1,4 +1,6 @@
 /* Hlavička — Heureka odznak + zákaznická linka s fotkou + vlastní ikona košíku.
+   Navíc plošná pojistka: přepis absolutních URL na technickou doménu
+   (www.exitshop.cz) na cesty od kořene — viz `localizeUrl` níže.
    Vkládá se 1× do Administrace → Skripty jako:
      <script src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@<hash>/src/scripts/header.js"></script>
    (Na všech stránkách; patička/Head je jedno — má DOM-ready guard.)
@@ -197,7 +199,59 @@
     }
   }
 
+  /* == Pojistka: URL s technickou doménou → cesta od kořene =============
+     Obsah vkládaný přes WYSIWYG v administraci si nese absolutní odkazy na
+     www.exitshop.cz — editor cesty zabsolutizuje doménou, na které se zrovna
+     edituje. Na produkci pak USP dlaždice a obrázky odvedou zákazníka na
+     technickou adresu shopu („starý eshop"). Přepisujeme je za běhu:
+       …exitshop.cz/shops/28056/cms/60954-x → /cms/60954-x  (na testu /shops/28056/cms/…)
+       …exitshop.cz/files/310/…             → /files/310/…  (stejná cesta na obou)
+     Odkaz na samotný exitshop.cz (kredit platformy v patičce) se NEMĚNÍ.
+     Řeší jen symptom — správně je opravit obsah v administraci; zdroje jsou
+     v src/content/*.html a vkládají se ve zdrojovém režimu (</>). */
+
+  var TECH_RE = /^https?:\/\/(?:www\.)?exitshop\.cz/i;
+  var SHOP_BASE = (location.pathname.match(/^\/shops\/\d+/) || [""])[0];
+
+  function localizeUrl(url) {
+    if (!url || !TECH_RE.test(url)) return null;
+    var path = url.replace(TECH_RE, "");
+    if (path.indexOf("/files/") === 0) return path;      // média: shodná cesta na obou doménách
+    var m = path.match(/^\/shops\/\d+(\/.*)?$/);
+    if (m) return SHOP_BASE + (m[1] || "/");
+    return null;                                          // kredit platformy — nechat být
+  }
+
+  function fixTechDomainUrls() {
+    var nodes = document.querySelectorAll(
+      'a[href*="exitshop.cz"], img[src*="exitshop.cz"]'
+    );
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      var attr = el.tagName === "IMG" ? "src" : "href";
+      var next = localizeUrl(el.getAttribute(attr));
+      if (next) el.setAttribute(attr, next);
+    }
+  }
+
+  /* Obsah dochází i po DOM-ready (Vue na detailu, AJAX filtrace ve výpisu),
+     proto ještě sledovat DOM — přepis je levný a spouští se zhuštěně. */
+  function watchTechDomainUrls() {
+    if (!("MutationObserver" in window)) return;
+    var pending = null;
+    new MutationObserver(function () {
+      if (pending) return;
+      pending = setTimeout(function () {
+        pending = null;
+        fixTechDomainUrls();
+      }, 100);
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+
   function init() {
+    fixTechDomainUrls();      // běží na všech stránkách, i tam kde není hlavička
+    watchTechDomainUrls();
+
     var middleRow = document.querySelector("header .header-middle .menu-gutters");
     if (!middleRow) middleRow = document.querySelector("header .header-middle .row");
     if (!middleRow) return; // není hlavička

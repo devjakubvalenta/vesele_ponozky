@@ -95,3 +95,12 @@
 .children_categories:not(:has(img)) {
   display: none;
 }
+
+/* ==== 4) Skrýt SEO blok „Nejlevnější …" pod výpisem ==================
+   Platforma pod stránkování většiny kategorií (i kořenového Katalogu)
+   sype `.product-similar-categories` — sloupec holých odkazů s ikonou
+   složky na `/c/<id>-…/price`. Vizuálně nezapadá a duplikuje navigaci.
+   Necháváme ho v DOM (odkazy zůstávají pro roboty), jen ho neukazujeme. */
+.product-similar-categories {
+  display: none;
+}

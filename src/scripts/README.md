@@ -113,6 +113,16 @@ kliknutí. Aktivní volba (`<option selected>`) dostane `.is-active`
 Idempotentní; mimo výpisy (chybí `select.sorting`) neudělá nic;
 MutationObserver zpracuje i toolbar překreslený AJAX filtrováním v kategorii.
 
+Navíc řeší **výchozí řazení kategorií v `PRICE_FIRST`** (teď jen Výprodej
+1243142), které administrace nastavit neumí: holá URL kategorie se hned
+překlopí (`location.replace`) na `…/price` a odkazy na tu kategorii (menu, HP,
+„Zobrazit vše") se přepíšou rovnou na `/price`, ať se redirect používá jen pro
+vstupy zvenčí. **Návrat na „Nejprodávanější" nejde přes `…/sales`** — ta URL
+301 přesměruje na holou a ta by se překlopila zpět; proto odkaz míří na holou
+URL s markerem `?vp-sort=sales`, který platforma ignoruje (200 + řazení dle
+prodejnosti) a redirect ho bere jako vědomou volbu. Stránkování má vlastní
+segment (`/price/24`, `/sales/24`), takže se ho redirect netýká.
+
 ## Co dělá `36-filter.js`
 
 Řídí **výchozí stav filtru** ve výpisu kategorie podle šířky displeje:
@@ -145,6 +155,16 @@ dropdown fungovat dál) — klik zachytíme v **capture fázi** na odkazu a zavo
 `document` vůbec nedostane a prohlížeč normálně následuje `href`. Šířka se
 kontroluje až uvnitř handleru, takže to sedí i po otočení displeje.
 
+A ještě jedna **plošná pojistka** (běží na všech stránkách, i tam kde není
+hlavička): obsah vložený v adminu přes WYSIWYG si nese absolutní URL na
+`www.exitshop.cz` (editor cesty zabsolutizuje doménou, na které se edituje) —
+na produkci pak USP dlaždice a ikony odvádějí zákazníka na technickou adresu.
+`localizeUrl()` je za běhu přepíše na cesty od kořene
+(`…/shops/28056/cms/60954-x` → `/cms/60954-x`, `…/files/…` → `/files/…`);
+odkaz na samotný `exitshop.cz` (kredit platformy v patičce) zůstává. MutationObserver
+pokrývá i obsah dorenderovaný později. **Správná oprava je obsah v administraci** —
+zdroje jsou v `src/content/*.html` a vkládají se ve zdrojovém režimu (`</>`).
+
 ## Co dělá `hp-categories.js`
 
 Nativní HP sekci „Titulek a kategorie" (`.category-circle-section`, renderuje
@@ -164,16 +184,31 @@ swipe dodává CSS scroll-snap v `28-hp-kategorie.css` — šablonová třída
 
 Doplňky k CSS redesignu detailu (`src/css/24-product-detail.css`, scope
 `#app.product-detail`): (1) pod hlavní obrázek vloží pás recenzí
-`.vp-recenze--pd` („Přes 500 tisíc prodaných párů" + 3 karty — reuse
-komponenty z `95-recenze.css`); (2) klonuje slevový pill „-46 %" do
+`.vp-recenze--pd` („Přes 130 000 spokojených zákazníků" + 3 karty **staticky
+vedle sebe**, na mobilu 2 — reuse komponenty z `95-recenze.css`; není to
+marquee jako v patičce a na HP); (2) klonuje slevový pill „-46 %" do
 pravého sloupce (`.pd-discount-pill`) a synchronizuje ho MutationObserverem
 se zdrojem na obrázku (Vue v-if — mizí/mění se při přepnutí varianty);
-(3) vloží label „Množství" (`.pd-qty-label`) nad stepper; (4) pojistka na
-zvýraznění data doručení; (5) blok **„Zákazníci také nakupují"** přestaví
-z nativního owl karuselu na **stejné karty jako ve výpisu kategorie**
-(viz níže). Nic nepřesouvá (Vue-safe, pořadí řeší CSS flex
-order) a respektuje zámek z `10-force-variant-selection.html`
-(`variant-selection-required` → bílé chipy + ztlumené CTA). Idempotentní.
+(3) vloží label „Množství" (`.pd-qty-label`) nad stepper; (4) u neponožkového
+zboží přepíše „Ponožky budou u vás" na „Zboží bude u vás" (rozhoduje název
+v H1) + pojistka na zvýraznění data doručení; (5) blok **„Zákazníci také
+nakupují"** přestaví z nativního owl karuselu na **stejné karty jako ve výpisu
+kategorie** (viz níže); (6) do YouTube facade nasadí náhledový obrázek videa
+(`img.youtube.com/vi/<id>/hqdefault.jpg`, modrý přeliv kreslí CSS);
+(7) **drží jednotkovou cenu** i při zvýšení množství (viz níže).
+Nic nepřesouvá (Vue-safe, pořadí řeší CSS flex order) a respektuje zámek
+z `10-force-variant-selection.html` (`variant-selection-required` → bílé chipy
++ ztlumené CTA). Idempotentní.
+
+> **Jednotková cena vs. množství.** Platforma při změně množství pošle
+> `POST /recalculate_price/<pid>/<qty>` (bez variant), resp.
+> `POST /recalculate_price_variant/<pid>-<vid>/<qty>`, a odpovědí přepíše cenu
+> na cenu za celé množství. Odpojit handler **nestačí** — u variant zapisuje
+> cenu přímo Vue z odpovědi (ověřeno živě: `off("do_recalculate_price")`
+> i `off("configurator_price_changed")` cenu nezastaví). Proto se nemění zápis,
+> ale **dotaz**: patch `XMLHttpRequest.open` + `fetch` přepíše množství v URL
+> na `1`, takže server vrátí jednotkovou cenu a Vue, přeškrtnutá cena i text
+> slevy zůstanou konzistentní. Do košíku jde množství z inputu, to se nemění.
 
 > **„Zákazníci také nakupují" (`.vp-also`).** Nativně je to
 > `section#products_category.itembox` — owl karusel s ochuzenou dlaždicí

@@ -234,17 +234,20 @@
   transition: border-color .15s ease, color .15s ease;
 }
 
-/* Hover a vybraná velikost: nativně #c6dcff/#99b0d6 s !important */
-.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selectable:hover,
-.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selected {
+/* Hover: nativně #c6dcff/#99b0d6 s !important */
+.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selectable:hover {
   background: var(--pl-surface) !important;
   border-color: var(--pl-blue) !important;
   color: var(--pl-blue);
 }
 
-/* Vybraný chip navíc odlišit od hoveru (tlustší modrý rámeček) */
-.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selected {
-  box-shadow: inset 0 0 0 1px var(--pl-blue);
+/* Vybraná velikost = plná modrá, stejně jako chip na detailu
+   (24-product-detail.css → #variant-table-anchor .variant-row.active) */
+.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selected,
+.products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-selectable.variant-box-selected:hover {
+  background: var(--pl-blue) !important;
+  border-color: var(--pl-blue) !important;
+  color: #fff !important;
 }
 
 /* ==== Název (2 řádky přes JS spany .pc-*) =========================== */
@@ -506,6 +509,23 @@
 .content > a.pc-show-all-hp:hover {
   background-color: #23843a;
   color: #fff !important;
+}
+
+/* ==== HP: obrazová plocha karet 1:1 ==================================
+   Šablona dává figure pevných 260 px výšky (template.css:1545), takže
+   poměr plochy určuje šířka karty — na HP z toho vychází ležatý obdélník
+   (~4:3) místo čtverce. Fixní výšku nahrazujeme poměrem; obrázek se do ní
+   vejde celý (contain). Scope body.homepage → platí pro doporučené bloky
+   i pro hlavní výpis „Všechny naše produkty" (aby byly stejné), výpis
+   kategorie zůstává na nativní výšce. */
+body.homepage .products .product figure {
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+body.homepage .products .product figure > img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 /* ==== Responzivita ================================================== */

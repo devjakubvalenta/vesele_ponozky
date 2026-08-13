@@ -9,7 +9,13 @@
   dlaždici přes :nth-child(4) — pořadí položek zachovat.
 
   Ikony = sdílené ikony1–4.svg (stejné jako HP benefits pás).
-  Pozn.: mockup uvádí „97 %" — HP pás říká 99 %; sjednotit dle reality.
+  Čísla („97 %", 130 000+) drží jednotně i HP pás, CMS Recenze a patička —
+  při změně upravit VŠECHNA místa: src/content/homepage.html,
+  src/content/recenze.html, src/scripts/footer.js, src/scripts/header.js.
+
+  ⚠️ Vkládat ve ZDROJOVÉM režimu (</>). WYSIWYG editor jinak přepíše
+  relativní cesty (/cms/…, /files/…) na absolutní s doménou, na které se
+  zrovna edituje — a zákazník z produkce odejde na exitshop.cz.
 
   NAHOŘE navíc placeholder %primary_accessories% = nativní blok „Příslušenství"
   (napárovaný produkt) → karta „Výhodné balení". Renderuje section#primary_accessories.itembox
