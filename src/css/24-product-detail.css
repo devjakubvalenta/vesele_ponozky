@@ -1112,6 +1112,38 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
 #app.product-detail .pd-accordion__content h4,
 #app.product-detail .pd-accordion__content strong { color: var(--pd-text); }
 #app.product-detail .pd-accordion__content ul { margin: .5rem 0; padding-left: 1.2rem; }
+
+/* Seznam dopravy v sekci „Doprava a vrácení" (markup staví 40-product-detail.js
+   z pole SHIPPING). Stejný jazyk jako seznam metod na stránce Doprava a platba
+   (85-doprava.css): název vlevo, pod ním modrá hranice dopravy zdarma,
+   cena vpravo. */
+#app.product-detail .pd-ship__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .6rem 0;
+  border-top: 1px solid var(--pd-border);
+}
+#app.product-detail .pd-ship__row:first-child { border-top: 0; padding-top: 0; }
+#app.product-detail .pd-ship__name {
+  min-width: 0;
+  font-weight: 600;
+  color: var(--pd-text);
+}
+#app.product-detail .pd-ship__note {
+  display: block;
+  font-size: .8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--pd-blue);
+}
+#app.product-detail .pd-ship__price {
+  flex: 0 0 auto;
+  font-weight: 800;
+  color: var(--pd-text);
+  white-space: nowrap;
+}
 #app.product-detail .pd-accordion__content table { width: 100%; border-collapse: collapse; }
 #app.product-detail .pd-accordion__content table td,
 #app.product-detail .pd-accordion__content table th {
@@ -1272,4 +1304,125 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   width: 14px;
   height: 14px;
   margin: 0;
+}
+
+/* ==== „Zákazníci také nakupují" (přestavuje 40-product-detail.js) =====
+   Nativní blok #products_category.itembox (owl karusel s ochuzenou dlaždicí)
+   nahrazuje JS sekcí .vp-also — titulek + šipky v hlavičce a scroll-snap
+   slider s KARTAMI Z VÝPISU (.products .product). Vzhled karty tedy CELÝ
+   dědíme z 25-products.css; tady je jen rám sekce, slider a šipky.
+
+   Sekce žije MIMO #app.product-detail (nativní blok sedí v .content >
+   section.row-fluid.product_footer), takže tokeny --pd-* sem nedosáhnou —
+   proto vlastní --vpa-*. Hodnoty = stejná paleta jako --pl-* / --pd-*.
+
+   Počet karet na obrazovku (--vpa-per) zrcadlí původní žebřík owlu
+   (992+ = 5, 576–991 = 3, pod 576 = 2), takže hustota bloku zůstává.
+   Karty nesou p-view-mob-two_column → pod 768 px mají stejně nízkou
+   fotku a menší tlačítko jako 2sloupcový výpis kategorie. */
+
+.vp-also {
+  --vpa-per: 5;                  /* karet na obrazovku */
+  --vpa-gap: 16px;
+  --vpa-text: #0f172a;
+  --vpa-blue: #1361cf;
+  --vpa-border: #cdd5e4;
+  margin: 2.5rem 0 1rem;
+}
+
+.vp-also__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .9rem;
+}
+
+.vp-also__title {
+  margin: 0;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--vpa-text);
+}
+
+.vp-also__nav {
+  display: flex;
+  flex: 0 0 auto;
+  gap: .5rem;
+}
+
+/* vejde se všechno → není co posouvat */
+.vp-also.is-static .vp-also__nav {
+  display: none;
+}
+
+.vp-also__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  background: #fff;
+  border: 1px solid var(--vpa-border);
+  border-radius: 999px;
+  color: var(--vpa-text);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color .15s ease, color .15s ease, opacity .15s ease;
+}
+
+.vp-also__arrow:hover:not(:disabled) {
+  border-color: var(--vpa-blue);
+  color: var(--vpa-blue);
+}
+
+.vp-also__arrow:disabled {
+  opacity: .35;
+  cursor: default;
+}
+
+/* Slider. Scrollbar schováváme (posouvá se šipkami a swipem) — stejný
+   princip jako mobilní slidery na HP (25-products.css, 28-hp-kategorie.css). */
+.vp-also__viewport {
+  display: flex;
+  gap: var(--vpa-gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  margin: 0;                     /* šablona: .products margin 10px 0 */
+  padding: 0 0 .5rem;            /* šablona: .products padding .2em 0 */
+  scrollbar-width: none;         /* Firefox */
+}
+.vp-also__viewport::-webkit-scrollbar { display: none; }   /* WebKit */
+
+/* Selektor musí být SPECIFIČTĚJŠÍ než šablonové `.products .product`
+   (0,2,0) — samotné `.vp-also__card` (0,1,0) prohraje a kartě zůstane
+   šablonový gutter `padding:.5em`, kterým se karta zúží o 16 px
+   (tlačítko „Přidat do košíku" se pak na mobilu nevejde na řádek). */
+.vp-also .vp-also__viewport > .product {
+  flex: 0 0 calc((100% - (var(--vpa-per) - 1) * var(--vpa-gap)) / var(--vpa-per));
+  max-width: calc((100% - (var(--vpa-per) - 1) * var(--vpa-gap)) / var(--vpa-per));
+  margin: 0;                     /* šablona: .products .product margin-bottom 1.5em */
+  padding: 0;                    /* šablona: .products .product padding .5em = gutter → tady dělá mezeru gap */
+  scroll-snap-align: start;
+}
+
+@media (max-width: 991.98px) {
+  .vp-also { --vpa-per: 3; }
+}
+
+@media (max-width: 575.98px) {
+  .vp-also {
+    --vpa-per: 2;
+    --vpa-gap: 12px;
+    margin: 2rem 0 .5rem;
+  }
+  .vp-also__arrow { width: 34px; height: 34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vp-also__viewport { scroll-behavior: auto; }
 }

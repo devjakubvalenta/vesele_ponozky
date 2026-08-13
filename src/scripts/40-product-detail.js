@@ -6,11 +6,10 @@
     3. label „Množství" nad stepperem,
     4. pojistka: zvýraznění data doručení, kdyby chyběl nativní span,
     5. plovoucí „Přidat do košíku" na mobilu,
-    6. taby (Popis/Parametry/…) → accordion pod galerií v levém sloupci
-       (klasický: jedna otevřená naráz, defaultně všechny zavřené; nové
-       ouško = automaticky další položka) + statické sekce z `TAB_STATIC`
-       (Materiál a péče, Doprava a vrácení, Časté dotazy, Hodnocení) —
-       TEXTY SE DOPLŇUJÍ TAM, pořadí řídí `TAB_ORDER`,
+    6. taby → accordion pod galerií v levém sloupci (klasický: jedna otevřená
+       naráz, po načtení `TAB_OPEN` = Složení) + statické sekce z `TAB_STATIC`
+       (Materiál a péče, Doprava a vrácení, Časté dotazy) — TEXTY SE DOPLŇUJÍ
+       TAM, pořadí řídí `TAB_ORDER`, `TAB_HIDE` schová nechtěná nativní ouška,
     7. YouTube preview → tmavá karta s vlastním play tlačítkem (facade;
        skutečný iframe až po kliknutí),
     8. sticky offset pravého sloupce — negativní `top` (CSS proměnná
@@ -19,7 +18,10 @@
        doscrolluje; přepočet při změně výšky sloupce i viewportu,
     9. „Zvýhodněné balení" (additional-services) — nativní odkaz na set má
        target="_blank"; sundáme ho, ať klikací karta (styl v CSS) otevírá set
-       ve STEJNÉM okně.
+       ve STEJNÉM okně,
+   10. „Zákazníci také nakupují" — nativní owl karusel s ochuzenými dlaždicemi
+       přestavíme na STEJNÉ karty jako ve výpisu kategorie (vč. tlačítka
+       „Přidat do košíku") ve vlastním scroll-snap slideru se šipkami.
 
   Vkládá se do: Administrace → Skripty → nová položka
      • Název: „Produktový detail (recenze, slevový pill, množství)"
@@ -270,7 +272,7 @@
 
   /* == 6) Taby (Popis/Parametry/…) → accordion pod galerií ============= */
   /* Z oušek .nav-tabs + panelů .tab-content postaví klasický accordion
-     (otevřená vždy jen JEDNA sekce, defaultně VŠECHNY zavřené), vloží ho na konec
+     (otevřená vždy jen JEDNA sekce, po načtení `TAB_OPEN`), vloží ho na konec
      levého sloupce (pod galerii) a originální taby skryje. Iterujeme přes
      ouška → nové ouško = automaticky další rozklikávací položka. Obsah panelu
      KLONUJEME (taby nemají data-v = needitují se s variantou), originál držíme
@@ -283,29 +285,56 @@
   // stát v accordionu. (Nativní název se dá změnit i v administraci; tady je to
   // jen proto, aby se text nemusel hlídat na dvou místech.)
   var TAB_RENAME = {
-    "Popis": "Popis a složení"
+    "Popis": "Složení"
   };
 
+  // Nativní ouška, která do accordionu NEPATŘÍ (obsah zůstane skrytý v tabech).
+  var TAB_HIDE = ["Parametry"];
+
+  // Sekce otevřená po načtení stránky; accordion jinak startuje celý zavřený.
+  var TAB_OPEN = "Složení";
+
+  // Doprava — stejné metody, ceny a hranice dopravy zdarma, jaké zákazník
+  // uvidí v košíku (ověřeno na /cart). PŘI ZMĚNĚ V ADMINISTRACI UPRAVIT I TADY
+  // (a taky v src/content/doprava.html, kde je stejný seznam).
+  var SHIPPING = [
+    { name: "Balíkovna na výdejní místa", note: "Zdarma nad 999 Kč", price: "79 Kč" },
+    { name: "Zásilkovna – výdejní místa a boxy", note: "Zdarma nad 999 Kč", price: "69 Kč" },
+    { name: "Alzaboxy a výdejní místa PPL", note: "Zdarma nad 999 Kč", price: "79 Kč" },
+    { name: "Balíkovna – doručení domů", note: "Zdarma nad 1 499 Kč", price: "119 Kč" },
+    { name: "PPL – doručení domů", note: "Zdarma nad 1 499 Kč", price: "129 Kč" }
+  ];
+
+  function shippingHtml() {
+    var rows = SHIPPING.map(function (s) {
+      return (
+        '<div class="pd-ship__row">' +
+        '<div class="pd-ship__name">' + s.name +
+        '<span class="pd-ship__note">' + s.note + "</span></div>" +
+        '<div class="pd-ship__price">' + s.price + "</div>" +
+        "</div>"
+      );
+    });
+    return '<div class="pd-ship">' + rows.join("") + "</div>";
+  }
+
   // Statické sekce accordionu — stejné u všech produktů.
-  // `html` je zatím prázdné = sekce se vykreslí a jde rozkliknout, jen nemá
-  // obsah. AŽ DORAZÍ TEXTY, stačí je vepsat sem (HTML: <p>, <ul>, <strong>…)
+  // Prázdné `html` = sekce se vykreslí a jde rozkliknout, jen zatím nemá obsah.
+  // AŽ DORAZÍ TEXTY, stačí je vepsat sem (HTML: <p>, <ul>, <strong>…)
   // a bumpnout hash skriptu v admin položce „Produktový detail".
   var TAB_STATIC = [
     { label: "Materiál a péče", html: "" },
-    { label: "Doprava a vrácení", html: "" },
-    { label: "Časté dotazy", html: "" },
-    { label: "Hodnocení", html: "" }
+    { label: "Doprava a vrácení", html: shippingHtml() },
+    { label: "Časté dotazy", html: "" }
   ];
 
   // Pořadí sekcí. Co v seznamu není (třeba nový nativní tab z administrace),
   // se zařadí na konec v původním pořadí — nic se nikdy neztratí.
   var TAB_ORDER = [
-    "Popis a složení",
+    "Složení",
     "Materiál a péče",
     "Doprava a vrácení",
-    "Časté dotazy",
-    "Hodnocení",
-    "Parametry"
+    "Časté dotazy"
   ];
 
   function buildTabsAccordion(root) {
@@ -326,6 +355,7 @@
         var pane = sel && sel.charAt(0) === "#" ? tc.querySelector(sel) : null;
         var label = (link.textContent || "").trim();
         if (!pane || !label || !(pane.innerHTML || "").trim()) return;  // prázdný nativní panel přeskočit
+        if (TAB_HIDE.indexOf(label) !== -1) return;                     // ouško, které do accordionu nechceme
         sections.push({ label: TAB_RENAME[label] || label, html: pane.innerHTML });
       });
       TAB_STATIC.forEach(function (t) {
@@ -348,8 +378,9 @@
 
       sections.forEach(function (sec) {
         var item = document.createElement("div");
-        item.className = "pd-accordion__item";          // defaultně VŠECHNY zavřené
-        if (!sec.html.trim()) item.classList.add("is-empty");   // sekce čekající na text
+        item.className = "pd-accordion__item";
+        if (sec.label === TAB_OPEN) item.classList.add("is-open");  // otevřená po načtení
+        if (!sec.html.trim()) item.classList.add("is-empty");       // sekce čekající na text
 
         var head = document.createElement("button");
         head.type = "button";
@@ -489,43 +520,212 @@
     for (var i = 0; i < links.length; i++) links[i].removeAttribute("target");
   }
 
-  /* == 10) Karusel „Zákazníci také nakupují" — počet karet podle šířky ===
-     Owl dostane od platformy `items` JEN při inicializaci a `responsive` mapu
-     má prázdnou, takže po změně šířky počet karet nepřepočítá. Když se stránka
-     načte široká a pak se zúží (otočení displeje, změna velikosti okna),
-     zůstane 5 karet i ve sloupci širokém 351 px → z karet jsou 70px nudličky
-     s uříznutým názvem. Dáme owlu vlastní žebřík a po resize zavoláme
-     `refresh.owl.carousel`, který přepočítá `settings` i šířky.
+  /* == 10) „Zákazníci také nakupují" → karty jako ve výpisu kategorie ====
+     Nativně je blok `#products_category.itembox` owl karusel s ochuzenou
+     dlaždicí (obrázek + název + cena, bez košíku). Přestavíme ho na STEJNÉ
+     karty jako ve výpisu (`.products .product`, styl 25-products.css)
+     v našem scroll-snap slideru (styl `.vp-also` v 24-product-detail.css).
 
-     Do 576 px jsou 2 karty (zadání), výš zůstává platformní rozdělení
-     (576–991 = 3, od 992 = 5), takže se na desktopu nic nemění.
+     PROČ PŘESTAVBA A NE RESTYL OWLU: šablona má
+     `.itembox .itembox-content * { padding: 0 !important }` — kartě uvnitř
+     karuselu by to vynulovalo VŠECHNY paddingy (tlačítko, pilulky, obsah).
+     Postavit karty mimo `.itembox` je levnější než přebíjet každý padding,
+     a navíc odpadá boj s inline šířkami, které owl sype do `.owl-item`.
+
+     CO DLAŽDICE NEMÁ (a karta to proto nemá také): přeškrtnutá původní cena,
+     datum doručení a chipy velikostí — platforma je do tohoto bloku
+     nerenderuje. Dopočítat starou cenu z procenta slevy nejde (procento je
+     zaokrouhlené → hrozí zobrazení nesprávné „původní ceny“), dotáhnout data
+     ze serveru by znamenalo 10 requestů na detail produktu.
+
+     TLAČÍTKO je přesně ten prvek, který má karta ve výpisu:
+     `.add-to-cart-js-variants` + `data-url`. Delegovaný handler šablony
+     (FrontendEshop.js) na klik udělá `location.href = data-url`, tedy proklik
+     na detail k výběru velikosti. Ve výpisu kategorie mají tenhle tvar
+     všechny karty (sortiment je variantní), takže se chová identicky.
+
      Blok NENÍ uvnitř #app.product-detail — sedí v section.row-fluid
      .product_footer, proto se hledá přes document. */
 
-  var OWL_ITEMS = [
-    { min: 992, items: 5 },
-    { min: 576, items: 3 },
-    { min: 0, items: 2 }
-  ];
+  var ALSO_TITLE = "Zákazníci také nakupují";   // fallback, když h2 chybí
+  var ALSO_CTA = "Přidat do košíku";
+  var alsoState = { section: null };
 
-  function owlItemsFor(w) {
-    for (var i = 0; i < OWL_ITEMS.length; i++) {
-      if (w >= OWL_ITEMS[i].min) return OWL_ITEMS[i].items;
+  function alsoCard(item) {
+    var link = item.querySelector("a.product_name") || item.querySelector("a[href]");
+    if (!link) return null;
+    var href = link.getAttribute("href") || "";
+    var name = (link.textContent || "").replace(/\s+/g, " ").trim();
+    if (!href || !name) return null;
+
+    var card = document.createElement("a");
+    card.href = href;
+    /* p-view-mob-two_column = mobilní režim výpisu (šablona: nižší figure;
+       25-products.css: menší tlačítko) — slider ukazuje na mobilu taky 2 karty */
+    card.className = "product p-view-mob-two_column vp-also__card";
+
+    var border = document.createElement("div");
+    border.className = "product-border";
+
+    var fig = document.createElement("figure");
+    var src = item.querySelector("img");
+    if (src) {
+      var img = document.createElement("img");
+      img.src = src.getAttribute("src") || "";
+      img.alt = name;
+      img.loading = "lazy";
+      fig.appendChild(img);
     }
-    return 2;
+
+    /* Slevový badge je v dlaždici uvnitř .itembox-strips, na kartě patří do
+       figure. Inline style = přesně jak ho renderuje výpis (25-products.css ho
+       pak přebíjí do pravého horního rohu), ať se karty chovají stejně. */
+    var disc = item.querySelector(".itembox-strips .discount-percentage");
+    if (disc) {
+      var badge = document.createElement("div");
+      badge.className = "discount-percentage d-flex align-self-start align-items-center justify-content-center";
+      badge.setAttribute("style", "position:absolute;right:10px;bottom:0;");
+      badge.textContent = (disc.textContent || "").replace(/\s+/g, " ").trim();
+      fig.appendChild(badge);
+    }
+
+    var text = document.createElement("div");
+    text.className = "product-text-content";
+
+    /* Kontejner štítků: „V KOŠÍKU“ do něj doplní 30-product-cards.js (jeho
+       MutationObserver reaguje na přidané .product), admin stripy typu NOVINKA
+       přeneseme z dlaždice. Prázdný kontejner CSS skryje. */
+    var stripes = document.createElement("div");
+    stripes.className = "product-stripes product-stripes-on-list flags";
+    var strips = item.querySelectorAll(".itembox-strips > *");
+    Array.prototype.forEach.call(strips, function (s) {
+      if (s.classList.contains("discount-strip")) return;   // slevu už máme ve figure
+      stripes.appendChild(s.cloneNode(true));
+    });
+    text.appendChild(stripes);
+
+    var content = document.createElement("div");
+    content.className = "product-content";
+    var h2 = document.createElement("h2");
+    h2.textContent = name;             // na 2 řádky rozdělí 30-product-cards.js
+    content.appendChild(h2);
+    text.appendChild(content);
+
+    var footer = document.createElement("div");
+    footer.className = "product-footer";
+
+    var priceBox = document.createElement("div");
+    priceBox.className = "product-price flex-grow-1";
+    var priceSrc = item.querySelector(".itembox-price");
+    if (priceSrc) {
+      var our = document.createElement("span");
+      our.className = "product-price-our";
+      our.appendChild(document.createTextNode((priceSrc.textContent || "").trim() + " "));
+      var cur = document.createElement("span");
+      cur.className = "product-price-currency";
+      var curSrc = item.querySelector(".itembox-currency");
+      cur.textContent = curSrc ? (curSrc.textContent || "").trim() : "Kč";
+      our.appendChild(cur);
+      priceBox.appendChild(our);
+    }
+    footer.appendChild(priceBox);
+
+    var group = document.createElement("div");
+    group.className = "add-to-cart-group";
+    var btn = document.createElement("div");
+    btn.className = "product-add-to-shopping-basket sprite-after add-to-cart-js-variants btn btn-primary";
+    btn.setAttribute("data-url", href);
+    var label = document.createElement("span");
+    label.className = "shopping-basket-icon show_variant_button";
+    label.textContent = ALSO_CTA;
+    btn.appendChild(label);
+    group.appendChild(btn);
+    footer.appendChild(group);
+
+    text.appendChild(footer);
+    border.appendChild(fig);
+    border.appendChild(text);
+    card.appendChild(border);
+    return card;
   }
 
-  function tuneProductCarousel() {
-    var jq = window.jQuery;
-    if (!jq) return;
-    var el = document.querySelector(".owl-carousel-section-products_category");
-    if (!el) return;
-    var inst = jq(el).data("owl.carousel");
-    if (!inst || !inst.options) return;              // owl ještě nenaběhl
-    var want = owlItemsFor(window.innerWidth);
-    if (inst.options.items === want && inst.settings.items === want) return;
-    inst.options.items = want;
-    jq(el).trigger("refresh.owl.carousel");
+  function alsoArrow(dir, label) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "vp-also__arrow vp-also__arrow--" + dir;
+    b.setAttribute("aria-label", label);
+    var i = document.createElement("i");
+    // ikonový font Bootstrap Icons je v šabloně (owl navText ho používá taky)
+    i.className = "bi bi-chevron-" + (dir === "prev" ? "left" : "right");
+    i.setAttribute("aria-hidden", "true");
+    b.appendChild(i);
+    return b;
+  }
+
+  function alsoSyncNav(section) {
+    var vp = section.querySelector(".vp-also__viewport");
+    if (!vp) return;
+    var max = vp.scrollWidth - vp.clientWidth;
+    section.classList.toggle("is-static", max <= 1);       // vejde se → šipky pryč
+    section.querySelector(".vp-also__arrow--prev").disabled = vp.scrollLeft <= 1;
+    section.querySelector(".vp-also__arrow--next").disabled = vp.scrollLeft >= max - 1;
+  }
+
+  function buildAlsoBought() {
+    var box = document.getElementById("products_category");
+    if (!box) return;                                       // hotovo / blok není
+    var items = box.querySelectorAll(".itembox-item");
+    if (!items.length) return;
+
+    var cards = [];
+    Array.prototype.forEach.call(items, function (it) {
+      var c = alsoCard(it);
+      if (c) cards.push(c);
+    });
+    if (!cards.length) return;                              // radši nechat nativní blok
+
+    var titleEl = box.querySelector("h2");
+    var section = document.createElement("section");
+    section.className = "vp-also";
+
+    var head = document.createElement("div");
+    head.className = "vp-also__head";
+    var h = document.createElement("h2");
+    h.className = "vp-also__title";
+    h.textContent = (titleEl && (titleEl.textContent || "").trim()) || ALSO_TITLE;
+    head.appendChild(h);
+
+    var nav = document.createElement("div");
+    nav.className = "vp-also__nav";
+    var prev = alsoArrow("prev", "Předchozí produkty");
+    var next = alsoArrow("next", "Další produkty");
+    nav.appendChild(prev);
+    nav.appendChild(next);
+    head.appendChild(nav);
+
+    var viewport = document.createElement("div");
+    viewport.className = "vp-also__viewport products";
+    cards.forEach(function (c) { viewport.appendChild(c); });
+
+    section.appendChild(head);
+    section.appendChild(viewport);
+
+    /* Owl korektně zrušit (drží si resize handlery na window), teprve pak
+       nativní blok pryč. Bez `.itembox` v DOM už ho ani zpožděné
+       FrontendShared.refreshOwlCarousels() na `load` nenajde. */
+    if (window.jQuery) {
+      var owl = box.querySelector(".owl-carousel");
+      if (owl) { try { window.jQuery(owl).trigger("destroy.owl.carousel"); } catch (e) {} }
+    }
+    box.parentNode.insertBefore(section, box);
+    box.parentNode.removeChild(box);
+
+    // posun o jednu „stránku“; snap zarovná na nejbližší kartu
+    prev.addEventListener("click", function () { viewport.scrollBy({ left: -viewport.clientWidth, behavior: "smooth" }); });
+    next.addEventListener("click", function () { viewport.scrollBy({ left: viewport.clientWidth, behavior: "smooth" }); });
+    viewport.addEventListener("scroll", function () { alsoSyncNav(section); });
+    alsoState.section = section;
+    alsoSyncNav(section);
   }
 
   /* == Orchestrace ===================================================== */
@@ -542,7 +742,7 @@
     enhanceYoutube();
     updateStickyOffset(root);
     fixAdditionalServicesLink(root);
-    tuneProductCarousel();
+    buildAlsoBought();
   }
 
   function init() {
@@ -568,20 +768,21 @@
     }
 
     // změna viewportu → přepočítat sticky offset pravého sloupce (bod 8)
-    // a počet karet v karuselu „Zákazníci také nakupují" (bod 10)
+    // a stav šipek slideru „Zákazníci také nakupují" (bod 10 — mění se
+    // počet karet na obrazovku, tedy i jestli je vůbec co posouvat)
     var rz = null;
     window.addEventListener("resize", function () {
       clearTimeout(rz);
       rz = setTimeout(function () {
         var r = app();
         if (r) updateStickyOffset(r);
-        tuneProductCarousel();
+        if (alsoState.section) alsoSyncNav(alsoState.section);
       }, 120);
     });
 
-    // Owl se inicializuje až po `load` (skripty šablony jsou na konci stránky),
-    // takže runAll ho během prvních 2 s ještě nemusí zastihnout.
-    window.addEventListener("load", tuneProductCarousel);
+    // Blok „Zákazníci také nakupují" je pod hlavním obsahem a owl ho může
+    // dorenderovat až po `load` — pojistka, kdyby runAll v prvních 2 s minul.
+    window.addEventListener("load", buildAlsoBought);
   }
 
   if (document.readyState === "loading") {
