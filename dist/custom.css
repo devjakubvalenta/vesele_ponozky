@@ -6,6 +6,10 @@
  *  Vlož do: Administrace → Nastavení designu → „Vaše doplňkové CSS".
  *  (Pro vývoj lze místo vložení hostovat přes jsDelivr a načítat
  *   jako <link> ve „Skripty" — viz CLAUDE.md.)
+ *
+ *  OBRÁZKY v url(): vždy RELATIVNĚ k tomuhle souboru („../assets/media/…"),
+ *  nikdy „/files/310/files/…". CSS jede z jsDelivr, takže cesta od kořene
+ *  by se rozlouskla proti cdn.jsdelivr.net a obrázek by spadl na 404.
  * ============================================================
  */
 
@@ -728,10 +732,10 @@ html body {
   background-size: contain;
 }
 .main-order-form #block-service-20780 .info-warapper::before {
-  background-image: url("/files/310/files/baln%C3%A9.png");
+  background-image: url("../assets/media/balne.png");
 }
 .main-order-form #block-service-20783 .info-warapper::before {
-  background-image: url("/files/310/files/d%C3%BD%C5%A1ko.png");
+  background-image: url("../assets/media/dysko.png");
 }
 /* popis hned pod titulkem, zarovnaný vedle ikony (přebíjí globální odsazení panelu) */
 .main-order-form #block-service-20780 .card-body,
@@ -3795,7 +3799,7 @@ header .header-shop-basket-button .btn.btn-primary {
   width: 20px;
   height: 20px;
   /* pozor: diakritika v názvu souboru MUSÍ zůstat URL-encoded */
-  background: url("/files/310/files/doru%C4%8Den%C3%AD.svg") center / contain no-repeat;
+  background: url("../assets/media/doruceni.svg") center / contain no-repeat;
 }
 #app.product-detail .order-delivery-date {
   color: var(--pd-green-dark);
@@ -3942,7 +3946,7 @@ header .header-shop-basket-button .btn.btn-primary {
   flex: 0 0 20px;
   width: 20px;
   height: 19px;
-  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("../assets/media/button_cart.svg") center / contain no-repeat;
 }
 #app.product-detail .product-add-to-shopping-basket.sprite-after::after { content: none !important; }
 
@@ -4120,7 +4124,7 @@ header .header-shop-basket-button .btn.btn-primary {
   flex: 0 0 20px;
   width: 20px;
   height: 19px;
-  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("../assets/media/button_cart.svg") center / contain no-repeat;
 }
 
 /* ==== Výhodné balení (nativní blok „Příslušenství" %primary_accessories%) ====
@@ -4830,7 +4834,7 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   flex: 0 0 12px;
   width: 12px;
   height: 12px;
-  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("../assets/media/button_cart.svg") center / contain no-repeat;
 }
 
 /* Ribbon šipky admin stripů k pilulce nepatří */
@@ -5276,7 +5280,7 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   flex: 0 0 12px;
   width: 12px;
   height: 12px;
-  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("../assets/media/button_cart.svg") center / contain no-repeat;
 }
 
 /* Fallback: karta bez .product-stripes → JS dá štítek do figure */
@@ -5410,7 +5414,7 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   width: 18px;
   height: 18px;
   /* pozor: diakritika v názvu souboru MUSÍ zůstat URL-encoded */
-  background: url("/files/310/files/doru%C4%8Den%C3%AD.svg") center / contain no-repeat;
+  background: url("../assets/media/doruceni.svg") center / contain no-repeat;
 }
 
 .products .product .pc-delivery-date {
@@ -5531,7 +5535,7 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   flex: 0 0 18px;
   width: 18px;
   height: 17px;
-  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("../assets/media/button_cart.svg") center / contain no-repeat;
 }
 
 /* Nativní sprite ikona pryč + reset odsazení textu (nativně margin-left:25px) */
@@ -7037,7 +7041,7 @@ body footer section.eshop-footer .vp-foot__attribution a {
    i mobilu (auto-škáluje), proto už není potřeba zvlášť Patička_mobil.svg. */
 .vp-foot__sockstrip {
   height: clamp(40px, 6vw, 74px);
-  background: #fabb01 url("/files/310/files/footer_sock.png") left center / auto 100% repeat-x;
+  background: #fabb01 url("../assets/media/footer_sock.png") left center / auto 100% repeat-x;
 }
 
 .vp-foot__inner {
@@ -8861,7 +8865,7 @@ body footer section.eshop-footer .vp-foot__attribution a {
   border: 0;
   border-radius: 16px;
   background-color: #f8fafc;
-  background-image: url("/files/310/files/download.svg");
+  background-image: url("../assets/media/download.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 26px;
@@ -11303,7 +11307,7 @@ a.vp-doprava__paylogo:hover {
   border: 0;
   border-radius: 16px;
   background-color: #f8fafc;
-  background-image: url("/files/310/files/download.svg");
+  background-image: url("../assets/media/download.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 26px;

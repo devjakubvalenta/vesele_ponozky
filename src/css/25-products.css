@@ -175,7 +175,7 @@
   flex: 0 0 12px;
   width: 12px;
   height: 12px;
-  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("../assets/media/button_cart.svg") center / contain no-repeat;
 }
 
 /* Fallback: karta bez .product-stripes → JS dá štítek do figure */
@@ -309,7 +309,7 @@
   width: 18px;
   height: 18px;
   /* pozor: diakritika v názvu souboru MUSÍ zůstat URL-encoded */
-  background: url("/files/310/files/doru%C4%8Den%C3%AD.svg") center / contain no-repeat;
+  background: url("../assets/media/doruceni.svg") center / contain no-repeat;
 }
 
 .products .product .pc-delivery-date {
@@ -430,7 +430,7 @@
   flex: 0 0 18px;
   width: 18px;
   height: 17px;
-  background: url("/files/310/files/button_cart.svg") center / contain no-repeat;
+  background: url("../assets/media/button_cart.svg") center / contain no-repeat;
 }
 
 /* Nativní sprite ikona pryč + reset odsazení textu (nativně margin-left:25px) */

@@ -21,6 +21,14 @@ Technická adresa téhož shopu (28056): https://www.exitshop.cz/shops/28056/
 > [src/scripts/30-product-cards.js](src/scripts/30-product-cards.js).
 > ID kategorií, produktů i CMS stránek jsou na obou doménách stejná.
 
+> ⚠️ **Výjimka: `url()` v CSS.** Tam cesta od kořene NEFUNGUJE — `url()` se
+> vyhodnocuje vůči **stylopisu**, a ten jede z jsDelivr, takže
+> `/files/310/files/x.svg` skončí na `cdn.jsdelivr.net/files/…` = 404 (takhle
+> nám jednou zmizely ikony košíku a doručení). Obrázky pro CSS proto leží
+> v repu v [assets/media/](assets/media/) a odkazují se **relativně**:
+> `url("../assets/media/x.svg")` (relativně k `dist/custom.css`).
+> V HTML/JS root-relative cesty fungují dál — tam je základ stránka.
+
 ## Omezení platformy exitshop.cz (uzavřený SaaS)
 
 - **Žádný FTP, žádný přístup ke zdrojům šablony, žádné API pro vzhled.** API je

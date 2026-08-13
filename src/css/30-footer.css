@@ -237,7 +237,7 @@ body footer section.eshop-footer .vp-foot__attribution a {
    i mobilu (auto-škáluje), proto už není potřeba zvlášť Patička_mobil.svg. */
 .vp-foot__sockstrip {
   height: clamp(40px, 6vw, 74px);
-  background: #fabb01 url("/files/310/files/footer_sock.png") left center / auto 100% repeat-x;
+  background: #fabb01 url("../assets/media/footer_sock.png") left center / auto 100% repeat-x;
 }
 
 .vp-foot__inner {

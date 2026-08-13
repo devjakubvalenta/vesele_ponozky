@@ -624,10 +624,10 @@
   background-size: contain;
 }
 .main-order-form #block-service-20780 .info-warapper::before {
-  background-image: url("/files/310/files/baln%C3%A9.png");
+  background-image: url("../assets/media/balne.png");
 }
 .main-order-form #block-service-20783 .info-warapper::before {
-  background-image: url("/files/310/files/d%C3%BD%C5%A1ko.png");
+  background-image: url("../assets/media/dysko.png");
 }
 /* popis hned pod titulkem, zarovnaný vedle ikony (přebíjí globální odsazení panelu) */
 .main-order-form #block-service-20780 .card-body,
