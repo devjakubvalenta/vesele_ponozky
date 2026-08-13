@@ -489,6 +489,45 @@
     for (var i = 0; i < links.length; i++) links[i].removeAttribute("target");
   }
 
+  /* == 10) Karusel „Zákazníci také nakupují" — počet karet podle šířky ===
+     Owl dostane od platformy `items` JEN při inicializaci a `responsive` mapu
+     má prázdnou, takže po změně šířky počet karet nepřepočítá. Když se stránka
+     načte široká a pak se zúží (otočení displeje, změna velikosti okna),
+     zůstane 5 karet i ve sloupci širokém 351 px → z karet jsou 70px nudličky
+     s uříznutým názvem. Dáme owlu vlastní žebřík a po resize zavoláme
+     `refresh.owl.carousel`, který přepočítá `settings` i šířky.
+
+     Do 576 px jsou 2 karty (zadání), výš zůstává platformní rozdělení
+     (576–991 = 3, od 992 = 5), takže se na desktopu nic nemění.
+     Blok NENÍ uvnitř #app.product-detail — sedí v section.row-fluid
+     .product_footer, proto se hledá přes document. */
+
+  var OWL_ITEMS = [
+    { min: 992, items: 5 },
+    { min: 576, items: 3 },
+    { min: 0, items: 2 }
+  ];
+
+  function owlItemsFor(w) {
+    for (var i = 0; i < OWL_ITEMS.length; i++) {
+      if (w >= OWL_ITEMS[i].min) return OWL_ITEMS[i].items;
+    }
+    return 2;
+  }
+
+  function tuneProductCarousel() {
+    var jq = window.jQuery;
+    if (!jq) return;
+    var el = document.querySelector(".owl-carousel-section-products_category");
+    if (!el) return;
+    var inst = jq(el).data("owl.carousel");
+    if (!inst || !inst.options) return;              // owl ještě nenaběhl
+    var want = owlItemsFor(window.innerWidth);
+    if (inst.options.items === want && inst.settings.items === want) return;
+    inst.options.items = want;
+    jq(el).trigger("refresh.owl.carousel");
+  }
+
   /* == Orchestrace ===================================================== */
 
   function runAll() {
@@ -503,6 +542,7 @@
     enhanceYoutube();
     updateStickyOffset(root);
     fixAdditionalServicesLink(root);
+    tuneProductCarousel();
   }
 
   function init() {
@@ -528,14 +568,20 @@
     }
 
     // změna viewportu → přepočítat sticky offset pravého sloupce (bod 8)
+    // a počet karet v karuselu „Zákazníci také nakupují" (bod 10)
     var rz = null;
     window.addEventListener("resize", function () {
       clearTimeout(rz);
       rz = setTimeout(function () {
         var r = app();
         if (r) updateStickyOffset(r);
+        tuneProductCarousel();
       }, 120);
     });
+
+    // Owl se inicializuje až po `load` (skripty šablony jsou na konci stránky),
+    // takže runAll ho během prvních 2 s ještě nemusí zastihnout.
+    window.addEventListener("load", tuneProductCarousel);
   }
 
   if (document.readyState === "loading") {
