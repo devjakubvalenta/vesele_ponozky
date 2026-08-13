@@ -17,14 +17,18 @@
 /* ---- Žlutý hover (stejný jazyk jako dlaždice v mega menu) ----------
    Podbarvuje se celá karta .subcategory-box, ne jen odkaz uvnitř, takže
    hover platí i nad ikonou a prázdným místem.
-   Text na žluté MUSÍ být tmavý — bílá na #fbbc02 má kontrast jen 1,71:1. */
+
+   Název ZŮSTÁVÁ webově modrý i při hoveru (dřív se překlápěl do skoro černé),
+   stejně jako v mega menu — viz 20-header.css.
+   ⚠️ Modrá na žluté #fbbc02 má kontrast 3,38:1 (WCAG AA chce 4,5:1 pro běžný
+   text). Kdyby vadilo, stačí hover podbarvit světle žlutou #fdf6e0 → 5,2:1. */
 .children_categories .subcategory-box:hover {
   background-color: var(--hdr-yellow, #fbbc02) !important;
   border-color: var(--hdr-yellow, #fbbc02) !important;
 }
 .children_categories .subcategory-box:hover .child_category_name,
 .children_categories a.subcategory-box:hover {
-  color: #0d1427 !important;
+  color: var(--hdr-accent, #1361cf) !important;
 }
 
 /* ---- Mobil: 2 dlaždice vedle sebe (místo 1) -----------------------
