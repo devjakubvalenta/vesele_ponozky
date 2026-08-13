@@ -3,33 +3,126 @@
 
    Vzhled se nastavuje v administraci Koloo (barva overlaye, barva tlačítka,
    texty, kupóny, spouštěč) — sem patří JEN to, co admin nenabízí:
-   **pozice sbaleného štítku**. Ta jde v Koloo vybrat jen po bocích
-   (`right1–7` / `left1–7`), ne v rohu.
+   **sbalený štítek jako kulatý odznak v levém dolním rohu**.
+
+   Koloo tenhle vzhled umí, ale váže ho na pozici `bottomleft`, kterou náš
+   tarif v adminu nenabízí (jde vybrat jen `right1–7` / `left1–7`) — a
+   v mobilním stylopisu ho nemá vůbec, tam `bottomleft` jen přesune obdélníkový
+   štítek. Pravidla níže jsou proto **opsaná z `hd.koloo.net/css/koloo-v2.css`**
+   (sekce `#koloo-clk.bottomleft`) a pověšená na `#koloo-clk` bez ohledu na
+   třídu pozice, takže platí na desktopu i na mobilu.
 
    Jde to přebít proto, že `#koloo-clk` je obyčejný prvek v našem <body>
-   (v iframu je jen VNITŘEK popupu). Widget si ho stylizuje inline,
-   takže potřebujeme `!important`.
+   (v iframu je jen VNITŘEK popupu). Widget si ho stylizuje inline, takže
+   všude potřebujeme `!important`.
 
-   ⚠️ Dovnitř popupu (iframe z app.koloo.net) odsud nedosáhneme — obsah,
-   barvy i tlačítko „Roztočit kolo!" umí změnit jen administrace Koloo.
-   Pozor tam na barvy: hodnota se do CSS sype doslova, takže musí být
-   i s mřížkou (`#00ac44`). Bez ní vznikne `background: 00ac44`, což je
-   neplatné a tlačítko zůstane průhledné.
+   ⚠️ Obrázky odznaku necháváme na Koloo CDN a odkazujeme absolutně. Cesta od
+   kořene by tu ukázala na jsDelivr (viz CLAUDE.md) a kopie v `assets/` by se
+   rozešla s tím, co Koloo servíruje. Cizí doména v `url()` je v pořádku —
+   pravidlo „nehardcodovat doménu" míří na náš shop (exitshop.cz), ne na CDN
+   třetí strany. Když Koloo ty soubory přejmenuje, zmizí jen kruhové pozadí.
 
-   ⚠️ A žádný `backdrop-filter` na `#koloo-plg-bg` — Chrome pak v místě
-   iframu vykreslí světlý obdélník (iframe je vlastní kompozitní vrstva
-   a vypadne z backdropu). */
+   ⚠️ Dovnitř popupu (iframe z app.koloo.net) odsud nedosáhneme — obsah, font
+   i tlačítko „Roztočit kolo!" umí změnit jen administrace Koloo. Pozor tam na
+   barvy: hodnota se do CSS sype doslova, takže musí být i s mřížkou
+   (`#00ac44`). Bez ní vznikne `background: 00ac44`, což je neplatné a tlačítko
+   zůstane průhledné.
 
-/* ---- Sbalený štítek do levého dolního rohu --------------------------
+   ⚠️ A žádný `backdrop-filter` na `#koloo-plg-bg` — Chrome pak v místě iframu
+   vykreslí světlý obdélník (iframe je vlastní kompozitní vrstva a vypadne
+   z backdropu). */
+
+/* ---- Kulatý odznak do levého dolního rohu ---------------------------
    `.right3` dává `right:-1px; top:35%; margin-top:-52px`; hodnotu `right`
    navíc widget animuje inline (vysunutí/zasunutí), proto ji nulujeme. */
 #koloo-clk {
-  top: auto !important;
-  bottom: 1rem !important;
   left: 0 !important;
   right: auto !important;
-  margin-top: 0 !important;
+  top: auto !important;
+  bottom: -1px !important;
+  margin: 0 !important;
+  width: 153px !important;
+  height: 153px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: url("https://hd.koloo.net/css/kleft-circle.png") center center /
+              153px 153px no-repeat !important;
   transition: opacity 0.2s ease;
+}
+
+/* Kolo uvnitř odznaku (obrázek je záměrně větší než výřez — kouká z něj jen
+   pravá půlka, na hover se protočí Koloo vlastní animací). */
+#koloo-clk span.koloo-clk-wheel {
+  width: 153px !important;
+  height: 153px !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+#koloo-clk span.koloo-clk-wheel img {
+  width: 195px !important;
+  height: 195px !important;
+  top: 20px !important;
+  left: -64px !important;
+  right: auto !important;
+}
+
+/* Lesk přes celý odznak (Koloo ho kreslí pseudoelementem, ne <img>). */
+#koloo-clk .koloo-clk-relativer::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 153px;
+  height: 153px;
+  background: url("https://hd.koloo.net/css/kleft-glare.png") 0 0 / 153px 153px
+              no-repeat;
+}
+
+/* Popisek „ZÍSKEJTE SLEVU" / „DÁREK" / „BONUS" nad kolem. Selektor je
+   ukotvený přes `body` schválně: Koloo ho v obou stylopisech nastavuje
+   s `!important` a jeho vlastní selektor je specifičtější než holé
+   `#koloo-clk span…`, takže bez `body` by na mobilu vyhrálo malé 38×25. */
+body #koloo-clk.koloo-clk-cz span.koloo-clk-discount,
+body #koloo-clk.koloo-clk-cz span.koloo-clk-gift,
+body #koloo-clk.koloo-clk-cz span.koloo-clk-bonus {
+  top: 81px !important;
+  width: 82px !important;
+  height: 66px !important;
+  background-size: 65px 44px !important;
+  z-index: 3;
+}
+
+/* Odpočet (zapíná se v adminu Koloo; když běží, popisek výše se schová).
+   Rozměry přebíjíme taky — mobilní stylopis Koloo má vlastní, menší, a to
+   by se s odznakem v desktopové geometrii (viz `scale()` níže) rozešlo. */
+#koloo-clk span.koloo-clk-countdown {
+  top: 91px !important;
+  left: 7px !important;
+  width: 55px !important;
+  height: 65px !important;
+  z-index: 3;
+}
+
+#koloo-clk .koloo_riadok0a,
+#koloo-clk .koloo_riadok0b {
+  background-size: 32px 32px !important;
+  background-position: 10px 4px !important;
+}
+
+#koloo-clk .koloo_riadok0a {
+  padding-top: 40px !important;
+  font-size: 12px !important;
+  line-height: 14px !important;
+}
+
+#koloo-clk .koloo_riadok0b {
+  padding-top: 37px !important;
+  font-size: 16px !important;
+  line-height: 18px !important;
 }
 
 /* Zasunutí štítku při otevřeném popupu dělá Koloo právě přes `right`,
@@ -40,10 +133,19 @@
   pointer-events: none;
 }
 
-/* Mobilní detail produktu: uhnout sticky liště `.pd-sticky-cta`
-   (stejná logika jako u `.scroll-to-top` v `36-back-to-top.css`). */
+/* ---- Mobil ----------------------------------------------------------
+   Geometrie odznaku je z desktopového stylopisu Koloo napevno v px, takže
+   ho na malém displeji jen zmenšíme celý (origin = levý dolní roh, aby
+   zůstal přisazený). 153 px × 0,78 ≈ 119 px. */
 @media (max-width: 767.98px) {
+  #koloo-clk {
+    transform: scale(0.78);
+    transform-origin: 0 100%;
+  }
+
+  /* Detail produktu: uhnout sticky liště `.pd-sticky-cta`
+     (stejná logika jako u `.scroll-to-top` v `36-back-to-top.css`). */
   body:has(.pd-sticky-cta.is-visible) #koloo-clk {
-    bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)) !important;
+    bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
