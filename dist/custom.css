@@ -5362,6 +5362,14 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   transform: scale(1.04) !important;
 }
 
+/* Hover vrstva s druhým obrázkem (.img_description_layer_image): obrázek je
+   zabalený v <p>, které má Bootstrapí `margin-bottom: 1rem`. Vrstva svůj obsah
+   centruje, takže se obrázek posune o půlku margin nahoru a dole vykoukne
+   šedý podklad vrstvy (rgba(150,150,150,.7)) jako proužek. Margin pryč. */
+.products .product figure .img_description_layer_image p {
+  margin: 0 !important;
+}
+
 /* Badge má inline style „right:10px;bottom:0" → jen author !important
    ho přesune nahoru. Barva #3b95f6 → brandová modrá. */
 .products .product figure .discount-percentage {
