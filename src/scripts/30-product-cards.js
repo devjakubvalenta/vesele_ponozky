@@ -52,10 +52,12 @@
 
   // Hlavní HP výpis „Všechny naše produkty" (nativní grid pod #homepage_text):
   // CSS nechá viditelné jen první 4 karty, JS pod grid přidá tlačítko „Zobrazit
-  // vše" mířící sem. Root Katalog je jediný výpis celého sortimentu (358 kusů),
-  // ale ve filtraci má legacy parametry 334/335 místo Motiv (52221) + Velikost
-  // (52209) — čeká na přenastavení parametrů v administraci.
-  var HP_ALL_PATH = "/c/1196952-katalog";
+  // vše" mířící sem. Cíl = Výprodej (1243142), stejně jako u bloku „To nejlepší
+  // právě v akci". Root Katalog (1196952) je sice jediný výpis celého sortimentu
+  // (358 kusů), ale ve filtraci servíruje legacy parametry 334/335 místo Motiv
+  // (52221) + Velikost (52209), takže tam chybí filtrace podle Povolání —
+  // dokud se parametry nepřenastaví v administraci, posíláme lidi na Výprodej.
+  var HP_ALL_PATH = "/c/1243142-vyprodej-az-90";
   var HP_ALL_LIMIT = 4;
 
   // Rozdělení názvu na 2 řádky:
