@@ -65,8 +65,18 @@
     formId: "4-f67e22c6c3dacfc9b77b6b40399abc16",
     account: "witsocks",
     widgetSrc: "https://d70shl7vidtft.cloudfront.net/widget.js",
-    title: 'NEZMEŠKEJTE ŽÁDNÉ NOVINKY A ZÍSKEJTE <span class="vp-nl__accent">SLEVU 15%</span>!',
-    lead: "Přihlaste se k odběru našeho newsletteru a získejte slevu 15 % na váš první nákup veselých ponožek."
+    // Zalomení je záměrné (3 řádky, třetí celý žlutě) — `<br>` v titulku platí
+    // všude, `<br class="vp-nl__br">` v odstavci jen na desktopu (na mobilu ho
+    // CSS vypne, ať text neláme na krátké pahýly). Viz 32-newsletter.css.
+    title: 'NEZMEŠKEJTE<br>ŽÁDNÉ NOVINKY<br><span class="vp-nl__accent">A ZÍSKEJTE SLEVU 15%!</span>',
+    // mezera PŘED <br> je schválně: když se `<br>` na mobilu vypne, drží slova
+    // od sebe; na desktopu se na konci řádku stejně sbalí
+    lead: "Přihlaste se k odběru našeho newsletteru a získejte <br class=\"vp-nl__br\">slevu 15 % na váš první nákup veselých ponožek.",
+    // Ecomail posílá na tlačítku text z konfigurace formuláře („PŘIHLÁSIT SE
+    // K ODBĚRU"). Do vsazené pilulky je moc dlouhý → přepisujeme ho na kratší
+    // (verzálky dodá CSS). Změnit jde i v Ecomailu, tady je to proto, aby se
+    // vzhled bloku nerozpadl, kdyby se na to v Ecomailu zapomnělo.
+    submitLabel: "Přihlásit se"
   };
 
   // Obsah recenzí — SHODNÝ se sekcí na HP (src/content/homepage.html).
@@ -266,6 +276,31 @@
     return wrap;
   }
 
+  // Zkrácení popisku odesílacího tlačítka. Widget se vykresluje asynchronně
+  // (a při přechodu na děkovací krok překresluje), proto MutationObserver.
+  // Cílíme jen na krok se zápisem — tlačítko „zpátky do e-shopu" na kroku po
+  // odeslání (.ec-v-form-step-send) necháváme být.
+  function relabelSubmit(mount) {
+    var btns = mount.querySelectorAll(
+      ".ec-v-form-step:not(.ec-v-form-step-send) .ec-v-form-submit button"
+    );
+    for (var i = 0; i < btns.length; i++) {
+      if (btns[i].dataset.vpLabel) continue;
+      btns[i].dataset.vpLabel = "1";
+      btns[i].textContent = NEWSLETTER.submitLabel;
+    }
+  }
+
+  function watchSubmitLabel(mount) {
+    relabelSubmit(mount);
+    if (!("MutationObserver" in window)) return;
+    var pending = null;
+    new MutationObserver(function () {
+      clearTimeout(pending);
+      pending = setTimeout(function () { relabelSubmit(mount); }, 60);
+    }).observe(mount, { childList: true, subtree: true });
+  }
+
   // Načte oficiální Ecomail widget (jen jednou). Loader je 1:1 podle embed kódu
   // z Ecomailu; widget si najde mount div #f-<formId> a vykreslí do něj formulář.
   function loadEcomailWidget() {
@@ -290,6 +325,8 @@
       var nl = buildNewsletter();
       footer.insertBefore(nl, footer.firstChild);
       loadEcomailWidget(); // mount div už je v DOM → widget se má kam vykreslit
+      var mount = document.getElementById("f-" + NEWSLETTER.formId);
+      if (mount) watchSubmitLabel(mount);
     }
 
     var container = footer.querySelector(":scope > .container") || footer.querySelector(".container");

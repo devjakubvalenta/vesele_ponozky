@@ -62,6 +62,13 @@
   line-height: 1.6 !important;
   margin: 0 0 1.25rem !important;
 }
+/* Ruční zalomení odstavce (footer.js) platí jen tam, kde je na něj místo —
+   na užších displejích by z něj byly krátké pahýly, tak se vypne. */
+@media (max-width: 767.98px) {
+  .vp-nl__br {
+    display: none;
+  }
+}
 
 /* ---- Ecomail widget (renderuje INLINE do .vp-nl__form; třídy ec-v-*) ----
    Ověřeno živě: widget vkládá vlastní markup (ne iframe). Bílý holder přebíjíme
@@ -152,19 +159,29 @@
   font-size: 0.82rem !important;
 }
 
-/* ---- Input + tlačítko na jeden řádek = spojený pill (jen krok 1, desktop) ----
+/* ---- Input + tlačítko na jeden řádek = bílá pilulka s vsazeným tlačítkem ----
    Widget renderuje input a tlačítko jako dva bloky ve sloupci pod sebou.
-   Uděláme ze sloupce flex-řádek: input (roste, zaoblený vlevo) + tlačítko
-   (přisazené vpravo, zaoblené vpravo) → jeden pill. Prázdný titulek pole skryjeme.
+   Uděláme ze sloupce flex-řádek a bílou pilulku dělá RÁDEK (.ec-v-form-column),
+   ne input — žluté tlačítko pak uvnitř „plave" s bílým lemem kolem sebe
+   (dřív to byly dvě slepené půlky jedné pilulky).
    Krok „po odeslání" (-send) neflexujeme, ať děkovací text zůstane pod sebou. */
 .vp-nl__form .ec-v-forms-label {
   display: none !important; /* titulek pole je prázdný (nadpis dodává blok) */
 }
 .vp-nl__form .ec-v-form-step:not(.ec-v-form-step-send) .ec-v-form-column {
   display: flex !important;
-  align-items: stretch !important;
+  align-items: center !important;
   gap: 0 !important;
   max-width: 600px !important;
+  background: #fff !important;
+  border-radius: 999px !important;
+  padding: 6px !important;
+  transition: box-shadow 0.15s ease;
+}
+/* Fokus se kreslí na celou pilulku — žlutý rámeček kolem průhledného inputu
+   uvnitř bílé plochy by vypadal jako druhé pole. */
+.vp-nl__form .ec-v-form-step:not(.ec-v-form-step-send) .ec-v-form-column:focus-within {
+  box-shadow: 0 0 0 3px rgba(251, 188, 2, 0.5);
 }
 .vp-nl__form .ec-v-form-input {
   flex: 1 1 auto !important;
@@ -178,15 +195,22 @@
   margin: 0 !important;
   padding: 0 !important;
 }
-.vp-nl__form .ec-v-forms-form-control {
-  height: 56px !important;
-  border-top-right-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
+.vp-nl__form .ec-v-form-step:not(.ec-v-form-step-send) .ec-v-forms-form-control {
+  height: 44px !important;
+  background: transparent !important;   /* bílou dělá pilulka kolem */
+  border-color: transparent !important;
+}
+.vp-nl__form .ec-v-form-step:not(.ec-v-form-step-send) .ec-v-forms-form-control:focus {
+  border-color: transparent !important; /* fokus řeší pilulka výš */
 }
 .vp-nl__form .ec-v-form-submit button {
-  height: 56px !important;
-  border-top-left-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
+  height: 44px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.02em !important;
+  box-shadow: none !important;          /* žlutá záře na bílém jen špiní */
+}
+.vp-nl__form .ec-v-form-submit button:hover {
+  transform: none !important;           /* uvnitř pilulky by tlačítko „vyskočilo" */
 }
 
 /* ---- Maskot ---- */
@@ -224,23 +248,37 @@
   .vp-nl__form input[type="submit"] {
     width: 100%;
   }
-  /* spojený pill se na úzko nevejde → zpět na stack (plné pilulky pod sebou) */
+  /* pilulka s vsazeným tlačítkem se na úzko nevejde → zpět na stack
+     (plné pilulky pod sebou, bílou dělá zase input) */
   .vp-nl__form .ec-v-form-step:not(.ec-v-form-step-send) .ec-v-form-column {
     display: block !important;
     max-width: none !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+  .vp-nl__form .ec-v-form-step:not(.ec-v-form-step-send) .ec-v-form-column:focus-within {
+    box-shadow: none !important;
   }
   .vp-nl__form .ec-v-form-input {
     margin-bottom: 0.6rem !important;
   }
-  .vp-nl__form .ec-v-forms-form-control {
+  .vp-nl__form .ec-v-form-step:not(.ec-v-form-step-send) .ec-v-forms-form-control {
+    height: 52px !important;
+    background: #fff !important;
     border-radius: 999px !important;
+  }
+  .vp-nl__form .ec-v-form-step:not(.ec-v-form-step-send) .ec-v-forms-form-control:focus {
+    border-color: var(--nl-yellow) !important;
   }
   .vp-nl__form .ec-v-form-submit {
     display: block !important;
   }
   .vp-nl__form .ec-v-form-submit button {
     width: 100% !important;
+    height: 52px !important;
     border-radius: 999px !important;
+    box-shadow: 0 6px 18px rgba(251, 188, 2, 0.4) !important;
   }
 }
 
