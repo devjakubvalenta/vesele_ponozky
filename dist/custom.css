@@ -8342,6 +8342,58 @@ body footer section.eshop-footer .vp-foot__attribution a {
   }
 }
 
+/* ==== 37-koloo.css ==== */
+
+/* Koloo — „kolo štěstí" (3rd-party widget z hd.koloo.net, loader
+   `src/scripts/koloo-wheel.html`).
+
+   Vzhled se nastavuje v administraci Koloo (barva overlaye, barva tlačítka,
+   texty, kupóny, spouštěč) — sem patří JEN to, co admin nenabízí:
+   **pozice sbaleného štítku**. Ta jde v Koloo vybrat jen po bocích
+   (`right1–7` / `left1–7`), ne v rohu.
+
+   Jde to přebít proto, že `#koloo-clk` je obyčejný prvek v našem <body>
+   (v iframu je jen VNITŘEK popupu). Widget si ho stylizuje inline,
+   takže potřebujeme `!important`.
+
+   ⚠️ Dovnitř popupu (iframe z app.koloo.net) odsud nedosáhneme — obsah,
+   barvy i tlačítko „Roztočit kolo!" umí změnit jen administrace Koloo.
+   Pozor tam na barvy: hodnota se do CSS sype doslova, takže musí být
+   i s mřížkou (`#00ac44`). Bez ní vznikne `background: 00ac44`, což je
+   neplatné a tlačítko zůstane průhledné.
+
+   ⚠️ A žádný `backdrop-filter` na `#koloo-plg-bg` — Chrome pak v místě
+   iframu vykreslí světlý obdélník (iframe je vlastní kompozitní vrstva
+   a vypadne z backdropu). */
+
+/* ---- Sbalený štítek do levého dolního rohu --------------------------
+   `.right3` dává `right:-1px; top:35%; margin-top:-52px`; hodnotu `right`
+   navíc widget animuje inline (vysunutí/zasunutí), proto ji nulujeme. */
+#koloo-clk {
+  top: auto !important;
+  bottom: 1rem !important;
+  left: 0 !important;
+  right: auto !important;
+  margin-top: 0 !important;
+  transition: opacity 0.2s ease;
+}
+
+/* Zasunutí štítku při otevřeném popupu dělá Koloo právě přes `right`,
+   což jsme mu vzali → schováme ho podle sourozence: `#koloo-plg-bg` má
+   `display:block` jen po dobu, kdy je popup otevřený. */
+#koloo-plg-bg[style*="display: block"] ~ #koloo-clk {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Mobilní detail produktu: uhnout sticky liště `.pd-sticky-cta`
+   (stejná logika jako u `.scroll-to-top` v `36-back-to-top.css`). */
+@media (max-width: 767.98px) {
+  body:has(.pd-sticky-cta.is-visible) #koloo-clk {
+    bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
 /* ==== 40-onas.css ==== */
 
 /* CMS stránka „O nás" v2 — brandový vzhled (modrá #1361cf + žlutá #fbbc02).

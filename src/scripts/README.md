@@ -26,7 +26,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 | `50-checkout.js` | Pokladna (dopravy a platby) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/50-checkout.js">` — **pin hashem**; styl `src/css/10-checkout.css` (`.vp-lbl*`) |
 | `35-listing-sort.js` | Řazení ve výpisech (klikací odkazy) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/35-listing-sort.js">` — **pin hashem**; styl `src/css/26-listing-sort.css` |
 | `36-filter.js` | Filtr — výchozí sbalený na mobilu | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/36-filter.js">` — **pin hashem**; styl `src/css/27-filter.css` |
-| `koloo-wheel.html` | Koloo (kolo štěstí) | Na všech stránkách | ne (patička) | ⏳ vlož obsah `<script>` DOSLOVA (3rd-party async loader, kLicense `UNI-FB75BE3A-1714`). Vzhled/texty/kupóny/trigger se řeší v adminu Koloo (hd.koloo.net), ne v kódu |
+| `koloo-wheel.html` | Koloo (kolo štěstí) | Na všech stránkách | ne (patička) | ⏳ vlož obsah `<script>` DOSLOVA (3rd-party async loader, kLicense `UNI-FB75BE3A-1714`). Vzhled/texty/kupóny/trigger se řeší v adminu Koloo (my.koloo.net), ne v kódu; z naší strany jen pozice sbaleného štítku — `src/css/37-koloo.css` |
 
 > ⚠️ **Sekce „Skripty" vkládá obsah DOSLOVA** (neobaluje ho). `<link>` a
 > `<style>` vkládej **holé** — NIKDY ne uvnitř `<script>…</script>` (browser by
@@ -169,9 +169,36 @@ komponenty z `95-recenze.css`); (2) klonuje slevový pill „-46 %" do
 pravého sloupce (`.pd-discount-pill`) a synchronizuje ho MutationObserverem
 se zdrojem na obrázku (Vue v-if — mizí/mění se při přepnutí varianty);
 (3) vloží label „Množství" (`.pd-qty-label`) nad stepper; (4) pojistka na
-zvýraznění data doručení. Nic nepřesouvá (Vue-safe, pořadí řeší CSS flex
+zvýraznění data doručení; (5) blok **„Zákazníci také nakupují"** přestaví
+z nativního owl karuselu na **stejné karty jako ve výpisu kategorie**
+(viz níže). Nic nepřesouvá (Vue-safe, pořadí řeší CSS flex
 order) a respektuje zámek z `10-force-variant-selection.html`
 (`variant-selection-required` → bílé chipy + ztlumené CTA). Idempotentní.
+
+> **„Zákazníci také nakupují" (`.vp-also`).** Nativně je to
+> `section#products_category.itembox` — owl karusel s ochuzenou dlaždicí
+> (obrázek + název + cena, **bez košíku**). JS z dlaždic postaví plnohodnotné
+> karty výpisu (`.products .product`), takže vzhled dědí celý z
+> `25-products.css`, a vloží je do vlastního scroll-snap slideru se šipkami
+> (styl `.vp-also` v `24-product-detail.css`; 992+ = 5 karet, 576–991 = 3,
+> pod 576 = 2 — stejný žebřík, jaký měl owl). Nativní blok se pak z DOM
+> odstraní (owl se předtím korektně `destroy`ne).
+>
+> **Proč přestavba a ne restyl owlu:** šablona má
+> `.itembox .itembox-content * { padding: 0 !important }` — kartám uvnitř
+> karuselu by to vynulovalo všechny paddingy.
+>
+> **Co karta nemá** (dlaždice ta data neobsahuje a platforma je do bloku
+> nerenderuje): přeškrtnutá původní cena, datum doručení, chipy velikostí.
+> Dopočítat starou cenu ze zaokrouhleného procenta slevy = riziko zobrazení
+> nesprávné ceny; dotáhnout data ze serveru = 10 requestů na detail.
+>
+> Tlačítko je `.add-to-cart-js-variants` + `data-url` — přesně ten prvek,
+> který má karta ve výpisu. Delegovaný handler šablony na klik udělá
+> `location.href = data-url` (proklik na detail k výběru velikosti); ve výpisu
+> kategorie se takhle chovají **všechny** karty, sortiment je variantní.
+> Štítek „V KOŠÍKU" a dělení názvu na 2 řádky doplní `30-product-cards.js`
+> (jeho MutationObserver reaguje na přidané `.product`).
 
 ## Co dělá `10-force-variant-selection.html`
 
