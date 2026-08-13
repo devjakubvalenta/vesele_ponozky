@@ -539,6 +539,17 @@
   function fixAdditionalServicesLink(root) {
     var links = root.querySelectorAll(".additional_services_products a.fw-bold[target]");
     for (var i = 0; i < links.length; i++) links[i].removeAttribute("target");
+
+    /* Cena balení: platforma píše „+ 359 Kč" (plus + nedělitelné mezery).
+       Přání: bez plusu. Span obsahuje jen text („?" tooltip je sourozenec),
+       takže se dá přepsat textContent. Idempotentní — po odebrání už
+       regulárka nematchne. */
+    var prices = root.querySelectorAll(".additional-services-price-js");
+    for (var j = 0; j < prices.length; j++) {
+      var txt = prices[j].textContent;
+      var next = txt.replace(/^\s*\+\s*/, "");   // \s v JS pokrývá i nedělitelnou mezeru
+      if (next !== txt) prices[j].textContent = next;
+    }
   }
 
   /* == 10) „Zákazníci také nakupují" → karty jako ve výpisu kategorie ====

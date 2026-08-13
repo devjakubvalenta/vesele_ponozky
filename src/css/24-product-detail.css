@@ -717,7 +717,10 @@
 
 #app.product-detail .additional-services-wrapper {
   position: relative;                          /* kotva pro miniaturu, cenu i stretched-link */
-  margin: 1rem 0 .85rem !important;            /* přebít Bootstrap mt-4/mb-1 (!important utils) */
+  /* Přebít Bootstrap mt-4/mb-1 (!important utils). Nahoře 0 → karta drží
+     u tlačítka do košíku (zbývá jen jeho vlastní mb-4), dole větší mezera,
+     ať jsou 4 dlaždice benefitů vizuálně oddělené. */
+  margin: 0 0 1.75rem !important;
   padding: 14px 92px 14px 76px;                /* levý padding = miniatura (48 + okraje), pravý = cena */
   background: #f4f8ff;                          /* jemná modrá jako stará karta */
   border: 1.5px solid var(--pd-border-strong);
