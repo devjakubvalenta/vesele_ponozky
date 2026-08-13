@@ -6328,7 +6328,13 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   columns: 2;
   column-gap: 1rem;
 }
-/* Ať se řádek (checkbox + název + počet) nerozlomí mezi sloupce.
+/* Počet kusů u velikostí pryč — u čísel nic neříká („40 (210)") a ve dvou
+   sloupcích jen tříští řádek. U Motivu počty zůstávají. */
+.category-filters .filter-group[data-filter-group-id="52209"] .filter-value-count {
+  display: none !important;
+}
+
+/* Ať se řádek (checkbox + název) nerozlomí mezi sloupce.
    `position: relative` je tu nutnost: šablona dává počtu kusů
    `position: absolute; right: 9px` a bez vlastního kontextu se všechny počty
    zaklesnou na pravý okraj CELÉ skupiny — v jednom sloupci to náhodou vyšlo,
