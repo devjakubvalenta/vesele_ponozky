@@ -2251,6 +2251,34 @@ header #top-menu .navbar-nav .nav-item.active > .nav-link {
   header #top-menu .yamm-dropdown-menu li.cat-l-second:hover {
     background: var(--hdr-yellow, #fbbc02);
   }
+
+  /* ---- Proklik z CELÉ dlaždice, ne jen z ikony a názvu -------------
+     Šablona dělá z <li> jen HOVER plochu — odkazy jsou dva malé <a>
+     uvnitř: jeden v .cat-l-second-img-wrap (~25–80 px) a jeden v
+     .cat-l-second-name (má sice display:block, ale uvnitř sloupce
+     width:80 %). Mezera mezi nimi i náš padding výše se podbarví žlutě,
+     ale klik tam nic neudělá — vypadá to jako rozbitá dlaždice.
+
+     Řešení je Bootstrapí „stretched link": název dostane ::after
+     roztažené přes celé <li>. Overlay překryje i odkaz na ikoně, ale
+     ten míří na STEJNOU URL, takže se nic neztrácí.
+     Ve výpisu podkategorií na stránce je dlaždice jeden <a>, proto tam
+     problém nikdy nebyl (viz 26-subcategories.css). */
+  header #top-menu .yamm-dropdown-menu li.cat-l-second {
+    position: relative;
+  }
+  header #top-menu .yamm-dropdown-menu li.cat-l-second .cat-l-second-name > span > a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  /* Třetí úroveň je globálně skrytá (00-misc.css), tohle je jen pojistka —
+     kdyby se někdy odkryla, musí zůstat nad overlayem a klikatelná. */
+  header #top-menu .yamm-dropdown-menu li.cat-l-second .cats-l-third {
+    position: relative;
+    z-index: 2;
+  }
 }
 
 header #top-menu .navbar-toggler {
@@ -3307,7 +3335,7 @@ header .vp-hdr-cart__ic {
   }
 }
 
-/* ---- Mobil/tablet (<992): zákaznická linka i Heureka skryté ----
+/* ---- Mobil/tablet (<992): zákaznická linka skrytá, Heureka menší ----
    Layout (dle přání uživatele, varianta A): řádek 1 = logo | účet, košík,
    hamburger — všechny akční prvky v jedné linii s logem (col 1fr auto auto);
    řádek 2 = vyhledávání přes celou šířku. Info ikonka (a.cms-mobile) skrytá
@@ -3319,9 +3347,16 @@ header .vp-hdr-cart__ic {
   header .vp-hdr-care {
     display: none !important;
   }
-  /* Heureka na mobilu pryč — uvolní místo většímu logu (dle přání uživatele) */
-  header .vp-hdr-heureka {
-    display: none !important;
+  /* Heureka odznak zůstává i na mobilu vedle loga, jen menší.
+     Odznak 157×48 při výšce 30 px zabere 77 px. Ověřeno živě: na 390 px
+     zbývá za odznakem 56 px k ikonám, na 360 px ještě 26 px — vejde se.
+     Pod ~330 px už ne, ale `.logotype` má flex-wrap, takže se odznak
+     zalomí pod logo (hlavička o 26 px vyšší) místo aby cokoli přeteklo. */
+  header .logotype {
+    gap: 0.35rem 0.6rem;
+  }
+  header .vp-hdr-heureka img {
+    height: 30px;
   }
   /* Info ikonka (i) — dle přání uživatele pryč z hlavičky */
   header .header-shop-basket-button a.header-cms-icon.cms-mobile {
@@ -6060,6 +6095,25 @@ body.homepage .products .product figure > img {
   .products .product figure {
     height: 230px;               /* nativně 260px */
   }
+
+  /* ---- Chipy velikostí: ukázat VŠECHNY, po dvou na řádek --------------
+     Nativní clip (výška 1 řádku + overflow:hidden, viz ř. 222) na mobilu
+     ruším — u půlkarty se vešly jen 2–3 velikosti ze čtyř a zákazník
+     nevěděl, že se jeho číslo vyrábí. Platforma navíc přebytečné chipy
+     schovává třídou .variant-box-hidden (display:none v šabloně) →
+     odkrytí musí být !important, jinak vyhraje specifičtější nativní
+     selektor. Šířka calc(50% - 3px) = polovina minus půlka 6px gapu. */
+  .products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row {
+    height: auto;
+    overflow: visible;
+  }
+  .products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box {
+    flex: 0 0 calc(50% - 3px);
+    justify-content: center;
+  }
+  .products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-hidden {
+    display: inline-flex !important;
+  }
 }
 
 /* ===== HP: produktové bloky = horizontální slider (jen mobil) =========
@@ -6115,6 +6169,26 @@ body.homepage .products .product figure > img {
     flex: 0 0 15px;            /* menší ikona košíku (nativně 18px) */
     width: 15px;
     height: 15px;
+  }
+}
+
+/* ===== Akční banner ve výpisu (admin „Akční bannery") ================
+   Renderuje se jako sourozenec produktových karet
+   (<a class="product product-banner … col-xs-12 col-lg-4 col-sm-6">).
+   `col-xs-12` v Bootstrapu 4/5 NEEXISTUJE → na mobilu banner nedostane
+   žádnou šířku z gridu a roztáhne se přes celý řádek, zatímco karty jsou
+   `col-6`. Srovnáváme ho tedy na půlku, ať sedí do mřížky jako dlaždice.
+   Obrázek nemá width:100 % (natural 314 px), na půlkarte by přetekl. */
+@media (max-width: 767.98px) {
+  .products .product.product-banner {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .products .product.product-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--pl-radius, 12px);
   }
 }
 
@@ -6532,6 +6606,60 @@ body.body-search .vp-sort-row .item-count-top {
   .children_categories .subcategory-box .child_category_name {
     font-size: .95rem;
     line-height: 1.25;
+  }
+}
+
+/* ---- Mobil: nejdřív 3 řádky, zbytek za tlačítkem ------------------
+   Kategorie jako Pánské mají 18 podkategorií = 9 řádků po dvou, takže
+   se k produktům dá dorolovat až po půl obrazovky dlaždic. Necháme
+   6 (3 řádky) a zbytek odkryje tlačítko „Zobrazit všechny".
+
+   Třídu .vp-subcat--collapsed a tlačítko přidává src/scripts/36-filter.js;
+   bez skriptu zůstane nativní stav (všechny dlaždice vidět) — bezpečný
+   směr selhání. Po kliknutí se tlačítko odstraní, zpátky se nesbaluje.
+
+   Breakpoint 767.98 px (a ne 500 px jako blok výše): 2 dlaždice na řádek
+   drží Bootstrap `row-cols-2` až do md, takže „6 = 3 řádky" platí
+   v celém rozsahu. Blok výše je starší, jeho hranici neměníme. */
+@media (max-width: 767.98px) {
+  .children_categories.vp-subcat--collapsed > *:nth-child(n+7) {
+    display: none;
+  }
+
+  /* Zelená pilulka stejným jazykem jako „Zobrazit vše" pod výpisem
+     (26-catalog.css) — jen přes celou šířku, ať je dobře na palec. */
+  .vp-subcat-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    width: 100%;
+    margin: -1.5rem 0 2rem;   /* stáhne se pod grid, který má mb-5 */
+    padding: .7rem 1.2rem;
+    background-color: #2e9e44;
+    border: 0;
+    border-radius: 999px;
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    transition: background-color .2s ease;
+  }
+  .vp-subcat-more:hover,
+  .vp-subcat-more:focus,
+  .vp-subcat-more:active {
+    background-color: #23843a;
+    color: #fff;
+    box-shadow: none;
+  }
+
+  /* Šipka: stejný znak „›" jako v mobilním menu, otočený dolů. */
+  .vp-subcat-more__ic {
+    display: inline-block;
+    transform: rotate(90deg);
+    font-size: 1.15rem;
+    line-height: 1;
   }
 }
 
@@ -11663,11 +11791,26 @@ a.vp-doprava__paylogo:hover {
   .vp-kt__newsletter-inner {
     grid-template-columns: 1fr;
   }
+  /* Pořadí na mobilu: nadpis → odstavec → maskot → formulář.
+     Hero je grid se dvěma dětmi (.vp-kt__hero-text s titulkem, leadem
+     a formulářem + .vp-kt__hero-media). Maskot měl `order:-1`, takže
+     skočil nad všechno a přerostl (naměřeno 340×476 px) — než zákazník
+     došel k textu, měl půl obrazovky ilustrace.
+
+     `display: contents` rozpustí wrapper, jeho děti se stanou grid items
+     a jdou seřadit mezi maskota. Je to bezpečné: .vp-kt__hero-text nemá
+     žádné vlastní pravidlo (žádný padding ani pozadí se neztrácí). */
+  .vp-kt__hero-text {
+    display: contents;
+  }
+  .vp-kt__title { order: 1; }
+  .vp-kt__lead { order: 2; }
   .vp-kt__hero-media {
-    order: -1;
-    max-width: 340px;
+    order: 3;
+    max-width: 170px;   /* SVG je na výšku → 170 px = ~238 px vysoký maskot */
     margin-inline: auto;
   }
+  .vp-kt__form-mount { order: 4; }
   .vp-kt__newsletter-inner {
     text-align: center;
   }

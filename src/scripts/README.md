@@ -25,7 +25,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 | `45-cart-popup.js` | Popup přidáno do košíku | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/45-cart-popup.js">` — **pin hashem**; styl `src/css/33-cart-popup.css`; texty cookie lišty se nastavují v administraci (styl `src/css/34-cookies.css` je čisté CSS) |
 | `50-checkout.js` | Pokladna (dopravy a platby) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/50-checkout.js">` — **pin hashem**; styl `src/css/10-checkout.css` (`.vp-lbl*`, `.vp-save*`, `.vp-optout*`) |
 | `35-listing-sort.js` | Řazení ve výpisech (klikací odkazy) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/35-listing-sort.js">` — **pin hashem**; styl `src/css/26-listing-sort.css` |
-| `36-filter.js` | Filtr — výchozí sbalený na mobilu | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/36-filter.js">` — **pin hashem**; styl `src/css/27-filter.css` |
+| `36-filter.js` | Výpis kategorie — filtr + podkategorie (mobil) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/36-filter.js">` — **pin hashem**; styl `src/css/27-filter.css` + `src/css/26-subcategories.css`. *(Položka se dřív jmenovala „Filtr — výchozí sbalený na mobilu"; přejmenovat, přibylo sbalení podkategorií.)* |
 | `koloo-wheel.html` | Koloo (kolo štěstí) | Na všech stránkách | ne (patička) | ⏳ vlož obsah `<script>` DOSLOVA (3rd-party async loader, kLicense `UNI-FB75BE3A-1714`). Vzhled/texty/kupóny/trigger se řeší v adminu Koloo (my.koloo.net), ne v kódu; z naší strany jen pozice sbaleného štítku — `src/css/37-koloo.css` |
 
 > ⚠️ **Sekce „Skripty" vkládá obsah DOSLOVA** (neobaluje ho). `<link>` a
@@ -170,6 +170,16 @@ Po prvním kliknutí uživatele na toggle se přestane vynucovat sbalení
 (`userToggled`). Idempotentní; mimo výpis kategorie (chybí
 `.category-filters-collapsible`) neudělá nic.
 
+Druhá věc, taky jen **pod 768 px**: **podkategorie nad výpisem**
+(`.children_categories`) zkrátí na **6 dlaždic = 3 řádky** a zbytek schová za
+tlačítko **„Zobrazit všechny"**. Pánské mají 18 podkategorií, tedy 9 řádků
+scrollu, než zákazník dojede k produktům. Sbalení kreslí CSS
+(`.vp-subcat--collapsed` + `.vp-subcat-more` v `src/css/26-subcategories.css`),
+skript jen přidá třídu a tlačítko — **bez skriptu zůstane nativní stav**
+(všechny dlaždice vidět), což je bezpečný směr selhání. Po kliknutí se tlačítko
+odstraní a zpátky se nesbaluje. Kategorie se **6 a méně** podkategoriemi
+tlačítko nedostanou. Idempotence přes `data-vp-subcat` na kontejneru.
+
 ## Co dělá `header.js`
 
 Do hlavičky přidá tři věci a jednu skryje: (1) **Heureka odznak**
@@ -181,6 +191,21 @@ v adminu bez kódu; (3) **vlastní ikonu košíku** (`cart.svg` místo Bootstrap
 `bi-handbag`). CSS (`20-header.css`) zároveň skryje duplicitní kontakt nahoře
 v modré liště — **pole „Doplňující informace" ale nechat vyplněné** (je zdroj
 dat pro linku). Zákaznická linka je jen na desktopu (≥992 px). Idempotentní.
+
+**Obsah mobilního menu (<992 px).** Nahoru přidá **4 barevné kategorie** shodné
+s dlaždicemi na HP, dolů **CMS odkazy** z modré lišty a nad ně **„Kontakty"**
+(v liště nejsou, odkaz se dohledá podle CMS ID `60969` — má ho patička na každé
+stránce, takže se nikde nehardcoduje doména).
+
+> **Které 4 kategorie.** Výběr je uložený jen v HP adminu („Titulek a kategorie
+> na homepage") a mimo HP v DOM není. Skript ho proto **na homepage vyčte
+> z dlaždic** (`.category-circle-item` → `/c/<ID>-…`) a uloží do `localStorage`
+> (`vp-hp-cats`); na ostatních stránkách ho odtud načte. Stojí to nula requestů
+> navíc a menu se srovná samo, když se dlaždice v administraci přehodí.
+> Konstanta `SIDE_CATEGORIES` v souboru je **záloha** pro první návštěvu mimo
+> HP (nebo zakázané úložiště); použije se i tehdy, když se z uložených ID
+> nepodaří poskládat **všechny** položky — menu tak nikdy nepřijde o zkratku.
+> Název a odkaz se vždy berou z navigace podle ID, nikdy natvrdo.
 
 Navíc v **mobilním menu (<992 px)** vrací kategoriím normální proklik: šablona
 jim dává `data-toggle="dropdown"`, takže Bootstrap na klik zavolá `preventDefault`

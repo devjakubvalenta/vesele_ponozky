@@ -29,18 +29,30 @@
 
   // Barevné kategorie na začátku mobilního menu — SHODNÉ s dlaždicemi na HP
   // (src/css/28-hp-kategorie.css). Výběr „které 4" je uložený jen v HP adminu
-  // („Titulek a kategorie na homepage") a mimo HP není dostupný, proto se sem
-  // zadává ID kategorie; NÁZEV i ODKAZ si skript vytáhne z navigace (je všude).
+  // („Titulek a kategorie na homepage") a mimo HP v DOM není — proto si ho
+  // skript na HP PŘEČTE z dlaždic a uloží (viz hpCategoryIds() níže), aby ho
+  // měl i na ostatních stránkách. Tenhle seznam je ZÁLOHA pro případ, že
+  // uložená data ještě nejsou (první návštěva mimo HP) nebo nesedí.
   // Pořadí = pořadí barev (c1 červená, c2 žlutá, c3 modrá, c4 zelená) jako na HP.
-  // Při změně kategorií na HP srovnat tento seznam (ID z URL /c/<ID>-…).
-  // name = záložní název (některé odkazy v navigaci nemají text — obrázkové);
-  // skript primárně bere název z navigace, name použije jen když tam text chybí.
+  // NÁZEV i ODKAZ si skript vždy vytáhne z navigace podle ID (je na všech
+  // stránkách); name = záložní název, když odkaz v navigaci text nemá.
   var SIDE_CATEGORIES = [
-    { id: "1243154", color: "c1", name: "Káva" },              // červená
-    { id: "1243415", color: "c2", name: "Adventní kalendáře" }, // žlutá
-    { id: "1243451", color: "c3", name: "Podkolenky" },        // modrá
-    { id: "1243496", color: "c4", name: "Zvířátka" }           // zelená
+    { id: "1243445", color: "c1", name: "MultiPACK" },          // červená
+    { id: "1243460", color: "c2", name: "Zdravotnictví" },      // žlutá
+    { id: "1243463", color: "c3", name: "Káva" },               // modrá
+    { id: "1243517", color: "c4", name: "Adventní kalendáře" }  // zelená
   ];
+
+  // Kam se ukládají ID dlaždic z HP. localStorage (ne session) schválně —
+  // ať uživatel po jedné návštěvě HP vidí správnou čtveřici i příště.
+  var HP_CATS_KEY = "vp-hp-cats";
+
+  // CMS položky, které nejsou v modré liště nahoře (.top-cms-menu), ale
+  // v mobilním menu je chceme. Vkládají se PŘED kopie z lišty, takže
+  // „Kontakty" vyjdou hned za kategorie a nad „O nás".
+  // Odkaz se dohledá v DOM podle ID (patička ho má na každé stránce) —
+  // doména se tím pádem nikde nehardcoduje.
+  var CMS_EXTRA = [{ id: "60969", name: "Kontakty" }];
 
   function insertHeureka(middleRow, logo) {
     if (document.getElementById("vp-hdr-heureka")) return;
@@ -125,6 +137,94 @@
     cart.insertBefore(img, cart.firstChild);
   }
 
+  /* Které 4 kategorie jsou na HP jako barevné dlaždice.
+     Na homepage je vyčteme přímo z DOM (.category-circle-item → /c/<ID>-…)
+     a uložíme; jinde je vezmeme z úložiště. Díky tomu se mobilní menu samo
+     srovná, když se dlaždice na HP v administraci přehodí — a nestojí to
+     žádný request navíc (HP zákazník tak jako tak dřív nebo později otevře).
+     Vrací pole ID, nebo null (pak se použije záložní SIDE_CATEGORIES). */
+  function hpCategoryIds() {
+    var tiles = document.querySelectorAll(".category-circle-list .category-circle-item");
+    var ids = [];
+    for (var i = 0; i < tiles.length; i++) {
+      var m = (tiles[i].getAttribute("href") || "").match(/\/c\/(\d+)-/);
+      if (m) ids.push(m[1]);
+    }
+    try {
+      if (ids.length) {
+        window.localStorage.setItem(HP_CATS_KEY, ids.join(","));
+        return ids;
+      }
+      var saved = window.localStorage.getItem(HP_CATS_KEY);
+      if (saved) {
+        ids = saved.split(",");
+        return ids.length ? ids : null;
+      }
+    } catch (e) {
+      // privátní režim / zakázané úložiště — jedeme dál na SIDE_CATEGORIES
+      if (ids.length) return ids;
+    }
+    return null;
+  }
+
+  /* Jedna barevná položka menu. Název i odkaz se berou z navigace podle ID
+     (je na všech stránkách), takže se nikde nehardcoduje doména ani text.
+     Vrací <li>, nebo null když se kategorie v navigaci nenajde. */
+  function catItem(id, color, fallbackName) {
+    var links = document.querySelectorAll('header #top-menu a[href*="/c/' + id + '-"]');
+    if (!links.length) return null;
+    // href z prvního výskytu; název z prvního odkazu, který text má (jinak fallback)
+    var name = fallbackName || "";
+    for (var k = 0; k < links.length; k++) {
+      var t = (links[k].textContent || "").trim();
+      if (t) { name = t; break; }
+    }
+    if (!name) return null;
+    var li = document.createElement("li");
+    li.className = "nav-item vp-menu-cat vp-menu-cat--" + color;
+    var a = document.createElement("a");
+    a.className = "nav-link";
+    a.href = links[0].getAttribute("href");
+    a.textContent = name;
+    a.insertAdjacentHTML("beforeend", '<span class="vp-menu-cat__arrow" aria-hidden="true">›</span>');
+    li.appendChild(a);
+    return li;
+  }
+
+  /* Pole <li> barevných kategorií. Primárně dle dlaždic z HP, ale jen když
+     se podaří poskládat VŠECHNY — jinak by menu tiše přišlo o zkratku, tak
+     radši spadneme na ověřený záložní seznam. */
+  function categoryItems() {
+    var ids = hpCategoryIds();
+    var out = [];
+    var i;
+    if (ids && ids.length) {
+      for (i = 0; i < ids.length; i++) {
+        var li = catItem(ids[i], "c" + ((i % 4) + 1), "");
+        if (li) out.push(li);
+      }
+      if (out.length === ids.length) return out;
+      out = [];
+    }
+    for (i = 0; i < SIDE_CATEGORIES.length; i++) {
+      var cat = SIDE_CATEGORIES[i];
+      var fli = catItem(cat.id, cat.color, cat.name);
+      if (fli) out.push(fli);
+    }
+    return out;
+  }
+
+  function cmsItem(href, text) {
+    var li = document.createElement("li");
+    li.className = "nav-item vp-menu-cms";
+    var a = document.createElement("a");
+    a.className = "nav-link";
+    a.href = href;
+    a.textContent = text;
+    li.appendChild(a);
+    return li;
+  }
+
   // Mobilní menu: 4 barevné kategorie nahoru + CMS položky (z modré lišty) dolů.
   // Vše jde do nativního .navbar-nav; CSS je zobrazí jen na mobilu (na desktopu
   // zůstává vodorovné menu + modrá lišta beze změny). Hlavní kategorie nedotčeny.
@@ -132,42 +232,27 @@
     var navUl = document.querySelector("#navbarSupportedContent .navbar-nav");
     if (!navUl || navUl.querySelector(".vp-menu-cat")) return; // idempotence
 
-    // 1. barevné kategorie na začátek (název + odkaz z navigace dle ID)
+    // 1. barevné kategorie na začátek
+    var items = categoryItems();
     var frag = document.createDocumentFragment();
-    for (var i = 0; i < SIDE_CATEGORIES.length; i++) {
-      var cat = SIDE_CATEGORIES[i];
-      var links = document.querySelectorAll('header #top-menu a[href*="/c/' + cat.id + '-"]');
-      if (!links.length) continue;
-      // href z prvního výskytu; název z prvního odkazu, který text má (jinak fallback)
-      var href = links[0].getAttribute("href");
-      var name = cat.name || "";
-      for (var k = 0; k < links.length; k++) {
-        var t = (links[k].textContent || "").trim();
-        if (t) { name = t; break; }
-      }
-      var li = document.createElement("li");
-      li.className = "nav-item vp-menu-cat vp-menu-cat--" + cat.color;
-      var a = document.createElement("a");
-      a.className = "nav-link";
-      a.href = href;
-      a.textContent = name;
-      a.insertAdjacentHTML("beforeend", '<span class="vp-menu-cat__arrow" aria-hidden="true">›</span>');
-      li.appendChild(a);
-      frag.appendChild(li);
-    }
+    for (var i = 0; i < items.length; i++) frag.appendChild(items[i]);
     navUl.insertBefore(frag, navUl.firstChild);
 
-    // 2. CMS položky z modré lišty na konec menu (jen kopie — lišta na desktopu zůstává)
+    // 2a. CMS položky, které v modré liště nejsou (Kontakty) — jdou první,
+    //     tedy hned pod kategorie a nad „O nás".
+    for (var e = 0; e < CMS_EXTRA.length; e++) {
+      var extra = CMS_EXTRA[e];
+      var src = document.querySelector('a[href*="/cms/' + extra.id + '-"]');
+      if (!src) continue; // odkaz nikde na stránce → položku nevytvářet
+      navUl.appendChild(cmsItem(src.getAttribute("href"), extra.name));
+    }
+
+    // 2b. CMS položky z modré lišty na konec menu (jen kopie — lišta na desktopu zůstává)
     var cmsLinks = document.querySelectorAll("header .main-nav .top-cms-menu a");
     for (var j = 0; j < cmsLinks.length; j++) {
-      var cli = document.createElement("li");
-      cli.className = "nav-item vp-menu-cms";
-      var ca = document.createElement("a");
-      ca.className = "nav-link";
-      ca.href = cmsLinks[j].getAttribute("href");
-      ca.textContent = (cmsLinks[j].textContent || "").trim();
-      cli.appendChild(ca);
-      navUl.appendChild(cli);
+      navUl.appendChild(
+        cmsItem(cmsLinks[j].getAttribute("href"), (cmsLinks[j].textContent || "").trim())
+      );
     }
   }
 

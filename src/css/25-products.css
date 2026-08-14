@@ -577,6 +577,25 @@ body.homepage .products .product figure > img {
   .products .product figure {
     height: 230px;               /* nativně 260px */
   }
+
+  /* ---- Chipy velikostí: ukázat VŠECHNY, po dvou na řádek --------------
+     Nativní clip (výška 1 řádku + overflow:hidden, viz ř. 222) na mobilu
+     ruším — u půlkarty se vešly jen 2–3 velikosti ze čtyř a zákazník
+     nevěděl, že se jeho číslo vyrábí. Platforma navíc přebytečné chipy
+     schovává třídou .variant-box-hidden (display:none v šabloně) →
+     odkrytí musí být !important, jinak vyhraje specifičtější nativní
+     selektor. Šířka calc(50% - 3px) = polovina minus půlka 6px gapu. */
+  .products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row {
+    height: auto;
+    overflow: visible;
+  }
+  .products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box {
+    flex: 0 0 calc(50% - 3px);
+    justify-content: center;
+  }
+  .products .product .show_variants_on_product_list_row-container .show_variants_on_product_list_row .variant-box.variant-box-hidden {
+    display: inline-flex !important;
+  }
 }
 
 /* ===== HP: produktové bloky = horizontální slider (jen mobil) =========
@@ -632,5 +651,25 @@ body.homepage .products .product figure > img {
     flex: 0 0 15px;            /* menší ikona košíku (nativně 18px) */
     width: 15px;
     height: 15px;
+  }
+}
+
+/* ===== Akční banner ve výpisu (admin „Akční bannery") ================
+   Renderuje se jako sourozenec produktových karet
+   (<a class="product product-banner … col-xs-12 col-lg-4 col-sm-6">).
+   `col-xs-12` v Bootstrapu 4/5 NEEXISTUJE → na mobilu banner nedostane
+   žádnou šířku z gridu a roztáhne se přes celý řádek, zatímco karty jsou
+   `col-6`. Srovnáváme ho tedy na půlku, ať sedí do mřížky jako dlaždice.
+   Obrázek nemá width:100 % (natural 314 px), na půlkarte by přetekl. */
+@media (max-width: 767.98px) {
+  .products .product.product-banner {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .products .product.product-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--pl-radius, 12px);
   }
 }

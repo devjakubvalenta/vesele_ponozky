@@ -67,3 +67,57 @@
     line-height: 1.25;
   }
 }
+
+/* ---- Mobil: nejdřív 3 řádky, zbytek za tlačítkem ------------------
+   Kategorie jako Pánské mají 18 podkategorií = 9 řádků po dvou, takže
+   se k produktům dá dorolovat až po půl obrazovky dlaždic. Necháme
+   6 (3 řádky) a zbytek odkryje tlačítko „Zobrazit všechny".
+
+   Třídu .vp-subcat--collapsed a tlačítko přidává src/scripts/36-filter.js;
+   bez skriptu zůstane nativní stav (všechny dlaždice vidět) — bezpečný
+   směr selhání. Po kliknutí se tlačítko odstraní, zpátky se nesbaluje.
+
+   Breakpoint 767.98 px (a ne 500 px jako blok výše): 2 dlaždice na řádek
+   drží Bootstrap `row-cols-2` až do md, takže „6 = 3 řádky" platí
+   v celém rozsahu. Blok výše je starší, jeho hranici neměníme. */
+@media (max-width: 767.98px) {
+  .children_categories.vp-subcat--collapsed > *:nth-child(n+7) {
+    display: none;
+  }
+
+  /* Zelená pilulka stejným jazykem jako „Zobrazit vše" pod výpisem
+     (26-catalog.css) — jen přes celou šířku, ať je dobře na palec. */
+  .vp-subcat-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    width: 100%;
+    margin: -1.5rem 0 2rem;   /* stáhne se pod grid, který má mb-5 */
+    padding: .7rem 1.2rem;
+    background-color: #2e9e44;
+    border: 0;
+    border-radius: 999px;
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    transition: background-color .2s ease;
+  }
+  .vp-subcat-more:hover,
+  .vp-subcat-more:focus,
+  .vp-subcat-more:active {
+    background-color: #23843a;
+    color: #fff;
+    box-shadow: none;
+  }
+
+  /* Šipka: stejný znak „›" jako v mobilním menu, otočený dolů. */
+  .vp-subcat-more__ic {
+    display: inline-block;
+    transform: rotate(90deg);
+    font-size: 1.15rem;
+    line-height: 1;
+  }
+}

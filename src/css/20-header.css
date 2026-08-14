@@ -522,6 +522,34 @@ header #top-menu .navbar-nav .nav-item.active > .nav-link {
   header #top-menu .yamm-dropdown-menu li.cat-l-second:hover {
     background: var(--hdr-yellow, #fbbc02);
   }
+
+  /* ---- Proklik z CELÉ dlaždice, ne jen z ikony a názvu -------------
+     Šablona dělá z <li> jen HOVER plochu — odkazy jsou dva malé <a>
+     uvnitř: jeden v .cat-l-second-img-wrap (~25–80 px) a jeden v
+     .cat-l-second-name (má sice display:block, ale uvnitř sloupce
+     width:80 %). Mezera mezi nimi i náš padding výše se podbarví žlutě,
+     ale klik tam nic neudělá — vypadá to jako rozbitá dlaždice.
+
+     Řešení je Bootstrapí „stretched link": název dostane ::after
+     roztažené přes celé <li>. Overlay překryje i odkaz na ikoně, ale
+     ten míří na STEJNOU URL, takže se nic neztrácí.
+     Ve výpisu podkategorií na stránce je dlaždice jeden <a>, proto tam
+     problém nikdy nebyl (viz 26-subcategories.css). */
+  header #top-menu .yamm-dropdown-menu li.cat-l-second {
+    position: relative;
+  }
+  header #top-menu .yamm-dropdown-menu li.cat-l-second .cat-l-second-name > span > a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  /* Třetí úroveň je globálně skrytá (00-misc.css), tohle je jen pojistka —
+     kdyby se někdy odkryla, musí zůstat nad overlayem a klikatelná. */
+  header #top-menu .yamm-dropdown-menu li.cat-l-second .cats-l-third {
+    position: relative;
+    z-index: 2;
+  }
 }
 
 header #top-menu .navbar-toggler {
@@ -1578,7 +1606,7 @@ header .vp-hdr-cart__ic {
   }
 }
 
-/* ---- Mobil/tablet (<992): zákaznická linka i Heureka skryté ----
+/* ---- Mobil/tablet (<992): zákaznická linka skrytá, Heureka menší ----
    Layout (dle přání uživatele, varianta A): řádek 1 = logo | účet, košík,
    hamburger — všechny akční prvky v jedné linii s logem (col 1fr auto auto);
    řádek 2 = vyhledávání přes celou šířku. Info ikonka (a.cms-mobile) skrytá
@@ -1590,9 +1618,16 @@ header .vp-hdr-cart__ic {
   header .vp-hdr-care {
     display: none !important;
   }
-  /* Heureka na mobilu pryč — uvolní místo většímu logu (dle přání uživatele) */
-  header .vp-hdr-heureka {
-    display: none !important;
+  /* Heureka odznak zůstává i na mobilu vedle loga, jen menší.
+     Odznak 157×48 při výšce 30 px zabere 77 px. Ověřeno živě: na 390 px
+     zbývá za odznakem 56 px k ikonám, na 360 px ještě 26 px — vejde se.
+     Pod ~330 px už ne, ale `.logotype` má flex-wrap, takže se odznak
+     zalomí pod logo (hlavička o 26 px vyšší) místo aby cokoli přeteklo. */
+  header .logotype {
+    gap: 0.35rem 0.6rem;
+  }
+  header .vp-hdr-heureka img {
+    height: 30px;
   }
   /* Info ikonka (i) — dle přání uživatele pryč z hlavičky */
   header .header-shop-basket-button a.header-cms-icon.cms-mobile {

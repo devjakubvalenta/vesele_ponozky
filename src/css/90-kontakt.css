@@ -327,11 +327,26 @@
   .vp-kt__newsletter-inner {
     grid-template-columns: 1fr;
   }
+  /* Pořadí na mobilu: nadpis → odstavec → maskot → formulář.
+     Hero je grid se dvěma dětmi (.vp-kt__hero-text s titulkem, leadem
+     a formulářem + .vp-kt__hero-media). Maskot měl `order:-1`, takže
+     skočil nad všechno a přerostl (naměřeno 340×476 px) — než zákazník
+     došel k textu, měl půl obrazovky ilustrace.
+
+     `display: contents` rozpustí wrapper, jeho děti se stanou grid items
+     a jdou seřadit mezi maskota. Je to bezpečné: .vp-kt__hero-text nemá
+     žádné vlastní pravidlo (žádný padding ani pozadí se neztrácí). */
+  .vp-kt__hero-text {
+    display: contents;
+  }
+  .vp-kt__title { order: 1; }
+  .vp-kt__lead { order: 2; }
   .vp-kt__hero-media {
-    order: -1;
-    max-width: 340px;
+    order: 3;
+    max-width: 170px;   /* SVG je na výšku → 170 px = ~238 px vysoký maskot */
     margin-inline: auto;
   }
+  .vp-kt__form-mount { order: 4; }
   .vp-kt__newsletter-inner {
     text-align: center;
   }
