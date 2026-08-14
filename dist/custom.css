@@ -6875,39 +6875,14 @@ body.body-search .vp-sort-row .item-count-top {
   font-size: 0.8125rem !important;
 }
 
-/* ---- Velikost: hodnoty do dvou sloupců ----------------------------
-   Velikostí je hodně (16 u dospělých, u dětských kategorií i přes 20)
-   a v jednom sloupci kvůli nim bylo nutné scrollovat přes celý sidebar.
-
-   Multi-column (`columns`), ne grid: sloupce se plní PO SLOUPCÍCH
-   (35–40 vlevo, 41–46 vpravo), což u číselné řady čte přirozeně —
-   grid by hodnoty střídal po řádcích (35 | 36 / 37 | 38). Sloupce se
-   navíc samy vyváží, takže lichý počet hodnot nevadí.
-
-   Cílíme jen na `.show`: `.filter-group-filters` je Bootstrap `.collapse`,
-   bez `.show` musí zůstat `display: none` — jinak by se po sbalení skupiny
-   hodnoty neschovaly. Motiv (52221) necháváme v jednom sloupci, názvy
-   („Zdravotnictví", „Povolání") by se do půlky sidebaru nevešly. */
-.category-filters .filter-group[data-filter-group-id="52209"] .filter-group-filters.show {
-  columns: 2;
-  column-gap: 1rem;
-}
-/* Počet kusů u velikostí pryč — u čísel nic neříká („40 (210)") a ve dvou
-   sloupcích jen tříští řádek. U Motivu počty zůstávají. */
-.category-filters .filter-group[data-filter-group-id="52209"] .filter-value-count {
-  display: none !important;
-}
-
-/* Ať se řádek (checkbox + název) nerozlomí mezi sloupce.
-   `position: relative` je tu nutnost: šablona dává počtu kusů
-   `position: absolute; right: 9px` a bez vlastního kontextu se všechny počty
-   zaklesnou na pravý okraj CELÉ skupiny — v jednom sloupci to náhodou vyšlo,
-   ve dvou by se naskládaly přes sebe. Takhle se každý počet drží svého řádku
-   (a tím i svého sloupce). */
-.category-filters .filter-group[data-filter-group-id="52209"] .filter-group-filter {
-  break-inside: avoid;
-  position: relative;
-}
+/* ---- Velikost: jeden sloupec + počty kusů (nativní stav) -----------
+   Skupina Velikost (52209) byla dočasně ve dvou sloupcích a bez počtů kusů
+   (commity ef2b6cc + 5106a62) — klientovi se to nelíbilo, vráceno zpět.
+   Nechávat to tu jako komentář má smysl: šablona dává počtu kusů
+   `position: absolute; right: 9px` bez vlastního kontextu, takže se počty
+   zaklesnou na pravý okraj CELÉ skupiny — v jednom sloupci to sedí, při
+   případném dalším pokusu o víc sloupců je potřeba `position: relative`
+   na `.filter-group-filter`, jinak se počty naskládají přes sebe. */
 
 /* ==== 27-hp-recenze.css ==== */
 
