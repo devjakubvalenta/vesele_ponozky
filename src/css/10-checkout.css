@@ -1159,3 +1159,81 @@ body.body-cart .discount-strip.discount-percentage {
 
 
 
+/* Rozvržení sloupce „Cena/Pár": přeškrtnutá cena a odznak slevy každý na svém
+   řádku, aktuální cena celá pod nimi.
+
+   Proč to bylo rozbité: šablona píše `<span old><span pill><br><span cena>`,
+   jenže `.prices-col` je flex (ř. 195) a `<br>` ve flexu žádný zlom neudělá —
+   všechno se naskládalo do jednoho řádku a při krátké částce se utrhlo „Kč"
+   („-41 %  99" / „Kč"). `flex-basis: 100%` na obou prvních prvcích zlom vrátí
+   a poslední řádek zůstane „99 Kč" pohromadě. */
+.main-order-form .cart-product .prices-col .discount-old-price,
+.main-order-form .cart-product .prices-col .discount-percentage {
+  flex: 0 0 100%;
+  margin: 0 0 0.25rem;
+}
+
+/* Tablet 768–991 px: nativní sloupec „Cena/Pár" má zůstat schovaný.
+   Šablona mu dává `d-none d-lg-block` (= vidět až od 992 px), jenže naše
+   pravidlo `display: flex !important` v bloku min-width: 768px (ř. 182–189)
+   Bootstrapu `d-none` přebíjelo, takže se od 768 px zase objevil — a to
+   ve zúženém sloupci, kde se lámalo „149 / Kč". Vracíme Bootstrapu slovo;
+   slevu v tomhle rozmezí ukazuje .vp-save (viz níž). */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .main-order-form .cart-product > .prices-col.d-none {
+    display: none !important;
+  }
+}
+
+/* ==== Sleva u položky na mobilu (.vp-save, staví 50-checkout.js) =======
+   Sloupec „Cena/Pár" má nativně `d-none d-lg-block`, takže pod 992 px není
+   vidět přeškrtnutá cena ani odznak. Nedá se jen odkrýt — je to cena za pár,
+   ne za řádek. Skript proto dopočítá přeškrtnutou cenu ZA ŘÁDEK a vloží ji
+   spolu s odznakem nad celkovou částku.
+
+   Na ≥992 px zůstává nativní sloupec, takže se tenhle blok skryje. */
+.main-order-form .cart-product .vp-save {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  margin-bottom: 0.15rem;
+  line-height: 1.2;
+}
+.main-order-form .cart-product .vp-save-old {
+  font-size: 0.8125rem;
+  color: var(--cx-text-muted);
+  text-decoration: line-through;
+  white-space: nowrap;
+}
+.main-order-form .cart-product .vp-save-pct {
+  display: inline-block;
+  background-color: #1361cf;
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+@media (min-width: 992px) {
+  .main-order-form .cart-product .vp-save {
+    display: none;
+  }
+}
+
+/* ==== Souhlasy: „Nesouhlasím" (opt-out) ===============================
+   50-checkout.js schová nativní checkbox (zůstává ve formuláři, aby se
+   odeslal) a před popisek vloží .vp-optout s obrácenou logikou.
+   `position: absolute` místo `display: none` — skryté pole se odesílá dál
+   a zůstane dosažitelné pro případné validace šablony. */
+.order-recap .terms_checkboxes_div input.vp-optout-real {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+}

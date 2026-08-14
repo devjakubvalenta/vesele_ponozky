@@ -1265,6 +1265,87 @@ body.body-cart .discount-strip.discount-percentage {
   white-space: nowrap !important;
 }
 
+
+
+/* Rozvržení sloupce „Cena/Pár": přeškrtnutá cena a odznak slevy každý na svém
+   řádku, aktuální cena celá pod nimi.
+
+   Proč to bylo rozbité: šablona píše `<span old><span pill><br><span cena>`,
+   jenže `.prices-col` je flex (ř. 195) a `<br>` ve flexu žádný zlom neudělá —
+   všechno se naskládalo do jednoho řádku a při krátké částce se utrhlo „Kč"
+   („-41 %  99" / „Kč"). `flex-basis: 100%` na obou prvních prvcích zlom vrátí
+   a poslední řádek zůstane „99 Kč" pohromadě. */
+.main-order-form .cart-product .prices-col .discount-old-price,
+.main-order-form .cart-product .prices-col .discount-percentage {
+  flex: 0 0 100%;
+  margin: 0 0 0.25rem;
+}
+
+/* Tablet 768–991 px: nativní sloupec „Cena/Pár" má zůstat schovaný.
+   Šablona mu dává `d-none d-lg-block` (= vidět až od 992 px), jenže naše
+   pravidlo `display: flex !important` v bloku min-width: 768px (ř. 182–189)
+   Bootstrapu `d-none` přebíjelo, takže se od 768 px zase objevil — a to
+   ve zúženém sloupci, kde se lámalo „149 / Kč". Vracíme Bootstrapu slovo;
+   slevu v tomhle rozmezí ukazuje .vp-save (viz níž). */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .main-order-form .cart-product > .prices-col.d-none {
+    display: none !important;
+  }
+}
+
+/* ==== Sleva u položky na mobilu (.vp-save, staví 50-checkout.js) =======
+   Sloupec „Cena/Pár" má nativně `d-none d-lg-block`, takže pod 992 px není
+   vidět přeškrtnutá cena ani odznak. Nedá se jen odkrýt — je to cena za pár,
+   ne za řádek. Skript proto dopočítá přeškrtnutou cenu ZA ŘÁDEK a vloží ji
+   spolu s odznakem nad celkovou částku.
+
+   Na ≥992 px zůstává nativní sloupec, takže se tenhle blok skryje. */
+.main-order-form .cart-product .vp-save {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  margin-bottom: 0.15rem;
+  line-height: 1.2;
+}
+.main-order-form .cart-product .vp-save-old {
+  font-size: 0.8125rem;
+  color: var(--cx-text-muted);
+  text-decoration: line-through;
+  white-space: nowrap;
+}
+.main-order-form .cart-product .vp-save-pct {
+  display: inline-block;
+  background-color: #1361cf;
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+@media (min-width: 992px) {
+  .main-order-form .cart-product .vp-save {
+    display: none;
+  }
+}
+
+/* ==== Souhlasy: „Nesouhlasím" (opt-out) ===============================
+   50-checkout.js schová nativní checkbox (zůstává ve formuláři, aby se
+   odeslal) a před popisek vloží .vp-optout s obrácenou logikou.
+   `position: absolute` místo `display: none` — skryté pole se odesílá dál
+   a zůstane dosažitelné pro případné validace šablony. */
+.order-recap .terms_checkboxes_div input.vp-optout-real {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+}
+
 /* ==== 12-dekovacka.css ==== */
 
 /* Děkovačka (potvrzovací stránka po objednávce) — brandový vzhled.
@@ -1404,6 +1485,48 @@ body.body-cart .discount-strip.discount-percentage {
 .vp-dekovacka__fact--total strong {
   font-size: 1.15rem;
   letter-spacing: -0.02em;
+}
+
+/* ---- QR platba ----------------------------------------------------
+   Blok drží placeholder %qrcode%. Ten platforma nahradí obrázkem jen
+   u převodu — u dobírky a karty zůstane prázdný, takže by na stránce
+   visel osamocený nadpis. `:has(img)` proto blok ukáže až tehdy, když
+   v něm QR kód opravdu je (stejný recept jako u panelů služeb
+   v 10-checkout.css). */
+.vp-dekovacka__qr {
+  display: none;
+}
+.vp-dekovacka__qr:has(img) {
+  display: block;
+  background: var(--dk-soft);
+  border: 1px solid var(--dk-border);
+  border-radius: var(--dk-radius);
+  padding: 1.1rem;
+  margin-bottom: 1.6rem;
+  text-align: center;
+}
+.vp-dekovacka__qr-title {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--dk-muted);
+  margin-bottom: 0.75rem;
+}
+.vp-dekovacka__qr-img img {
+  margin: 0 auto;
+  width: 180px;
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 0.5rem;
+}
+.vp-dekovacka__qr-note {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--dk-muted);
 }
 
 /* ---- CTA ----------------------------------------------------------
@@ -2262,8 +2385,18 @@ header .navbar-toggler-top .navbar-toggler {
     display: none !important;
   }
 
+  /* Modrý pruh pod odpočtem je na mobilu PRÁZDNÝ, takže se schovává celý.
+     Pravidlo tu původně stálo jako `display: flex !important`, protože se do
+     pruhu vešla zákaznická linka; jenže CMS odkazy se pod 768 px skrývají
+     (ř. 655) a `.company-info` uvnitř je taky `display: none` — zbyl jen 36 px
+     modré plochy bez obsahu (ověřeno na 360/480/600/767 px: obě děti mají
+     nulovou výšku a pruh nemá žádný text). Od 768 px se pruh vrací i s odkazy,
+     proto je změna jen v tomhle mobilním bloku.
+
+     Šablona sama má `header .main-nav { display: none }` pod 768 px — tímhle
+     jí to jen přestáváme přebíjet. */
   header nav.main-nav {
-    display: flex !important;
+    display: none !important;
   }
 
   header .company-info,
@@ -3569,6 +3702,70 @@ header #top-menu .navbar-nav .nav-item.active > .nav-link[href*="vyprodej"] {
    Text se na jeden řádek vejde (142 px, bez přetečení) → jen zakázat zlom. */
 header .header-shop-basket-button .btn.btn-primary {
   white-space: nowrap !important;
+}
+
+/* ==== Hlavička v košíku ----------------------------------------------
+   Šablona v košíku menu SCHOVÁVÁ: `.body-cart header #top-menu { display:none }`
+   (style.css). Markup ale renderuje celý — #navbarSupportedContent má všech
+   ~186 odkazů. Právě proto v košíku „nefungoval hamburger": viditelný toggler
+   sedí v .header-middle (.navbar-toggler-top) a míří na #navbarSupportedContent,
+   který je uvnitř skrytého #top-menu — collapse se rozbalil do ničeho.
+   Odkrytím #top-menu se tedy spraví menu i hamburger jednou změnou.
+
+   Specificita: šablonový selektor má (0,1,1,1); `body.body-cart` přidá druhou
+   třídu → (0,2,1,1) a vyhrajeme bez !important. */
+body.body-cart header #top-menu {
+  display: block;
+}
+
+/* ==== Sticky hlavička (hide-on-scroll) -------------------------------
+   Při scrollu dolů hlavička odjede nahoru, při scrollu nahoru se vrátí.
+   Třídu .vp-hdr-off přepíná header.js.
+
+   Kontext, který je potřeba znát:
+   • Odpočtová lišta #notification-bar je `position: fixed; top: 0` se
+     z-indexem 99982 (šablonový mechanismus „make-sticky"). Hlavička se proto
+     lepí až POD ni — odsazení počítá JS do --vp-hdr-top (0, když lišta chybí
+     nebo ji zákazník zavře) a zůstává o 1 pod jejím z-indexem.
+   • Šablona si sama dělá sticky z modré lišty #top-menu (fixed, top 41px).
+     Uvnitř přilepené hlavičky by se lišta zdvojila, tak ji vracíme do toku.
+     Placeholder, který si šablona vkládá (#is-sticky-placeholder-N), má
+     výšku 1 px, takže se o něj není nutné starat. */
+body > header {
+  position: sticky;
+  top: var(--vp-hdr-top, 0px);
+  z-index: 99981;
+  transition: transform 0.28s ease;
+  will-change: transform;
+}
+
+body > header.vp-hdr-off {
+  transform: translateY(calc(-100% - var(--vp-hdr-top, 0px)));
+}
+
+body > header #top-menu.is-sticky {
+  position: static !important;
+  width: auto !important;
+  z-index: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body > header {
+    transition: none;
+  }
+}
+
+/* Přilepená hlavička na mobilu: horní pruh s CMS odkazy ubere ~42 px výšky
+   a v přilepeném stavu není k ničemu (odkazy jsou i v patičce a v menu).
+   Šablona dělá totéž ve svém `header.is-sticky .under-header`.
+
+   `!important` je tu nutnost, ne pohodlí: `header nav.main-nav` výš v tomhle
+   souboru (mobilní blok, ř. ~659) drží `display: flex !important` — bez toho
+   by pruh zůstal viset i v přilepené hlavičce. */
+@media (max-width: 991.98px) {
+  body > header.vp-hdr-stuck .main-nav {
+    display: none !important;
+  }
 }
 
 /* ==== 24-product-detail.css ==== */

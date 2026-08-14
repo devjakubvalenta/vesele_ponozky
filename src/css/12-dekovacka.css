@@ -137,6 +137,48 @@
   letter-spacing: -0.02em;
 }
 
+/* ---- QR platba ----------------------------------------------------
+   Blok drží placeholder %qrcode%. Ten platforma nahradí obrázkem jen
+   u převodu — u dobírky a karty zůstane prázdný, takže by na stránce
+   visel osamocený nadpis. `:has(img)` proto blok ukáže až tehdy, když
+   v něm QR kód opravdu je (stejný recept jako u panelů služeb
+   v 10-checkout.css). */
+.vp-dekovacka__qr {
+  display: none;
+}
+.vp-dekovacka__qr:has(img) {
+  display: block;
+  background: var(--dk-soft);
+  border: 1px solid var(--dk-border);
+  border-radius: var(--dk-radius);
+  padding: 1.1rem;
+  margin-bottom: 1.6rem;
+  text-align: center;
+}
+.vp-dekovacka__qr-title {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--dk-muted);
+  margin-bottom: 0.75rem;
+}
+.vp-dekovacka__qr-img img {
+  margin: 0 auto;
+  width: 180px;
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 0.5rem;
+}
+.vp-dekovacka__qr-note {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--dk-muted);
+}
+
 /* ---- CTA ----------------------------------------------------------
    Zelená pilulka s bílým textem.
 

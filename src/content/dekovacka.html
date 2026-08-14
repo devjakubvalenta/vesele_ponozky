@@ -15,9 +15,13 @@
   Placeholdery (reference/administrace-moznosti.md):
     %o = číslo objednávky   %k = cena vč. dopravy
     %e = e-mail             %n = jméno            %u = doména obchodu
+    %qrcode% = QR kód pro mobilní platbu
   Pozn.: %x (datum) je zatím NEOVĚŘENÝ — dost možná datum objednávky, ne
   doručení. Řádek „Předpokládané doručení" proto stojí samostatně, aby šel
   snadno přejmenovat nebo smazat, až se ověří, co %x reálně vypíše.
+
+  QR blok se u dobírky a karty nevykreslí (placeholder zůstane prázdný), proto
+  ho CSS ukazuje jen tehdy, když v něm opravdu obrázek je (.vp-dekovacka__qr:has(img)).
 -->
 <div class="vp-dekovacka">
 
@@ -54,7 +58,17 @@
       </div>
     </div>
 
-    <a class="vp-dekovacka__cta" href="%u">Pokračovat v nákupu</a>
+    <div class="vp-dekovacka__qr">
+      <span class="vp-dekovacka__qr-title">Zaplaťte mobilem</span>
+      <div class="vp-dekovacka__qr-img">%qrcode%</div>
+      <span class="vp-dekovacka__qr-note">Načtěte QR kód v bankovní aplikaci — částka i variabilní symbol se vyplní samy.</span>
+    </div>
+
+    <!-- Cesta od kořene, ne %u: neověřili jsme, jestli %u končí lomítkem, a
+         „%ucms/…" by se při chybějícím lomítku slepilo do nefunkční adresy.
+         Na technické adrese (/shops/28056/cms/…) by odkaz nesedl, děkovačku
+         ale zákazník vidí jen na produkci — tam je cesta správně. -->
+    <a class="vp-dekovacka__cta" href="/cms/56952-o-nas">Přečtěte si náš příběh</a>
 
   </div>
 

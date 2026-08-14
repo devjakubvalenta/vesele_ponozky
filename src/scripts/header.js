@@ -248,9 +248,74 @@
     }).observe(document.body, { childList: true, subtree: true });
   }
 
+  /* == Sticky hlavička: skrýt při scrollu dolů, vrátit při scrollu nahoru ==
+     Styl (position: sticky, transform) je v src/css/20-header.css, tady se
+     jen přepínají třídy.
+
+     Odsazení shora: odpočtová lišta #notification-bar je `position: fixed`
+     (šablonový „make-sticky"), takže by hlavička zajela pod ni. Její výšku
+     měříme za běhu do --vp-hdr-top — zákazník lištu může zavřít křížkem a
+     text v ní se mění, takže napevno se to napsat nedá.
+
+     Kdy NEskrývat: nad prahem 120 px (ať to nepodskakuje hned na začátku
+     stránky) a s otevřeným mobilním menu / vyhledáváním — rozbalený panel je
+     uvnitř hlavičky, odjel by ze obrazovky i s ním. */
+  var HIDE_AFTER = 120;   // px scrollu, než se začne skrývat
+  var DIR_SLOP = 4;       // px, aby se to nepřepínalo na chvění trackpadu
+
+  function stickyHeader() {
+    var hdr = document.querySelector("header");
+    if (!hdr) return;
+
+    var last = window.pageYOffset;
+    var ticking = false;
+
+    function menuOpen() {
+      return (
+        document.body.classList.contains("mobile-menu-locked") ||
+        !!document.querySelector("#navbarSupportedContent.show, #navbarSupportedContent.collapsing")
+      );
+    }
+
+    /* Výška lišty se počítá jen když opravdu překrývá obsah (fixed). */
+    function topOffset() {
+      var bar = document.getElementById("notification-bar");
+      if (!bar || window.getComputedStyle(bar).position !== "fixed") return 0;
+      return Math.round(bar.getBoundingClientRect().height);
+    }
+
+    function apply() {
+      ticking = false;
+      var y = window.pageYOffset;
+
+      document.documentElement.style.setProperty("--vp-hdr-top", topOffset() + "px");
+      hdr.classList.toggle("vp-hdr-stuck", y > HIDE_AFTER);
+
+      if (menuOpen() || y <= HIDE_AFTER) {
+        hdr.classList.remove("vp-hdr-off");
+      } else if (y > last + DIR_SLOP) {
+        hdr.classList.add("vp-hdr-off");
+      } else if (y < last - DIR_SLOP) {
+        hdr.classList.remove("vp-hdr-off");
+      }
+      last = y;
+    }
+
+    function schedule() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(apply);
+    }
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    apply();
+  }
+
   function init() {
     fixTechDomainUrls();      // běží na všech stránkách, i tam kde není hlavička
     watchTechDomainUrls();
+    stickyHeader();
 
     var middleRow = document.querySelector("header .header-middle .menu-gutters");
     if (!middleRow) middleRow = document.querySelector("header .header-middle .row");

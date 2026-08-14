@@ -23,7 +23,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 | `header.js` | Hlavička (Heureka + zákaznická linka + cart ikona) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/header.js">` — **pin hashem**; styl `src/css/20-header.css`. Telefon/e-mail v lince se čtou z pole „Doplňující informace" (nemazat ho) |
 | `40-product-detail.js` | Produktový detail (recenze, slevový pill, množství) | **Pouze produktový detail** | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/40-product-detail.js">` — **pin hashem**; styl `src/css/24-product-detail.css`; benefity do admin pole „Produktový detail" = `src/content/product-detail-benefits.html` |
 | `45-cart-popup.js` | Popup přidáno do košíku | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/45-cart-popup.js">` — **pin hashem**; styl `src/css/33-cart-popup.css`; texty cookie lišty se nastavují v administraci (styl `src/css/34-cookies.css` je čisté CSS) |
-| `50-checkout.js` | Pokladna (dopravy a platby) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/50-checkout.js">` — **pin hashem**; styl `src/css/10-checkout.css` (`.vp-lbl*`) |
+| `50-checkout.js` | Pokladna (dopravy a platby) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/50-checkout.js">` — **pin hashem**; styl `src/css/10-checkout.css` (`.vp-lbl*`, `.vp-save*`, `.vp-optout*`) |
 | `35-listing-sort.js` | Řazení ve výpisech (klikací odkazy) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/35-listing-sort.js">` — **pin hashem**; styl `src/css/26-listing-sort.css` |
 | `36-filter.js` | Filtr — výchozí sbalený na mobilu | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/36-filter.js">` — **pin hashem**; styl `src/css/27-filter.css` |
 | `koloo-wheel.html` | Koloo (kolo štěstí) | Na všech stránkách | ne (patička) | ⏳ vlož obsah `<script>` DOSLOVA (3rd-party async loader, kLicense `UNI-FB75BE3A-1714`). Vzhled/texty/kupóny/trigger se řeší v adminu Koloo (my.koloo.net), ne v kódu; z naší strany jen pozice sbaleného štítku — `src/css/37-koloo.css` |
@@ -85,7 +85,11 @@ zůstane nativní obsah popupu jen nastylovaný.
 
 ## Co dělá `50-checkout.js`
 
-Srovná řádky **dopravy a platby** v košíku do podoby „název vlevo, cena
+Pět věcí v košíku/pokladně. Vše je idempotentní a jede přes jeden
+`MutationObserver` nad `.main-order-form`, takže to přežije i překreslení
+seznamu dopravy nebo změnu množství.
+
+**1) Řádky dopravy a platby** — srovná je do podoby „název vlevo, cena
 vpravo" (styl `src/css/10-checkout.css`, třídy `.vp-lbl*`). Název metody je
 v šabloně **holý textový uzel** uvnitř `.label-shipping-text` — ve flexu z něj
 vznikne anonymní flex item, kterému nejde nastavit `min-width: 0`, takže dlouhý
@@ -96,9 +100,40 @@ metody) vyzobne na druhý řádek jako modré `.vp-lbl-free` „Zdarma nad 999 K
 a ořízne osiřelé pomlčky na konci („Na dobírku - " → „Na dobírku"). Když
 platforma cenu přepne na „ZDARMA" (překročený limit), řádek dostane `.vp-free`
 → zelené „Zdarma" a modrá poznámka se skryje. Idempotentní (`data-vp-lbl`),
-MutationObserver nad `.main-order-form` pokrývá překreslení seznamu po změně
-dopravy/platby. Bez skriptu zůstane nativní chování (text se zalomí, cena spadne
-pod něj).
+Bez skriptu zůstane nativní chování (text se zalomí, cena spadne pod něj).
+
+**2) Pořadí skupin dopravy** — skupina „Doprava na výdejní místo a do boxu" jde
+před „Doprava na adresu". Šablona obě renderuje do jednoho `.col-md-6` jako
+ploché sourozence (`h4` + `ul` + `h4` + `ul`), takže se to nedá udělat CSS
+`order` — nadpis a jeho seznam by se musely párovat. Přesouvají se uzly, jednou
+za načtení (`data-vp-order`).
+
+**3) Souhlasy „Nesouhlasím"** — volitelné souhlasy (`checkbox_newsletter`,
+`checkbox_heureka`) jsou nativně PŘEDzaškrtnuté a znamenají „souhlasím".
+Zadání je opačné: prázdné políčko s textem „Nesouhlasím…", ale souhlas se má
+dál ukládat. Logika se proto obrací — reálný input zůstane zaškrtnutý a jen se
+vizuálně schová (`.vp-optout-real`, `position:absolute`, ne `display:none`, aby
+se odeslal), před popisek se vloží proxy `.vp-optout` a `for` na popisku se
+přepne na něj. Zaškrtnutí proxy = „nesouhlasím" = reálný se odškrtne.
+**Obchodní podmínky (`checkbox_op`, required) se nemění.** Když se skript
+nenačte, zůstane nativní „Souhlasím" — bezpečný směr selhání.
+
+**4) Doplňkové služby přes refresh** — platforma volbu (Dýško) nedrží, po F5 se
+panel vykreslí odškrtnutý a částka zmizí (ověřeno 196 → 157 Kč). Stav se ukládá
+do `sessionStorage` (`vp-services`) — ne `localStorage`, tichý návrat placené
+položky po dnech je horší než zapomenutí. Obnovuje se `input.click()`, ne
+`checked = true`: platforma na klik pošle přepočet, samotné nastavení vlastnosti
+by nechalo zaškrtnuté políčko u nezaplacené služby. Klikne se jen jednou za
+načtení stránky.
+
+**5) Sleva u položky na mobilu** — sloupec „Cena/Pár" má nativně
+`d-none d-lg-block`, takže pod 992 px zmizí přeškrtnutá cena i pilulka se
+slevou a zákazník o slevě neví. Odkrýt ho nejde: je to cena **za pár**, kdežto
+viditelná částka vedle je **celkem za řádek** — při množství 1 by se zdvojily,
+při 2 by si odporovaly. Skript proto dopočítá přeškrtnutou cenu za celý řádek
+z `data-old-price × ks` na inputu množství a vloží ji spolu s procenty nad
+částku (`.vp-save`). Zapisuje jen při skutečné změně textu, jinak by observer
+reagoval na vlastní zápis.
 
 ## Co dělá `35-listing-sort.js`
 
@@ -154,6 +189,21 @@ dropdown fungovat dál) — klik zachytíme v **capture fázi** na odkazu a zavo
 `stopPropagation()`, takže se k události Bootstrapův delegovaný handler na
 `document` vůbec nedostane a prohlížeč normálně následuje `href`. Šířka se
 kontroluje až uvnitř handleru, takže to sedí i po otočení displeje.
+
+**Sticky hlavička** (na všech stránkách): při scrollu dolů hlavička odjede
+nahoru, při scrollu nahoru se vrátí (`.vp-hdr-off`, styl v `20-header.css`).
+Nad prahem 120 px dostane `.vp-hdr-stuck`, což na mobilu schová horní modrý
+pruh. S otevřeným mobilním menu se hlavička neschovává — rozbalený panel je
+uvnitř ní a odjel by ze obrazovky s ní.
+
+> **Proč to není nativní.** Šablona má vlastní mechanismus „make-sticky"
+> (třída `.is-sticky`, `position: fixed`) a lepí jím odpočtovou lištu
+> `#notification-bar` a modrou lištu `#top-menu`. Seznam prvků si ale
+> **snímkuje při inicializaci** — přidat `make-sticky` hlavičce za běhu nemá
+> žádný efekt (ověřeno živě). Proto vlastní `position: sticky`; `#top-menu`
+> se uvnitř přilepené hlavičky vrací do toku, jinak by se lišta zdvojila.
+> Odsazení shora (`--vp-hdr-top`) se počítá z výšky odpočtové lišty za běhu —
+> zákazník ji může zavřít křížkem.
 
 A ještě jedna **plošná pojistka** (běží na všech stránkách, i tam kde není
 hlavička): obsah vložený v adminu přes WYSIWYG si nese absolutní URL na
