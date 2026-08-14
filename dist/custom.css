@@ -5262,6 +5262,50 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   .vp-also__viewport { scroll-behavior: auto; }
 }
 
+/* =====================================================================
+   NEVYBRANÁ VARIANTA — zatřesení výběru velikosti
+   Třídy přidává 40-product-detail.js (nudgeVariantPicker) při kliknutí na
+   zamčené CTA (`.forced-disabled`, pointer-events:none) nebo na mobilní
+   sticky tlačítko. Zámek samotný dělá admin položka „force variant";
+   tohle je jen zpětná vazba, aby klik nevypadal jako mrtvý.
+
+   Keyframes je vlastní (`vp-shake-pd`) a ne sdílený s 25-products.css:
+   soubory jsou samostatné sekce jednoho buildu a sdílený „utils" v repu
+   není — duplicita dvou krátkých bloků je menší zlo než nová konvence.
+   ===================================================================== */
+
+@keyframes vp-shake-pd {
+  0%, 100% { transform: translateX(0); }
+  15%, 45%, 75% { transform: translateX(-6px); }
+  30%, 60%, 90% { transform: translateX(6px); }
+}
+
+#app.product-detail #variant-table-anchor.pd-shake,
+#app.product-detail #configurator-variants.pd-shake,
+#app.product-detail #variant-selector.pd-shake {
+  animation: vp-shake-pd .4s ease;
+}
+
+/* Hláška „Nejprve vyberte variantu." krátce zvýrazníme, ať si jí zákazník
+   všimne i když animaci selektoru přehlédne (je nad tlačítkem). */
+@keyframes vp-note-flash {
+  0%, 100% { transform: scale(1); }
+  35% { transform: scale(1.06); }
+}
+#app.product-detail .variant-selection-note.pd-note-flash {
+  animation: vp-note-flash .45s ease;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #app.product-detail #variant-table-anchor.pd-shake,
+  #app.product-detail #configurator-variants.pd-shake,
+  #app.product-detail #variant-selector.pd-shake,
+  #app.product-detail .variant-selection-note.pd-note-flash {
+    animation: none;
+  }
+}
+
 /* ==== 25-homepage.css ==== */
 
 /* Homepage — slideshow (600×600) + dva side-bannery (600×300) = čtvercová „bento" kompozice.
@@ -5774,6 +5818,36 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   background: var(--pl-blue) !important;
   border-color: var(--pl-blue) !important;
   color: #fff !important;
+}
+
+/* ==== Nevybraná velikost: zatřesení + hláška ======================== */
+/* Třídu .pc-shake a hlášku .pc-size-hint přidává 30-product-cards.js, když
+   zákazník klikne na „Přidat do košíku" a nemá vybranou velikost. Bez JS
+   zůstane nativní chování (proklik na detail), takže tohle nic nerozbije. */
+
+@keyframes vp-shake {
+  0%, 100% { transform: translateX(0); }
+  15%, 45%, 75% { transform: translateX(-6px); }
+  30%, 60%, 90% { transform: translateX(6px); }
+}
+
+.products .product .show_variants_on_product_list_row.pc-shake {
+  animation: vp-shake .4s ease;
+}
+
+.products .product .pc-size-hint {
+  margin-top: .3rem;
+  color: #b02a37;              /* stejná červená jako .variant-selection-note na detailu */
+  font-size: .75rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+/* Animace je doplněk, ne nosič informace — hláška zůstane i bez ní. */
+@media (prefers-reduced-motion: reduce) {
+  .products .product .show_variants_on_product_list_row.pc-shake {
+    animation: none;
+  }
 }
 
 /* ==== Název (2 řádky přes JS spany .pc-*) =========================== */
@@ -8181,6 +8255,66 @@ body footer section.eshop-footer .vp-foot__attribution a {
     border-radius: 999px !important;
     box-shadow: 0 6px 18px rgba(251, 188, 2, 0.4) !important;
   }
+}
+
+/* ============================================================
+   SLEVOVÝ KÓD na děkovacím kroku (vkládá footer.js → injectCode)
+   Krok .ec-v-form-step-send má nativně height:444px, ale ten je výš
+   přebitý na height:auto, takže se blok pod „Děkujeme!" v klidu vejde.
+   ============================================================ */
+.vp-nl__code {
+  margin: 0.9rem 0 1.1rem;
+  text-align: center;
+}
+/* !important je nutné: patička má `body footer p { color: …; font-size: … }`
+   taky s !important (30-footer.css) a jinak by nám odstavec zešedl. */
+.vp-nl__code-lead {
+  margin: 0 0 0.5rem;
+  color: #fff !important;
+  font-size: 0.95rem !important;
+  font-weight: 600;
+}
+/* Kód + tlačítko na jedné lince, na úzkém displeji se zalomí pod sebe */
+.vp-nl__code-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+/* Sám kód: bílá pilulka, verzálky, rozestup písmen — ať je čitelný
+   i při opisování z mobilu, kdyby kopírování selhalo. Monospace kvůli
+   záměně 0/O a 1/l. */
+.vp-nl__code-val {
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  background: #fff;
+  border-radius: 999px;
+  color: var(--nl-blue);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  /* dvojklikem vybere celý kód */
+  user-select: all;
+  -webkit-user-select: all;
+}
+/* Tlačítko dědí žlutý pill z .vp-nl__form button výše — tady jen zmenšit,
+   ať nekonkuruje „zpátky do e-shopu" pod ním.
+   `width: auto` je nutné: mobilní de-pill blok níž roztahuje tlačítka widgetu
+   na celou šířku, což by kopírovací tlačítko odtrhlo od kódu na vlastní řádek. */
+.vp-nl__form .vp-nl__code-copy {
+  height: 44px !important;
+  width: auto !important;
+  flex: 0 0 auto !important;
+  padding: 0 1.2rem !important;
+  font-size: 0.88rem !important;
+  box-shadow: none !important;
+}
+/* Potvrzení zkopírování — zelená, ať je jasné, že se to povedlo */
+.vp-nl__form .vp-nl__code-copy.is-copied {
+  background: #2e9e44 !important;
+  color: #fff !important;
 }
 
 /* ============================================================

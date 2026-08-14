@@ -2,12 +2,13 @@
  * Položka v admin „Skripty": Pokladna (dopravy a platby) — Na všech stránkách, patička.
  * Styl dodává src/css/10-checkout.css (.vp-lbl*, .vp-optout, .vp-save*).
  *
- * Skript dělá pět věcí; každá má svůj komentář níž:
+ * Skript dělá šest věcí; každá má svůj komentář níž:
  *   1. řádky dopravy a platby (název vlevo, cena vpravo)          — labels
  *   2. skupina „výdejní místa a boxy" jako první                  — orderShippingGroups
  *   3. souhlasy novinky/dotazník překlopené na „Nesouhlasím"      — optOutConsents
  *   4. zapamatování doplňkových služeb (Dýško) přes refresh       — services
  *   5. sleva u položky i na mobilu (úspora + procenta)            — cartSavings
+ *   6. položky košíku seřazené od nejlevnější (cena za kus)       — sortCartByPrice
  *
  * ---------------------------------------------------------------------------
  * 1) ŘÁDKY DOPRAVY A PLATBY
@@ -286,6 +287,71 @@
     for (var i = 0; i < rows.length; i++) cartSaving(rows[i]);
   }
 
+  /* =========================================================================
+     6) ŘAZENÍ POLOŽEK V KOŠÍKU OD NEJLEVNĚJŠÍ
+
+     Šablona řadí položky podle pořadí vložení. Řadíme podle CENY ZA KUS
+     (`data-price` na inputu množství), ne podle částky za řádek — jinak by
+     levný produkt v deseti kusech spadl na konec a pořadí by se přeskládalo
+     při každé změně množství.
+
+     Řádky jsou ploší sourozenci ve .main-order-form, prokládané oddělovači
+     .separator — proto se každý řádek přesouvá i se svým oddělovačem, jinak
+     by čáry zůstaly na původních místech.
+
+     ⚠️ Idempotence tu není kosmetika: observer v init() sleduje childList nad
+     .main-order-form, takže každý insertBefore by ho spustil znovu. Když už
+     pořadí sedí, funkce se musí vrátit BEZ zápisu do DOM — jinak nekonečná
+     smyčka. Guard přes data-* (jako u orderShippingGroups) se nehodí: po
+     smazání položky nebo změně ceny se pořadí musí přepočítat. */
+  function sortCartByPrice() {
+    var form = document.querySelector('.main-order-form');
+    if (!form) return;
+
+    var rows = form.querySelectorAll(':scope > .cart-product');
+    if (rows.length < 2) return;
+
+    var items = [];
+    for (var i = 0; i < rows.length; i++) {
+      var qty = rows[i].querySelector('input.cart_quantity');
+      var price = qty ? parseFloat(qty.getAttribute('data-price')) : NaN;
+      // Oddělovač patřící k řádku (bývá hned za ním) se veze s sebou.
+      var sep = rows[i].nextElementSibling;
+      if (!sep || sep.className.indexOf('separator') === -1) sep = null;
+      items.push({
+        row: rows[i],
+        sep: sep,
+        // bez ceny na konec; index drží stabilitu při shodných cenách
+        key: isFinite(price) ? price : Infinity,
+        index: i
+      });
+    }
+
+    var sorted = items.slice().sort(function (a, b) {
+      return (a.key - b.key) || (a.index - b.index);
+    });
+
+    // Už seřazeno? Nesahat na DOM.
+    var same = true;
+    for (var s = 0; s < sorted.length; s++) {
+      if (sorted[s].index !== s) { same = false; break; }
+    }
+    if (same) return;
+
+    /* Kotva musí být uzel, který se NEPŘESOUVÁ — jinak by se pořadí zvrtlo
+       (kotva = první řádek by po prvním insertBefore zůstala vpředu a zbytek
+       by se skládal před ni). Bereme první uzel ZA celým blokem položek,
+       typicky `.row.total-price`. Když tam nic není, radši nesaháme. */
+    var last = items[items.length - 1];
+    var anchor = (last.sep || last.row).nextSibling;
+    if (!anchor) return;
+
+    for (var k = 0; k < sorted.length; k++) {
+      form.insertBefore(sorted[k].row, anchor);
+      if (sorted[k].sep) form.insertBefore(sorted[k].sep, anchor);
+    }
+  }
+
   function run(root) {
     var boxes = (root || document).querySelectorAll('.shipping-tab .label-shipping-text');
     for (var i = 0; i < boxes.length; i++) {
@@ -294,6 +360,7 @@
     }
     orderShippingGroups();
     optOutConsents();
+    sortCartByPrice();
     cartSavings(root);
   }
 

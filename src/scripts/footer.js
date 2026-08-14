@@ -76,7 +76,18 @@
     // K ODBĚRU"). Do vsazené pilulky je moc dlouhý → přepisujeme ho na kratší
     // (verzálky dodá CSS). Změnit jde i v Ecomailu, tady je to proto, aby se
     // vzhled bloku nerozpadl, kdyby se na to v Ecomailu zapomnělo.
-    submitLabel: "Přihlásit se"
+    submitLabel: "Přihlásit se",
+
+    // Slevový kód, který se ukáže na děkovacím kroku po přihlášení.
+    // ⚠️ Musí existovat SOUČASNĚ na třech místech, jinak to zákazníkovi nesedí:
+    //   1. tady (zobrazení na webu hned po odeslání),
+    //   2. v administraci eshopu jako slevový kupón (aby šel uplatnit v košíku),
+    //   3. v Ecomailu ve welcome automatizaci (aby přišel i e-mailem).
+    // Změna je jednořádková — hodnota se nikde jinde v kódu neopakuje.
+    code: "VESELE15",
+    codeLead: "Váš slevový kód na 15 %:",
+    copyLabel: "Zkopírovat",
+    copiedLabel: "Zkopírováno ✓"
   };
 
   // Obsah recenzí — SHODNÝ se sekcí na HP (src/content/homepage.html).
@@ -291,14 +302,96 @@
     }
   }
 
+  /* Zkopírování kódu do schránky. `navigator.clipboard` je moderní cesta, ale
+     funguje jen v secure contextu a starší Safari/Android ho nemají — proto
+     fallback přes skrytý <textarea> + execCommand("copy"). Vrací Promise, ať
+     se dá na obě větve navěsit stejná reakce. */
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      // mimo obrazovku, ale NE display:none — z neviditelného pole se nekopíruje
+      ta.style.cssText = "position:fixed;top:-1000px;left:-1000px;opacity:0";
+      ta.setAttribute("readonly", "readonly");
+      document.body.appendChild(ta);
+      try {
+        ta.select();
+        ta.setSelectionRange(0, ta.value.length); // iOS bez tohohle nevybere nic
+        if (document.execCommand("copy")) resolve(); else reject();
+      } catch (err) {
+        reject(err);
+      }
+      document.body.removeChild(ta);
+    });
+  }
+
+  /* Slevový kód na děkovacím kroku.
+     Ecomail vykreslí OBA kroky do DOM rovnou a po odeslání jen přehodí třídu
+     `ec-v-form-step-visible` z formuláře na `.ec-v-form-step-send` (ověřeno
+     živě). Nečekáme tedy na žádnou událost widgetu — stačí sledovat, kdy je
+     děkovací krok viditelný. Díky tomu jde stav i otestovat bez odeslání:
+     přehodit tu třídu v DevTools.
+
+     Kód sázíme za `.ec-v-form-text` („Děkujeme!"), tedy nad tlačítko „zpátky
+     do e-shopu". Idempotence přes id #vp-nl-code. */
+  function injectCode(mount) {
+    if (!NEWSLETTER.code) return;
+    var step = mount.querySelector(".ec-v-form-step-send.ec-v-form-step-visible");
+    if (!step) return;                       // ještě jsme neodeslali
+    if (step.querySelector("#vp-nl-code")) return;
+
+    var box = document.createElement("div");
+    box.className = "vp-nl__code";
+    box.id = "vp-nl-code";
+    box.innerHTML =
+      '<p class="vp-nl__code-lead">' + NEWSLETTER.codeLead + "</p>" +
+      '<div class="vp-nl__code-row">' +
+      '<code class="vp-nl__code-val">' + NEWSLETTER.code + "</code>" +
+      '<button type="button" class="vp-nl__code-copy">' + NEWSLETTER.copyLabel + "</button>" +
+      "</div>";
+
+    var btn = box.querySelector(".vp-nl__code-copy");
+    btn.addEventListener("click", function () {
+      copyToClipboard(NEWSLETTER.code).then(function () {
+        btn.textContent = NEWSLETTER.copiedLabel;
+        btn.classList.add("is-copied");
+        setTimeout(function () {
+          btn.textContent = NEWSLETTER.copyLabel;
+          btn.classList.remove("is-copied");
+        }, 2000);
+      })["catch"](function () {
+        // Kopírování neprošlo (starý prohlížeč, odepřené oprávnění) — kód je
+        // vidět, zákazník ho opíše. Označíme text, ať se dá aspoň vybrat.
+        var val = box.querySelector(".vp-nl__code-val");
+        if (!val || !window.getSelection || !document.createRange) return;
+        var range = document.createRange();
+        range.selectNodeContents(val);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      });
+    });
+
+    var text = step.querySelector(".ec-v-form-text");
+    if (text && text.parentNode) text.parentNode.insertBefore(box, text.nextSibling);
+    else step.insertBefore(box, step.firstChild);
+  }
+
   function watchSubmitLabel(mount) {
     relabelSubmit(mount);
+    injectCode(mount);
     if (!("MutationObserver" in window)) return;
     var pending = null;
     new MutationObserver(function () {
       clearTimeout(pending);
-      pending = setTimeout(function () { relabelSubmit(mount); }, 60);
-    }).observe(mount, { childList: true, subtree: true });
+      pending = setTimeout(function () {
+        relabelSubmit(mount);
+        injectCode(mount);
+      }, 60);
+    }).observe(mount, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
   }
 
   // Načte oficiální Ecomail widget (jen jednou). Loader je 1:1 podle embed kódu

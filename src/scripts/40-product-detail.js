@@ -226,6 +226,71 @@
      NAD viewport (odscrollováno dolů za tlačítko). Klik se přeposílá na originál
      — capture-listener boxu (force-variant) tím pádem zámek řeší sám. Vzhled
      řídí CSS `.pd-sticky-cta` (jen mobil ≤767.98px). */
+  /* == Nevybraná varianta: zatřást výběrem velikosti ====================
+     Zámek z admin položky `10-force-variant-selection.html` dává tlačítku
+     `.forced-disabled` s `pointer-events: none`. Klik tedy nevyvolá vůbec nic
+     — zákazník klikne a nestane se nic, což vypadá jako rozbitý eshop.
+     (Hláška „Nejprve vyberte variantu." v DOM je, ale je nad tlačítkem
+     a snadno se přehlédne.)
+
+     `pointer-events: none` NEODSTRAŇUJEME: kdyby se tenhle skript nenačetl,
+     tlačítko by bylo aktivní a přidalo předvybranou variantu — přesně to,
+     čemu zámek brání. Bezpečný směr selhání má přednost.
+
+     Místo toho využijeme, že klik díky `pointer-events: none` propadne na
+     rodiče `.product-add-to-shopping-basket-wrapper` (ověřeno živě přes
+     elementFromPoint). Posloucháme tedy na wrapperu. */
+  function nudgeVariantPicker() {
+    var r = app();
+    if (!r) return;
+    var picker =
+      r.querySelector("#variant-table-anchor") ||
+      r.querySelector("#configurator-variants") ||
+      r.querySelector("#variant-selector");
+    if (!picker) return;
+
+    picker.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    // Třídu je nutné sundat, jinak se animace podruhé nespustí.
+    picker.classList.remove("pd-shake");
+    if (!picker.dataset.vpShake) {
+      picker.dataset.vpShake = "1";
+      picker.addEventListener("animationend", function () {
+        picker.classList.remove("pd-shake");
+      });
+    }
+    void picker.offsetWidth;   // vynutit reflow mezi odebráním a přidáním
+    picker.classList.add("pd-shake");
+
+    var note = r.querySelector(".variant-selection-note");
+    if (note) {
+      note.classList.remove("pd-note-flash");
+      void note.offsetWidth;
+      note.classList.add("pd-note-flash");
+    }
+  }
+
+  function watchLockedCta() {
+    var r = app();
+    if (!r) return;
+    var wrap = r.querySelector(".product-add-to-shopping-basket-wrapper");
+    if (!wrap || wrap.dataset.vpLockedCta) return;
+    wrap.dataset.vpLockedCta = "1";
+
+    wrap.addEventListener("click", function (e) {
+      if (!r.classList.contains("variant-selection-required")) return;
+      // Klik na tlačítka množství uvnitř wrapperu má vlastní target —
+      // nás zajímá jen „propadlý" klik ze zakázaného tlačítka.
+      if (e.target !== wrap) return;
+      var btn = wrap.querySelector(".product-add-to-shopping-basket");
+      if (!btn) return;
+      // ...a jen když padl opravdu do plochy tlačítka, ne do paddingu wrapperu
+      var b = btn.getBoundingClientRect();
+      if (e.clientY < b.top || e.clientY > b.bottom) return;
+      nudgeVariantPicker();
+    });
+  }
+
   var stickyState = { bar: null, observer: null, observed: null };
 
   function ensureStickyCta(root) {
@@ -245,11 +310,7 @@
         var r = app();
         if (!r) return;
         if (r.classList.contains("variant-selection-required")) {
-          var picker =
-            r.querySelector("#configurator-variants") ||
-            r.querySelector("#variant-selector") ||
-            r.querySelector(".variant-name");
-          if (picker) picker.scrollIntoView({ behavior: "smooth", block: "center" });
+          nudgeVariantPicker();   // odscrolluje k výběru a zatřese jím
           return;
         }
         var orig = r.querySelector(".product-add-to-shopping-basket .btn");
@@ -820,6 +881,7 @@
     fixDeliveryLabel(root);
     ensureDeliveryDateSpan(root);
     freezeUnitPrice();
+    watchLockedCta();
     ensureStickyCta(root);
     buildTabsAccordion(root);
     enhanceYoutube();

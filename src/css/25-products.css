@@ -258,6 +258,36 @@
   color: #fff !important;
 }
 
+/* ==== Nevybraná velikost: zatřesení + hláška ======================== */
+/* Třídu .pc-shake a hlášku .pc-size-hint přidává 30-product-cards.js, když
+   zákazník klikne na „Přidat do košíku" a nemá vybranou velikost. Bez JS
+   zůstane nativní chování (proklik na detail), takže tohle nic nerozbije. */
+
+@keyframes vp-shake {
+  0%, 100% { transform: translateX(0); }
+  15%, 45%, 75% { transform: translateX(-6px); }
+  30%, 60%, 90% { transform: translateX(6px); }
+}
+
+.products .product .show_variants_on_product_list_row.pc-shake {
+  animation: vp-shake .4s ease;
+}
+
+.products .product .pc-size-hint {
+  margin-top: .3rem;
+  color: #b02a37;              /* stejná červená jako .variant-selection-note na detailu */
+  font-size: .75rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+/* Animace je doplněk, ne nosič informace — hláška zůstane i bez ní. */
+@media (prefers-reduced-motion: reduce) {
+  .products .product .show_variants_on_product_list_row.pc-shake {
+    animation: none;
+  }
+}
+
 /* ==== Název (2 řádky přes JS spany .pc-*) =========================== */
 
 .products .product .product-content h2 {

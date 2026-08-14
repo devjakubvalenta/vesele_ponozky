@@ -283,6 +283,66 @@
 }
 
 /* ============================================================
+   SLEVOVÝ KÓD na děkovacím kroku (vkládá footer.js → injectCode)
+   Krok .ec-v-form-step-send má nativně height:444px, ale ten je výš
+   přebitý na height:auto, takže se blok pod „Děkujeme!" v klidu vejde.
+   ============================================================ */
+.vp-nl__code {
+  margin: 0.9rem 0 1.1rem;
+  text-align: center;
+}
+/* !important je nutné: patička má `body footer p { color: …; font-size: … }`
+   taky s !important (30-footer.css) a jinak by nám odstavec zešedl. */
+.vp-nl__code-lead {
+  margin: 0 0 0.5rem;
+  color: #fff !important;
+  font-size: 0.95rem !important;
+  font-weight: 600;
+}
+/* Kód + tlačítko na jedné lince, na úzkém displeji se zalomí pod sebe */
+.vp-nl__code-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+/* Sám kód: bílá pilulka, verzálky, rozestup písmen — ať je čitelný
+   i při opisování z mobilu, kdyby kopírování selhalo. Monospace kvůli
+   záměně 0/O a 1/l. */
+.vp-nl__code-val {
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  background: #fff;
+  border-radius: 999px;
+  color: var(--nl-blue);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  /* dvojklikem vybere celý kód */
+  user-select: all;
+  -webkit-user-select: all;
+}
+/* Tlačítko dědí žlutý pill z .vp-nl__form button výše — tady jen zmenšit,
+   ať nekonkuruje „zpátky do e-shopu" pod ním.
+   `width: auto` je nutné: mobilní de-pill blok níž roztahuje tlačítka widgetu
+   na celou šířku, což by kopírovací tlačítko odtrhlo od kódu na vlastní řádek. */
+.vp-nl__form .vp-nl__code-copy {
+  height: 44px !important;
+  width: auto !important;
+  flex: 0 0 auto !important;
+  padding: 0 1.2rem !important;
+  font-size: 0.88rem !important;
+  box-shadow: none !important;
+}
+/* Potvrzení zkopírování — zelená, ať je jasné, že se to povedlo */
+.vp-nl__form .vp-nl__code-copy.is-copied {
+  background: #2e9e44 !important;
+  color: #fff !important;
+}
+
+/* ============================================================
    Skrýt starší in-content newsletter bloky (placeholdery na CMS
    stránkách). Newsletter je teď JEDEN globální v patičce (.vp-nl),
    takže tyhle rozseté kopie skrýváme, ať nejsou na stránce 2×.

@@ -16,7 +16,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 |--------|------------------------|------------------------|----------------|------|
 | `00-css-cdn-link.html` | github | Na všech stránkách | **ANO** | ✅ **nasazeno** — položka „github", ověřeno živě (CSS jde z CDN) |
 | `10-force-variant-selection.html` | Pokus s nutností vybrat variantu. JS i CSS | Pouze produktový detail | ne (patička) | ✅ **už nasazeno** v admin — tady jen verzovaný zdroj |
-| `footer.js` | patička (sock strip + recenze + badge + logo + accordion + newsletter + platební loga) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/footer.js">` — **pin hashem** (v adminu byl původně `@main`, ale jsDelivr ho drží v cache i dny a purge nezabírá); newsletter = **Ecomail embed widget** (formulář ID 4, účet witsocks) mountovaný do brandového bloku, styl `src/css/32-newsletter.css`. **Nevkládej Ecomail embed zvlášť** — footer.js si widget načte sám (jinak by běžel 2×). Ecomail vynucuje reCAPTCHA, proto NE syrový POST — viz paměť `ecomail-robotcheck`. Do právního pásu dole přidává i **pruh platebních log** (Comgate + Visa + Mastercard) — Comgate to má v obchodních podmínkách jako povinnost pro patičku webu; loga jsou **inline SVG** přímo ve skriptu (`PAY_LOGO`, verzovaná kopie v `assets/pay/`), takže nezávisí na nahrání do médií |
+| `footer.js` | patička (sock strip + recenze + badge + logo + accordion + newsletter + platební loga) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/footer.js">` — **pin hashem** (v adminu byl původně `@main`, ale jsDelivr ho drží v cache i dny a purge nezabírá); newsletter = **Ecomail embed widget** (formulář ID 4, účet witsocks) mountovaný do brandového bloku, styl `src/css/32-newsletter.css`. Po odeslání ukazuje **slevový kód s tlačítkem „Zkopírovat"** — kód je konstanta `NEWSLETTER.code` (teď `VESELE15`) a **musí sedět i v administraci eshopu (slevový kupón) a v Ecomailu (welcome e-mail)**, jinak ho zákazník neuplatní. **Nevkládej Ecomail embed zvlášť** — footer.js si widget načte sám (jinak by běžel 2×). Ecomail vynucuje reCAPTCHA, proto NE syrový POST — viz paměť `ecomail-robotcheck`. Do právního pásu dole přidává i **pruh platebních log** (Comgate + Visa + Mastercard) — Comgate to má v obchodních podmínkách jako povinnost pro patičku webu; loga jsou **inline SVG** přímo ve skriptu (`PAY_LOGO`, verzovaná kopie v `assets/pay/`), takže nezávisí na nahrání do médií |
 | `countdown-bar.js` | Odpočet v liště | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…/src/scripts/countdown-bar.js">`; datum konce akce (TARGET) je v souboru |
 | `30-product-cards.js` | Produktové karty (název, datum, Zobrazit vše) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…/src/scripts/30-product-cards.js">`; mapa „Zobrazit vše" (SHOW_ALL) a prefixy názvů jsou v souboru |
 | `hp-categories.js` | Kategorie na HP (přesun + barevné dlaždice) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/hp-categories.js">` — **pin hashem** jako u CSS linku, bump jen při změně souboru; styl `src/css/28-hp-kategorie.css` |
@@ -58,6 +58,19 @@ se nehardcoduje), páruje přes productId z `href` karty a po vyprázdnění
 košíku štítek zase odebere (`pageshow` pokrývá i návrat zpět přes
 bfcache). Idempotentní, MutationObserver zpracuje i karty dorenderované
 AJAX filtrováním v kategorii a v popupu „přidáno do košíku".
+
+> **(6) Nevybraná velikost — zatřesení místo tichého odchodu.** Karta má
+> tlačítko `.add-to-cart-js-variants` + `data-url` a delegovaný handler šablony
+> na klik udělá `location.href = data-url` — zákazník klikne na „Přidat do
+> košíku" a bez jakéhokoli vysvětlení se ocitne na detailu produktu. Chipy
+> velikostí má přitom rovnou na kartě. Klik proto zachytíme v **capture fázi**
+> na documentu (proběhne dřív než delegovaný handler na `<body>`, takže
+> `stopPropagation()` navigaci zruší; `preventDefault()` řeší to, že celá karta
+> je `<a>`), zatřeseme řádkem chipů (`.pc-shake`) a pod ně vložíme
+> „Nejprve vyberte velikost" (`.pc-size-hint`, styl v `25-products.css`).
+> Chytá to **jen karty, které mají z čeho vybírat** (existuje
+> `.variant-box-selectable`) — nevariantní zboží se dál přidává jedním klikem.
+> Třída se sundává na `animationend`, aby šla animace spustit opakovaně.
 
 > **Cíle „Zobrazit vše" — past platformy.** Root kategorie Katalog
 > (1196952) vykresluje ve filtraci staré parametry `334` „Velikosti" +
@@ -154,6 +167,19 @@ při 2 by si odporovaly. Skript proto dopočítá přeškrtnutou cenu za celý �
 z `data-old-price × ks` na inputu množství a vloží ji spolu s procenty nad
 částku (`.vp-save`). Zapisuje jen při skutečné změně textu, jinak by observer
 reagoval na vlastní zápis.
+
+**6) Řazení položek od nejlevnější** — šablona řadí podle pořadí vložení,
+my podle **ceny za kus** (`data-price` na inputu množství). Ne podle částky za
+řádek: levný produkt v deseti kusech by spadl na konec a pořadí by se
+přeskládalo při každé změně množství. Řádky `.cart-product` jsou ploší
+sourozenci ve `.main-order-form` prokládaní `.separator`, takže se každý
+přesouvá **i se svým oddělovačem** — jinak by čáry zůstaly na původních
+místech. Kotvou pro vkládání je první uzel ZA blokem položek
+(`.row.total-price`), ne první řádek: ten se sám přesouvá a pořadí by se
+obrátilo. Řádek bez ceny jde na konec. **Musí být no-op, když už pořadí sedí** —
+observer sleduje `childList` právě nad `.main-order-form`, takže zbytečný
+`insertBefore` by ho spustil znovu a zacyklil; guard `data-vp-*` se nehodí,
+po smazání položky se pořadí musí přepočítat.
 
 ## Co dělá `35-listing-sort.js`
 
@@ -294,6 +320,22 @@ kategorie** (viz níže); (6) do YouTube facade nasadí náhledový obrázek vid
 Nic nepřesouvá (Vue-safe, pořadí řeší CSS flex order) a respektuje zámek
 z `10-force-variant-selection.html` (`variant-selection-required` → bílé chipy
 + ztlumené CTA). Idempotentní.
+
+> **(8) Klik na zamčené CTA — zatřesení výběrem velikosti.** Zámek dává
+> tlačítku `.forced-disabled` s `pointer-events: none`, takže klik nevyvolá
+> **vůbec nic** — zákazník klikne a nestane se nic, což vypadá jako rozbitý
+> eshop (hláška „Nejprve vyberte variantu." v DOM je, ale je nad tlačítkem
+> a snadno se přehlédne). `pointer-events: none` **neodstraňujeme**: kdyby se
+> skript nenačetl, tlačítko by bylo aktivní a přidalo předvybranou variantu —
+> přesně to, čemu zámek brání; bezpečný směr selhání má přednost. Místo toho
+> využíváme, že klik díky `pointer-events: none` propadne na rodiče
+> `.product-add-to-shopping-basket-wrapper` (ověřeno živě přes
+> `elementFromPoint`) — posloucháme tedy na wrapperu, s podmínkou
+> `e.target === wrapper` (klik na tlačítka množství uvnitř má jiný target)
+> a kontrolou, že Y padne do plochy zakázaného tlačítka (ne do paddingu).
+> `nudgeVariantPicker()` pak odscrolluje k `#variant-table-anchor`, zatřese jím
+> (`.pd-shake`) a krátce zvýrazní hlášku (`.pd-note-flash`). Stejnou funkci
+> volá i mobilní sticky CTA, které dřív jen odscrollovalo bez zpětné vazby.
 
 > **Jednotková cena vs. množství.** Platforma při změně množství pošle
 > `POST /recalculate_price/<pid>/<qty>` (bez variant), resp.

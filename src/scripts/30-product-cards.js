@@ -6,7 +6,10 @@
     4. tlačítko „Zobrazit vše" pod hlavním HP výpisem „Všechny naše produkty"
        (CSS nechá viditelné jen 4 karty; JS přidá odkaz na Katalog),
     5. štítek „V KOŠÍKU" na kartách produktů, které už v košíku jsou
-       (čte cart cookie shopping_cart_<shopId>; styl .pc-in-cart).
+       (čte cart cookie shopping_cart_<shopId>; styl .pc-in-cart),
+    6. klik na „Přidat do košíku" bez vybrané velikosti nespadne na detail
+       produktu, ale zatřese chipy velikostí + ukáže „Nejprve vyberte
+       velikost" (styl .pc-shake / .pc-size-hint).
 
   Vkládá se do: Administrace → Skripty → nová položka
      • Název: „Produktové karty (název, datum, Zobrazit vše)"
@@ -217,6 +220,62 @@
       }
     });
   }
+
+  /* == Nevybraná velikost: zatřást a říct proč ==========================
+     Karta ve výpisu má tlačítko `.add-to-cart-js-variants` + `data-url`.
+     Delegovaný handler šablony na klik udělá `location.href = data-url`, tedy
+     proklik na detail k výběru velikosti — bez jakéhokoli vysvětlení. Zákazník
+     klikne na „Přidat do košíku" a místo košíku je na jiné stránce.
+
+     Chipy velikostí jsou přitom rovnou na kartě: stačí říct, ať jednu vybere.
+     Klik proto zachytíme v CAPTURE fázi na documentu — ta proběhne dřív než
+     delegovaný handler šablony na <body>, takže `stopPropagation()` navigaci
+     zruší. `preventDefault()` je tam kvůli tomu, že celá karta je <a>.
+
+     Chytáme JEN karty, které opravdu mají z čeho vybírat (existuje
+     `.variant-box-selectable`) — nevariantní zboží se přidává jedním klikem
+     a to nesmíme rozbít. */
+  var SIZE_HINT = "Nejprve vyberte velikost";
+
+  function shakeSizes(card) {
+    var row = card.querySelector(".show_variants_on_product_list_row");
+    if (!row) return;
+
+    // Třídu je nutné sundat, jinak se animace podruhé nespustí.
+    row.classList.remove("pc-shake");
+    if (!row.dataset.vpShake) {
+      row.dataset.vpShake = "1";
+      row.addEventListener("animationend", function () {
+        row.classList.remove("pc-shake");
+      });
+    }
+    // vynutit reflow, ať prohlížeč vidí odebrání i přidání jako změnu
+    void row.offsetWidth;
+    row.classList.add("pc-shake");
+
+    var box = card.querySelector(".show_variants_on_product_list_row-container");
+    if (box && !box.querySelector(".pc-size-hint")) {
+      var hint = document.createElement("div");
+      hint.className = "pc-size-hint";
+      hint.textContent = SIZE_HINT;
+      box.appendChild(hint);
+    }
+  }
+
+  document.addEventListener("click", function (e) {
+    if (!e.target || !e.target.closest) return;
+    var btn = e.target.closest(".product-add-to-shopping-basket.add-to-cart-js-variants");
+    if (!btn) return;
+    var card = btn.closest(".product");
+    if (!card) return;
+    // bez chipů = nevariantní produkt → nechat nativní chování
+    if (!card.querySelector(".variant-box-selectable")) return;
+    if (card.querySelector(".variant-box-selected")) return;  // velikost vybraná
+
+    e.preventDefault();
+    e.stopPropagation();
+    shakeSizes(card);
+  }, true);
 
   /* == Orchestrace ====================================================== */
 

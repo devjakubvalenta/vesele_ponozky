@@ -1442,3 +1442,47 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
 @media (prefers-reduced-motion: reduce) {
   .vp-also__viewport { scroll-behavior: auto; }
 }
+
+/* =====================================================================
+   NEVYBRANÁ VARIANTA — zatřesení výběru velikosti
+   Třídy přidává 40-product-detail.js (nudgeVariantPicker) při kliknutí na
+   zamčené CTA (`.forced-disabled`, pointer-events:none) nebo na mobilní
+   sticky tlačítko. Zámek samotný dělá admin položka „force variant";
+   tohle je jen zpětná vazba, aby klik nevypadal jako mrtvý.
+
+   Keyframes je vlastní (`vp-shake-pd`) a ne sdílený s 25-products.css:
+   soubory jsou samostatné sekce jednoho buildu a sdílený „utils" v repu
+   není — duplicita dvou krátkých bloků je menší zlo než nová konvence.
+   ===================================================================== */
+
+@keyframes vp-shake-pd {
+  0%, 100% { transform: translateX(0); }
+  15%, 45%, 75% { transform: translateX(-6px); }
+  30%, 60%, 90% { transform: translateX(6px); }
+}
+
+#app.product-detail #variant-table-anchor.pd-shake,
+#app.product-detail #configurator-variants.pd-shake,
+#app.product-detail #variant-selector.pd-shake {
+  animation: vp-shake-pd .4s ease;
+}
+
+/* Hláška „Nejprve vyberte variantu." krátce zvýrazníme, ať si jí zákazník
+   všimne i když animaci selektoru přehlédne (je nad tlačítkem). */
+@keyframes vp-note-flash {
+  0%, 100% { transform: scale(1); }
+  35% { transform: scale(1.06); }
+}
+#app.product-detail .variant-selection-note.pd-note-flash {
+  animation: vp-note-flash .45s ease;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #app.product-detail #variant-table-anchor.pd-shake,
+  #app.product-detail #configurator-variants.pd-shake,
+  #app.product-detail #variant-selector.pd-shake,
+  #app.product-detail .variant-selection-note.pd-note-flash {
+    animation: none;
+  }
+}
