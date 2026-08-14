@@ -2020,6 +2020,18 @@ body > header #top-menu.is-sticky {
   z-index: auto !important;
 }
 
+/* …a s ní i její rozpěrka. Šablona si při „přilepení" #top-menu vloží do
+   hlavičky `#is-sticky-placeholder-N` a nafoukne ho na výšku lišty (66 px),
+   aby stránka neposkočila, když lišta vypadne z toku. Jenže my ji v toku
+   držíme, takže se místo rezervovalo dvakrát a hlavička při odhalení narostla
+   z 199 na 265 px — přesně ta mezera pod logem.
+
+   Cílíme jen na rozpěrky UVNITŘ hlavičky; ta pro odpočtovou lištu je dítě
+   <body> a musí zůstat (lišta opravdu fixed je). */
+body > header > [id^="is-sticky-placeholder"] {
+  display: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body > header {
     transition: none;
