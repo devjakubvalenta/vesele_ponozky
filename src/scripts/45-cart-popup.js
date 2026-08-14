@@ -7,7 +7,10 @@
        (data-product-price kliknuté varianty, na detailu cena z DOM),
     3. počet ks čte z cart cookie shopping_cart_<shopId>
        (URL-encoded JSON {"productId-variantId": "ks"}; shop id se
-       nehardcoduje — na produkci bude jiné).
+       nehardcoduje — na produkci bude jiné),
+    4. OPRAVA PLATFORMY: po přidání do košíku ve výpisu přestaly jít
+       vybírat velikosti — šablona si při renderu popupu naváže handler
+       chipů podruhé a dva se navzájem ruší. Viz dedupeVariantHandlers().
 
   Vkládá se do: Administrace → Skripty → nová položka
      • Název: „Popup přidáno do košíku"
@@ -24,6 +27,9 @@
   if (window.__vpCartPopup) return;
   window.__vpCartPopup = true;
 
+  // Selektor, na který má šablona delegovaný handler výběru velikosti.
+  var VARIANT_SELECTOR = ".variant-box-selectable";
+
   // Naposledy kliknutá varianta / add tlačítko — zdroj ceny a přesného
   // id "productId-variantId" pro dohledání počtu ks v cookie.
   var lastPick = null; // { id, price, name, label, at }
@@ -38,8 +44,57 @@
     };
   }
 
+  /* == Past platformy: zdvojený handler chipů velikostí ==================
+     Šablona má na <body> delegovaný click handler `.variant-box-selectable`
+     (výběr velikosti na kartě ve výpisu). Popup „přidáno do košíku" ale
+     renderuje vlastní blok „Doporučené produkty" — a při tom si ten handler
+     naváže ZNOVU, aniž by původní odpojila.
+
+     Po prvním přidání do košíku jsou tedy dva: klik na velikost projde
+     oběma a druhý zruší, co udělal první, takže chip zůstane nevybraný.
+     Tlačítko pak zůstane `.add-to-cart-js-variants`, což znamená „vyber
+     velikost na detailu" → místo přidání odvede zákazníka na detail
+     produktu. Navenek to vypadá, že po prvním nákupu už nejde přidat další
+     produkt ani zakliknout velikost. Každé další přidání navěsí další kopii.
+
+     Ověřeno živě na kategorii (jQuery 2.2.4): po načtení 1 handler, po
+     prvním popupu 2, po druhém 3…; obě funkce mají identický zdroj — jde
+     o totéž navázání spuštěné podruhé. Zbytek delegovaných handlerů na
+     <body> (13 dalších selektorů) se nezdvojuje, jen tenhle.
+
+     Opravujeme v CAPTURE fázi kliknutí na chip — tedy dřív, než se událost
+     vůbec dostane na <body>, kde jQuery teprve sestavuje frontu handlerů.
+     Nezáleží tak na tom, kdy přesně si šablona handler naváže (pokus
+     opravovat to při otevření popupu by byl závod s časováním). Necháváme
+     PRVNÍ handler (ten z načtení stránky) a ostatní zahazujeme.
+
+     `$._data` je interní API jQuery — proto feature-detect + try/catch:
+     kdyby ho jiná verze neměla, oprava se prostě neprovede a chování
+     zůstane nativní (rozbité, ale ne rozbitější). */
+  function dedupeVariantHandlers() {
+    var $ = window.jQuery;
+    if (!$ || !$._data || !$.fn || !$.fn.off) return;
+    try {
+      var events = $._data(document.body, "events");
+      if (!events || !events.click) return;
+      var handlers = [];
+      for (var i = 0; i < events.click.length; i++) {
+        if (events.click[i].selector === VARIANT_SELECTOR) {
+          handlers.push(events.click[i].handler);
+        }
+      }
+      if (handlers.length < 2) return;
+      $(document.body).off("click", VARIANT_SELECTOR);
+      $(document.body).on("click", VARIANT_SELECTOR, handlers[0]);
+    } catch (err) {
+      // jiná verze jQuery / změněné interní API — necháme být
+    }
+  }
+
   document.addEventListener("click", function (e) {
     if (!e.target || !e.target.closest) return;
+    // Musí být dřív, než událost dojde na <body> — viz dedupeVariantHandlers().
+    if (e.target.closest(VARIANT_SELECTOR)) dedupeVariantHandlers();
     var box = e.target.closest(".variant-box[data-product-id]");
     if (box) { rememberPick(box); return; }
     // tlačítko bez variant nese data-* někdy samo

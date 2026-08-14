@@ -83,6 +83,26 @@ názvy s „ - " se nerozbijí. CSS zároveň omezuje Doporučené produkty na
 4 karty (desktop) a na mobilu je skrývá úplně. Idempotentní; bez JS
 zůstane nativní obsah popupu jen nastylovaný.
 
+> **Opravuje i chybu platformy: po přidání do košíku ve výpisu přestaly jít
+> vybírat velikosti.** Šablona má na `<body>` delegovaný click handler
+> `.variant-box-selectable`. Popup si ho ale při renderu bloku „Doporučené
+> produkty" naváže **znovu**, aniž by původní odpojila — po prvním přidání
+> jsou dva, klik na velikost projde oběma a druhý zruší, co udělal první.
+> Chip zůstane nevybraný, tlačítko zůstane `.add-to-cart-js-variants` (= „vyber
+> velikost na detailu") a místo přidání odvede zákazníka na detail produktu.
+> Navenek: *„po prvním nákupu už nejde přidat další produkt ani zakliknout
+> velikost."* Každé další přidání navěsí další kopii.
+>
+> `dedupeVariantHandlers()` nechá jen **první** handler (ten z načtení
+> stránky). Spouští se v **capture fázi** kliknutí na chip — tedy dřív, než se
+> událost dostane na `<body>`, kde jQuery teprve sestavuje frontu handlerů;
+> nezáleží tak na tom, kdy si šablona handler naváže (oprava při otevření
+> popupu by byla závod s časováním). Čte interní `$._data` jQuery, proto je celá
+> ve feature-detectu a `try/catch` — při změně jQuery se prostě neprovede.
+>
+> Ověřeno živě (jQuery 2.2.4): po načtení 1 handler, po prvním popupu 2, po
+> druhém 3; ostatních 13 delegovaných selektorů na `<body>` se nezdvojuje.
+
 ## Co dělá `50-checkout.js`
 
 Pět věcí v košíku/pokladně. Vše je idempotentní a jede přes jeden
