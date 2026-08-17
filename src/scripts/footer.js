@@ -25,8 +25,9 @@
     stars: MEDIA + "Hv%C4%9Bzdi%C4%8Dky.svg",
     emoji: MEDIA + "emoji_recenze.svg",
     mascot: MEDIA + "maskot.svg",
-    // fotka u kontaktu — SHODNÁ s zákaznickou linkou v hlavičce (header.js)
-    advisor: MEDIA + "kontakt.svg"
+    // fotka u kontaktu — SHODNÁ s zákaznickou linkou v hlavičce (header.js);
+    // kulatý avatar 455×455, při změně vyměnit na obou místech
+    advisor: MEDIA + "ikonka___call_centrum_kruh.svg"
   };
 
   // Platební loga v patičce. Comgate má v obchodních podmínkách POVINNOST

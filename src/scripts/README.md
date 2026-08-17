@@ -230,7 +230,8 @@ tlačítko nedostanou. Idempotence přes `data-vp-subcat` na kontejneru.
 
 Do hlavičky přidá tři věci a jednu skryje: (1) **Heureka odznak**
 „97 % zákazníků doporučuje" (`heureka_banner.png`) dovnitř `.logotype` vedle
-loga; (2) **zákaznickou linku** `.vp-hdr-care` (fotka `kontakt.svg` + telefon
+loga; (2) **zákaznickou linku** `.vp-hdr-care` (kulatý avatar
+`ikonka___call_centrum_kruh.svg` + telefon
 + otevírací doba + e-mail) za vyhledávání — **data čte z nativního pole
 „Doplňující informace"** (`.company-info a.phone` / `a.mail`), takže se mění
 v adminu bez kódu; (3) **vlastní ikonu košíku** (`cart.svg` místo Bootstrap

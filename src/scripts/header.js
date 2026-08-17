@@ -21,7 +21,11 @@
   var ASSET = {
     heureka: MEDIA + "heureka_banner.png",
     cart: MEDIA + "cart.svg",
-    advisor: MEDIA + "kontakt.svg"
+    // Kulatý avatar do zákaznické linky (455×455, bílý kruhový podklad).
+    // Dřív se tu recyklovala kontakt.svg (354×496 na výšku) — do kolečka
+    // 50×50 se musela ořezávat přes object-fit a maskotovi mizela hlava.
+    // Velký maskot s telefonem zůstává kontakt.svg na stránce Kontakty.
+    advisor: MEDIA + "ikonka___call_centrum_kruh.svg"
   };
 
   // Heureka profil obchodu (odkaz na odznaku). Prázdné = odznak bez odkazu.
