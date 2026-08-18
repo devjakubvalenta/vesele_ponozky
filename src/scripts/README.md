@@ -16,7 +16,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 |--------|------------------------|------------------------|----------------|------|
 | `00-css-cdn-link.html` | github | Na všech stránkách | **ANO** | ✅ **nasazeno** — položka „github", ověřeno živě (CSS jde z CDN) |
 | `10-force-variant-selection.html` | Pokus s nutností vybrat variantu. JS i CSS | Pouze produktový detail | ne (patička) | ✅ **už nasazeno** v admin — tady jen verzovaný zdroj |
-| `footer.js` | patička (sock strip + recenze + badge + logo + accordion + newsletter + platební loga) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/footer.js">` — **pin hashem** (v adminu byl původně `@main`, ale jsDelivr ho drží v cache i dny a purge nezabírá); newsletter = **Ecomail embed widget** (formulář ID 4, účet witsocks) mountovaný do brandového bloku, styl `src/css/32-newsletter.css`. Po odeslání ukazuje **slevový kód s tlačítkem „Zkopírovat"** — kód je konstanta `NEWSLETTER.code` (teď `VESELE15`) a **musí sedět i v administraci eshopu (slevový kupón) a v Ecomailu (welcome e-mail)**, jinak ho zákazník neuplatní. **Nevkládej Ecomail embed zvlášť** — footer.js si widget načte sám (jinak by běžel 2×). Ecomail vynucuje reCAPTCHA, proto NE syrový POST — viz paměť `ecomail-robotcheck`. Do právního pásu dole přidává i **pruh platebních log** (Comgate + Visa + Mastercard) — Comgate to má v obchodních podmínkách jako povinnost pro patičku webu; loga jsou **inline SVG** přímo ve skriptu (`PAY_LOGO`, verzovaná kopie v `assets/pay/`), takže nezávisí na nahrání do médií |
+| `footer.js` | patička (sock strip + recenze + badge + logo + accordion + newsletter + platební loga) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/footer.js">` — **pin hashem** (v adminu byl původně `@main`, ale jsDelivr ho drží v cache i dny a purge nezabírá); newsletter = **Ecomail embed widget** (formulář ID 4, účet witsocks) mountovaný do brandového bloku, styl `src/css/32-newsletter.css`. Po odeslání ukazuje **slevový kód na jednom řádku s ikonovým tlačítkem kopírování**; ecomailové „Děkujeme!" a „ZPÁTKY DO E-SHOPU" schovává CSS (v repu se jejich text změnit nedá, jen v Ecomailu). ⚠️ Widget si vstřikuje vlastní CSS reset `.ec-v-form-holder *` a jde do stránky až za náš <link>, takže naše pravidla uvnitř formuláře potřebují **dvě třídy + !important** — a ikony smí být jen z `<path>`, protože reset nuluje width/height i u SVG tvarů. Kód je konstanta `NEWSLETTER.code` (teď `VESELE15`) a — kód je konstanta `NEWSLETTER.code` (teď `VESELE15`) a **musí sedět i v administraci eshopu (slevový kupón) a v Ecomailu (welcome e-mail)**, jinak ho zákazník neuplatní. **Nevkládej Ecomail embed zvlášť** — footer.js si widget načte sám (jinak by běžel 2×). Ecomail vynucuje reCAPTCHA, proto NE syrový POST — viz paměť `ecomail-robotcheck`. Do právního pásu dole přidává i **pruh platebních log** (Comgate + Visa + Mastercard) — Comgate to má v obchodních podmínkách jako povinnost pro patičku webu; loga jsou **inline SVG** přímo ve skriptu (`PAY_LOGO`, verzovaná kopie v `assets/pay/`), takže nezávisí na nahrání do médií |
 | `countdown-bar.js` | Odpočet v liště | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…/src/scripts/countdown-bar.js">`; datum konce akce (TARGET) je v souboru |
 | `30-product-cards.js` | Produktové karty (název, datum, Zobrazit vše) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…/src/scripts/30-product-cards.js">`; mapa „Zobrazit vše" (SHOW_ALL) a prefixy názvů jsou v souboru |
 | `hp-categories.js` | Kategorie na HP (přesun + barevné dlaždice) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/hp-categories.js">` — **pin hashem** jako u CSS linku, bump jen při změně souboru; styl `src/css/28-hp-kategorie.css` |
@@ -372,6 +372,31 @@ z `10-force-variant-selection.html` (`variant-selection-required` → bílé chi
 > kategorie se takhle chovají **všechny** karty, sortiment je variantní.
 > Štítek „V KOŠÍKU" a dělení názvu na 2 řádky doplní `30-product-cards.js`
 > (jeho MutationObserver reaguje na přidané `.product`).
+
+> **(9) Záložky → accordion pod galerií.** `buildTabsAccordion()` postaví
+> z nativních oušek `.nav-tabs` + panelů `.tab-content` klasický accordion
+> (`.pd-accordion`, otevřená vždy jen jedna sekce), vloží ho na konec levého
+> sloupce a originální taby skryje. Pořadí sekcí drží `TAB_ORDER`, co v něm
+> není, spadne na konec — nový tab z administrace se tedy nikdy neztratí.
+>
+> Obsah má **dva zdroje**:
+> - **„Složení"** = nativní tab „Popis" (jen přejmenovaný přes `TAB_RENAME`),
+>   tedy **popis produktu z administrace — per produkt**. V JS se needituje.
+>   Nativní tab „Parametry" je skrytý (`TAB_HIDE`).
+> - **„Materiál a péče", „Doprava a vrácení", „Časté dotazy"** = `TAB_STATIC`,
+>   tedy **natvrdo v tomhle souboru** (stejné u všech produktů; platforma pro
+>   ně žádné pole nemá). Skládají je funkce `careHtml()`, `returnsHtml()` +
+>   `shippingHtml()` a `faqHtml()`. Prázdné `html` = sekce se vykreslí, jen
+>   nemá obsah (dostane informativní třídu `is-empty`, na kterou nic nevisí).
+>
+> ⚠️ Ceník v `SHIPPING` **musí sedět s košíkem** a je i v
+> `src/content/doprava.html` — při změně upravit obě místa. Text o vrácení do
+> 120 dní je shodný s leadem CMS stránky `src/content/vraceni.html`.
+>
+> **Časté dotazy mají druhou úroveň rozklikávání** — 7 okruhů jako nativní
+> `<details>`/`<summary>`. Nativní element je tu záměr: obsah sekce se vkládá
+> přes `innerHTML`, takže na cokoli JS-ového by se sem nedal navěsit
+> posluchač. Styl `.pd-faq*` v `24-product-detail.css`.
 
 ## Co dělá `10-force-variant-selection.html`
 

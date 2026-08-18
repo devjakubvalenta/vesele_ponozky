@@ -87,8 +87,11 @@
     // Změna je jednořádková — hodnota se nikde jinde v kódu neopakuje.
     code: "VESELE15",
     codeLead: "Váš slevový kód na 15 %:",
-    copyLabel: "Zkopírovat",
-    copiedLabel: "Zkopírováno ✓"
+    // Tlačítko je ikonové (celý děkovací krok má být jediný řádek), takže
+    // tyhle popisky nejsou vidět — žijí v aria-label/title, tedy pro čtečky
+    // a jako tooltip.
+    copyLabel: "Zkopírovat kód",
+    copiedLabel: "Zkopírováno"
   };
 
   // Obsah recenzí — SHODNÝ se sekcí na HP (src/content/homepage.html).
@@ -329,6 +332,37 @@
     });
   }
 
+  // Přepnutí stavu kopírovacího tlačítka. Vzhled (která ikona je vidět) řeší
+  // CSS podle třídy; tady se dorovná jen popisek pro čtečku a tooltip.
+  function setCopied(btn, on) {
+    var label = on ? NEWSLETTER.copiedLabel : NEWSLETTER.copyLabel;
+    btn.classList.toggle("is-copied", on);
+    btn.setAttribute("aria-label", label);
+    btn.setAttribute("title", label);
+  }
+
+  /* Ikony kopírovacího tlačítka — INLINE SVG, stejně jako platební loga výš.
+     Bootstrap-icons `bi-copy` by byl kratší, ale šablona nese vlastní verzi
+     icon fontu a ta ikona v ní být nemusí; inline SVG nezávisí na ničem.
+     `currentColor` = obarví se ze CSS spolu s tlačítkem.
+     Obě ikony sedí v tlačítku SOUČASNĚ a přepíná se mezi nimi třídou
+     `is-copied` — dřívější přepis `textContent` by SVG smazal.
+
+     ⚠️ ŽÁDNÝ <rect>, jen <path>. Ecomail vstřikuje reset
+     `.ec-v-form-holder * { width:auto; height:auto }` a v Chrome jsou
+     width/height u SVG tvarů CSS vlastnosti, které přebijí atributy —
+     obdélník se scvrkne na nulu a z ikony zbyde půlka (ověřeno živě).
+     Cesta má geometrii v `d`, kam reset nedosáhne. */
+  var ICON_COPY =
+    '<svg class="vp-nl__ico vp-nl__ico--copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+    '<path d="M11 9h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2Z"/>' +
+    '<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>' +
+    "</svg>";
+  var ICON_CHECK =
+    '<svg class="vp-nl__ico vp-nl__ico--done" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+    '<path d="M20 6 9 17l-5-5"/>' +
+    "</svg>";
+
   /* Slevový kód na děkovacím kroku.
      Ecomail vykreslí OBA kroky do DOM rovnou a po odeslání jen přehodí třídu
      `ec-v-form-step-visible` z formuláře na `.ec-v-form-step-send` (ověřeno
@@ -336,8 +370,10 @@
      děkovací krok viditelný. Díky tomu jde stav i otestovat bez odeslání:
      přehodit tu třídu v DevTools.
 
-     Kód sázíme za `.ec-v-form-text` („Děkujeme!"), tedy nad tlačítko „zpátky
-     do e-shopu". Idempotence přes id #vp-nl-code. */
+     Kód sázíme za `.ec-v-form-text` („Děkujeme!"). Ten je dnes spolu
+     s tlačítkem „zpátky do e-shopu" schovaný CSS (32-newsletter.css), takže
+     z celého kroku zbyde jediný řádek s kódem — jako kotva pro vložení ale
+     skrytý element slouží dál. Idempotence přes id #vp-nl-code. */
   function injectCode(mount) {
     if (!NEWSLETTER.code) return;
     var step = mount.querySelector(".ec-v-form-step-send.ec-v-form-step-visible");
@@ -347,21 +383,27 @@
     var box = document.createElement("div");
     box.className = "vp-nl__code";
     box.id = "vp-nl-code";
+    // Popisek je <span>, ne <p>: patička má `body footer p { color … !important }`
+    // (30-footer.css) a jako odstavec by text zešedl.
     box.innerHTML =
-      '<p class="vp-nl__code-lead">' + NEWSLETTER.codeLead + "</p>" +
-      '<div class="vp-nl__code-row">' +
+      '<span class="vp-nl__code-lead">' + NEWSLETTER.codeLead + "</span>" +
       '<code class="vp-nl__code-val">' + NEWSLETTER.code + "</code>" +
-      '<button type="button" class="vp-nl__code-copy">' + NEWSLETTER.copyLabel + "</button>" +
-      "</div>";
+      '<button type="button" class="vp-nl__code-copy" aria-label="' +
+      NEWSLETTER.copyLabel + '" title="' + NEWSLETTER.copyLabel + '">' +
+      ICON_COPY + ICON_CHECK + "</button>";
 
     var btn = box.querySelector(".vp-nl__code-copy");
+    var resetTimer = null;
     btn.addEventListener("click", function () {
       copyToClipboard(NEWSLETTER.code).then(function () {
-        btn.textContent = NEWSLETTER.copiedLabel;
-        btn.classList.add("is-copied");
-        setTimeout(function () {
-          btn.textContent = NEWSLETTER.copyLabel;
-          btn.classList.remove("is-copied");
+        // Jen třída + popisek pro čtečku; obsah tlačítka (dvě SVG) se nesmí
+        // přepsat, jinak by ikony zmizely.
+        setCopied(btn, true);
+        // Bez clearTimeout by druhý klik během potvrzení shodil fajfku dřív,
+        // než ji stihne doběhnout jeho vlastní odpočet.
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(function () {
+          setCopied(btn, false);
         }, 2000);
       })["catch"](function () {
         // Kopírování neprošlo (starý prohlížeč, odepřené oprávnění) — kód je

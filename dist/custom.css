@@ -4919,7 +4919,20 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
 #app.product-detail .pd-accordion__content h3,
 #app.product-detail .pd-accordion__content h4,
 #app.product-detail .pd-accordion__content strong { color: var(--pd-text); }
+/* h4 = mezinadpis uvnitř sekce (např. „Jak pečovat o ponožky…"). Šablona mu
+   dává 1.3em → srazit, ať nekonkuruje hlavičce accordionu (1.05rem/800). */
+#app.product-detail .pd-accordion__content h4 {
+  margin: 1.35rem 0 .35rem;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+#app.product-detail .pd-accordion__content h4:first-child { margin-top: 0; }
 #app.product-detail .pd-accordion__content ul { margin: .5rem 0; padding-left: 1.2rem; }
+/* <ol> chyběl úplně — bez toho nemá číslovaný seznam ani odsazení */
+#app.product-detail .pd-accordion__content ol { margin: .5rem 0; padding-left: 1.25rem; }
+/* Poslední prvek nesmí přidávat mezeru k paddingu obsahu (0 .25rem 1.15rem) */
+#app.product-detail .pd-accordion__content > :last-child { margin-bottom: 0; }
 
 /* Seznam dopravy v sekci „Doprava a vrácení" (markup staví 40-product-detail.js
    z pole SHIPPING). Stejný jazyk jako seznam metod na stránce Doprava a platba
@@ -4959,6 +4972,184 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   border-bottom: 1px solid var(--pd-border);
   text-align: left;
   vertical-align: top;
+}
+
+/* ==== Zvýrazněný blok (callout) v obsahu accordionu ==================
+   Teď: „Vrácení zboží do 120 dní" nad ceníkem dopravy (staví
+   40-product-detail.js › returnsHtml). Žlutá dlaždice je stejná jako
+   u benefitu „Doprava zdarma", takže v rámci detailu nezavádí novou barvu.
+   POZOR: uvnitř .pd-accordion__content je text ztlumený na --pd-muted,
+   callout si proto barvu nastavuje sám — jinak by „zvýrazněný" blok byl
+   světlejší než text kolem. */
+#app.product-detail .pd-callout {
+  margin: 0 0 1.2rem;
+  padding: .9rem 1.05rem;
+  background: var(--pd-yellow-bg);
+  border: 1px solid var(--pd-yellow-border);
+  border-radius: var(--pd-radius);
+  color: var(--pd-text);
+}
+#app.product-detail .pd-callout p {
+  margin: 0;
+  color: var(--pd-text);
+}
+/* Titulek má 3 třídy > `.pd-callout p` (2 třídy + typ), takže barvu vyhraje
+   bez !important — na `p` uvnitř #app.product-detail nemá šablona žádné
+   !important pravidlo (na rozdíl od patičky). */
+#app.product-detail .pd-callout .pd-callout__title {
+  margin: 0 0 .3rem;
+  font-size: .9rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--pd-blue);
+}
+
+/* Mezinadpis mezi bloky uvnitř jedné sekce („Možnosti dopravy" nad ceníkem).
+   Lehčí než h4 — jen tichý štítek, který odděluje dvě témata sekce. */
+#app.product-detail .pd-accordion__content .pd-subhead {
+  margin: 0 0 .5rem;
+  font-size: .8rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--pd-muted);
+}
+
+/* ==== Číslovaný seznam s tučným lead-inem (.pd-steps) ================
+   Body, kde první věta funguje jako titulek (složení příze, tipy na praní —
+   40-product-detail.js › careHtml). Markup:
+     <ol class="pd-steps"><li><strong>Titulek</strong><p>Text…</p></li></ol>
+   Číslo kreslí counter do jemného modrého kolečka; nativní marker to neumí
+   (musel by být modrý, tučný a zarovnaný k prvnímu řádku titulku).
+   Selektor je `ol.pd-steps`, ať přebije obecné `ol` pravidlo výš bez
+   spoléhání na pořadí v souboru. */
+#app.product-detail .pd-accordion__content ol.pd-steps {
+  margin: .7rem 0 1.2rem;
+  padding-left: 0;
+  list-style: none;
+  counter-reset: pd-step;
+}
+#app.product-detail .pd-accordion__content .pd-steps > li {
+  position: relative;
+  margin: 0 0 .9rem;
+  padding-left: 2.25rem;
+  counter-increment: pd-step;
+}
+#app.product-detail .pd-accordion__content .pd-steps > li:last-child { margin-bottom: 0; }
+#app.product-detail .pd-accordion__content .pd-steps > li::before {
+  content: counter(pd-step);
+  position: absolute;
+  top: .05rem;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  background: #eaf2ff;
+  border: 1px solid #d4e4fd;
+  border-radius: 50%;
+  color: var(--pd-blue);
+  font-size: .8rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+/* Lead-in na vlastní řádek — barvu --pd-text má `strong` z pravidla výš */
+#app.product-detail .pd-accordion__content .pd-steps > li > strong {
+  display: block;
+  margin-bottom: .15rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+#app.product-detail .pd-accordion__content .pd-steps > li > p { margin: 0 0 .35rem; }
+#app.product-detail .pd-accordion__content .pd-steps > li > p:last-child { margin-bottom: 0; }
+
+/* ==== Časté dotazy — druhá úroveň rozklikávání ========================
+   Sedm okruhů uvnitř sekce „Časté dotazy" (staví 40-product-detail.js ›
+   faqHtml). Markup jsou NATIVNÍ <details>/<summary> — obsah sekce se do
+   accordionu vkládá přes innerHTML, takže na cokoli JS-ového by se sem
+   nedal navěsit posluchač; <details> to umí samo.
+   Vizuálně je to vědomě TIŠŠÍ varianta hlavního accordionu: menší písmo,
+   bez modré na otevřeném stavu a šipka místo +/−, ať je na první pohled
+   jasné, že jde o vnořenou úroveň, a ne o další hlavní sekci. */
+#app.product-detail .pd-faq {
+  margin: -.35rem 0 0;
+  border-top: 1px solid var(--pd-border);
+}
+#app.product-detail .pd-faq__group {
+  border-bottom: 1px solid var(--pd-border);
+}
+/* Nativní trojúhelníček pryč — kreslíme si vlastní šipku níž.
+   `list-style` řeší Firefox, `::-webkit-details-marker` starší WebKit. */
+#app.product-detail .pd-faq__head {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .8rem .25rem;
+  cursor: pointer;
+  list-style: none;
+}
+#app.product-detail .pd-faq__head::-webkit-details-marker { display: none; }
+#app.product-detail .pd-faq__head:focus-visible {
+  outline: 2px solid var(--pd-blue);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+#app.product-detail .pd-faq__ico {
+  flex: 0 0 auto;
+  font-size: 1.05rem;
+  line-height: 1;
+  /* emoji jedou z fallback fontu, kde by adjust z 05-fonts.css zvětšoval nazdařbůh */
+  font-size-adjust: none;
+}
+#app.product-detail .pd-faq__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: .95rem;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--pd-text);
+}
+/* Šipka: dvě čárky svírající „v", při otevření se překlopí nahoru. */
+#app.product-detail .pd-faq__head::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  margin-right: .3rem;
+  border-right: 2px solid var(--pd-muted);
+  border-bottom: 2px solid var(--pd-muted);
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform .2s ease, border-color .2s ease;
+}
+#app.product-detail .pd-faq__group[open] > .pd-faq__head::after {
+  transform: translateY(2px) rotate(-135deg);
+  border-color: var(--pd-blue);
+}
+#app.product-detail .pd-faq__body {
+  padding: 0 .25rem .9rem;
+}
+#app.product-detail .pd-faq__q {
+  margin: .9rem 0 .2rem;
+  font-size: .92rem;
+  font-weight: 800;
+  line-height: 1.35;
+  color: var(--pd-text);
+}
+#app.product-detail .pd-faq__body > .pd-faq__q:first-child { margin-top: 0; }
+#app.product-detail .pd-faq__a { color: var(--pd-muted); }
+#app.product-detail .pd-faq__a p { margin: 0 0 .4rem; }
+#app.product-detail .pd-faq__a ul { margin: .3rem 0 .4rem; padding-left: 1.1rem; }
+#app.product-detail .pd-faq__a li { margin: 0 0 .25rem; }
+#app.product-detail .pd-faq__a > :last-child { margin-bottom: 0; }
+/* Odkazy v odpovědích — v accordionu jinak splynou s okolním textem */
+#app.product-detail .pd-faq__a a {
+  color: var(--pd-blue);
+  font-weight: 700;
+  text-decoration: underline;
 }
 
 /* ==== YouTube preview (facade — náhled z YT + modrý přeliv + play) ====
@@ -8063,6 +8254,18 @@ body footer section.eshop-footer .vp-foot__attribution a {
   max-width: none !important;
   min-height: 0 !important; /* widget nese inline minheight (config 444px) → shodit */
 }
+/* ⚠️ Widget si vstřikuje VLASTNÍ CSS RESET `.ec-v-form-holder *` (nuluje
+   border, background, padding, letter-spacing, font a nastavuje color:inherit)
+   a nad ním `.ec-v-form-holder { font-family:"Open Sans"; color:#333 }`.
+   Ten <style> se do stránky vkládá až za náš <link>, takže při STEJNÉ
+   specificitě vyhrává widget — proto se náš font ani barvy uvnitř formuláře
+   neprosadily. Řešení: dvě třídy (= vyšší specificita) + !important.
+   Tohle jedno pravidlo srovná na webový font celý widget, tedy i e-mailové
+   pole a hlášky, ne jen slevový kód. */
+.vp-nl__form .ec-v-form-holder,
+.vp-nl__form .ec-v-form-holder * {
+  font-family: inherit !important;
+}
 /* Krok formuláře má inline height:444px (config minheight) → nechat srazit na obsah */
 .vp-nl__form .ec-v-form-step {
   height: auto !important;
@@ -8259,63 +8462,156 @@ body footer section.eshop-footer .vp-foot__attribution a {
 }
 
 /* ============================================================
-   SLEVOVÝ KÓD na děkovacím kroku (vkládá footer.js → injectCode)
-   Krok .ec-v-form-step-send má nativně height:444px, ale ten je výš
-   přebitý na height:auto, takže se blok pod „Děkujeme!" v klidu vejde.
+   DĚKOVACÍ KROK: jediný řádek se slevovým kódem
+   (markup vkládá footer.js → injectCode)
+
+   Proti dřívějšku: kód je BÍLÝ text v průhledné pilulce s bílým lemem
+   (byla bílá výplň s modrým textem), kopírování je IKONOVÉ tlačítko
+   (text „Zkopírovat" žral celý řádek navíc) a ecomailové „Děkujeme!"
+   i „ZPÁTKY DO E-SHOPU" jsou pryč — po odeslání nemá zákazník co jiného
+   řešit než kód. Krok .ec-v-form-step-send má nativně height:444px, ten
+   je ale výš (ř. 91–94) přebitý na height:auto, takže se řádek vejde.
    ============================================================ */
+
+/* ---- Pryč s tím, co po odeslání nic neřeší ----
+   Obojí renderuje Ecomail; v repu se text změnit nedá, jen skrýt:
+     • .ec-v-form-text = „Děkujeme!" — kód sám o sobě potvrzuje úspěch,
+     • .ec-v-form-submit / .ec-v-form-button = „ZPÁTKY DO E-SHOPU" —
+       zákazník na e-shopu už je.
+   Schováváme celý OBAL tlačítka, ne jen <button>, ať po něm nezůstane
+   mezera. Scopováno na krok -send, ať to nesestřelí zapisovací krok. */
+.vp-nl__form .ec-v-form-step-send .ec-v-form-text,
+.vp-nl__form .ec-v-form-step-send .ec-v-form-submit,
+.vp-nl__form .ec-v-form-step-send .ec-v-form-button {
+  display: none !important;
+}
+/* Pojistka, kdyby Ecomail obalové třídy přejmenoval: na děkovacím kroku
+   schovej JAKÉKOLI tlačítko kromě našeho kopírovacího (to je uvnitř
+   #vp-nl-code, tedy mimo oba obaly výš). */
+.vp-nl__form .ec-v-form-step-send button:not(.vp-nl__code-copy) {
+  display: none !important;
+}
+
+/* ---- Řádek: popisek + kód + ikona ---- */
 .vp-nl__code {
-  margin: 0.9rem 0 1.1rem;
-  text-align: center;
-}
-/* !important je nutné: patička má `body footer p { color: …; font-size: … }`
-   taky s !important (30-footer.css) a jinak by nám odstavec zešedl. */
-.vp-nl__code-lead {
-  margin: 0 0 0.5rem;
-  color: #fff !important;
-  font-size: 0.95rem !important;
-  font-weight: 600;
-}
-/* Kód + tlačítko na jedné lince, na úzkém displeji se zalomí pod sebe */
-.vp-nl__code-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap;          /* pojistka na úzké displeje, ne primární stav */
   align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
+  gap: 0.3rem 0.6rem;
+  margin: 0;
 }
-/* Sám kód: bílá pilulka, verzálky, rozestup písmen — ať je čitelný
-   i při opisování z mobilu, kdyby kopírování selhalo. Monospace kvůli
-   záměně 0/O a 1/l. */
-.vp-nl__code-val {
-  display: inline-block;
-  padding: 0.7rem 1.4rem;
-  background: #fff;
-  border-radius: 999px;
-  color: var(--nl-blue);
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  /* dvojklikem vybere celý kód */
+/* Popisek je <span>, ne <p> — patička má `body footer p { color … !important }`
+   (30-footer.css ř. 27–29) a jako odstavec by zešedl. */
+/* !important všude, kde do toho sahá reset widgetu (color, font, border,
+   background, padding, letter-spacing) — viz komentář u pravidla s fontem výš. */
+.vp-nl__form .vp-nl__code-lead {
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+}
+/* Sám kód: BÍLÝ text v průhledné pilulce s bílým lemem.
+   `font-family: inherit` i `color` jsou nutné explicitně — <code> má
+   monospace z UA stylu a Bootstrap 4 mu navíc dává `color:#e83e8c;
+   font-size:87.5%`. Monospace byl jediné místo, kde se web rozcházel
+   s „Proxima Soft Cond" (05-fonts.css). Čitelnost při opisování z mobilu
+   (záměna 0/O, 1/l) místo něj drží verzálky + letter-spacing. */
+.vp-nl__form .vp-nl__code-val {
+  padding: 0.36rem 0.95rem !important;
+  border: 2px solid rgba(255, 255, 255, 0.7) !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: #fff !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  /* dvojklikem vybere celý kód — záchrana, když selže schránka */
   user-select: all;
   -webkit-user-select: all;
 }
-/* Tlačítko dědí žlutý pill z .vp-nl__form button výše — tady jen zmenšit,
-   ať nekonkuruje „zpátky do e-shopu" pod ním.
-   `width: auto` je nutné: mobilní de-pill blok níž roztahuje tlačítka widgetu
-   na celou šířku, což by kopírovací tlačítko odtrhlo od kódu na vlastní řádek. */
+/* Ikonové tlačítko „kopírovat" — kruh 38 px. Přebíjí obecný žlutý pill
+   `.vp-nl__form button` (ten má vše s !important), proto i tady všude
+   !important. Ghost styl (průhledné + bílý lem) je záměr: žlutá kaňka
+   vedle bílého kódu řádek rozbíjí. `width/min-width` musí být !important
+   kvůli mobilnímu bloku výš (ř. 243–250), který tlačítka widgetu roztahuje
+   na 100 % — jinak by ikona spadla na vlastní řádek. */
 .vp-nl__form .vp-nl__code-copy {
-  height: 44px !important;
-  width: auto !important;
+  position: relative;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   flex: 0 0 auto !important;
-  padding: 0 1.2rem !important;
-  font-size: 0.88rem !important;
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 38px !important;
+  padding: 0 !important;
+  border: 2px solid rgba(255, 255, 255, 0.7) !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  color: #fff !important;
   box-shadow: none !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+              color 0.15s ease !important;
+}
+/* Dotykový cíl ~48 px, aniž by kruh opticky narostl */
+.vp-nl__form .vp-nl__code-copy::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+}
+.vp-nl__form .vp-nl__code-copy:hover,
+.vp-nl__form .vp-nl__code-copy:focus-visible {
+  background: #fff !important;
+  border-color: #fff !important;
+  color: var(--nl-blue) !important;
+  transform: none !important;   /* obecné tlačítko na hoveru „vyskočí" */
+}
+.vp-nl__form .vp-nl__code-copy:focus-visible {
+  outline: 2px solid var(--nl-yellow) !important;
+  outline-offset: 2px;
 }
 /* Potvrzení zkopírování — zelená, ať je jasné, že se to povedlo */
-.vp-nl__form .vp-nl__code-copy.is-copied {
+.vp-nl__form .vp-nl__code-copy.is-copied,
+.vp-nl__form .vp-nl__code-copy.is-copied:hover {
   background: #2e9e44 !important;
+  border-color: #2e9e44 !important;
   color: #fff !important;
+}
+/* Přepínání ikon dělá TŘÍDA, ne přepis textu — footer.js proto sází do
+   tlačítka obě SVG naráz (btn.textContent by je smazal). */
+.vp-nl__form .vp-nl__ico {
+  display: block !important;    /* reset widgetu sahá i na svg (width/height:auto) */
+  width: 17px !important;
+  height: 17px !important;
+  pointer-events: none;         /* klik vždy na <button>, ne na <svg> */
+}
+.vp-nl__form .vp-nl__ico--done,
+.vp-nl__form .vp-nl__code-copy.is-copied .vp-nl__ico--copy {
+  display: none !important;
+}
+.vp-nl__form .vp-nl__code-copy.is-copied .vp-nl__ico--done {
+  display: block !important;
+}
+
+/* Mobil: na ~294 px vnitřní šířky se popisek a kód vedle sebe nevejdou
+   a řádek se zalomí. Kód s ikonou drží spolu (jsou to dvě flex položky
+   vedle sebe), popisek dostane celou šířku, ať zalomení nevypadá náhodně.
+   Nic neroztahujeme na 100 % — na 575px displeji místo ještě je. */
+@media (max-width: 575.98px) {
+  .vp-nl__code {
+    justify-content: center;
+    text-align: center;
+  }
+  .vp-nl__form .vp-nl__code-lead {
+    flex: 1 0 100%;
+  }
+  .vp-nl__form .vp-nl__code-val {
+    font-size: 1rem !important;
+    letter-spacing: 0.1em !important;
+  }
 }
 
 /* ============================================================

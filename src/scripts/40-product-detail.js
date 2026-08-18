@@ -395,14 +395,328 @@
     return '<div class="pd-ship">' + rows.join("") + "</div>";
   }
 
+  /* Vrácení do 120 dní — nejsilnější argument sekce, proto zvýrazněný blok
+     NAD ceníkem dopravy. Znění je 1:1 s leadem CMS stránky „Vrácení zboží"
+     (src/content/vraceni.html › .vp-vraceni__lead) — při změně lhůty nebo
+     formulace upravit OBĚ místa, ať zákazník nečte dvě verze. */
+  function returnsHtml() {
+    return (
+      '<div class="pd-callout">' +
+      '<p class="pd-callout__title">Vrácení zboží do 120 dní</p>' +
+      "<p>Chceme, abyste byli s nákupem 100% spokojeni. Proto u nás máte na " +
+      "vrácení zboží až 120 dní od jeho převzetí. Bez starostí a zbytečných " +
+      "otázek.</p>" +
+      "</div>"
+    );
+  }
+
+  /* Materiál a péče — jeden blok stejný pro všechny produkty: role vláken
+     v přízi (ZÁMĚRNĚ bez procent — konkrétní složení je per produkt
+     v nativní sekci „Složení" z administrace) a jak ponožky prát, ať vydrží.
+     Číslované seznamy jedou přes .pd-steps (24-product-detail.css).
+     Text je autorská konstanta, proto se neescapuje — stejně jako
+     u shippingHtml(). Diakritika přímo, bez entit (soubor je UTF-8). */
+  function careHtml() {
+    return (
+      '<ol class="pd-steps">' +
+
+      "<li><strong>Bavlna – základ pohodlí a prodyšnosti</strong>" +
+      "<p>Přírodní soft luxus: bavlna je příjemně hebká na dotek, skvěle saje " +
+      "vlhkost a nechává pokožku volně dýchat po celý den.</p></li>" +
+
+      "<li><strong>Polyamid – mistr na jemné vzory</strong>" +
+      "<p>Detailní a čisté motivy: polyamidová vlákna jsou tenká a mimořádně " +
+      "pevná. Právě díky nim dokážeme do úpletu dostat i ty nejjemnější vzory, " +
+      "drobné grafiky a přesné kontury bez ztráty kvality.</p></li>" +
+
+      "<li><strong>Elastan – aby ponožka seděla jako ulitá</strong>" +
+      "<p>Stačí jen malé procento elastanu a dějí se zázraky. Dává ponožce " +
+      "pružnost a tvarovou stálost. Díky němu ponožka obepne nohu, neshrnuje " +
+      "se v botě a horní lem drží bez zbytečného zařezávání.</p></li>" +
+
+      "</ol>" +
+
+      "<h4>Jak pečovat o ponožky, aby vydržely co nejdéle svěží a barevné? 🧦</h4>" +
+      "<p>Chcete, aby vám vaše oblíbené ponožky dělaly radost při každém kroku " +
+      "a udržely si skvělou formu? Stačí jim dopřát trochu jednoduché péče. " +
+      "Tady je pár osvědčených tipů, díky kterým zůstanou barvy zářivé " +
+      "a materiál perfektně pružný:</p>" +
+
+      '<ol class="pd-steps">' +
+
+      "<li><strong>Perte naruby a na pohodu (30–40 °C)</strong>" +
+      "<p>Otočte je naruby: ochráníte tím lícovou stranu i barvy před odíráním " +
+      "v bubnu pračky a zároveň lépe vyperete část, která byla v přímém " +
+      "kontaktu s chodidlem.</p>" +
+      "<p>Nepřehřívejte vodu: teplota 30 °C až 40 °C bohatě stačí na perfektní " +
+      "vyprání a zbytečně nenamáhá elastická vlákna.</p></li>" +
+
+      "<li><strong>S aviváží opatrně</strong>" +
+      "<p>Elastická vlákna (jako elastan) nemají příliš v lásce nadmíru " +
+      "aviváže – ta může obalit vlákna, snížit jejich prodyšnost a způsobit " +
+      "ztrátu pružnosti. Běžný prací gel nebo prášek bohatě stačí.</p></li>" +
+
+      "<li><strong>Sušička? Raději volný vzduch</strong>" +
+      "<p>Nejlepší cestou k dlouhé životnosti je přirozené schnutí na čerstvém " +
+      "vzduchu. Vysoké teploty v sušičce mohou ponožky srazit nebo oslabit " +
+      "pružný lem.</p></li>" +
+
+      "<li><strong>Žehličku nechte odpočívat</strong>" +
+      "<p>Ponožky po obutí samy krásně přilnou k noze. Vysoká teplota žehličky " +
+      "by navíc mohla poškodit jemná elastická složení úpletu.</p></li>" +
+
+      "<li><strong>Skládejte bez zbytečného natahování</strong>" +
+      "<p>Místo motání do těsných „kuliček“, které časem vytahují horní " +
+      "gumičku, zkuste ponožky raději překládat napůl nebo jemně rolovat. " +
+      "Lem vám za to poděkuje!</p></li>" +
+
+      "</ol>"
+    );
+  }
+
+  /* Časté dotazy — DRUHÁ úroveň rozklikávání uvnitř sekce accordionu.
+     Sedm okruhů; zavřené zaberou sedm řádků, takže se i takhle dlouhý obsah
+     do sekce vejde, aniž by ji nafoukl.
+
+     Okruhy staví NATIVNÍ <details>/<summary>. Obsah sekce se do accordionu
+     vkládá přes innerHTML, takže cokoli, na co by musel JS věšet posluchače,
+     by tu nefungovalo — <details> si rozklikávání i klávesnicovou obsluhu
+     řeší samo, bez jediného řádku skriptu navíc.
+
+     Odpovědi smí obsahovat HTML (odkazy, <ul>) — je to autorská konstanta,
+     stejně jako SHIPPING; nic odsud nepochází od uživatele, proto se
+     neescapuje. Odpověď začínající "<" se bere jako hotové HTML, jinak se
+     obalí do <p>. Odkazy piš VŽDY od kořene (/cms/…) — viz CLAUDE.md. */
+  var FAQ = [
+    {
+      ico: "🧦",
+      title: "Produkt a péče o ponožky",
+      qa: [
+        [
+          "Z jakého materiálu jsou ponožky vyrobené?",
+          "Základem našich ponožek je kvalitní česaná bavlna (zpravidla 80 %), která " +
+          "zajišťuje měkkost, prodyšnost a celodenní pohodlí. Aby ponožky perfektně " +
+          "držely tvar, neškrtily a vydržely nespočet vyprání, doplňujeme ji o odolný " +
+          "polyamid a pružný elastan."
+        ],
+        [
+          "Jak správně vybrat velikost?",
+          "Ponožky nabízíme ve standardních rozmezích (např. 35–38, 39–42, 43–46). Díky " +
+          "elastanu se noze skvěle přizpůsobí. Pokud jste rozměrově přesně na pomezí " +
+          "(např. máte velikost 42,5), doporučujeme sáhnout po větší variantě pro " +
+          "maximální pohodlí."
+        ],
+        [
+          "Jak se o veselé ponožky starat, aby barvy nevypadaly?",
+          "Aby vám ponožky dělaly radost co nejdéle, perte je naruby na max. 30–40 °C a " +
+          "vyhněte se bělidlům či chemickému čištění. Sušičku doporučujeme vynechat – " +
+          "vysoká teplota poškozuje elastická vlákna."
+        ]
+      ]
+    },
+    {
+      ico: "⚡",
+      title: "Rychlost doručení a expedice",
+      qa: [
+        [
+          "Jak rychle balíček odesíláte?",
+          "Všechno zboží máme skladem. Objednávky přijaté v pracovní den do 12:00 " +
+          "balíme a předáváme dopravci ještě týž den. Pozdější objednávky odesíláme " +
+          "hned následující pracovní den."
+        ],
+        [
+          "Za jak dlouho budou ponožky u mě?",
+          "<p>Standardní doba doručení po ČR je 1 až 2 pracovní dny od " +
+          "odeslání.</p><ul><li><strong>Zásilkovna, Balíkovna a boxy PPL:</strong> " +
+          "obvykle k vyzvednutí druhý den od podání.</li><li><strong>Kurýr na " +
+          "adresu:</strong> doručuje zpravidla do 24–48 hodin od převzetí " +
+          "balíčku.</li></ul>"
+        ],
+        [
+          "Potřebuji ponožky zítra jako dárek – stihne to dorazit?",
+          "Pokud objednáte v pracovní den do 12:00 a zvolíte platbu kartou online " +
+          "(případně dobírku), v 95 % případů máte balíček druhý den u sebe nebo v " +
+          "boxu."
+        ],
+        [
+          "Doručujete i o víkendu?",
+          "Expedice z našeho skladu probíhá od pondělí do pátku, ve vánoční sezóně " +
+          "odesíláme i o víkendu. Pokud si ale necháte balíček poslat do samoobslužného " +
+          "boxu (např. Z-BOX, AlzaBox), můžete si ho vyzvednout kdykoliv i během " +
+          "víkendu, jakmile ho tam dopravce uloží."
+        ],
+        [
+          "Doručujete i na Slovensko?",
+          "Ano — máme slovenskou mutaci e-shopu <a href=\"https://www.veseleponozky.sk\" " +
+          "target=\"_blank\" rel=\"noopener\">veseleponozky.sk</a>, nakupte prosím tam."
+        ],
+        [
+          "Jak poznám, kde se můj balíček právě nachází?",
+          "Jakmile předáme zásilku dopravci, pošleme vám e-mail s odkazem pro sledování " +
+          "zásilky. Přesné informace o pohybu balíčku vám bude posílat i samotný " +
+          "dopravce v SMS a e-mailu."
+        ]
+      ]
+    },
+    {
+      ico: "📦",
+      title: "Doprava a platba",
+      qa: [
+        [
+          "Jaké nabízíte možnosti dopravy a jak rychle balíček dorazí?",
+          "Odesíláme bleskově! Zásilky předáváme dopravci zpravidla do 24 hodin. Využít " +
+          "můžete Zásilkovnu, Balíkovnu, boxy PPL i doručení kurýrem přímo na adresu. " +
+          "Běžná doba doručení je 1–2 pracovní dny."
+        ],
+        [
+          "Od jaké částky mám dopravu zdarma?",
+          "Dopravu zadarmo od nás získáte při nákupu nad 999 Kč."
+        ],
+        [
+          "Jaké způsoby platby podporujete?",
+          "Zaplatit můžete pohodlně kartou online, rychlým bankovním převodem, přes " +
+          "Apple Pay / Google Pay nebo na dobírku při převzetí."
+        ]
+      ]
+    },
+    {
+      ico: "🔄",
+      title: "Výměna, vrácení a reklamace",
+      qa: [
+        [
+          "Co když netrefím velikost nebo ponožky jako dárek nesednou?",
+          "Žádný strach. Nenošené a nepoužité ponožky v původním obalu a s cedulkou " +
+          "můžete snadno vyměnit nebo vrátit do 120 dnů od převzetí."
+        ],
+        [
+          "Jak postupovat při vrácení nebo výměně zboží?",
+          "Stačí vyplnit náš jednoduchý <a href=\"/cms/60957-vraceni-zbozi\">online " +
+          "formulář</a>, ponožky zabalit a poslat nám je zpět. Jakmile balíček dorazí, " +
+          "obratem vám pošleme novou velikost nebo vrátíme peníze na účet."
+        ]
+      ]
+    },
+    {
+      ico: "🏭",
+      title: "Původ zboží a certifikace",
+      qa: [
+        [
+          "Kde se vaše ponožky vyrábějí?",
+          "90 % produktů vyrábíme přímo my v naší pletárně v Třeboni, zbytek se vyrábí " +
+          "také v ČR."
+        ],
+        [
+          "Jsou použité materiály bezpečné a certifikované?",
+          "Určitě. Všechny používané bavlněné příze i doplňková vlákna splňují přísné " +
+          "normy (např. OEKO-TEX Standard 100). Ponožky jsou tak zcela zdravotně " +
+          "nezávadné a příjemné i pro citlivou pokožku."
+        ]
+      ]
+    },
+    {
+      ico: "🏷️",
+      title: "Slevy a newsletter",
+      qa: [
+        [
+          "Jak mohu získat slevu na první nákup?",
+          "Stačí se přihlásit k odběru našeho newsletteru dole v patičce webu. Do " +
+          "e-mailu vám ihned pošleme slevový kód a navíc budete vědět o všech novinkách " +
+          "a tajných akcích jako první."
+        ]
+      ]
+    },
+    {
+      ico: "🤝",
+      title: "Velkoobchod a zakázková výroba (B2B)",
+      qa: [
+        [
+          "Jak se stát vaším velkoobchodním partnerem a získat VO ceník?",
+          "Stačí vyplnit náš <a href=\"/cms/60945-velkoobchodni-spoluprace\">B2B " +
+          "formulář</a> nebo nám poslat poptávku na <a " +
+          "href=\"mailto:david@modacapek.cz\">david@modacapek.cz</a> s vaším IČO. Po " +
+          "krátkém ověření vám obratem zpřístupníme velkoobchodní ceník a nákupní " +
+          "podmínky."
+        ],
+        [
+          "Jaké je minimální množství pro velkoobchodní odběr z e-shopu (MOQ)?",
+          "Minimální množství nemáme stanoveno."
+        ],
+        [
+          "Vyrábíte ponožky přímo na zakázku (s vlastním logem nebo designem)?",
+          "Ano! <a href=\"/cms/56958-vyroba-na-zakazku\">Zakázková výroba</a> na míru je " +
+          "naše specialita. Vyrobíme pro vás originální ponožky jako firemní dárek pro " +
+          "zaměstnance a obchodní partnery, nebo jako merch pro váš klub či značku."
+        ],
+        [
+          "Od kolika párů realizujete zakázkovou výrobu?",
+          "Vlastní designy vyplétáme už od 50 párů od jednoho vzoru. Při vyšších " +
+          "objemech pak nabízíme výrazné množstevní slevy."
+        ],
+        [
+          "Pomůžete nám s grafickým návrhem zakázkových ponožek?",
+          "Rádi! Nemusíte mít hotové podklady od grafika. Stačí nám poslat logo, " +
+          "firemní barvy nebo hrubý nápad a náš tým pro vás zdarma připraví vizuální " +
+          "návrhy ke schválení."
+        ],
+        [
+          "Je možné získat vzorky před spuštěním větší výroby?",
+          "Samozřejmě. Před finální zakázkou vám rádi zašleme vzorky, abyste si mohli " +
+          "osahat materiál, pružnost lemu a prověřit kvalitu úpletu."
+        ],
+        [
+          "Zajišťujete i vlastní etikety a balení (private label)?",
+          "Ano, kompletace je součástí našich služeb. Ponožky opatříme vaší vlastní " +
+          "papírovou etiketou, čárovým kódem nebo je zabalíme do stylových dárkových " +
+          "krabiček."
+        ],
+        [
+          "Jaká je dodací lhůta u velkoobchodních a zakázkových objednávek?",
+          "Zboží ze skladu odesíláme do 1–2 pracovních dnů. Zakázková výroba od " +
+          "schválení grafického návrhu trvá obvykle 3–6 týdnů v závislosti na velikosti " +
+          "zakázky a sezóně."
+        ]
+      ]
+    }
+  ];
+
+  function faqHtml() {
+    var groups = FAQ.map(function (g) {
+      var qa = g.qa.map(function (item) {
+        var answer = item[1].charAt(0) === "<" ? item[1] : "<p>" + item[1] + "</p>";
+        return (
+          '<p class="pd-faq__q">' + item[0] + "</p>" +
+          '<div class="pd-faq__a">' + answer + "</div>"
+        );
+      }).join("");
+      return (
+        '<details class="pd-faq__group">' +
+        '<summary class="pd-faq__head">' +
+        '<span class="pd-faq__ico" aria-hidden="true">' + g.ico + "</span>" +
+        '<span class="pd-faq__title">' + g.title + "</span>" +
+        "</summary>" +
+        '<div class="pd-faq__body">' + qa + "</div>" +
+        "</details>"
+      );
+    });
+    return '<div class="pd-faq">' + groups.join("") + "</div>";
+  }
+
   // Statické sekce accordionu — stejné u všech produktů.
-  // Prázdné `html` = sekce se vykreslí a jde rozkliknout, jen zatím nemá obsah.
+  // Prázdné `html` = sekce se vykreslí a jde rozkliknout, jen zatím nemá obsah
+  // (JS jí přidá třídu `is-empty`, na kterou ale žádné CSS nevisí).
   // AŽ DORAZÍ TEXTY, stačí je vepsat sem (HTML: <p>, <ul>, <strong>…)
   // a bumpnout hash skriptu v admin položce „Produktový detail".
+  // „Doprava a vrácení" nese dvě témata, proto mezi ně patří mezinadpis —
+  // bez něj ceník splývá s blokem o vrácení.
   var TAB_STATIC = [
-    { label: "Materiál a péče", html: "" },
-    { label: "Doprava a vrácení", html: shippingHtml() },
-    { label: "Časté dotazy", html: "" }
+    { label: "Materiál a péče", html: careHtml() },
+    {
+      label: "Doprava a vrácení",
+      html: returnsHtml() +
+        '<p class="pd-subhead">Možnosti dopravy</p>' +
+        shippingHtml()
+    },
+    { label: "Časté dotazy", html: faqHtml() }
   ];
 
   // Pořadí sekcí. Co v seznamu není (třeba nový nativní tab z administrace),
