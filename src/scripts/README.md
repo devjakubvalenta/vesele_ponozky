@@ -317,10 +317,38 @@ v H1) + pojistka na zvýraznění data doručení; (5) blok **„Zákazníci tak
 nakupují"** přestaví z nativního owl karuselu na **stejné karty jako ve výpisu
 kategorie** (viz níže); (6) do YouTube facade nasadí náhledový obrázek videa
 (`img.youtube.com/vi/<id>/hqdefault.jpg`, modrý přeliv kreslí CSS);
-(7) **drží jednotkovou cenu** i při zvýšení množství (viz níže).
+(7) **drží jednotkovou cenu** i při zvýšení množství (viz níže);
+(10) vloží **odznak Heureka vedle ceny** (viz níže).
 Nic nepřesouvá (Vue-safe, pořadí řeší CSS flex order) a respektuje zámek
 z `10-force-variant-selection.html` (`variant-selection-required` → bílé chipy
 + ztlumené CTA). Idempotentní.
+
+> **(10) Odznak Heureka v řádku ceny.** Stejný obrázek jako v hlavičce
+> (`heureka_banner.png`) — signál důvěry přímo u ceny, tedy v momentě
+> rozhodování. Styl `.pd-heureka` v `24-product-detail.css`.
+>
+> **Kam:** pravý sloupec je flex **column**, takže cokoli přidaného jako jeho
+> přímé dítě zabere celý řádek — vedle ceny se to `order`em dostat nedá. Řádek
+> ceny (`.product-price-and-cart-button > .col-md-12`) je ale sám flex
+> s `align-items: center`, tak jdeme dovnitř něj a doprava odsuneme
+> `margin-left: auto`. Nezávisí to pak na `order` schématu sloupce, které se
+> mezi desktopem a mobilem celé přečíslovává (30 → 5).
+>
+> **Sourozenec `.wrapper-product-price`, ne jeho dítě** — `ensureStickyCta()`
+> klonuje `wrapper-product-price.innerHTML` do mobilní sticky lišty a odznak by
+> se do ní propsal (ověřeno, že se nepropisuje).
+>
+> ⚠️ **Žádné `id="vp-hdr-heureka"`.** Na tom id stojí guard v `header.js`, který
+> běží i na detailu — druhý element s tím id by odznak v hlavičce zrušil.
+> Idempotenci tady drží dotaz na `.pd-heureka` uvnitř řádku ceny.
+>
+> `width`/`height` u `<img>` je **123×48**, ne 157×48 jako v hlavičce: PNG je
+> ve skutečnosti 698×272 (poměr 2,566), takže hlavička rezervuje o 27 % širší
+> místo, než obrázek zabere (drobný layout shift). Tady rovnou správně.
+>
+> Vue řádek ceny při přepnutí varianty překreslí a uzel zmizí — vrátí ho
+> `runAll()` z MutationObserveru. Ověřeno živě na 390 / 768 / 992 / 1440 px,
+> včetně produktu bez slevy a s dlouhou cenou (nikde se nezalomí).
 
 > **(8) Klik na zamčené CTA — zatřesení výběrem velikosti.** Zámek dává
 > tlačítku `.forced-disabled` s `pointer-events: none`, takže klik nevyvolá

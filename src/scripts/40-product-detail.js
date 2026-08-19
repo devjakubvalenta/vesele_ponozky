@@ -54,6 +54,9 @@
      jako asset v repu. */
   var STARS = "https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/hvezdicky-modre.svg";
   var AVATAR = FILES + "emoji_recenze.svg";
+  // Stejný odznak jako v hlavičce (header.js). Obrázek je 698×272,
+  // tedy poměr 2,566 — viz width/height u <img> v injectHeureka().
+  var HEUREKA = FILES + "heureka_banner.png";
 
   var TITLE = "Přes 130 000 spokojených zákazníků";
   var REVIEWS = [
@@ -159,6 +162,43 @@
     } else {
       pill.hidden = true;
     }
+  }
+
+  /* == 2b) Odznak Heureka vedle ceny ===================================
+     Signál důvěry přímo u ceny, tedy v momentě rozhodování. Stejný obrázek
+     jako v hlavičce.
+
+     KAM: pravý sloupec je flex COLUMN, takže cokoli přidaného jako jeho přímé
+     dítě zabere celý řádek — vedle ceny se to `order`em dostat nedá. Řádek ceny
+     (`.product-price-and-cart-button > .col-md-12`) je ale sám flex s
+     `align-items: center`, tak jdeme dovnitř něj a doprava odsuneme
+     `margin-left: auto` (CSS). Nezávisí to pak na `order` schématu sloupce,
+     které se mezi desktopem a mobilem celé přečíslovává (30 → 5).
+
+     SOUROZENEC `.wrapper-product-price`, ne jeho dítě: ensureStickyCta() dole
+     klonuje `wrapper-product-price.innerHTML` do mobilní sticky lišty a odznak
+     by se do ní propsal.
+
+     ŽÁDNÉ id="vp-hdr-heureka" — na tom stojí guard v header.js, který běží
+     i na detailu; druhý element s tím id by odznak v hlavičce zrušil.
+     Idempotenci tady drží dotaz na `.pd-heureka` uvnitř řádku ceny.
+
+     Vue tenhle řádek při přepnutí varianty překreslí a uzel zmizí — vrátí ho
+     runAll() z MutationObserveru v init(), guard hlídá, ať se to nezacyklí. */
+
+  function injectHeureka(root) {
+    var price = root.querySelector(".wrapper-product-price");
+    if (!price) return;
+    var row = price.parentElement;
+    if (!row || row.querySelector(".pd-heureka")) return;
+    var el = document.createElement("span");
+    el.className = "pd-heureka";
+    // width/height = SKUTEČNÝ poměr obrázku (698×272 → 123×48), aby prohlížeč
+    // rezervoval správné místo ještě před načtením PNG (žádný layout shift).
+    el.innerHTML =
+      '<img src="' + HEUREKA +
+      '" width="123" height="48" alt="97 % zákazníků doporučuje — Ověřeno zákazníky Heureka" loading="lazy">';
+    price.insertAdjacentElement("afterend", el);
   }
 
   /* == 3) Label „Množství" ============================================= */
@@ -1191,6 +1231,7 @@
     if (!root) return;
     injectReviews(root);
     syncDiscountPill(root);
+    injectHeureka(root);
     injectQtyLabel(root);
     fixDeliveryLabel(root);
     ensureDeliveryDateSpan(root);

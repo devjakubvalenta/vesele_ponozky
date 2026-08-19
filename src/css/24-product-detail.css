@@ -205,6 +205,32 @@
   transform: rotate(-8deg);              /* nativně -15° */
 }
 
+/* ==== Odznak Heureka v řádku ceny (vkládá JS) ======================= */
+/* Vloží se jako sourozenec .wrapper-product-price dovnitř řádku ceny,
+   který je flex s align-items:center → odznak je svisle na úrovni ceny.
+   `margin-left: auto` ho odsune k pravému okraji sloupce.
+   Pravidla z hlavičky sem nedosáhnou (jsou scopovaná na `header`). */
+#app.product-detail .pd-heureka {
+  flex: 0 0 auto;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+}
+#app.product-detail .pd-heureka img {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+/* Menší od tabletu dolů. Breakpoint 991.98 (ne 767.98): nejtěsnější místo je
+   dvousloupcový tablet 768–991 px — tam má řádek ceny jen 324 px, z toho cena
+   zabere 156. Při výšce 38 px má odznak 98 px, takže zbývá 70 px. */
+@media (max-width: 991.98px) {
+  #app.product-detail .pd-heureka img {
+    height: 38px;
+  }
+}
+
 /* ==== Doručení ====================================================== */
 
 #app.product-detail .relative { margin: .35rem 0 .85rem; }
