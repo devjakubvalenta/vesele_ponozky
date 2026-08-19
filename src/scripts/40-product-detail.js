@@ -24,7 +24,11 @@
        přestavíme na STEJNÉ karty jako ve výpisu kategorie (vč. tlačítka
        „Přidat do košíku") ve vlastním scroll-snap slideru se šipkami,
    11. cena zůstává jednotková i při zvýšení množství (odpojení nativního
-       přepočtu `do_recalculate_price`).
+       přepočtu `do_recalculate_price`),
+   12. tabulka velikostí — odkaz „Tabulka velikostí" u výběru velikosti
+       otevře <dialog> se záložkami; DATA NEJSOU TADY, ale v admin poli
+       „Produktový detail" jako skrytý blok .pd-size-src (verzovaná kopie
+       src/content/product-detail.html) — rozměry se tedy mění v adminu.
 
   Vkládá se do: Administrace → Skripty → nová položka
      • Název: „Produktový detail (recenze, slevový pill, množství)"
@@ -1224,11 +1228,297 @@
     }
   }
 
+  /* == 12) Tabulka velikostí ==========================================
+     Data NEJSOU v tomhle souboru — leží v admin poli „Produktový detail"
+     (Obsah → Produktový detail; verzovaná kopie src/content/product-detail.html)
+     jako blok .pd-size-src, aby šly rozměry měnit bez gitu. Skript z něj
+     KLONUJE obsah do <dialog> v <body> a k nadpisu „Vyberte velikost"
+     přidá odkaz „Tabulka velikostí".
+
+     Proč klonovat a nepřesouvat: přesun uzlu ven z #app je childList mutace
+     uvnitř stromu, který pozorujeme — observer by se probudil a runAll()
+     by běžel znovu. Klon zdroj nechává být, takže mutace nevznikne vůbec.
+     Modal navíc visí mimo #app, takže přepínání záložek observer nevidí.
+
+     Bez tohohle skriptu se tabulka NEZOBRAZÍ (CSS .pd-size-src{display:none}).
+     Je to vědomé: šest tabulek vysypaných pod košík vypadá jako rozbitá
+     stránka, kdežto chybějící doplňková informace stojí jen sebe — rozmezí
+     velikostí jsou i na chipech a ve FAQ výš. Proto se injectSizeLink()
+     volá v runAll() jako PRVNÍ: výjimka odjinud mu nesmí zabránit vzniknout.
+
+     Okno je <dialog>.showModal(), ne vlastní overlay: kreslí se v top layer,
+     tedy nad sticky hlavičkou (99981), lištou #notification-bar (99982)
+     i widgetem Koloo (2147483006), a Esc, focus-trap i návrat focusu jsou
+     zadarmo. Styl: src/css/24-size-chart.css. */
+
+  var SIZE_LINK_TEXT = "Tabulka velikostí";
+  var SIZE_MODAL_TITLE = "Tabulka velikostí";
+
+  /* Pravítko inline — nic se nemusí nahrávat do médií ani do assets/
+     (a odpadá past s url() v CSS, které se vyhodnocuje proti jsDelivr).
+     stroke="currentColor" → ikona ztmavne s textem na hoveru. */
+  var RULER_SVG =
+    '<svg class="pd-size-link__ic" width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" ' +
+    'fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">' +
+    '<rect x="1" y="5" width="14" height="6" rx="1.5"></rect>' +
+    '<path d="M4.4 5v2.2M6.8 5v3.2M9.2 5v2.2M11.6 5v3.2"></path>' +
+    '</svg>';
+
+  var sizeState = { dlg: null, tabs: [], panels: [] };
+
+  /* Kontejner bez jediné položky = pole v adminu je rozdělané. Vracíme null,
+     ať nevznikne odkaz, který otevře prázdné okno. */
+  function sizeSrc() {
+    var el = document.querySelector(".pd-size-src");
+    return el && el.querySelector(".pd-size-item") ? el : null;
+  }
+
+  function sizeLinkEl() {
+    var b = document.createElement("button");
+    b.type = "button";                          // ne <a> — nikam to nevede
+    b.className = "pd-size-link";
+    b.setAttribute("data-pd-size-open", "");    // hook pro delegovaný handler
+    b.setAttribute("aria-haspopup", "dialog");
+    b.innerHTML = RULER_SVG + "<span>" + SIZE_LINK_TEXT + "</span>";
+    return b;
+  }
+
+  function injectSizeLink(root) {
+    if (!sizeSrc()) return;      // v adminu není co ukázat → žádný mrtvý odkaz
+
+    /* Standardní varianty: odkaz je posledním dítětem #variant-table-anchor
+       a CSS ho absolutně posadí na řádek popisku „Vyberte velikost".
+       Jen append + třída, tedy stejný Vue-safe vzor jako injectHeureka(). */
+    var anchor = root.querySelector("#variant-table-anchor");
+    if (anchor) {
+      if (anchor.querySelector(".pd-size-link")) return;   // idempotence
+      anchor.appendChild(sizeLinkEl());
+      anchor.classList.add("pd-has-size");
+      return;
+    }
+
+    /* Konfigurátorové produkty popisek „Vyberte velikost" nemají, takže
+       není na co odkaz posadit — dostane vlastní řádek nad výběrem. */
+    var conf = root.querySelector("#configurator-variants") || root.querySelector("#variant-selector");
+    if (!conf || !conf.parentNode) return;      // produkt bez variant → bez odkazu
+    if (conf.parentNode.querySelector(".pd-size-line")) return;
+    var line = document.createElement("div");
+    line.className = "pd-size-line";
+    line.appendChild(sizeLinkEl());
+    conf.parentNode.insertBefore(line, conf);
+  }
+
+  /* WYSIWYG editor si do tabulky při vizuální editaci dopisuje inline šířky,
+     border, cellpadding a občas <colgroup>. Inline styl by přebil naše CSS
+     specificitou, proto ho sundáme z KLONU — obsah v administraci zůstává,
+     jak ho editor uložil, takže se tam nic „samo neopravuje" ani nerozbíjí. */
+  var TBL_JUNK = ["border", "cellpadding", "cellspacing", "width", "height", "style", "bgcolor", "align", "valign"];
+
+  function cleanTable(tbl) {
+    var all = [tbl].concat(Array.prototype.slice.call(tbl.querySelectorAll("tr, td, th, thead, tbody")));
+    all.forEach(function (el) {
+      TBL_JUNK.forEach(function (a) { el.removeAttribute(a); });
+    });
+    var cg = tbl.querySelector("colgroup");
+    if (cg && cg.parentNode) cg.parentNode.removeChild(cg);
+
+    /* Editor umí <th> při přeuložení zahodit. Bez hlaviček by tabulka ztratila
+       nejen vzhled, ale i význam pro odečítač — první řádek proto povýšíme. */
+    if (!tbl.querySelector("th")) {
+      var first = tbl.querySelector("tr");
+      if (first) {
+        Array.prototype.slice.call(first.querySelectorAll("td")).forEach(function (td) {
+          var th = document.createElement("th");
+          th.setAttribute("scope", "col");
+          th.innerHTML = td.innerHTML;
+          td.parentNode.replaceChild(th, td);
+        });
+      }
+    }
+    return tbl;
+  }
+
+  function activateSizeTab(idx) {
+    sizeState.tabs.forEach(function (tab, i) {
+      var on = i === idx;
+      tab.setAttribute("aria-selected", on ? "true" : "false");
+      tab.tabIndex = on ? 0 : -1;            // roving tabindex: Tab přeskočí
+                                             // celý pás záložek jedním krokem
+      sizeState.panels[i].hidden = !on;      // hidden funguje i bez našeho CSS
+    });
+    var body = sizeState.dlg && sizeState.dlg.querySelector(".pd-size__body");
+    if (body) body.scrollTop = 0;
+  }
+
+  function buildSizeModal() {
+    if (sizeState.dlg) return sizeState.dlg;
+    var src = sizeSrc();
+    if (!src) return null;
+
+    var dlg = document.createElement("dialog");
+    dlg.id = "pd-size-modal";
+    dlg.className = "pd-size";
+    dlg.setAttribute("aria-labelledby", "pd-size-title");
+    dlg.innerHTML =
+      '<div class="pd-size__head">' +
+        /* Focus po otevření patří NADPISU, ne prvnímu tlačítku: bez autofocusu
+           by ho showModal() dal křížku (první focusovatelný prvek) a Chrome by
+           u něj vykreslil focus ring i zákazníkovi, který okno otevřel myší.
+           Na první záložku taky ne — odečítač by začal „Ponožky, 1 ze 6" dřív,
+           než by řekl, jaké okno se otevřelo. tabindex="-1" dělá nadpis
+           focusovatelným programově, ale drží ho mimo pořadí Tabu. */
+        '<h2 class="pd-size__title" id="pd-size-title" tabindex="-1" autofocus>' + SIZE_MODAL_TITLE + "</h2>" +
+        '<button type="button" class="pd-size__close" aria-label="Zavřít">' +
+          '<span aria-hidden="true">&times;</span></button>' +
+      "</div>" +
+      '<div class="pd-size__tabs" role="tablist" aria-label="Typ zboží"></div>' +
+      '<div class="pd-size__body"></div>';
+
+    var tablist = dlg.querySelector(".pd-size__tabs");
+    var body = dlg.querySelector(".pd-size__body");
+    sizeState.tabs = [];
+    sizeState.panels = [];
+
+    Array.prototype.slice.call(src.querySelectorAll(".pd-size-item")).forEach(function (item) {
+      var tbl = item.querySelector("table");
+      if (!tbl) return;                      // položka bez tabulky nedává smysl
+
+      var nameEl = item.querySelector(".pd-size-name") || item.querySelector("h1, h2, h3, h4, strong");
+      var label = nameEl ? (nameEl.textContent || "").trim() : "Velikosti";
+      var img = item.querySelector("img");
+      var note = item.querySelector(".pd-size-note");
+      var i = sizeState.tabs.length;
+
+      var tab = document.createElement("button");
+      tab.type = "button";
+      tab.className = "pd-size__tab";
+      tab.id = "pd-size-tab-" + i;
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-controls", "pd-size-panel-" + i);
+      tab.textContent = label;
+      tab.addEventListener("click", function () { activateSizeTab(i); });
+      tablist.appendChild(tab);
+
+      var panel = document.createElement("div");
+      panel.className = "pd-size__panel";
+      panel.id = "pd-size-panel-" + i;
+      panel.setAttribute("role", "tabpanel");
+      panel.setAttribute("aria-labelledby", tab.id);
+
+      if (img) {
+        var fig = document.createElement("div");
+        fig.className = "pd-size__fig";
+        var im = img.cloneNode(true);        // klon — originál v adminu neměníme
+        im.className = "pd-size__img";
+        im.removeAttribute("style");         // editor rád dopisuje inline rozměry
+        im.removeAttribute("loading");       // ve skrytém zdroji lazy dává smysl,
+                                             // v otevřeném okně už ne
+        fig.appendChild(im);
+        panel.appendChild(fig);
+      }
+
+      var data = document.createElement("div");
+      data.className = "pd-size__data";
+      var wrap = document.createElement("div");
+      wrap.className = "pd-size__tablewrap";
+      wrap.appendChild(cleanTable(tbl.cloneNode(true)));
+      data.appendChild(wrap);
+      if (note) {
+        var n = document.createElement("p");
+        n.className = "pd-size__note";
+        n.textContent = (note.textContent || "").trim();
+        data.appendChild(n);
+      }
+      panel.appendChild(data);
+      body.appendChild(panel);
+
+      sizeState.tabs.push(tab);
+      sizeState.panels.push(panel);
+    });
+
+    if (!sizeState.tabs.length) return null;
+
+    /* Klávesnice podle WAI-ARIA APG (tabs, automatic activation): šipky
+       přesouvají focus A ROVNOU přepínají — panely jsou hotové v DOM, takže
+       přepnutí nic nestojí. Delegace na tablistu. */
+    tablist.addEventListener("keydown", function (e) {
+      var i = sizeState.tabs.indexOf(document.activeElement);
+      if (i === -1) return;
+      var n = sizeState.tabs.length;
+      var next = -1;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") next = (i + 1) % n;
+      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = (i - 1 + n) % n;
+      else if (e.key === "Home") next = 0;
+      else if (e.key === "End") next = n - 1;
+      if (next === -1) return;
+      e.preventDefault();
+      activateSizeTab(next);
+      sizeState.tabs[next].focus();
+    });
+
+    dlg.querySelector(".pd-size__close").addEventListener("click", function () { dlg.close(); });
+
+    /* Klik do backdropu: ::backdrop nemá vlastní uzel, cílem události je sám
+       <dialog>. Funguje to jen proto, že dialog má padding:0 a obsah ho
+       vyplňuje — jinak by zavíral i klik do jeho vlastního odsazení. */
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+
+    /* Úklid řeší JEDNO místo — událost `close` chytí i Esc, i křížek, i klik
+       do backdropu. V handlerech tlačítek by Esc scroll-lock nesundal. */
+    dlg.addEventListener("close", function () {
+      document.documentElement.classList.remove("pd-size-lock");
+    });
+
+    document.body.appendChild(dlg);   // MIMO #app → observer o okně neví
+    sizeState.dlg = dlg;
+    return dlg;
+  }
+
+  function openSizeModal() {
+    var dlg = buildSizeModal();
+    if (!dlg) return;
+    activateSizeTab(0);               // vždy první záložka; typ produktu
+                                      // nehádáme (viz README, bod 12)
+    if (typeof dlg.showModal === "function") {
+      if (!dlg.open) dlg.showModal();
+    } else {
+      dlg.setAttribute("open", "");   // prehistorický prohlížeč: aspoň obsah
+    }
+    document.documentElement.classList.add("pd-size-lock");
+  }
+
+  function watchSizeTriggers() {
+    if (window.__vpSizeDelegate) return;
+    window.__vpSizeDelegate = true;
+    /* Delegace na documentu: otevře cokoli s [data-pd-size-open]. Kromě
+       vloženého odkazu tak funguje i odkaz dopsaný v administraci do popisu
+       produktu — obsah accordionu se vkládá přes innerHTML, takže na něj by
+       se posluchač navěsit nedal (stejný důvod, proč jsou okruhy FAQ
+       nativní <details>). */
+    document.addEventListener("click", function (e) {
+      var t = e.target && e.target.closest ? e.target.closest("[data-pd-size-open]") : null;
+      if (!t) return;
+      e.preventDefault();
+      openSizeModal();
+    });
+
+    /* Scroll-lock sundává jen událost `close`. Kdyby se okno zavřelo cestou,
+       která ji nevyvolá (odchod na jinou stránku a návrat zpět přes bfcache),
+       zůstala by stránka zamčená a zákazník by nemohl scrollovat. Při návratu
+       proto zámek shodíme, pokud okno opravdu není otevřené. */
+    window.addEventListener("pageshow", function () {
+      if (!sizeState.dlg || !sizeState.dlg.open) {
+        document.documentElement.classList.remove("pd-size-lock");
+      }
+    });
+  }
+
   /* == Orchestrace ===================================================== */
 
   function runAll() {
     var root = app();
     if (!root) return;
+    injectSizeLink(root);
     injectReviews(root);
     syncDiscountPill(root);
     injectHeureka(root);
@@ -1247,6 +1537,7 @@
 
   function init() {
     if (!app()) return;   // mimo produktový detail nedělat nic
+    watchSizeTriggers();
     runAll();
 
     // pár opakování pro dorenderování (Vue hydratace)

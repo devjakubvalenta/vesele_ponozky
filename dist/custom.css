@@ -5523,6 +5523,352 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
   }
 }
 
+/* ==== 24-size-chart.css ==== */
+
+/* =====================================================================
+   TABULKA VELIKOSTÍ — odkaz u výběru velikosti + okno s tabulkami
+   Skript: src/scripts/40-product-detail.js, bod 12.
+   Data:  admin pole „Produktový detail" (src/content/product-detail.html),
+          blok .pd-size-src — na stránce SKRYTÝ, skript si z něj klonuje
+          obsah do <dialog>. Bez skriptu se tabulka nezobrazí vůbec:
+          šest tabulek vysypaných pod košík vypadá jako rozbitá stránka,
+          kdežto chybějící doplňková informace stojí jen sebe (rozmezí
+          velikostí jsou i na chipech a ve FAQ v accordionu).
+
+   Soubor je ZA 24-product-detail.css (build řadí lexikograficky,
+   „product-detail" < „size-chart"), takže smí přebíjet bez !important.
+
+   ⚠️ Dvě části mají ROZDÍLNÝ scope:
+     • odkaz .pd-size-link žije uvnitř #app.product-detail → smí tokeny --pd-*,
+     • okno #pd-size-modal visí na <body> (mimo #app), kam scopované tokeny
+       nedosáhnou → barvy jsou tam LITERÁLNÍ. Stejný důvod má .pd-sticky-cta
+       v 24-product-detail.css.
+   ===================================================================== */
+
+/* ==== Zdroj dat v admin poli ======================================== */
+
+/* Nescopováno do #app schválně — kdyby administrátor blok omylem vložil
+   i do jiného obsahového pole (produktová patička, CMS stránka), ať se
+   nikde nevysype. Třída je naše, kolize nehrozí. */
+.pd-size-src { display: none !important; }
+
+/* ==== Odkaz „Tabulka velikostí" u výběru velikosti ================== */
+
+/* #variant-table-anchor je flex s wrapem a .choose-variant-title v něm má
+   flex:1 0 100%, takže popisek drží vlastní řádek a vpravo od něj zbývá
+   místo. Odkaz proto NENÍ flex položka (musel by dostat order a ještě
+   neviditelný zalamovač s flex-basis:100%, což by kvůli gap:8px přidalo
+   druhou mezeru mezi řádky) — sedí absolutně na řádku popisku.
+   Bonus: nesaháme na .choose-variant-title, což je Vue uzel. */
+#app.product-detail #variant-table-anchor { position: relative; }
+
+#app.product-detail #variant-table-anchor.pd-has-size .choose-variant-title {
+  /* pojistka proti překryvu, kdyby administrace popisek prodloužila */
+  padding-right: 9.5rem;
+}
+
+#app.product-detail .pd-size-link {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: .8125rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--pd-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(19, 97, 207, .35);
+  cursor: pointer;
+  transition: color .15s ease, text-decoration-color .15s ease;
+}
+#app.product-detail .pd-size-link:hover,
+#app.product-detail .pd-size-link:focus-visible {
+  color: var(--pd-blue-dark);
+  text-decoration-color: currentColor;
+}
+#app.product-detail .pd-size-link:focus-visible {
+  outline: 2px solid var(--pd-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+#app.product-detail .pd-size-link__ic { flex: 0 0 auto; }
+
+/* Konfigurátorové produkty nemají řádek s popiskem, do kterého by šlo
+   odkaz posadit — dostanou vlastní řádek nad výběrem (order 49 / mobilně 8,
+   velikosti mají 50 / 9; viz pořadí v 24-product-detail.css). */
+#app.product-detail .product-right-content .product-price-and-cart-button > .pd-size-line,
+#app.product-detail .product-right-content > .pd-size-line {
+  order: 49;
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 .35rem;
+}
+#app.product-detail .pd-size-line .pd-size-link { position: static; }
+
+@media (max-width: 767.98px) {
+  #app.product-detail .product-right-content .product-price-and-cart-button > .pd-size-line,
+  #app.product-detail .product-right-content > .pd-size-line { order: 8; }
+}
+
+/* Pod 360 px by se popisek s odkazem potkaly — odkaz spadne pod popisek. */
+@media (max-width: 359.98px) {
+  #app.product-detail #variant-table-anchor.pd-has-size .choose-variant-title { padding-right: 0; }
+  #app.product-detail .pd-size-link { position: static; margin: -.1rem 0 .35rem; }
+}
+
+/* ==== Okno s tabulkami (dialog v <body>) ============================
+   Barvy literálně — tokeny --pd-* jsou scopované do #app.product-detail
+   a sem nedosáhnou (viz hlavička souboru).
+     modrá #1361cf · tmavá #0f4ea8 · soft #eaf1fc
+     text  #0f172a · muted #64748b · linka #e5e9f0 · zebra #f6f9fd
+   ==================================================================== */
+
+/* Proč <dialog>.showModal() a ne vlastní div: kreslí se v TOP LAYER, tedy
+   nad vším bez ohledu na z-index. Na stránce je sticky hlavička (99981),
+   šablonová lišta #notification-bar (99982) a widget Koloo (2147483006) —
+   vlastní overlay by musel do závodu, kterému by časem někdo přidal nulu.
+   Navíc Esc, focus-trap, návrat focusu a inertní pozadí jsou zadarmo. */
+#pd-size-modal {
+  padding: 0;
+  border: 0;
+  width: 100%;
+  max-width: min(720px, calc(100vw - 24px));
+  max-height: min(88vh, 780px);
+  overflow: hidden;                       /* radius ořízne hlavičku i pás záložek */
+  border-radius: 16px;
+  background: #fff;
+  color: #0f172a;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, .28);
+}
+/* Bez [open] by ID selektor přebil UA pravidlo dialog:not([open]){display:none}
+   a zavřené okno by leželo uprostřed stránky. */
+#pd-size-modal[open] { display: flex; flex-direction: column; }
+#pd-size-modal:not([open]) { display: none; }
+
+#pd-size-modal::backdrop { background: rgba(15, 23, 42, .55); }
+
+/* Hlavička */
+#pd-size-modal .pd-size__head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .9rem 1.1rem;
+  background: #1361cf;
+  color: #fff;
+}
+#pd-size-modal .pd-size__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+}
+/* Nadpis dostává focus hned po otevření (autofocus + tabindex="-1" z JS) — ať
+   ho prohlížeč neobtahuje rámečkem; jeho úkol je jen dát odečítači kam skočit,
+   ne nabídnout ovládací prvek. */
+#pd-size-modal .pd-size__title:focus,
+#pd-size-modal .pd-size__title:focus-visible { outline: none; }
+
+#pd-size-modal .pd-size__close {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .16);
+  color: #fff;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+#pd-size-modal .pd-size__close:hover { background: rgba(255, 255, 255, .3); }
+#pd-size-modal .pd-size__close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Pás záložek */
+#pd-size-modal .pd-size__tabs {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  padding: .6rem .7rem;
+  background: #f4f7fa;
+  border-bottom: 1px solid #e5e9f0;
+}
+#pd-size-modal .pd-size__tab {
+  flex: 1 1 auto;
+  padding: .45rem .7rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  font-size: .8125rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #64748b;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+#pd-size-modal .pd-size__tab:hover { background: #eaf1fc; color: #1361cf; }
+#pd-size-modal .pd-size__tab[aria-selected="true"] {
+  background: #1361cf;
+  border-color: #1361cf;
+  color: #fff;
+}
+#pd-size-modal .pd-size__tab:focus-visible { outline: 2px solid #1361cf; outline-offset: 2px; }
+
+/* Tělo + panel */
+#pd-size-modal .pd-size__body {
+  flex: 1 1 auto;
+  min-height: 0;                 /* bez tohohle flex položka nescrolluje */
+  overflow-y: auto;
+  overscroll-behavior: contain;  /* dojetí na konec nepokračuje scrollem stránky */
+  padding: 1.1rem;
+}
+#pd-size-modal .pd-size__panel {
+  display: grid;
+  /* minmax(0,1fr) je nutné — samotné 1fr = minmax(auto,1fr) a široká
+     tabulka by mřížku roztlačila přes okraj okna. */
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 1.1rem;
+  align-items: start;
+}
+#pd-size-modal .pd-size__panel[hidden] { display: none; }
+
+/* Nákresy z administrace mají RŮZNÝ poměr stran (ponožka 302×382 na výšku,
+   trenýrky 458×302 na šířku). Bez pevné výšky boxu by okno při přepnutí
+   záložky poskočilo o desítky pixelů — proto fixní rámeček a obrázek do něj
+   vepsaný oběma rozměry. */
+#pd-size-modal .pd-size__fig {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+#pd-size-modal .pd-size__img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Tabulka — záchranná brzda pro případ, že v adminu přibude sloupec.
+   S nastavením níž se scroll na 360 px nezapne. */
+#pd-size-modal .pd-size__tablewrap {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border: 1px solid #e5e9f0;
+  border-radius: 12px;
+}
+#pd-size-modal .pd-size__tablewrap table {
+  width: 100%;
+  min-width: 260px;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: .9rem;
+}
+#pd-size-modal .pd-size__tablewrap th {
+  padding: .6rem;
+  background: #1361cf;
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  text-align: center;
+  line-height: 1.25;
+  hyphens: auto;                 /* „Obvod hrudníku" se radši zalomí, než roztáhne sloupec */
+}
+#pd-size-modal .pd-size__tablewrap td {
+  padding: .55rem .6rem;
+  text-align: center;
+  color: #0f172a;
+  border-top: 1px solid #e5e9f0;
+}
+/* Zebra = kotva pro čtení napříč čtyřmi sloupci */
+#pd-size-modal .pd-size__tablewrap tbody tr:nth-child(odd) td { background: #f6f9fd; }
+/* První sloupec je velikost — podle něj zákazník řádek hledá */
+#pd-size-modal .pd-size__tablewrap td:first-child { font-weight: 700; white-space: nowrap; }
+
+#pd-size-modal .pd-size__note {
+  margin: .6rem 0 0;
+  font-size: .8125rem;
+  line-height: 1.4;
+  color: #64748b;
+}
+
+/* Scroll-lock: <dialog> ho spec negarantuje, pozadí by ujíždělo pod oknem. */
+html.pd-size-lock, html.pd-size-lock body { overflow: hidden; }
+/* Mobilní plovoucí košík by čouhal zpod spodního sheetu */
+html.pd-size-lock .pd-sticky-cta { display: none !important; }
+
+/* ==== Tablet a níž ================================================== */
+
+@media (max-width: 767.98px) {
+  #pd-size-modal .pd-size__panel { grid-template-columns: 1fr; gap: .75rem; }
+  #pd-size-modal .pd-size__fig { height: 130px; }
+}
+
+/* ==== Mobil ========================================================= */
+
+@media (max-width: 575.98px) {
+  /* Spodní sheet: <dialog> se centruje `margin:auto`, přepsáním spodního
+     marginu na 0 se přisaje ke spodní hraně — palec ho má u ruky. */
+  #pd-size-modal {
+    max-width: 100%;
+    max-height: 92vh;
+    margin: auto auto 0;
+    border-radius: 18px 18px 0 0;
+  }
+  /* Šest pilulek do dvou sloupců (3 řádky). Vodorovný scroll by schoval
+     „Pánská trička" mimo obrazovku — tedy právě u zboží, kde je tabulka
+     nejpotřebnější, protože velikost nejde odvodit z čísla boty. */
+  #pd-size-modal .pd-size__tabs { display: grid; grid-template-columns: 1fr 1fr; }
+  #pd-size-modal .pd-size__tab { white-space: normal; }
+  #pd-size-modal .pd-size__head { padding: .8rem .9rem; }
+  #pd-size-modal .pd-size__title { font-size: 1.05rem; }
+  #pd-size-modal .pd-size__body { padding: .9rem; }
+}
+
+@media (max-width: 399.98px) {
+  #pd-size-modal .pd-size__tablewrap table { font-size: .82rem; min-width: 0; }
+  #pd-size-modal .pd-size__tablewrap th { padding: .5rem .35rem; font-size: .72rem; }
+  #pd-size-modal .pd-size__tablewrap td { padding: .45rem .35rem; }
+}
+
+/* ==== Animace ======================================================= */
+
+#pd-size-modal[open] { animation: vp-size-in .18s ease-out; }
+#pd-size-modal[open]::backdrop { animation: vp-size-fade .18s ease-out; }
+
+@keyframes vp-size-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes vp-size-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #pd-size-modal[open],
+  #pd-size-modal[open]::backdrop { animation: none; }
+}
+
 /* ==== 25-homepage.css ==== */
 
 /* Homepage — slideshow (600×600) + dva side-bannery (600×300) = čtvercová „bento" kompozice.
@@ -12951,6 +13297,95 @@ a.vp-doprava__paylogo:hover {
 }
 
 /* ================= Responsivita (BS4 breakpointy) ================= */
+/* ==== RECENZE Z HEUREKY =============================================
+   Nativní placeholder platformy (markup vkládá src/content/recenze.html,
+   vykresluje ho server). My dodáváme nadpis, obal a přebití šablonových
+   tříd, ať blok sedí se zbytkem stránky.
+
+   Co šablona renderuje (ověřeno v živém stylopisu /css/style.css i
+   v reference/template.css ř. 3198–3204):
+     section.review-list.review-list-horizontal
+       └ .itembox › .itembox-content (owl carousel)
+           └ .owl-item › .itembox-item.review
+               ├ span.stars.stars5      (PNG sprite 55×10 px)
+               ├ blockquote             (kurzíva + obří uvozovky přes :before/:after)
+               ├ .review-left / .review-right   (floaty)
+               └ .review-avatar         (šedý čtverec 32×32 s iniciálami)
+
+   ⚠️ Pravidla níž jsou psaná podle TĚCHTO tříd, ale samotný widget zatím
+   nebyl vidět naživo (na stránce ještě není). Po prvním nasazení projít
+   reálný DOM a doladit — hlavně carousel a hvězdy. Rules, které nic
+   netrefí, jsou neškodné.
+   =================================================================== */
+
+.vp-recenze__heureka-title {
+  margin: var(--rec-section) 0 0.4rem !important;
+  color: var(--rec-blue) !important;
+  font-size: clamp(1.3rem, 3vw, 1.9rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+}
+/* Mount drží pozici v layoutu; obsah do něj sype platforma.
+   overflow-x: auto je nutné kvůli `overflow-x: clip` na kořeni .vp-recenze
+   (ř. 20) — bez toho by se vodorovný carousel oříznul místo aby scrolloval. */
+.vp-recenze__heureka {
+  margin: 0 auto;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+/* .vp-recenze p { margin: 0 } (ř. 32–34) sundá odsazení i odstavcům widgetu */
+.vp-recenze__heureka p { margin: 0 0 0.5rem; }
+
+/* ---- Přebití šablonových tříd ---- */
+/* Floaty ze šablony nahradit mřížkou v rytmu .vp-recenze__cards */
+.vp-recenze__heureka .review-list-horizontal .review-left,
+.vp-recenze__heureka .review-list-horizontal .review-right {
+  float: none !important;
+}
+/* Karta = stejný jazyk jako .vp-recenze__card (rádius 14px, ne --rec-radius) */
+.vp-recenze__heureka .itembox-item,
+.vp-recenze__heureka .review {
+  height: auto !important;      /* owl na téhle platformě sype pevnou výšku */
+  padding: 1.15rem 1.3rem 1.3rem;
+  background: #fff;
+  border: 1px solid var(--rec-border);
+  border-radius: 14px;
+  box-shadow: var(--rec-shadow);
+  text-align: left !important;
+}
+/* Citace sjednotit s .vp-recenze__quote */
+.vp-recenze__heureka blockquote {
+  margin: 0 0 0.9rem;
+  padding: 0;
+  border: 0;
+  color: var(--rec-text);
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.55;
+}
+/* Šablona sází kolem citace uvozovky ve 40px Arialu (`content: open-quote`)
+   — vedle našich karet je to cizí těleso. Text si uvozovky nese sám. */
+.vp-recenze__heureka blockquote::before,
+.vp-recenze__heureka blockquote::after {
+  content: none !important;
+}
+/* Avatar: ze šedého čtverce kolečko v barvách webu (jako .vp-recenze__avatar) */
+.vp-recenze__heureka .review-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: var(--rec-pill);
+  background-color: var(--rec-blue) !important;
+  font-size: 14px !important;
+}
+/* Hvězdy jsou PNG sprite 55×10 px, hodnocení kóduje background-position —
+   obrázek proto nejde vyměnit za náš žlutý SVG, jde jen zvětšit. */
+.vp-recenze__heureka .stars {
+  transform: scale(1.35);
+  transform-origin: left center;
+  margin-bottom: 0.75rem;
+}
+
 @media (max-width: 991.98px) {
   .vp-recenze__cards {
     grid-template-columns: repeat(2, 1fr);

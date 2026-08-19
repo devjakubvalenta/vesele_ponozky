@@ -21,7 +21,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 | `30-product-cards.js` | Produktové karty (název, datum, Zobrazit vše) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…/src/scripts/30-product-cards.js">`; mapa „Zobrazit vše" (SHOW_ALL) a prefixy názvů jsou v souboru |
 | `hp-categories.js` | Kategorie na HP (přesun + barevné dlaždice) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/hp-categories.js">` — **pin hashem** jako u CSS linku, bump jen při změně souboru; styl `src/css/28-hp-kategorie.css` |
 | `header.js` | Hlavička (Heureka + zákaznická linka + cart ikona) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/header.js">` — **pin hashem**; styl `src/css/20-header.css`. Telefon/e-mail v lince se čtou z pole „Doplňující informace" (nemazat ho) |
-| `40-product-detail.js` | Produktový detail (recenze, slevový pill, množství) | **Pouze produktový detail** | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/40-product-detail.js">` — **pin hashem**; styl `src/css/24-product-detail.css`; benefity do admin pole „Produktový detail" = `src/content/product-detail-benefits.html` |
+| `40-product-detail.js` | Produktový detail (recenze, slevový pill, množství) | **Pouze produktový detail** | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/40-product-detail.js">` — **pin hashem**; styl `src/css/24-product-detail.css` + `src/css/24-size-chart.css`; obsah admin pole „Produktový detail" (benefity + skrytý zdroj tabulky velikostí) = `src/content/product-detail.html` |
 | `45-cart-popup.js` | Popup přidáno do košíku | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/45-cart-popup.js">` — **pin hashem**; styl `src/css/33-cart-popup.css`; texty cookie lišty se nastavují v administraci (styl `src/css/34-cookies.css` je čisté CSS) |
 | `50-checkout.js` | Pokladna (dopravy a platby) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/50-checkout.js">` — **pin hashem**; styl `src/css/10-checkout.css` (`.vp-lbl*`, `.vp-save*`, `.vp-optout*`) |
 | `35-listing-sort.js` | Řazení ve výpisech (klikací odkazy) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/35-listing-sort.js">` — **pin hashem**; styl `src/css/26-listing-sort.css` |
@@ -425,6 +425,63 @@ z `10-force-variant-selection.html` (`variant-selection-required` → bílé chi
 > `<details>`/`<summary>`. Nativní element je tu záměr: obsah sekce se vkládá
 > přes `innerHTML`, takže na cokoli JS-ového by se sem nedal navěsit
 > posluchač. Styl `.pd-faq*` v `24-product-detail.css`.
+
+> **(12) Tabulka velikostí.** V řádku „Vyberte velikost" přibude vpravo
+> decentní odkaz **„Tabulka velikostí"** (`.pd-size-link`, ikona pravítka je
+> inline SVG přímo ve skriptu), který otevře okno s šesti záložkami — Ponožky,
+> Dětské ponožky, Pánské/Dámské prádlo, Pánská/Dámská trička. Styl
+> `src/css/24-size-chart.css`.
+>
+> **Data nejsou v kódu.** Leží v admin poli *Obsah → Produktový detail* jako
+> blok `.pd-size-src` (verzovaná kopie `src/content/product-detail.html`), aby
+> šly rozměry měnit bez gitu. Jedna `.pd-size-item` = jedna záložka; nadpis
+> `h3.pd-size-name` je její popisek, první `<table>` data, první `<img>` nákres,
+> `p.pd-size-note` poznámka pod tabulkou. **Sedmá záložka = zkopírovat blok
+> v administraci, do kódu se nesahá.** Nákresy jsou v médiích
+> (`vysoke-ponozky.png`, `nizke-ponozky.png`, `trenýrky.png` → v HTML zapsané
+> jako `tren%C3%BDrky.png`, `kalhotky.png`, `tricka.png` pro obojí trička).
+>
+> **Klonuje se, nepřesouvá.** Přesun uzlu ven z `#app` je `childList` mutace
+> uvnitř pozorovaného stromu — observer by se probudil a `runAll()` by běžel
+> znovu. Klon zdroj nechává být; ověřeno živě, že používání okna nevyvolá
+> uvnitř `#app` **ani jednu** mutaci.
+>
+> **Bez skriptu se tabulka nezobrazí** (CSS `.pd-size-src{display:none}`). Je to
+> vědomý směr selhání: šest tabulek vysypaných pod košík vypadá jako rozbitá
+> stránka, kdežto chybějící doplňková informace stojí jen sebe — rozmezí
+> velikostí jsou i na chipech a ve FAQ. Proto se `injectSizeLink()` volá
+> v `runAll()` jako **první**. Když v poli `.pd-size-src` chybí (nebo nemá ani
+> jednu položku), odkaz **vůbec nevznikne** — nikdy tedy neotevře prázdné okno.
+>
+> **Proč `<dialog>.showModal()` a ne vlastní overlay:** kreslí se v *top layer*,
+> tedy nad vším bez ohledu na z-index. Na stránce je sticky hlavička (99981),
+> šablonová lišta `#notification-bar` (99982) a widget Koloo (**2147483006**) —
+> ověřeno `elementFromPoint`, že okno vyhraje nad všemi. Esc, focus-trap, návrat
+> focusu na spouštěč i inertní pozadí jsou zadarmo; dopisuje se jen scroll-lock
+> (`html.pd-size-lock`), který `<dialog>` negarantuje.
+>
+> Zavření řeší **jediné místo** — událost `close` (chytí Esc i křížek i klik do
+> backdropu). V handlerech tlačítek by Esc scroll-lock nesundal. Pojistka na
+> `pageshow` shodí zámek i po návratu přes bfcache, aby se stránka nemohla
+> vrátit zamčená.
+>
+> Focus po otevření dostává **nadpis okna** (`tabindex="-1"` + `autofocus`), ne
+> křížek: bez toho by ho `showModal()` dal prvnímu tlačítku a Chrome by kolem
+> něj nakreslil focus ring i zákazníkovi, který okno otevřel myší.
+>
+> Záložky jsou `role="tab"` s roving `tabindex` a šipkami dle WAI-ARIA APG;
+> panely se přepínají přes `hidden`, takže fungují i bez našeho CSS. Vždy se
+> otevře první — typ produktu se **nehádá** (`data-feature-*` na variantách
+> jsou v administraci zadané nekonzistentně: stejná hodnota `1006=15320` je na
+> pánských tričkách, trenýrkách, dětských boxerkách i jedněch ponožkách).
+>
+> Klon tabulky se sanitizuje (`cleanTable()`): WYSIWYG editor dopisuje inline
+> `style`/`width`/`border` a umí zahodit `<th>` — inline styl by přebil naše CSS
+> a bez hlaviček by tabulka ztratila význam i pro odečítač.
+>
+> Konfigurátorové produkty (`#configurator-variants`) popisek „Vyberte velikost"
+> nemají, tam jde odkaz na vlastní řádek nad výběr (`.pd-size-line`). Produkt
+> bez variant odkaz nedostane vůbec.
 
 ## Co dělá `10-force-variant-selection.html`
 

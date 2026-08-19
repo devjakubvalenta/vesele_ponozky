@@ -1,0 +1,187 @@
+<!--
+  Obsah admin pole „Produktový detail" (Administrace → Obsah → Produktový
+  detail → „Na detailu produktu"). Vkládá se CELÝ tento soubor (bez tohoto
+  komentáře, pokud editor komentáře nebere — jinak nevadí).
+
+  Jsou v něm TŘI věci: placeholder „Výhodné balení", pás benefitů a skrytý
+  zdroj dat pro tabulku velikostí.
+
+  Renderuje se na detailu jako .content-product-detail > ul (platforma může
+  třídu ul přepsat na „benefits" — CSS v 24-product-detail.css proto cílí
+  strukturně a na třídě nezávisí). 4. položka (Doprava zdarma) má žlutou
+  dlaždici přes :nth-child(4) — pořadí položek zachovat.
+
+  Ikony = sdílené ikony1–4.svg (stejné jako HP benefits pás).
+  Čísla („97 %", 130 000+) drží jednotně i HP pás, CMS Recenze a patička —
+  při změně upravit VŠECHNA místa: src/content/homepage.html,
+  src/content/recenze.html, src/scripts/footer.js, src/scripts/header.js.
+
+  ⚠️ Vkládat ve ZDROJOVÉM režimu (</>). WYSIWYG editor jinak přepíše
+  relativní cesty (/cms/…, /files/…) na absolutní s doménou, na které se
+  zrovna edituje — a zákazník z produkce odejde na exitshop.cz.
+
+  NAHOŘE navíc placeholder %primary_accessories% = nativní blok „Příslušenství"
+  (napárovaný produkt) → karta „Výhodné balení". Renderuje section#primary_accessories.itembox
+  (miniatura + a.product_name + .cena). Styl + přesun NAD velikosti řeší
+  24-product-detail.css (sekce „Výhodné balení" + display:contents/order na
+  .content-product-detail) — čistě CSS, bez JS.
+
+  Admin „Blok - Příslušenství" u produktu:
+    • napárovat příslušenství (produkt),
+    • „Titulek bloku Příslušenství" = „Výhodné balení" (naplní <h2>),
+    • ODškrtnout „Zobrazit v záložce u popisu produktu" — jinak se blok
+      přesune do (bez titulku neviditelné) záložky a inline %primary_accessories%
+      se vyrenderuje NAPRÁZDNO.
+-->
+%primary_accessories%
+<ul class="pd-benefits">
+  <li><a href="/cms/60954-recenze"><span><img src="/files/310/files/ikony1.svg" class="img-responsive-editor" alt=""></span><span><strong>97 % zákazníků doporučuje</strong><small>Spokojenost zákazníků je pro nás nejlepší vizitka.</small></span></a></li>
+  <li><a href="/cms/60948-vyroba"><span><img src="/files/310/files/ikony2.svg" class="img-responsive-editor" alt=""></span><span><strong>Výroba v Třeboni</strong><small>Kvalita je u nás na prvním místě.</small></span></a></li>
+  <li><a href="/cms/60957-vraceni-zbozi"><span><img src="/files/310/files/ikony3.svg" class="img-responsive-editor" alt=""></span><span><strong>Vrácení do 120 dní</strong><small>Bez obav, když nesedne velikost.</small></span></a></li>
+  <li><a href="/cms/56955-doprava-a-platba"><span><img src="/files/310/files/ikony4.svg" class="img-responsive-editor" alt=""></span><span><strong>Doprava zdarma</strong><small>Doručení druhý pracovní den.</small></span></a></li>
+</ul>
+
+<!-- =====================================================================
+     TABULKA VELIKOSTÍ — zdroj dat pro okno na produktovém detailu.
+
+     Na stránce je tenhle blok SKRYTÝ (CSS .pd-size-src{display:none}).
+     40-product-detail.js z něj postaví okno s přepínatelnými záložkami
+     a k nadpisu „Vyberte velikost" přidá odkaz „Tabulka velikostí".
+     Bez toho skriptu se tabulka nezobrazí vůbec — je to záměr, viz
+     komentář u bodu 12 v src/scripts/40-product-detail.js.
+
+     JAK TO UPRAVIT (nic víc není potřeba):
+       • jeden blok <div class="pd-size-item"> = jedna záložka v okně,
+       • pořadí bloků = pořadí záložek; první se otevře po otevření okna,
+       • <h3 class="pd-size-name"> = název záložky,
+       • první <img> v bloku = nákres vlevo od tabulky (nepovinný),
+       • první <table> v bloku = data — klidně přidej sloupec nebo řádek,
+       • <p class="pd-size-note"> = poznámka pod tabulkou (nepovinná).
+     Novou záložku uděláš zkopírováním celého bloku a přepsáním textů.
+
+     NÁKRESY jsou nahrané v médiích administrace (cesta /files/310/files/ je
+     stejná na produkci i na technické adrese):
+        vysoke-ponozky.png   Ponožky
+        nizke-ponozky.png    Dětské ponožky
+        trenýrky.png         Pánské prádlo   (v HTML zapsáno jako tren%C3%BDrky.png —
+                             háček v názvu souboru se v adrese musí zakódovat)
+        kalhotky.png         Dámské prádlo
+        tricka.png           Pánská i dámská trička (stejný nákres)
+     Jsou to brandové kresby, ne technické kóty — proto mají prázdné alt=""
+     (odečítač je přeskočí) a co se kde měří říká text v hlavičce sloupce
+     a poznámka pod tabulkou. Chybějící obrázek nic nerozbije — záložka se
+     ukáže jen bez nákresu.
+
+     ⚠️ POZNÁMKA K DĚTSKÝM PONOŽKÁM: hodnoty níže (14-16 … 31-34) jsou podle
+     dodaného podkladu, ale eshop reálně prodává varianty 20-24 / 25-29 /
+     30-34. Zákazník si tedy svou velikost v tabulce nenajde 1:1. Až budou
+     správné rozsahy po ruce, přepiš je rovnou tady v administraci.
+
+     ⚠️ Dětské prádlo (boxerky 122-128 … 158-164) zatím vlastní záložku nemá.
+     ===================================================================== -->
+<div class="pd-size-src">
+
+  <div class="pd-size-item">
+    <h3 class="pd-size-name">Ponožky</h3>
+    <p class="pd-size-fig"><img src="/files/310/files/vysoke-ponozky.png" width="302" height="382" loading="lazy" alt=""></p>
+    <table class="pd-size-table">
+      <thead>
+        <tr><th scope="col">EU</th><th scope="col">UK</th><th scope="col">A</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>35-38</td><td>3-5</td><td>23-25</td></tr>
+        <tr><td>39-42</td><td>6-8</td><td>26-28</td></tr>
+        <tr><td>43-46</td><td>9-11</td><td>29-31</td></tr>
+        <tr><td>47-50</td><td>12-15</td><td>32-34</td></tr>
+      </tbody>
+    </table>
+    <p class="pd-size-note">A = délka chodidla v centimetrech.</p>
+  </div>
+
+  <div class="pd-size-item">
+    <h3 class="pd-size-name">Dětské ponožky</h3>
+    <p class="pd-size-fig"><img src="/files/310/files/nizke-ponozky.png" width="356" height="330" loading="lazy" alt=""></p>
+    <table class="pd-size-table">
+      <thead>
+        <tr><th scope="col">EU</th><th scope="col">A</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>14-16</td><td>9-11</td></tr>
+        <tr><td>18-20</td><td>12-13</td></tr>
+        <tr><td>23-26</td><td>15.5-17.5</td></tr>
+        <tr><td>27-30</td><td>18-20</td></tr>
+        <tr><td>31-34</td><td>21-23</td></tr>
+      </tbody>
+    </table>
+    <p class="pd-size-note">A = délka chodidla v centimetrech.</p>
+  </div>
+
+  <div class="pd-size-item">
+    <h3 class="pd-size-name">Pánské prádlo</h3>
+    <p class="pd-size-fig"><img src="/files/310/files/tren%C3%BDrky.png" width="458" height="302" loading="lazy" alt=""></p>
+    <table class="pd-size-table">
+      <thead>
+        <tr><th scope="col">Velikost</th><th scope="col">Obvod pasu</th><th scope="col">Obvod boků</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>M</td><td>85-92</td><td>98-105</td></tr>
+        <tr><td>L</td><td>93-100</td><td>106-113</td></tr>
+        <tr><td>XL</td><td>101-108</td><td>114-121</td></tr>
+        <tr><td>2XL</td><td>109-116</td><td>122-129</td></tr>
+      </tbody>
+    </table>
+    <p class="pd-size-note">Obvod je v centimetrech.</p>
+  </div>
+
+  <div class="pd-size-item">
+    <h3 class="pd-size-name">Dámské prádlo</h3>
+    <p class="pd-size-fig"><img src="/files/310/files/kalhotky.png" width="434" height="280" loading="lazy" alt=""></p>
+    <table class="pd-size-table">
+      <thead>
+        <tr><th scope="col">Velikost</th><th scope="col">Obvod pasu</th><th scope="col">Obvod boků</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>S</td><td>66-74</td><td>78-86</td></tr>
+        <tr><td>M</td><td>74-82</td><td>86-94</td></tr>
+        <tr><td>L</td><td>82-90</td><td>94-102</td></tr>
+        <tr><td>XL</td><td>90-98</td><td>102-110</td></tr>
+      </tbody>
+    </table>
+    <p class="pd-size-note">Obvod je v centimetrech.</p>
+  </div>
+
+  <div class="pd-size-item">
+    <h3 class="pd-size-name">Pánská trička</h3>
+    <p class="pd-size-fig"><img src="/files/310/files/tricka.png" width="404" height="356" loading="lazy" alt=""></p>
+    <table class="pd-size-table">
+      <thead>
+        <tr><th scope="col">Velikost</th><th scope="col">Výška postavy</th><th scope="col">Obvod hrudníku</th><th scope="col">Obvod pasu</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>M</td><td>168</td><td>96-100</td><td>84-88</td></tr>
+        <tr><td>L</td><td>176</td><td>104-108</td><td>92-96</td></tr>
+        <tr><td>XL</td><td>184</td><td>112-116</td><td>100-104</td></tr>
+        <tr><td>2XL</td><td>192+</td><td>120-126</td><td>108-114</td></tr>
+      </tbody>
+    </table>
+    <p class="pd-size-note">Obvod je v centimetrech.</p>
+  </div>
+
+  <div class="pd-size-item">
+    <h3 class="pd-size-name">Dámská trička</h3>
+    <p class="pd-size-fig"><img src="/files/310/files/tricka.png" width="404" height="356" loading="lazy" alt=""></p>
+    <table class="pd-size-table">
+      <thead>
+        <tr><th scope="col">Velikost</th><th scope="col">Výška postavy</th><th scope="col">Obvod hrudníku</th><th scope="col">Obvod pasu</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>S</td><td>164</td><td>84-88</td><td>68-72</td></tr>
+        <tr><td>M</td><td>168</td><td>92-96</td><td>76-80</td></tr>
+        <tr><td>L</td><td>176</td><td>100-104</td><td>84-88</td></tr>
+        <tr><td>XL</td><td>176+</td><td>110-116</td><td>94-100</td></tr>
+      </tbody>
+    </table>
+    <p class="pd-size-note">Obvod je v centimetrech.</p>
+  </div>
+
+</div>
