@@ -70,9 +70,18 @@ header {
   text-decoration: none;
 }
 
+/* Skrytý zdroj konce akce z administrace (%countdown% ve slotu „Box pod
+   hlavičkou“ — viz src/content/countdown-source.html). Pojistka pro případ,
+   že editor sebere inline style. */
+#vp-cd-src {
+  display: none !important;
+}
+
 /* Odpočet v liště — vykresluje src/scripts/countdown-bar.js (platforma %countdown%
-   v liště nerozbaluje). Prostý inline formát DD:HH:MM:SS, stejný styl jako text. */
-#notification-bar .es-countdown {
+   v liště nerozbaluje). Prostý inline formát DD:HH:MM:SS, stejný styl jako text.
+   `.es-countdown` je tu jen kvůli starší verzi skriptu, nová používá `.vp-cd`. */
+#notification-bar .es-countdown,
+#notification-bar .vp-cd {
   display: inline;
   padding: 0 !important;
   margin: 0 !important;
@@ -84,7 +93,8 @@ header {
   white-space: nowrap;
 }
 /* oddělovač „ - " před odpočtem */
-#notification-bar .es-countdown::before {
+#notification-bar .es-countdown::before,
+#notification-bar .vp-cd::before {
   content: "- ";
 }
 
