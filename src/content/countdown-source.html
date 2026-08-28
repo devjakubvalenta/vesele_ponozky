@@ -1,24 +1,31 @@
 <!--
   SKRYTÝ ZDROJ ODPOČTU pro oznamovací lištu.
 
-  Proč: platforma rozbaluje %countdown% jen v sekcích „Obsah", v liště ne.
+  Proč: platforma rozbaluje %countdown% jen v některých sekcích „Obsah“.
   Tenhle blok se nikde nezobrazí (display:none) — slouží jen k tomu, aby se
   na stránku dostal koncový čas akce z administrace
-  (Marketing a slevy → „Odpočítávání na e-shopu" → Koncové datum a čas).
+  (Marketing a slevy → „Odpočítávání na e-shopu“ → Koncové datum a čas).
   Odtud si ho vezme src/scripts/countdown-bar.js a vykreslí ho v liště.
 
-  Kam vložit (zdrojový režim `</>`):
-    Administrace → Obsah → „Box pod hlavičkou“ (zobrazuje se na všech
-    stránkách, jinak je prázdný).
+  Kam vložit (zdrojový režim `</>`), ideálně na obě místa:
+    a) Obsah → Patička obchodu → Sekce 4 (O nás) — patička je na všech
+       stránkách, takže odpočet nikde nic nedostahuje. NEOVĚŘENO, jestli
+       tenhle slot placeholder rozbaluje.
+    b) Obsah → Úvodní stránka (homepage) — slot, který administrace sama
+       doporučuje v nápovědě u odpočtu. Je i v src/content/homepage.html.
+       Když (a) nefunguje, skript si konec akce stáhne z homepage a schová
+       do sessionStorage na 15 min.
 
-  Ověření po vložení (konzole prohlížeče na libovolné stránce):
-    document.querySelector('#vp-cd-src .es-countdown').dataset.endtime
-  Když to vrátí datum → hotovo, lišta odpočítává podle administrace.
-  Když se místo toho na stránce objeví doslova text „%countdown%“, slot
-  placeholdery nerozbaluje — zkus jiný slot z „Obsah“ (např. Úvodní stránka),
-  odpočet pak funguje na stránkách, kde se ten slot renderuje.
+  ⚠️ OVĚŘENO 2026-08-28: slot „Box pod hlavičkou“ %countdown% NEROZBALUJE —
+     vypíše ho doslova jako text. Tam blok nedávej (a pokud tam je, smaž ho).
 
-  Bez tohoto bloku lišta ukazuje jen text, bez odpočtu (záměrně — jediný
-  zdroj pravdy o konci akce je administrace).
+  Ověření po vložení (konzole prohlížeče na dané stránce):
+    document.querySelector('#vp-cd-src [data-endtime]')?.dataset.endtime
+  Když to vrátí datum → slot rozbaluje, hotovo.
+  Když vrátí undefined a na stránce je doslova text „%countdown%“ → slot
+  placeholder nerozbaluje, zkus jiný.
+
+  Bez tohoto bloku (a bez homepage varianty) lišta ukazuje jen text, bez
+  odpočtu — záměrně: jediný zdroj pravdy o konci akce je administrace.
 -->
 <div id="vp-cd-src" style="display:none" aria-hidden="true">%countdown%</div>
