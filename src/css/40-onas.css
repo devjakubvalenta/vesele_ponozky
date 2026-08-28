@@ -124,6 +124,19 @@
   border-radius: calc(var(--onas-radius) - 6px);
 }
 
+/* Hero s fotografií místo modré dlaždice s krabicí — fotka jde od kraje ke
+   kraji, modré pozadí i vnitřní odsazení se ruší (stín zůstává). */
+.vp-onas__hero-media--photo {
+  background: none;
+  padding: 0;
+  line-height: 0;
+}
+.vp-onas__hero-media--photo .vp-onas__hero-img {
+  display: block;
+  height: auto;
+  border-radius: var(--onas-radius);
+}
+
 /* ---- Placeholder fotky (rámeček) ---- */
 .vp-onas__photo {
   border-radius: var(--onas-radius);
