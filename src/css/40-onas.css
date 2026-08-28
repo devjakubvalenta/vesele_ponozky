@@ -144,6 +144,24 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
+/* Rámeček s reálnou fotkou — ruší dashed placeholder (i modrou variantu, proto
+   až za ní). Fotka drží svůj poměr stran, sloupec se přizpůsobí. */
+.vp-onas__photo--img {
+  display: block;
+  background: none;
+  border: 0;
+  padding: 0;
+  min-height: 0;
+  overflow: hidden;
+  line-height: 0;
+}
+.vp-onas__photo--img img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: inherit;
+}
+
 /* ---- 2. RODINA (obrázek + text) ---- */
 .vp-onas__family {
   display: grid;

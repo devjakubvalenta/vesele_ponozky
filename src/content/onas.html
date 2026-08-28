@@ -2,7 +2,8 @@
   Stránka „O nás" v2 (CMS) — vkládá se do: Administrace → CMS a blog → O nás
   ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor sanitizuje).
   Formulář je NATIVNÍ přes %contact_form%. Styl dodává 40-onas.css (scope .vp-onas) přes CDN.
-  Fotky „rodina/dílna" a „dílna/detaily" = zatím placeholder rámečky.
+  Fotky: /files/310/files/rodinna-firma.jpg (rodina) a v%C3%BDroba.jpg (dílna) —
+  soubor s diakritikou musí být v src URL-enkódovaný, jinak se nenačte.
 -->
 <div class="vp-onas">
 
@@ -22,7 +23,9 @@
 
   <!-- 2. SÍLA RODINNÉHO KRUHU -->
   <div class="vp-onas__family">
-    <div class="vp-onas__photo">Fotografie: naše rodina / dílna</div>
+    <div class="vp-onas__photo vp-onas__photo--img">
+      <img src="/files/310/files/rodinna-firma.jpg" alt="Rodina za Veselými ponožkami" loading="lazy" />
+    </div>
     <div class="vp-onas__family-text">
       <h2 class="vp-onas__h2 vp-onas__h2--left">Síla rodinného kruhu a poctivé práce</h2>
       <p>Jsme stoprocentně rodinná firma. To pro nás není jen marketingový štítek na webu, ale každodenní realita. Rodinné podnikání znamená, že práce neodchází z hlavy s bouchnutím dveří od dílny v pět hodin odpoledne — o nových nápadech, materiálech a vzorech se společně bavíme u nedělního oběda. Všichni táhneme za jeden provaz a každý z nás dává do chodu firmy maximum své energie a srdce. Od technického zázemí přes pečlivý výběr materiálů a ladění detailů až po finální kontrolu a odeslání balíčku – vše prochází našima rukama.</p>
@@ -86,7 +89,9 @@
       <p>Jedna věc se však nezmění nikdy. Vždycky budeme tou rodinnou firmou z Třeboně, která má své srdce v pletařské dílně. Každý spokojený zákazník, který nám napíše, že naše ponožky jsou ty nejpohodlnější, jaké kdy měl, je pro nás potvrzením, že naše rozhodnutí jít vlastní, lokální cestou mělo smysl.</p>
       <p class="vp-onas__future-thanks"><strong>Děkujeme, že jste součástí našeho příběhu a že nám pomáháte udržovat poctivé české textilní řemeslo naživu. Bez vaší podpory by se naše stroje nerozběhly a nitě by zůstaly smutně stát. Každým krokem, který v našich ponožkách uděláte, jdete kousek této cesty s námi.</strong></p>
     </div>
-    <div class="vp-onas__photo vp-onas__photo--on-blue">Fotografie: dílna / detaily</div>
+    <div class="vp-onas__photo vp-onas__photo--on-blue vp-onas__photo--img">
+      <img src="/files/310/files/v%C3%BDroba.jpg" alt="Pletařský stroj v naší dílně v Třeboni" loading="lazy" />
+    </div>
   </div>
 
   <!-- 6. KONTAKT / SPOLUPRÁCE -->
