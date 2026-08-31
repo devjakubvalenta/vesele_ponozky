@@ -7780,6 +7780,16 @@ body.homepage .container-fluid:has(> section.category-circle-section:not(.vp-cat
   display: block;
 }
 
+/* Ikony kategorií jsou modrá čárová kresba na průhledném pozadí, takže na
+   modré dlaždici (c3) splynou s podkladem — na Kávě to vypadalo, že ikona
+   chybí, přitom se načte v pořádku (HTTP 200, 194×180). Přebarvíme ji na
+   bílou: brightness(0) sjede kresbu na černou, invert(1) ji převrátí na
+   bílou a průhledné pozadí zůstane průhledné. Platí pro cokoli, co v cyklu
+   barev spadne na modrou (3., 7., 11. dlaždice…), ne jen pro Kávu. */
+.vp-cats .vp-cat-c3 .category-circle-item-img img {
+  filter: brightness(0) invert(1);
+}
+
 /* Text: bílé verzálky nahoře, akcentní slova 2+ na vlastním řádku */
 .vp-cats .category-circle-item .category-circle-item-text {
   margin: 0;
