@@ -10,6 +10,26 @@
    nikde nenačítá (ověřeno: window.Swiper undefined, žádný skript třídu nezná,
    ani s mobilním UA). Swipe na mobilu proto dodává CSS scroll-snap track. */
 
+/* Do přesunu sekci vůbec neukazovat. Nativně se renderuje mezi hero bentem
+   a #homepage_text, tedy hned pod hero, a hp-categories.js ji odtud odnese
+   dolů. Bez tohohle pravidla to nad ohybem problikne — změřeno na produkci
+   rAF smyčkou: sekce byla vidět 294–328 ms na pozici top 245 px (v prvním
+   viewportu), pak zmizela a na správném místě se objevila až v 1333 ms.
+   Parser dorazí na naše skripty v patičce pozdě (HTML homepage má 2,4 MB),
+   takže časováním JS se s tím nedá hnout — musí to vyřešit CSS, které je
+   render-blocking a platí od prvního vykreslení.
+
+   display:none, ne visibility — jinak by se místo pod hero rezervovalo
+   a obsah by při přesunu stejně odskočil.
+
+   Bez pojistky na odkrytí schválně: CSS i skript jedou ze stejného CDN, takže
+   při výpadku jsDelivru se nenačte ani tohle pravidlo a kategorie se ukážou
+   nativně. (Časovaná animace by tu stejně nefungovala — animace na prvku
+   s display:none neběží, ověřeno.) */
+body.homepage .container-fluid:has(> section.category-circle-section:not(.vp-cats)) {
+  display: none;
+}
+
 .category-circle-section.vp-cats {
   --cat-red: #ec3323;
   --cat-yellow: #fbbc02;

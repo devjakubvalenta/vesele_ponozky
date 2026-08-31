@@ -24,13 +24,15 @@
 (function () {
   "use strict";
 
+  /* Vrací true = hotovo (nebo tu není co dělat), false = cíle ještě nejsou
+     v DOM, ať se to zkusí znovu na DOMContentLoaded. */
   function init() {
     var section = document.querySelector("section.category-circle-section");
     var anchor =
       document.querySelector("#homepage_text .vp-recenze--hp") ||
       document.querySelector("#homepage_text ul.benefits");
-    if (!section || !anchor) return; // mimo HP / sekce není
-    if (section.classList.contains("vp-cats")) return; // už zpracováno
+    if (!section || !anchor) return false; // mimo HP / sekce ještě není
+    if (section.classList.contains("vp-cats")) return true; // už zpracováno
 
     // 1. přesun celého obalu (container-fluid) za recenze (příp. benefits)
     var wrap = section.parentElement;
@@ -65,11 +67,16 @@
     } catch (e) {
       /* staré prohlížeče bez Event konstruktoru — resize je jen optimalizace */
     }
+    return true;
   }
 
-  if (document.readyState === "loading") {
+  /* Skript sedí v patičce, takže sekce i kotva v DOM UŽ JSOU — přesouváme
+     hned, ne až na DOMContentLoaded. Jinak se sekce stihne vykreslit ve své
+     nativní pozici pod hero a při přesunu odtud problikne (měřeno: první
+     vykreslení 752 ms, DOMContentLoaded až 889 ms). Do té doby ji drží
+     schovanou CSS (28-hp-kategorie.css). Posluchač se navěsí jen když se
+     cíle nenašly — tím se vyloučí dvojí běh. */
+  if (!init()) {
     document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
   }
 })();

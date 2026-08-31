@@ -325,8 +325,12 @@
 
   /* Obsah dochází i po DOM-ready (Vue na detailu, AJAX filtrace ve výpisu),
      proto ještě sledovat DOM — přepis je levný a spouští se zhuštěně. */
+  var watchBound = false;
+
   function watchTechDomainUrls() {
     if (!("MutationObserver" in window)) return;
+    if (watchBound) return; // init může běžet 2× (viz start dole) — jen jeden observer
+    watchBound = true;
     var pending = null;
     new MutationObserver(function () {
       if (pending) return;
@@ -352,9 +356,13 @@
   var HIDE_AFTER = 120;   // px scrollu, než se začne skrývat
   var DIR_SLOP = 4;       // px, aby se to nepřepínalo na chvění trackpadu
 
+  var stickyBound = false;
+
   function stickyHeader() {
     var hdr = document.querySelector("header");
     if (!hdr) return;
+    if (stickyBound) return; // init může běžet 2× — posluchače navázat jen jednou
+    stickyBound = true;
 
     var last = window.pageYOffset;
     var ticking = false;
@@ -401,6 +409,8 @@
     apply();
   }
 
+  /* Vrací true = hlavička zpracována, false = ještě není v DOM (zkusit znovu
+     na DOMContentLoaded). Všechny kroky uvnitř jsou idempotentní. */
   function init() {
     fixTechDomainUrls();      // běží na všech stránkách, i tam kde není hlavička
     watchTechDomainUrls();
@@ -408,7 +418,7 @@
 
     var middleRow = document.querySelector("header .header-middle .menu-gutters");
     if (!middleRow) middleRow = document.querySelector("header .header-middle .row");
-    if (!middleRow) return; // není hlavička
+    if (!middleRow) return false; // není hlavička
 
     var logo = middleRow.querySelector(".logotype");
     var searchDiv = middleRow.querySelector(".search-div");
@@ -418,11 +428,16 @@
     swapCartIcon();
     buildSideMenu();
     keepMobileMenuLinksNavigable();
+    return true;
   }
 
-  if (document.readyState === "loading") {
+  /* Skript sedí v patičce, takže hlavička v DOM UŽ JE — doplňujeme ji hned,
+     ne až na DOMContentLoaded. Jinak se stihne vykreslit bez odznaku Heureky
+     a zákaznické linky a po jejich vložení celá stránka poskočí (měřeno:
+     první vykreslení 752 ms, DOMContentLoaded až 889 ms). Výšku řádku do té
+     doby drží min-height v 20-header.css. Posluchač se navěsí jen když
+     hlavička nebyla nalezena — tím se vyloučí dvojí běh. */
+  if (!init()) {
     document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
   }
 })();
