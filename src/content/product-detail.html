@@ -3,8 +3,7 @@
   detail → „Na detailu produktu"). Vkládá se CELÝ tento soubor (bez tohoto
   komentáře, pokud editor komentáře nebere — jinak nevadí).
 
-  Jsou v něm TŘI věci: placeholder „Výhodné balení", pás benefitů a skrytý
-  zdroj dat pro tabulku velikostí.
+  Jsou v něm DVĚ věci: pás benefitů a skrytý zdroj dat pro tabulku velikostí.
 
   Renderuje se na detailu jako .content-product-detail > ul (platforma může
   třídu ul přepsat na „benefits" — CSS v 24-product-detail.css proto cílí
@@ -20,20 +19,15 @@
   relativní cesty (/cms/…, /files/…) na absolutní s doménou, na které se
   zrovna edituje — a zákazník z produkce odejde na exitshop.cz.
 
-  NAHOŘE navíc placeholder %primary_accessories% = nativní blok „Příslušenství"
-  (napárovaný produkt) → karta „Výhodné balení". Renderuje section#primary_accessories.itembox
-  (miniatura + a.product_name + .cena). Styl + přesun NAD velikosti řeší
-  24-product-detail.css (sekce „Výhodné balení" + display:contents/order na
-  .content-product-detail) — čistě CSS, bez JS.
-
-  Admin „Blok - Příslušenství" u produktu:
-    • napárovat příslušenství (produkt),
-    • „Titulek bloku Příslušenství" = „Výhodné balení" (naplní <h2>),
-    • ODškrtnout „Zobrazit v záložce u popisu produktu" — jinak se blok
-      přesune do (bez titulku neviditelné) záložky a inline %primary_accessories%
-      se vyrenderuje NAPRÁZDNO.
+  ⚠️ Karta „Zvýhodněné balení" NEPATŘÍ do tohoto pole. Dřív se dělala přes
+  placeholder %primary_accessories% (nativní blok „Příslušenství"), ale vazba
+  se přepojila na nativní **„Doplňkové služby"** (additional services), které
+  si šablona vykresluje sama do pravého sloupce pod tlačítko do košíku —
+  žádný placeholder k tomu není potřeba. Styl řeší 24-product-detail.css
+  (sekce „Zvýhodněné balení") + drobnosti v 40-product-detail.js (odkaz ve
+  stejném okně, cena bez plusu). Nastavuje se U KAŽDÉHO PRODUKTU ZVLÁŠŤ
+  v administraci — viz src/content/README.md.
 -->
-%primary_accessories%
 <ul class="pd-benefits">
   <li><a href="/cms/60954-recenze"><span><img src="/files/310/files/ikony1.svg" class="img-responsive-editor" alt=""></span><span><strong>97 % zákazníků doporučuje</strong><small>Spokojenost zákazníků je pro nás nejlepší vizitka.</small></span></a></li>
   <li><a href="/cms/60948-vyroba"><span><img src="/files/310/files/ikony2.svg" class="img-responsive-editor" alt=""></span><span><strong>Výroba v Třeboni</strong><small>Kvalita je u nás na prvním místě.</small></span></a></li>
