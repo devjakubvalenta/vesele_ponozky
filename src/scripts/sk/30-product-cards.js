@@ -1,0 +1,335 @@
+/* ⚠️ GENEROVANÝ SOUBOR — NEEDITOVAT.
+   Vzniká z src/scripts/30-product-cards.js + i18n/sk-texty.mjs příkazem: node build-sk.mjs
+   Úpravy patří do českého originálu nebo do slovníku, pak přegenerovat. */
+/*
+  Produktové karty ve výpisech — JS doplňky ke stylu v src/css/25-products.css:
+    1. dvouřádkový název (černý typ produktu + modrý název motivu),
+    2. zeleně zvýrazněné datum v „doručíme 15.07.",
+    3. tlačítko „Zobrazit vše" pod produktovými bloky na HP (nativně neexistuje),
+    4. tlačítko „Zobrazit vše" pod hlavním HP výpisem „Všechny naše produkty"
+       (CSS nechá viditelné jen 4 karty; JS přidá odkaz na Katalog),
+    5. štítek „V KOŠÍKU" na kartách produktů, které už v košíku jsou
+       (čte cart cookie shopping_cart_<shopId>; styl .pc-in-cart),
+    6. klik na „Přidat do košíku" bez vybrané velikosti nespadne na detail
+       produktu, ale zatřese chipy velikostí + ukáže „Nejprve vyberte
+       velikost" (styl .pc-shake / .pc-size-hint).
+
+  Vkládá se do: Administrace → Skripty → nová položka
+     • Název: „Produktové karty (název, datum, Zobrazit vše)"
+     • Zobrazit na stránkách: Na všech stránkách
+     • Umístit v Head: ne (patička)
+     • Obsah položky (JS musí být v <script>):
+         <script src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/src/scripts/30-product-cards.js"></script>
+
+  Vše je idempotentní (lze spustit opakovaně) a bez JS web degraduje
+  elegantně — karty jen zůstanou s jednobarevným názvem a bez tlačítka.
+*/
+(function () {
+  "use strict";
+
+  if (window.__vpProductCards) return;
+  window.__vpProductCards = true;
+
+  /* == Konfigurace ======================================================= */
+
+  // Web běží na dvou doménách se dvěma tvary cest:
+  //   produkce  www.veseleponozky.cz/c/1254445-…            (bez prefixu)
+  //   test      www.exitshop.cz/shops/28056/c/1254445-…      (s prefixem shopu)
+  // ID kategorií jsou na obou stejná, liší se jen prefix → URL držíme jako
+  // cesty od kořene a prefix dopočítáme za běhu. NIKDY sem nedávat absolutní
+  // URL s doménou — na produkci by odkaz odvedl návštěvníka na testovací web.
+  var SHOP_BASE = (location.pathname.match(/^\/shops\/\d+/) || [""])[0];
+  function shopUrl(path) { return SHOP_BASE + path; }
+
+  // Mapa HP produktových bloků → cesta pro tlačítko „Zobrazit vše".
+  // Klíč = číslo z třídy section.recommend-block-{id}. Blok bez záznamu
+  // tlačítko nedostane. Na HP jsou teď bloky:
+  //   3224 = „To nejlepší právě v akci", 3236 = „Dárkové sety".
+  // Pozn.: 3224 dřív mířil na /c/1254445-katalog/new (= jen řazení „Nejnovější"
+  // na rootu Katalog). Root Katalog servíruje staré facety 334 „Velikosti" +
+  // 335 „Je hlavní produkt" místo Motiv/Velikost, takže tam chybí filtrace
+  // podle Povolání. Kategorie Výprodej (1243142) obsahuje přesně ty zlevněné
+  // kusy, které blok ukazuje, a má správné filtry Motiv → Velikost → Cena.
+  var SHOW_ALL = {
+    "3224": "/c/1254445-vyprodej-az-90",  // To nejlepší právě v akci
+    "3236": "/c/1254442-darkove-sety"     // Dárkové sety
+  };
+  var SHOW_ALL_LABEL = "Zobraziť všetko";
+
+  // Hlavní HP výpis „Všechny naše produkty" (nativní grid pod #homepage_text):
+  // CSS nechá viditelné jen první 4 karty, JS pod grid přidá tlačítko „Zobrazit
+  // vše" mířící sem. Cíl = Výprodej (1243142), stejně jako u bloku „To nejlepší
+  // právě v akci". Root Katalog (1196952) je sice jediný výpis celého sortimentu
+  // (358 kusů), ale ve filtraci servíruje legacy parametry 334/335 místo Motiv
+  // (52221) + Velikost (52209), takže tam chybí filtrace podle Povolání —
+  // dokud se parametry nepřenastaví v administraci, posíláme lidi na Výprodej.
+  var HP_ALL_PATH = "/c/1254445-vyprodej-az-90";
+  var HP_ALL_LIMIT = 4;
+
+  // Rozdělení názvu na 2 řádky:
+  //  1. obsahuje-li název „ - ", dělí se na první pomlčce (pomlčka se nezobrazí),
+  //  2. jinak začíná-li některým prefixem, dělí se za ním (delší prefix má přednost),
+  //  3. jinak zůstane název vcelku (jednobarevný).
+  var NAME_PREFIXES = [
+    "Veselé ponožky",
+    "Detské ponožky",
+    "Darčeková krabička",
+    "Darčekový set",
+    "Veselé ponožky",
+    "Dětské ponožky",
+    "Dárková krabička",
+    "Dárkový set",
+    "WiT Box",
+    "Termo"
+  ];
+
+  /* == 1) Název na dva řádky ============================================ */
+
+  function splitName(scope) {
+    var headings = scope.querySelectorAll(".products .product .product-content h2");
+    Array.prototype.forEach.call(headings, function (h2) {
+      if (h2.querySelector(".pc-name-brand")) return; // už zpracováno
+      var name = (h2.textContent || "").replace(/\s+/g, " ").trim();
+      if (!name) return;
+
+      var line1 = null, line2 = null;
+      var dash = name.indexOf(" - ");
+      if (dash > 0) {
+        line1 = name.slice(0, dash).trim();
+        line2 = name.slice(dash + 3).trim();
+      } else {
+        for (var i = 0; i < NAME_PREFIXES.length; i++) {
+          var p = NAME_PREFIXES[i];
+          if (name.length > p.length + 1 &&
+              name.slice(0, p.length + 1).toLowerCase() === (p + " ").toLowerCase()) {
+            line1 = name.slice(0, p.length);
+            line2 = name.slice(p.length + 1).trim();
+            break;
+          }
+        }
+      }
+      if (!line1 || !line2) return; // nedělitelný název — nechat být
+
+      var brand = document.createElement("span");
+      brand.className = "pc-name-brand";
+      brand.textContent = line1;
+      var variant = document.createElement("span");
+      variant.className = "pc-name-variant";
+      variant.textContent = line2;
+      variant.title = name; // celý název v tooltipu (řádek se ořezává ellipsis)
+      h2.textContent = "";
+      h2.appendChild(brand);
+      h2.appendChild(variant);
+    });
+  }
+
+  /* == 2) Zelené datum v „doručíme 15.07." ============================== */
+
+  function wrapDeliveryDate(scope) {
+    var counts = scope.querySelectorAll(".products .product .stored-count");
+    Array.prototype.forEach.call(counts, function (el) {
+      if (el.querySelector(".pc-delivery-date")) return;
+      // jen přímé textové uzly (uvnitř může být popup šablony)
+      var nodes = Array.prototype.slice.call(el.childNodes);
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        if (node.nodeType !== 3) continue;
+        var m = node.nodeValue.match(/(\d{1,2}\.\s?\d{1,2}\.(?:\s?\d{2,4})?)/);
+        if (!m) continue;
+        var span = document.createElement("span");
+        span.className = "pc-delivery-date";
+        span.textContent = m[1];
+        var after = node.splitText(m.index);
+        after.nodeValue = after.nodeValue.slice(m[1].length);
+        el.insertBefore(span, after);
+        break;
+      }
+    });
+  }
+
+  /* == 3) „Zobrazit vše" pod HP bloky =================================== */
+
+  function addShowAllButtons(scope) {
+    var blocks = (scope.querySelectorAll ? scope : document)
+      .querySelectorAll("section.recommend-block");
+    Array.prototype.forEach.call(blocks, function (block) {
+      if (block.querySelector(".pc-show-all")) return;
+      var m = block.className.match(/recommend-block-(\d+)/);
+      if (!m || !SHOW_ALL[m[1]]) return;
+      var a = document.createElement("a");
+      a.className = "pc-show-all";
+      a.href = shopUrl(SHOW_ALL[m[1]]);
+      a.textContent = SHOW_ALL_LABEL;
+      block.appendChild(a);
+    });
+  }
+
+  /* == 4) „Zobrazit vše" pod hlavním HP výpisem ========================= */
+
+  // Grid „Všechny naše produkty" = section.products.row hned za #homepage_text
+  // (existuje jen na HP). CSS skryje 5.+ kartu; sem přidáme odkaz na Katalog.
+  function addHomepageShowAll() {
+    var grid = document.querySelector("#homepage_text + section.products.row");
+    if (!grid) return;                                              // jen HP
+    if (grid.parentNode.querySelector("a.pc-show-all-hp")) return;  // už hotovo
+    if (grid.querySelectorAll(":scope > a.product").length <= HP_ALL_LIMIT) return;
+    var a = document.createElement("a");
+    a.className = "pc-show-all-hp";
+    a.href = shopUrl(HP_ALL_PATH);
+    a.textContent = SHOW_ALL_LABEL;
+    grid.insertAdjacentElement("afterend", a);
+  }
+
+  /* == 5) Štítek „V KOŠÍKU" ============================================= */
+
+  // Obsah košíku drží cookie shopping_cart_<shopId> — URL-encoded JSON
+  // {"productId-variantId": "ks"}. Shop id nehardcodovat (produkce má jiné).
+  function cartProductIds() {
+    var m = document.cookie.match(/(?:^|;\s*)shopping_cart_\d+=([^;]*)/);
+    if (!m) return {};
+    var ids = {};
+    try {
+      var cart = JSON.parse(decodeURIComponent(m[1]));
+      Object.keys(cart || {}).forEach(function (k) {
+        ids[k.split("-")[0]] = true;
+      });
+    } catch (e) { /* nečitelná cookie → bez štítků */ }
+    return ids;
+  }
+
+  // Karta je <a href="…/p/<productId>-slug">; štítek se přidává/odebírá
+  // podle aktuální cookie (po vyprázdnění košíku zmizí). Jde jako PRVNÍ
+  // do kontejneru .product-stripes (V KOŠÍKU nahoře, admin stripy typu
+  // DOPRAVA ZDARMA pod ním — sloupeček pilulek řeší CSS); bez kontejneru
+  // fallback do figure (absolutní pozici dodá CSS). Vzhled: .pc-in-cart
+  // v src/css/25-products.css.
+  function syncInCartBadges(scope) {
+    var inCart = cartProductIds();
+    var cards = scope.querySelectorAll(".products .product");
+    Array.prototype.forEach.call(cards, function (card) {
+      var m = (card.getAttribute("href") || "").match(/\/p\/(\d+)/);
+      var badge = card.querySelector(".pc-in-cart");
+      if (m && inCart[m[1]]) {
+        if (!badge) {
+          badge = document.createElement("span");
+          badge.className = "pc-in-cart";
+          badge.textContent = "V košíku";
+          var stripes = card.querySelector(".product-stripes");
+          var fig = card.querySelector("figure");
+          if (stripes) {
+            stripes.insertBefore(badge, stripes.firstChild);
+          } else if (fig) {
+            fig.appendChild(badge);
+          }
+        }
+      } else if (badge) {
+        badge.parentNode.removeChild(badge);
+      }
+    });
+  }
+
+  /* == Nevybraná velikost: zatřást a říct proč ==========================
+     Karta ve výpisu má tlačítko `.add-to-cart-js-variants` + `data-url`.
+     Delegovaný handler šablony na klik udělá `location.href = data-url`, tedy
+     proklik na detail k výběru velikosti — bez jakéhokoli vysvětlení. Zákazník
+     klikne na „Přidat do košíku" a místo košíku je na jiné stránce.
+
+     Chipy velikostí jsou přitom rovnou na kartě: stačí říct, ať jednu vybere.
+     Klik proto zachytíme v CAPTURE fázi na documentu — ta proběhne dřív než
+     delegovaný handler šablony na <body>, takže `stopPropagation()` navigaci
+     zruší. `preventDefault()` je tam kvůli tomu, že celá karta je <a>.
+
+     Chytáme JEN karty, které opravdu mají z čeho vybírat (existuje
+     `.variant-box-selectable`) — nevariantní zboží se přidává jedním klikem
+     a to nesmíme rozbít. */
+  var SIZE_HINT = "Najprv vyberte veľkosť";
+
+  function shakeSizes(card) {
+    var row = card.querySelector(".show_variants_on_product_list_row");
+    if (!row) return;
+
+    // Třídu je nutné sundat, jinak se animace podruhé nespustí.
+    row.classList.remove("pc-shake");
+    if (!row.dataset.vpShake) {
+      row.dataset.vpShake = "1";
+      row.addEventListener("animationend", function () {
+        row.classList.remove("pc-shake");
+      });
+    }
+    // vynutit reflow, ať prohlížeč vidí odebrání i přidání jako změnu
+    void row.offsetWidth;
+    row.classList.add("pc-shake");
+
+    var box = card.querySelector(".show_variants_on_product_list_row-container");
+    if (box && !box.querySelector(".pc-size-hint")) {
+      var hint = document.createElement("div");
+      hint.className = "pc-size-hint";
+      hint.textContent = SIZE_HINT;
+      box.appendChild(hint);
+    }
+  }
+
+  document.addEventListener("click", function (e) {
+    if (!e.target || !e.target.closest) return;
+    var btn = e.target.closest(".product-add-to-shopping-basket.add-to-cart-js-variants");
+    if (!btn) return;
+    var card = btn.closest(".product");
+    if (!card) return;
+    // bez chipů = nevariantní produkt → nechat nativní chování
+    if (!card.querySelector(".variant-box-selectable")) return;
+    if (card.querySelector(".variant-box-selected")) return;  // velikost vybraná
+
+    e.preventDefault();
+    e.stopPropagation();
+    shakeSizes(card);
+  }, true);
+
+  /* == Orchestrace ====================================================== */
+
+  function runAll() {
+    splitName(document);
+    wrapDeliveryDate(document);
+    addShowAllButtons(document);
+    addHomepageShowAll();
+    syncInCartBadges(document);
+  }
+
+  function init() {
+    runAll();
+
+    // Návrat z košíku přes bfcache (zpět) — přepočítat štítky „V KOŠÍKU"
+    window.addEventListener("pageshow", function () { runAll(); });
+
+    // Pár opakování pro jistotu (obsah se může dorenderovávat)
+    var tries = 0;
+    var iv = setInterval(function () {
+      runAll();
+      if (++tries >= 8) clearInterval(iv);
+    }, 250);
+
+    // Kategorie umí AJAX filtrování/stránkování — nové karty zpracovat také.
+    // Reagujeme jen na přidané elementy obsahující produktové karty,
+    // vlastní zásahy (spany uvnitř h2) observer nespustí znovu díky guardům.
+    if ("MutationObserver" in window) {
+      var pending = null;
+      var mo = new MutationObserver(function (mutations) {
+        var relevant = mutations.some(function (mu) {
+          return Array.prototype.some.call(mu.addedNodes, function (n) {
+            return n.nodeType === 1 &&
+              (n.matches && n.matches(".product") || n.querySelector && n.querySelector(".product"));
+          });
+        });
+        if (!relevant) return;
+        clearTimeout(pending);
+        pending = setTimeout(runAll, 150);
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();

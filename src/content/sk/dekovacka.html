@@ -1,0 +1,71 @@
+<!--
+  Ďakovačka (potvrdzovacia stránka po odoslaní objednávky) — SLOVENSKÁ VERZIA.
+  Vkladá sa do: Administrácia SK shopu (28711) → Obsah → „Děkovačka /
+  potvrzovací stránka“.
+
+  Slovenský originál je src/content/dekovacka.html; sem patria jen změny textu
+  a ID. Struktura, třídy i placeholdery zůstávají shodné, aby fungovalo stejné
+  CSS (src/css/12-dekovacka.css) sdílené z CDN.
+
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG — editor sanitizuje, proto jen
+  <div>/<img>/<a>. Fajfku NEKRESLIT inline SVG (editor by ho zahodil) —
+  .vp-dekovacka__check je prázdný <div> a kolečko i háček dělá CSS.
+
+  Média zůstávají na /files/310/ — to je ID účtu, ne shopu, a oba shopy jedou
+  pod stejným účtem. Obrázky se tedy znovu nenahrávají.
+
+  Placeholdery jsou platformní a jsou stejné jako na CZ:
+    %o = číslo objednávky   %k = cena vč. dopravy
+    %e = e-mail             %n = jméno            %u = doména obchodu
+    %qrcode% = QR kód pro mobilní platbu
+  Pozn.: %x (datum) je NEOVĚŘENÝ i na SK — řádek „Predpokladané doručenie“
+  proto stojí samostatně, aby šel snadno přejmenovat nebo smazat.
+-->
+<div class="vp-dekovacka">
+
+  <div class="vp-dekovacka__art">
+    <img src="/files/310/files/thankyou.svg" alt="Maskot Veselé ponožky ďakuje za objednávku" loading="lazy" />
+  </div>
+
+  <div class="vp-dekovacka__main">
+
+    <div class="vp-dekovacka__check"></div>
+
+    <div class="vp-dekovacka__title">
+      <strong>ĎAKUJEME</strong>
+      <em>ZA OBJEDNÁVKU!</em>
+    </div>
+
+    <div class="vp-dekovacka__lead">
+      Tvoje veselé ponožky už balíme v Třeboni.<br />
+      Potvrdenie sme poslali na <strong>%e</strong>.
+    </div>
+
+    <div class="vp-dekovacka__facts">
+      <div class="vp-dekovacka__fact">
+        <span>Číslo objednávky</span>
+        <strong>%o</strong>
+      </div>
+      <div class="vp-dekovacka__fact">
+        <span>Predpokladané doručenie</span>
+        <strong>%x</strong>
+      </div>
+      <div class="vp-dekovacka__fact vp-dekovacka__fact--total">
+        <span>Celkom na úhradu</span>
+        <strong>%k</strong>
+      </div>
+    </div>
+
+    <div class="vp-dekovacka__qr">
+      <span class="vp-dekovacka__qr-title">Zaplaťte mobilom</span>
+      <div class="vp-dekovacka__qr-img">%qrcode%</div>
+      <span class="vp-dekovacka__qr-note">Načítajte QR kód v bankovej aplikácii — suma aj variabilný symbol sa vyplnia samy.</span>
+    </div>
+
+    <!-- Cesta od kořene, ne %u: neověřili jsme, jestli %u končí lomítkem.
+         61597 = O nás na slovenském shopu (české ID bylo 56952). -->
+    <a class="vp-dekovacka__cta" href="/cms/61597-o-nas">Prečítajte si náš príbeh</a>
+
+  </div>
+
+</div>

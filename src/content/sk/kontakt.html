@@ -1,0 +1,86 @@
+<!--
+  Stránka „Kontakty" (CMS) — SLOVENSKÁ VERZIA.
+  Vkládá se do: Administrace SK shopu (28711) → CMS a blog → Kontakty
+  (/cms/61624-kontakty; české ID bylo 60969).
+
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor sanitizuje).
+  Formulář je NATIVNÍ přes %contact_form%. Styl dodává 90-kontakt.css (scope .vp-kt)
+  přes CDN — sdílený s českou verzí, nic se needituje.
+
+  Firemní údaje se ZÁMĚRNĚ nemění: provozovatel je stejná česká společnost
+  (Moda Čapek s.r.o., IČ 02605104), slovenská mutace je jen jazyková.
+  Telefon i e-maily proto zůstávají české.
+
+  Média zůstávají na /files/310/ — ID účtu je pro oba shopy stejné.
+-->
+<div class="vp-kt">
+
+  <!-- 1. HERO (titul + formulár + ilustrácia) -->
+  <div class="vp-kt__hero">
+    <div class="vp-kt__hero-text">
+      <h1 class="vp-kt__title">KONTAKTY</h1>
+      <p class="vp-kt__lead">Sme tu pre vás! Neváhajte sa na nás obrátiť – radi vám pomôžeme s výberom, objednávkou aj čímkoľvek ďalším. Ozveme sa vám do 24 hodín.</p>
+      <div class="vp-kt__form-mount">%contact_form%</div>
+    </div>
+    <div class="vp-kt__hero-media">
+      <img class="vp-kt__hero-img" src="/files/310/files/kontakt.svg" alt="Maskot Veselé ponožky s telefónom" loading="lazy" />
+    </div>
+  </div>
+
+  <!-- 2. INFO (kontakty | fakturačné | mapa) -->
+  <div class="vp-kt__info">
+
+    <!-- Kontakty -->
+    <div class="vp-kt__contacts">
+      <div class="vp-kt__row">
+        <img class="vp-kt__row-ic" src="/files/310/files/kontakt1.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-kt__row-label">Telefón</p>
+          <p class="vp-kt__row-lines"><a href="tel:+420792377714">+420 792 377 714</a><br>Po–Pi 9:00–16:00 hod.</p>
+        </div>
+      </div>
+      <div class="vp-kt__row">
+        <img class="vp-kt__row-ic" src="/files/310/files/kontakt2.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-kt__row-label">E-mail</p>
+          <p class="vp-kt__row-lines"><a href="mailto:veseleponozky@modacapek.cz">veseleponozky@modacapek.cz</a><br>Odpovedáme do 24 hodín.</p>
+        </div>
+      </div>
+      <div class="vp-kt__row">
+        <img class="vp-kt__row-ic" src="/files/310/files/kontakt3.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-kt__row-label">Pre veľkoobchodnú spoluprácu</p>
+          <p class="vp-kt__row-lines">E-mail: <a href="mailto:david@modacapek.cz">david@modacapek.cz</a><br>Telefón: <a href="tel:+420724061774">+420 724 061 774</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fakturačné údaje -->
+    <div class="vp-kt__bill">
+      <h2 class="vp-kt__info-h">Fakturačné údaje</h2>
+      <div class="vp-kt__row">
+        <img class="vp-kt__row-ic" src="/files/310/files/firma.png" alt="" loading="lazy" />
+        <div><p class="vp-kt__row-lines"><strong>Moda Čapek s.r.o.</strong></p></div>
+      </div>
+      <div class="vp-kt__row">
+        <img class="vp-kt__row-ic" src="/files/310/files/location.png" alt="" loading="lazy" />
+        <div><p class="vp-kt__row-lines">Boženy Němcové 1095<br>379 01 Třeboň, Česká republika</p></div>
+      </div>
+      <div class="vp-kt__row">
+        <img class="vp-kt__row-ic" src="/files/310/files/info.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-kt__row-lines">IČO: 02605104<br>DIČ: CZ02605104</p>
+          <p class="vp-kt__info-small">Spoločnosť je zapísaná v obchodnom registri vedenom Krajským súdom v Českých Budějoviciach, oddiel C, vložka č. 22444.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mapa -->
+    <div class="vp-kt__map vp-kt__map--img">
+      <img src="/files/310/files/mapa-kontakty.png" alt="Mapa – Boženy Němcové 1095, Třeboň" loading="lazy" />
+    </div>
+
+  </div>
+
+
+</div>

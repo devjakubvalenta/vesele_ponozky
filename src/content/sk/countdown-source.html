@@ -1,0 +1,30 @@
+<!--
+  SKRYTÝ ZDROJ ODPOČTU pre oznamovaciu lištu — SLOVENSKÁ VERZIA.
+
+  Obsah je shodný s českou verzí (src/content/countdown-source.html), protože
+  blok neobsahuje žádný text — jen placeholder. Vlastní soubor tu je proto,
+  aby SK sada byla kompletní a dala se vložit bez přeskakování mezi složkami.
+
+  Proč to je potřeba: platforma rozbaluje %countdown% jen v některých sekcích
+  „Obsah“. Tenhle blok se nikde nezobrazí (display:none) — slouží jen k tomu,
+  aby se na stránku dostal koncový čas akce z administrace SK shopu
+  (Marketing a slevy → „Odpočítávání na e-shopu“ → Koncové datum a čas).
+  Odtud si ho vezme src/scripts/sk/countdown-bar.js a vykreslí ho v liště.
+
+  Kam vložit v SK administraci (zdrojový režim `</>`):
+    Obsah → Úvodní stránka (homepage) — slot, který administrace sama
+    doporučuje v nápovědě u odpočtu. Je i v src/content/sk/homepage.html,
+    takže když vložíš celou homepage, máš to hotové.
+
+  ⚠️ OVĚŘENO na CZ shopu: slot „Box pod hlavičkou“ %countdown% NEROZBALUJE —
+     vypíše ho doslova jako text. Na SK to bude stejné, tam blok nedávej.
+
+  Ověření po vložení (konzole prohlížeče na SK shopu):
+    document.querySelector('#vp-cd-src [data-endtime]')?.dataset.endtime
+  Když to vrátí datum → hotovo. Když vrátí undefined a na stránce je doslova
+  text „%countdown%“ → slot placeholder nerozbaluje, zkus jiný.
+
+  Bez tohoto bloku lišta ukazuje jen text, bez odpočtu — záměrně: jediný
+  zdroj pravdy o konci akce je administrace.
+-->
+<div id="vp-cd-src" style="display:none" aria-hidden="true">%countdown%</div>

@@ -1,0 +1,162 @@
+<!--
+  Obsah admin pole „Produktový detail" — SLOVENSKÁ VERZIA.
+  Vkládá se do: Administrace SK shopu (28711) → Obsah → Produktový detail
+  → „Na detailu produktu". Vkládá se CELÝ tento soubor.
+
+  Jsou v něm DVĚ věci: pás benefitů a skrytý zdroj dat pro tabulku velikostí.
+
+  Odkazy v benefitech míří na SLOVENSKÁ CMS ID (61609 Recenze, 61612 Výroba,
+  61618 Vrácení zboží, 61600 Doprava a platba) — česká ID by na SK shopu
+  spadla mimo shop (ověřeno: /cms/60954-recenze tam vrací 404).
+
+  Média zůstávají na /files/310/ — ID účtu je pro oba shopy stejné, obrázky
+  se znovu nenahrávají.
+
+  ⚠️ Vkládat ve ZDROJOVÉM režimu (</>). WYSIWYG editor jinak přepíše
+  relativní cesty na absolutní s doménou, na které se zrovna edituje.
+
+  ⚠️ Karta „Zvýhodnené balenie" tady NENÍ — jede z nativních „Doplňkových
+  služeb", které se páruje u každého produktu zvlášť v administraci.
+-->
+<ul class="pd-benefits">
+  <li><a href="/cms/61609-recenze"><span><img src="/files/310/files/ikony1.svg" class="img-responsive-editor" alt=""></span><span><strong>97 % zákazníkov odporúča</strong><small>Spokojnosť zákazníkov je pre nás najlepšia vizitka.</small></span></a></li>
+  <li><a href="/cms/61612-vyroba"><span><img src="/files/310/files/ikony2.svg" class="img-responsive-editor" alt=""></span><span><strong>Výroba v Třeboni</strong><small>Kvalita je u nás na prvom mieste.</small></span></a></li>
+  <li><a href="/cms/61618-vraceni-zbozi"><span><img src="/files/310/files/ikony3.svg" class="img-responsive-editor" alt=""></span><span><strong>Vrátenie do 120 dní</strong><small>Bez obáv, keď nesadne veľkosť.</small></span></a></li>
+  <li><a href="/cms/61600-doprava-a-platba"><span><img src="/files/310/files/ikony4.svg" class="img-responsive-editor" alt=""></span><span><strong>Doprava zadarmo</strong><small>Doručenie druhý pracovný deň.</small></span></a></li>
+</ul>
+
+<!-- =====================================================================
+     TABUĽKA VEĽKOSTÍ — zdroj dat pro okno na produktovém detailu.
+
+     Na stránce je tenhle blok SKRYTÝ (CSS .pd-size-src{display:none}).
+     src/scripts/sk/40-product-detail.js z něj postaví okno s přepínatelnými
+     záložkami a k nadpisu velikostí přidá odkaz „Tabuľka veľkostí".
+
+     JAK TO UPRAVIT (nic víc není potřeba):
+       • jeden blok <div class="pd-size-item"> = jedna záložka v okně,
+       • pořadí bloků = pořadí záložek; první se otevře po otevření okna,
+       • <h3 class="pd-size-name"> = název záložky,
+       • první <img> v bloku = nákres vlevo od tabulky (nepovinný),
+       • první <table> v bloku = data,
+       • <p class="pd-size-note"> = poznámka pod tabulkou (nepovinná).
+
+     NÁKRESY jsou v médiích účtu (/files/310/files/, stejné jako na CZ):
+        vysoke-ponozky.png   Ponožky
+        nizke-ponozky.png    Detské ponožky
+        tren%C3%BDrky.png    Pánska bielizeň  (háček v názvu souboru se
+                             v adrese musí zakódovat — nepřepisovat!)
+        kalhotky.png         Dámska bielizeň
+        tricka.png           Pánske i dámske tričká (stejný nákres)
+
+     ⚠️ PŘEVZATO Z ČESKÉ VERZE VČETNĚ ZNÁMÝCH NEDOSTATKŮ:
+     hodnoty u detských ponožiek (14-16 … 31-34) jsou podle dodaného podkladu,
+     ale eshop reálně prodává varianty 20-24 / 25-29 / 30-34. Až budou správné
+     rozsahy po ruce, přepiš je v OBOU jazykových verzích.
+     Detská bielizeň (boxerky 122-128 … 158-164) zatím vlastní záložku nemá.
+     ===================================================================== -->
+<div class="pd-size-src">
+
+  <div class="pd-size-item">
+    <h3 class="pd-size-name">Ponožky</h3>
+    <p class="pd-size-fig"><img src="/files/310/files/vysoke-ponozky.png" width="302" height="382" loading="lazy" alt=""></p>
+    <table class="pd-size-table">
+      <thead>
+        <tr><th scope="col">EU</th><th scope="col">UK</th><th scope="col">A</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>35-38</td><td>3-5</td><td>23-25</td></tr>
+        <tr><td>39-42</td><td>6-8</td><td>26-28</td></tr>
+        <tr><td>43-46</td><td>9-11</td><td>29-31</td></tr>
+        <tr><td>47-50</td><td>12-15</td><td>32-34</td></tr>
+      </tbody>
+    </table>
+    <p class="pd-size-note">A = dĺžka chodidla v centimetroch.</p>
+  </div>
+
+  <div class="pd-size-item">
+    <h3 class="pd-size-name">Detské ponožky</h3>
+    <p class="pd-size-fig"><img src="/files/310/files/nizke-ponozky.png" width="356" height="330" loading="lazy" alt=""></p>
+    <table class="pd-size-table">
+      <thead>
+        <tr><th scope="col">EU</th><th scope="col">A</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>14-16</td><td>9-11</td></tr>
+        <tr><td>18-20</td><td>12-13</td></tr>
+        <tr><td>23-26</td><td>15.5-17.5</td></tr>
+        <tr><td>27-30</td><td>18-20</td></tr>
+        <tr><td>31-34</td><td>21-23</td></tr>
+      </tbody>
+    </table>
+    <p class="pd-size-note">A = dĺžka chodidla v centimetroch.</p>
+  </div>
+
+  <div class="pd-size-item">
+    <h3 class="pd-size-name">Pánska bielizeň</h3>
+    <p class="pd-size-fig"><img src="/files/310/files/tren%C3%BDrky.png" width="458" height="302" loading="lazy" alt=""></p>
+    <table class="pd-size-table">
+      <thead>
+        <tr><th scope="col">Veľkosť</th><th scope="col">Obvod pásu</th><th scope="col">Obvod bokov</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>M</td><td>85-92</td><td>98-105</td></tr>
+        <tr><td>L</td><td>93-100</td><td>106-113</td></tr>
+        <tr><td>XL</td><td>101-108</td><td>114-121</td></tr>
+        <tr><td>2XL</td><td>109-116</td><td>122-129</td></tr>
+      </tbody>
+    </table>
+    <p class="pd-size-note">Obvod je v centimetroch.</p>
+  </div>
+
+  <div class="pd-size-item">
+    <h3 class="pd-size-name">Dámska bielizeň</h3>
+    <p class="pd-size-fig"><img src="/files/310/files/kalhotky.png" width="434" height="280" loading="lazy" alt=""></p>
+    <table class="pd-size-table">
+      <thead>
+        <tr><th scope="col">Veľkosť</th><th scope="col">Obvod pásu</th><th scope="col">Obvod bokov</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>S</td><td>66-74</td><td>78-86</td></tr>
+        <tr><td>M</td><td>74-82</td><td>86-94</td></tr>
+        <tr><td>L</td><td>82-90</td><td>94-102</td></tr>
+        <tr><td>XL</td><td>90-98</td><td>102-110</td></tr>
+      </tbody>
+    </table>
+    <p class="pd-size-note">Obvod je v centimetroch.</p>
+  </div>
+
+  <div class="pd-size-item">
+    <h3 class="pd-size-name">Pánske tričká</h3>
+    <p class="pd-size-fig"><img src="/files/310/files/tricka.png" width="404" height="356" loading="lazy" alt=""></p>
+    <table class="pd-size-table">
+      <thead>
+        <tr><th scope="col">Veľkosť</th><th scope="col">Výška postavy</th><th scope="col">Obvod hrudníka</th><th scope="col">Obvod pásu</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>M</td><td>168</td><td>96-100</td><td>84-88</td></tr>
+        <tr><td>L</td><td>176</td><td>104-108</td><td>92-96</td></tr>
+        <tr><td>XL</td><td>184</td><td>112-116</td><td>100-104</td></tr>
+        <tr><td>2XL</td><td>192+</td><td>120-126</td><td>108-114</td></tr>
+      </tbody>
+    </table>
+    <p class="pd-size-note">Obvod je v centimetroch.</p>
+  </div>
+
+  <div class="pd-size-item">
+    <h3 class="pd-size-name">Dámske tričká</h3>
+    <p class="pd-size-fig"><img src="/files/310/files/tricka.png" width="404" height="356" loading="lazy" alt=""></p>
+    <table class="pd-size-table">
+      <thead>
+        <tr><th scope="col">Veľkosť</th><th scope="col">Výška postavy</th><th scope="col">Obvod hrudníka</th><th scope="col">Obvod pásu</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>S</td><td>164</td><td>84-88</td><td>68-72</td></tr>
+        <tr><td>M</td><td>168</td><td>92-96</td><td>76-80</td></tr>
+        <tr><td>L</td><td>176</td><td>100-104</td><td>84-88</td></tr>
+        <tr><td>XL</td><td>176+</td><td>110-116</td><td>94-100</td></tr>
+      </tbody>
+    </table>
+    <p class="pd-size-note">Obvod je v centimetroch.</p>
+  </div>
+
+</div>

@@ -1,0 +1,28 @@
+<!--
+  Dvě česká slova, která zbyla v jinak jazykově neutrálním CSS.
+  Slovenský shop bere tentýž dist/custom.css z CDN jako český — kvůli dvěma
+  řetězcům nemá smysl udržovat druhý stylopis, tohle je levnější.
+
+  Vkládá se do: Administrace SK shopu (28711) → Skripty → nová položka
+     • Název: „CSS – slovenské texty"
+     • Zobrazit na stránkách: Na všech stránkách
+     • Umístit v Head: ANO (musí platit dřív, než se stránka vykreslí)
+     • Obsah položky: celý tento soubor VČETNĚ <style> tagů
+
+  ⚠️ Položka musí být v POŘADÍ ZA položkou s <link> na custom.css, jinak ji
+  původní pravidlo přebije (stejná specificita, rozhoduje pořadí).
+
+  Zdroj českých hodnot: src/css/10-checkout.css ř. 885 a src/css/50-vyroba.css
+  ř. 233 — při jejich změně upravit i tady.
+-->
+<style>
+/* „Zdarma" u plateb, které to mají jen v názvu (QR převod, karta online) */
+.payment-select label[for="bank_transfer"] .label-shipping-text::after,
+.payment-select label[for="comgate"] .label-shipping-text::after {
+  content: "Zadarmo";
+}
+/* Tlačítko pro přílohy ve formuláři na stránce Výroba na zakázku */
+.vp-vyroba__form-mount label[for="cform_attachment"]::before {
+  content: "Priložiť súbory";
+}
+</style>
