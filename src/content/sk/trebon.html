@@ -1,0 +1,89 @@
+<!--
+  Stránka „Výroba v Třeboni" (CMS) — SLOVENSKÁ VERZE.
+  Vkládá se do: Administrace SK shopu (28711) → CMS a blog → Výroba
+  (/cms/61612-vyroba; české ID bylo 60948).
+
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor sanitizuje).
+  Odznak „Vyrobené s láskou v Třeboni" = CSS překryv (ikona Třeboň01 + text) na čisté fotce třeboň.jpg.
+  Styl dodává 70-trebon.css (scope .vp-tr) přes CDN — sdílený s českou verzí, nic se needituje.
+
+  Proti češtině se mění POUZE jazyk textu: struktura, třídy, pořadí bloků i alt
+  atributy sedí 1:1, aby stejný stylopis fungoval na obou shopech.
+  Zeměpisná jména zůstávají v českém tvaru (Třeboň, Třeboni), protože pletárna
+  fyzicky stojí v Česku. Stránka neobsahuje ceny, dopravce ani odkazy na jiné
+  CMS stránky, takže tu uživatel nemusí nic dopisovat ani přemapovávat.
+
+  Média zůstávají na /files/310/ — ID účtu je pro oba shopy stejné, včetně
+  procentně kódovaných názvů (T%C5%99ebo%C5%8801.png … 07). Nepřepisovat.
+-->
+<div class="vp-tr">
+
+  <!-- 1. HERO (citace) -->
+  <div class="vp-tr__hero">
+    <h1 class="vp-tr__hero-quote">„Žiadna cesta cez pol sveta. Naše ponožky prejdú z pletiarne do skladu iba jedno poschodie výťahom."</h1>
+    <p class="vp-tr__hero-sub">Táto jediná veta dokonale vystihuje, ako v Třeboni funguje naša výroba. Celý proces od prvého návrhu až po zabalenie do krabice sa odohráva pod jednou jedinou strechou. Žiadna zbytočná logistika, žiadne kamióny križujúce Európu, žiadna anonymná veľkovýroba. Len poctivé remeslo, na ktoré si môžeme každý deň siahnuť.</p>
+  </div>
+
+  <!-- 2. DVĚ FOTKY (dílna + Třeboň + odznak) -->
+  <div class="vp-tr__photos">
+    <div class="vp-tr__photo">
+      <img src="/files/310/files/T%C5%99ebo%C5%88-v%C3%BDroba.jpg" alt="Naša pletiarska dielňa v Třeboni" loading="lazy" />
+    </div>
+    <div class="vp-tr__photo">
+      <img src="/files/310/files/t%C5%99ebo%C5%88.jpg" alt="Třeboň z vtáčej perspektívy" loading="lazy" />
+      <div class="vp-tr__badge">
+        <img class="vp-tr__badge-ic" src="/files/310/files/T%C5%99ebo%C5%8801.png" alt="" loading="lazy" />
+        <span class="vp-tr__badge-text">Vyrobené<br>s láskou<br><span class="vp-tr__badge-accent">v Třeboni</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. CO ZNAMENÁ VÝROBA POD JEDNOU STŘECHOU -->
+  <div class="vp-tr__section">
+    <h2 class="vp-tr__h2">Čo znamená výroba pod jednou strechou v praxi?</h2>
+    <p class="vp-tr__section-intro">Kompletný výrobný reťazec v jednej budove nám dáva obrovskú slobodu, ale predovšetkým absolútnu kontrolu nad výslednou kvalitou. Ako to u nás prebieha?</p>
+    <div class="vp-tr__cols3">
+      <div class="vp-tr__feature">
+        <img class="vp-tr__feature-icon" src="/files/310/files/T%C5%99ebo%C5%8802.png" alt="" loading="lazy" />
+        <h3 class="vp-tr__feature-title">Prvotriedny materiál na začiatku</h3>
+        <p>Základom našich ponožiek je špičková bavlna a starostlivo vybrané elastické vlákna. Nekupujeme hotové anonymné produkty, ale sami si vyberáme priadze, z ktorých budeme pliesť.</p>
+      </div>
+      <div class="vp-tr__feature">
+        <img class="vp-tr__feature-icon" src="/files/310/files/T%C5%99ebo%C5%8803.png" alt="" loading="lazy" />
+        <h3 class="vp-tr__feature-title">Technologická precíznosť na strojoch</h3>
+        <p>Naše pletacie stroje programujeme s milimetrovou presnosťou. Každý typ ponožky si vyžaduje inú hustotu pletenia, iné zosilnenie v oblasti päty a špičky a inú pružnosť lemu, aby ponožka dokonale sedela, netlačila a zároveň sa nezosúvala.</p>
+      </div>
+      <div class="vp-tr__feature">
+        <img class="vp-tr__feature-icon" src="/files/310/files/T%C5%99ebo%C5%8804.png" alt="" loading="lazy" />
+        <h3 class="vp-tr__feature-title">Poctivá ručná práca na konci</h3>
+        <p>Len čo ponožka zíde zo stroja, nastupujú ľudské ruky a zmysel pre detail. Každý pár prejde dôkladnou kontrolou, ručným spracovaním a finálnym spárovaním. Až keď sme si stopercentne istí, že je dokonalý, posielame ho výťahom hore do skladu.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. PROČ JE LOKÁLNÍ VÝROBA VÝHROU (+ CTA) -->
+  <div class="vp-tr__section">
+    <h2 class="vp-tr__h2">Prečo je pre vás naša lokálna výroba výhrou?</h2>
+    <p class="vp-tr__section-intro">To, že nevyrábame na druhom konci sveta, prináša našim zákazníkom obrovské výhody:</p>
+    <div class="vp-tr__cols3">
+      <div class="vp-tr__feature">
+        <img class="vp-tr__feature-icon" src="/files/310/files/T%C5%99ebo%C5%8805.png" alt="" loading="lazy" />
+        <h3 class="vp-tr__feature-title">Nekompromisná kvalita pod osobným dohľadom</h3>
+        <p>Na rozdiel od firiem, ktoré dovezený tovar iba prepredávajú, my vidíme každý deň každý krok výroby. Ak sa nám čokoľvek nezdá, dokážeme pletací stroj zastaviť a proces okamžite upraviť. Za kvalitu ručíme vlastným menom.</p>
+      </div>
+      <div class="vp-tr__feature">
+        <img class="vp-tr__feature-icon" src="/files/310/files/T%C5%99ebo%C5%8806.png" alt="" loading="lazy" />
+        <h3 class="vp-tr__feature-title">Extrémna rýchlosť a flexibilita</h3>
+        <p>Keď zistíme, že naši zákazníci túžia po novej farbe alebo špecifickom vzore, nemusíme čakať mesiace na schválenie a dopravu z Ázie. Sadneme si k strojom, naprogramujeme vzor a v priebehu niekoľkých dní máme hotové ponožky pripravené na odoslanie.</p>
+      </div>
+      <div class="vp-tr__feature">
+        <img class="vp-tr__feature-icon" src="/files/310/files/T%C5%99ebo%C5%8807.png" alt="" loading="lazy" />
+        <h3 class="vp-tr__feature-title">Skutočná udržateľnosť</h3>
+        <p>Veľa firiem o ekológii iba hovorí, my ju žijeme prirodzene. Tým, že prepravu materiálov a produktov obmedzujeme na úplné minimum, nezaťažujeme planétu zbytočnými emisiami. Podporujete tak čistý lokálny produkt z južných Čiech.</p>
+      </div>
+    </div>
+    <p class="vp-tr__cta">Keď si obujete ponožky od nás, neobúvate si len kus látky z globálneho reťazca. Obúvate si produkt, ktorý vznikol lokálne, s láskou k remeslu a s vedomím, že najdlhšia trasa, ktorú pred cestou k vám prekonal, bola tá v našom firemnom výťahu.</p>
+  </div>
+
+
+</div>

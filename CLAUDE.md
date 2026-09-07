@@ -59,6 +59,25 @@ zástupné symboly (`%v`, `%n`, `%c`, `%email`…) pro data objednávky.
 nutností vybrat variantu. JS i CSS" (Pouze produktový detail). Naše položky se
 **přidávají**. Mapa položek: [src/scripts/README.md](src/scripts/README.md).
 
+## Slovenská mutace (shop 28711)
+
+Vedle českého shopu běží **slovenská mutace jako samostatný shop 28711**
+(`https://www.exitshop.cz/shops/28711/`, cílová doména veseleponozky.sk).
+Vznikla duplikací, takže má stejnou šablonu i stejný účet.
+
+- **Média jsou sdílená** — `/files/310/` je ID účtu, ne shopu. Cesty k obrázkům
+  se pro SK NEMĚNÍ a soubory se znovu nenahrávají.
+- **CSS je sdílené** — SK shop bere tentýž `dist/custom.css` z CDN; dvě česká
+  slova v `content:` přebíjí položka `src/scripts/sk/00-css-sk-override.html`.
+- **ID se liší** — CMS stránky i kategorie mají jiná čísla, mapa je
+  [reference/sk-mapa-id.md](reference/sk-mapa-id.md). Pozor: česká ID kategorií
+  pod slovenským prefixem vracejí HTTP 200, ale tiše spadnou na výpis všeho zboží.
+- **Skripty se generují**, nekopírují: `node build-sk.mjs` vyrobí
+  `src/scripts/sk/*.js` z české verze podle slovníku v `i18n/`. Zdroj pravdy
+  zůstává čeština; po její změně se SK přegeneruje a nástroj ohlásí, co zbylo
+  nepřeložené (pozná to podle písmen ě/ř/ů, která slovenština nemá).
+- **Obsahové stránky** se naopak píšou ručně do `src/content/sk/`.
+
 ## Struktura repa
 
 ```

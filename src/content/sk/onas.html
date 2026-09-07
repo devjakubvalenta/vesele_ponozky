@@ -1,0 +1,149 @@
+<!--
+  Stránka „O nás" (CMS) — SLOVENSKÁ VERZIA.
+  Vkládá se do: Administrace SK shopu (28711) → CMS a blog → O nás
+  (/cms/61597-o-nas; české ID bylo 56952).
+
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor sanitizuje).
+  Formulář je NATIVNÍ přes %contact_form%. Styl dodává 40-onas.css (scope .vp-onas)
+  přes CDN — sdílený s českou verzí, nic se needituje.
+
+  Média zůstávají na /files/310/ — ID účtu je pro oba shopy stejné, včetně
+  URL-enkódovaných názvů (v%C3%BDroba.jpg, voz%C3%ADk1.svg). Fotky:
+  rodinna-firma2.jpg (hero), rodinna-firma.jpg (rodina), v%C3%BDroba.jpg (dílna).
+
+  Proti češtině je jinak jen jazyk a dvě drobnosti:
+  – v textu se místo domény „Veseleponozky.cz" píše značka „Veselé ponožky"
+    (slovenská doména veseleponozky.sk zatím neběží; až poběží, lze doplnit),
+  – u adresy je navíc „Česká republika" (stejně jako ve slovenském kontakt.html).
+
+  Firemní údaje se ZÁMĚRNĚ nemění: provozovatel je stejná česká společnost
+  (Moda Čapek s.r.o., IČO 02605104), slovenská mutace je jen jazyková.
+  Telefon i e-maily proto zůstávají české. České „IČ" je slovensky „IČO".
+
+  Stránka nemá ceny ani dopravce, takže uživatel nemusí nic doplňovat.
+-->
+<div class="vp-onas">
+
+  <!-- 1. HERO -->
+  <div class="vp-onas__hero">
+    <div class="vp-onas__hero-text">
+      <h1 class="vp-onas__title">O FIRME VESELÉ PONOŽKY</h1>
+      <p>Niektoré veci v živote vnímame ako úplnú samozrejmosť. Každé ráno si ich obliekame, sprevádzajú nás celým dňom, chránia nás pred chladom a často vyjadrujú aj našu náladu či osobnosť.</p>
+      <p class="vp-onas__lead"><strong>Ponožky. Pre niekoho obyčajný kus textilu, pre nás vo Veselých ponožkách vášeň a celoživotné poslanie.</strong></p>
+      <p>Náš príbeh sa nezačal písať v moderných kanceláriách nad tabuľkami s túžbou po rýchlom zisku z lacného dovozu. Začal sa písať v malebnej Třeboni, uprostred juhočeskej krajiny, s jasnou víziou: dokázať, že poctivé české remeslo má aj v 21. storočí svoje nezastupiteľné miesto.</p>
+      <p>Keď sme s podnikaním začínali, stáli sme pred zásadným rozhodnutím. Cesta, ktorú volí väčšina trhu – zadať výrobu anonymným obrovským továrňam v Ázii a súťažiť iba najnižšou cenou – nám nikdy nebola blízka. Chceli sme veciam rozumieť od úplného základu, poznať pôvod každého vlákna a vidieť za každým hotovým párom konkrétnu ľudskú tvár. Preto sme sa vydali tou síce zložitejšou, ale jedinou správnou cestou: vybudovali sme vlastnú výrobu priamo v Třeboni.</p>
+    </div>
+    <div class="vp-onas__hero-media vp-onas__hero-media--photo">
+      <img class="vp-onas__hero-img" src="/files/310/files/rodinna-firma2.jpg" alt="Rodina Veselé ponožky pri rybníku v Třeboni" loading="lazy" />
+    </div>
+  </div>
+
+  <!-- 2. SÍLA RODINNÉHO KRUHU -->
+  <div class="vp-onas__family">
+    <div class="vp-onas__photo vp-onas__photo--img">
+      <img src="/files/310/files/rodinna-firma.jpg" alt="Rodina za Veselými ponožkami" loading="lazy" />
+    </div>
+    <div class="vp-onas__family-text">
+      <h2 class="vp-onas__h2 vp-onas__h2--left">Sila rodinného kruhu a poctivej práce</h2>
+      <p>Sme stopercentne rodinná firma. Nie je to pre nás len marketingová nálepka na webe, ale každodenná realita. Rodinné podnikanie znamená, že práca neodíde z hlavy s buchnutím dverí od dielne o piatej popoludní — o nových nápadoch, materiáloch a vzoroch sa spolu rozprávame pri nedeľnom obede. Všetci ťaháme za jeden povraz a každý z nás dáva do chodu firmy maximum svojej energie a srdca. Od technického zázemia cez starostlivý výber materiálov a ladenie detailov až po finálnu kontrolu a odoslanie balíka – všetko prechádza našimi rukami.</p>
+      <p>Táto symbióza nám dáva obrovskú slobodu, ale aj stopercentnú zodpovednosť za kvalitu. Keď na balík nalepíme našu etiketu, podpisujeme sa pod neho ako rodina. Vieme, že ak chceme uspieť v obrovskej konkurencii, naše ponožky musia byť jednoducho lepšie, pohodlnejšie a trvácnejšie. A to sa nedá dosiahnuť inak než osobným dohľadom nad každým jediným krokom celého procesu.</p>
+    </div>
+  </div>
+
+  <!-- 3. OD KLUBKA BAVLNY (proces) -->
+  <div class="vp-onas__section">
+    <h2 class="vp-onas__h2">Od klbka bavlny až po balík vo vašich rukách</h2>
+    <p class="vp-onas__section-intro">Naša výroba v Třeboni spája tradičnú remeselnú zručnosť s modernými technológiami. Základom všetkého je nekompromisný výber materiálov — dlhé hodiny trávime testovaním tej najjemnejšej bavlny a hľadaním optimálneho pomeru elastických vlákien tak, aby ponožka dokonale sedela na nohe, netlačila, ale zároveň sa nešmýkala dole.</p>
+    <p class="vp-onas__section-lead"><strong>Celý proces u nás funguje pod jednou strechou:</strong></p>
+    <p class="vp-onas__section-outro">Vďaka tomu, že máme pod kontrolou kompletný reťazec, dokážeme reagovať na želania našich zákazníkov s pružnosťou, o akej sa veľkým korporáciám môže len snívať. Keď naši zákazníci túžia po konkrétnom motíve, dokážeme ho navrhnúť, upliesť a uviesť na e-shop v priebehu týždňov, nie mesiacov.</p>
+    <div class="vp-onas__cols3">
+      <div class="vp-onas__feature">
+        <img class="vp-onas__feature-icon" src="/files/310/files/icon1.svg" alt="" loading="lazy" />
+        <h3 class="vp-onas__feature-title">Návrh a dizajn</h3>
+        <p>Vzory si vymýšľame sami, ladíme farebné kombinácie a hráme sa s detailmi, ktoré robia naše ponožky jedinečnými.</p>
+      </div>
+      <div class="vp-onas__feature">
+        <img class="vp-onas__feature-icon" src="/files/310/files/icon2.svg" alt="" loading="lazy" />
+        <h3 class="vp-onas__feature-title">Technické nastavenie a pletenie</h3>
+        <p>Naše pletacie stroje programujeme s milimetrovou presnosťou. Každý typ väzby, zosilnená päta či špička pre dlhšiu životnosť – to všetko je výsledkom desiatok hodín ladenia a skúšania.</p>
+      </div>
+      <div class="vp-onas__feature">
+        <img class="vp-onas__feature-icon" src="/files/310/files/icon3.svg" alt="" loading="lazy" />
+        <h3 class="vp-onas__feature-title">Dokončenie a kontrola kvality</h3>
+        <p>Tu nastupujú ľudské ruky, zmysel pre detail a trpezlivosť. Každý pár prejde dôkladnou kontrolou, kým ho zopneme a pripravíme na zabalenie.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. HODNOTY -->
+  <div class="vp-onas__section">
+    <h2 class="vp-onas__h2">Hodnoty, na ktorých stojíme</h2>
+    <p class="vp-onas__section-intro">Naše podnikanie nerastie z túžby po expanzii za každú cenu. Naším hnacím motorom sú pevné hodnoty, ktorých sa nemienime vzdať ani v časoch, keď je trh zložitý a nestabilný.</p>
+    <div class="vp-onas__cols3">
+      <div class="vp-onas__feature">
+        <img class="vp-onas__feature-icon" src="/files/310/files/icon4.svg" alt="" loading="lazy" />
+        <h3 class="vp-onas__feature-title">Lokálnosť a podpora regiónu</h3>
+        <p>Třeboňsko je náš domov. Sme hrdí na to, že dávame prácu ľuďom v našom regióne a pomáhame rozvíjať miesto, kde žijeme a vychovávame deti. Nákupom u nás zákazníci podporujú živú juhočeskú komunitu, nie anonymný kapitál na druhom konci sveta.</p>
+      </div>
+      <div class="vp-onas__feature">
+        <img class="vp-onas__feature-icon" src="/files/310/files/icon5.svg" alt="" loading="lazy" />
+        <h3 class="vp-onas__feature-title">Udržateľnosť a úcta k zdrojom</h3>
+        <p>Tým, že vyrábame lokálne, minimalizujeme uhlíkovú stopu spojenú s prevážaním tovaru cez pol planéty. Veríme v koncept „pomalej módy" – radšej menej párov ponožiek, ktoré sú však kvalitné, držia tvar aj farbu a nepredrú sa po treťom vypraní.</p>
+      </div>
+      <div class="vp-onas__feature">
+        <img class="vp-onas__feature-icon" src="/files/310/files/icon6.svg" alt="" loading="lazy" />
+        <h3 class="vp-onas__feature-title">Ľudský prístup a transparentnosť</h3>
+        <p>Na nič sa nehráme. Naši zákazníci vedia, kto pre nich ponožky vyrobil, kde stojí naša dielňa a z čoho pletieme. Keď nám niekto napíše alebo zavolá, hovorí so skutočným človekom, ktorý žije naším biznisom každý deň.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. POHLED DO BUDOUCNA (modrý blok) -->
+  <div class="vp-onas__future">
+    <div class="vp-onas__future-text">
+      <h2 class="vp-onas__future-title">Pohľad do budúcnosti s úctou k minulosti</h2>
+      <p>Svet okolo nás sa mení závratným tempom, prostredie e-commerce sa neustále vyvíja a digitalizuje. Aj my ideme s dobou – náš e-shop Veselé ponožky neustále vylepšujeme, optimalizujeme logistiku a hľadáme nové cesty, ako osloviť zákazníkov, ktorým záleží na pôvode vecí, čo si kupujú.</p>
+      <p>Jedna vec sa však nezmení nikdy. Vždy budeme rodinnou firmou, ktorá sídli v Třeboni a má srdce v pletiarskej dielni. Každý spokojný zákazník, ktorý nám napíše, že naše ponožky sú tie najpohodlnejšie, aké kedy mal, je pre nás potvrdením, že rozhodnutie ísť vlastnou, lokálnou cestou malo zmysel.</p>
+      <p class="vp-onas__future-thanks"><strong>Ďakujeme, že ste súčasťou nášho príbehu a že nám pomáhate udržiavať poctivé české textilné remeslo pri živote. Bez vašej podpory by sa naše stroje nerozbehli a nite by smutne zostali stáť. Každým krokom, ktorý v našich ponožkách urobíte, idete kúsok tejto cesty s nami.</strong></p>
+    </div>
+    <div class="vp-onas__photo vp-onas__photo--on-blue vp-onas__photo--img">
+      <img src="/files/310/files/v%C3%BDroba.jpg" alt="Pletiarsky stroj v našej dielni v Třeboni" loading="lazy" />
+    </div>
+  </div>
+
+  <!-- 6. KONTAKT / SPOLUPRÁCE -->
+  <div class="vp-onas__contact">
+    <div class="vp-onas__contact-form">
+      <h2 class="vp-onas__h2 vp-onas__h2--left">Máte záujem o spoluprácu?</h2>
+      <p>Vyplňte formulár a my sa vám ozveme s ponukou na mieru.</p>
+      <div class="vp-onas__form-mount">%contact_form%</div>
+    </div>
+    <div class="vp-onas__contact-info">
+      <h3 class="vp-onas__info-h">Kontakt</h3>
+      <div class="vp-onas__info-row">
+        <img class="vp-onas__info-ic" src="/files/310/files/kontakt1.svg" alt="" loading="lazy" />
+        <div>
+          <p class="vp-onas__info-label">Pre veľkoobchodnú spoluprácu</p>
+          <p class="vp-onas__info-lines">E-mail: <a href="mailto:david@modacapek.cz">david@modacapek.cz</a><br>Telefón: <a href="tel:+420724061774">+420 724 061 774</a></p>
+        </div>
+      </div>
+
+      <h3 class="vp-onas__info-h">Fakturačné údaje</h3>
+      <div class="vp-onas__info-row">
+        <img class="vp-onas__info-ic" src="/files/310/files/voz%C3%ADk1.svg" alt="" loading="lazy" />
+        <div><p class="vp-onas__info-lines"><strong>MODA ČAPEK s.r.o.</strong></p></div>
+      </div>
+      <div class="vp-onas__info-row">
+        <img class="vp-onas__info-ic" src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/onas-contact2.svg" alt="" loading="lazy" />
+        <div><p class="vp-onas__info-lines">Boženy Němcové 1095<br>379 01 Třeboň, Česká republika</p></div>
+      </div>
+      <div class="vp-onas__info-row">
+        <img class="vp-onas__info-ic" src="/files/310/files/kontakt1.svg" alt="" loading="lazy" />
+        <div><p class="vp-onas__info-lines">IČO: 02605104<br>DIČ: CZ02605104</p></div>
+      </div>
+      <p class="vp-onas__info-small">Spoločnosť je zapísaná v obchodnom registri vedenom Krajským súdom v Českých Budějoviciach, oddiel C, vložka 22444.</p>
+    </div>
+  </div>
+
+
+</div>

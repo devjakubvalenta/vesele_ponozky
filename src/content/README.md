@@ -44,6 +44,33 @@ není — kontrolovat se musí ve vykresleném DOM:
 přes který se karta dělala dřív (tehdy pod názvem „Výhodné balení"). Dnes se
 nepoužívá — napárované příslušenství se na detailu neprojeví.
 
+## Slovenská mutace (shop 28711)
+
+Slovenské verze stránek jsou v podsložce **`sk/`**. Vkládají se do administrace
+**slovenského** shopu 28711 (`https://www.exitshop.cz/shops/28711/`, doména
+veseleponozky.sk) — jinak stejným způsobem, ve zdrojovém `</>` režimu.
+
+Proti češtině se liší jen **text a ID**:
+
+- CMS ID a ID kategorií podle mapy v [reference/sk-mapa-id.md](../../reference/sk-mapa-id.md)
+  (odkaz s českým ID na SK shopu končí 404, u kategorií se dokonce tiše načte
+  výpis všeho zboží),
+- částky v korunách a jména českých dopravců jsou nahrazené značkami `{{SK_…}}`,
+  které **se musí vyplnit před nasazením**,
+- `%recommend_block_3224/3236%` jsou značky `{{SK_BLOK_AKCE}}` / `{{SK_BLOK_SETY}}`,
+  protože slovenské produktové bloky zatím neexistují.
+
+Co zůstává **shodné**: cesty k médiím (`/files/310/…` je ID účtu, ne shopu — oba
+shopy sdílejí knihovnu), firemní údaje (týž provozovatel), CSS z CDN a Ecomail
+newsletter.
+
+Právní stránky (`vop.html`, `gdpr.html`, `vraceni.html`) slovenskou verzi
+**záměrně nemají** — slovenské spotřebitelské právo a dozorové orgány jsou jiné,
+překlad českého textu by nestačil.
+
+Slovenské **skripty** se na rozdíl od obsahu negenerují ručně — viz
+[src/scripts/sk/README.md](../scripts/sk/README.md).
+
 ## Jak nasadit
 
 1. V administraci **CMS a blog → O nás** přepni editor do **zdrojového režimu** (`</>`).

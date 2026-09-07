@@ -1,0 +1,131 @@
+<!--
+  Stránka „Výroba na zakázku" (CMS) — SLOVENSKÁ VERZE.
+  Vkládá se do: Administrace SK shopu (28711) → CMS a blog → Výroba na zakázku
+  (/cms/61603-vyroba-na-zakazku; české ID bylo 56958).
+  POZOR: /cms/61612-vyroba je stránka „Výroba v Třeboni" a patří jí obsah
+  ze src/content/sk/trebon.html — sem ho nevkládej.
+
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor sanitizuje).
+  Poptávkový formulář v hero je NATIVNÍ přes %contact_form%. Styl dodává 50-vyroba.css
+  (scope .vp-vyroba) přes CDN — stylopis je sdílený s českou verzí, nic se v něm needituje.
+
+  ⚠️ Popisek tlačítka pro přílohy ve formuláři NEJDE z tohoto souboru — dodává ho CSS
+  (content:). Slovenský text tlačítka proto řeš v položce src/scripts/sk/00-css-sk-override.html,
+  ne tady.
+
+  Proti české verzi se mění jen jazyk: stránka neobsahuje odkazy na CMS ani kategorie,
+  žádné ceny dopravy ani jména dopravců — uživatel tedy nemá co doplňovat, vkládá se rovnou.
+  Ilustrace „Čo všetko zvládneme" = screen.png, hero = na-zakázku-hero1.jpg.
+
+  Média zůstávají na /files/310/ — ID účtu je pro oba shopy stejné.
+-->
+<div class="vp-vyroba">
+
+  <!-- 1. HERO (dopyt + obrázok) -->
+  <div class="vp-vyroba__hero">
+    <div class="vp-vyroba__hero-text">
+      <h1 class="vp-vyroba__title">VÝROBA NA ZÁKAZKU</h1>
+      <p class="vp-vyroba__lead">Ponožky podľa vašich predstáv! Vyrábame originálne ponožky s logom, nápisom alebo motívom presne podľa vášho zadania. Pošlite nám nezáväzný dopyt a my sa vám ozveme s návrhom riešenia.</p>
+      <h2 class="vp-vyroba__form-title">Odoslať nezáväzný dopyt:</h2>
+      <div class="vp-vyroba__form-mount">%contact_form%</div>
+    </div>
+    <div class="vp-vyroba__hero-media">
+      <img class="vp-vyroba__hero-img" src="/files/310/files/na-zak%C3%A1zku-hero1.jpg" alt="Ukážka ponožiek na zákazku – vaše logo, motívy, farby aj nápady" loading="lazy" />
+    </div>
+  </div>
+
+  <!-- 2. AKO TO FUNGUJE (5 krokov) -->
+  <div class="vp-vyroba__section">
+    <h2 class="vp-vyroba__h2">Ako to funguje?</h2>
+    <div class="vp-vyroba__steps">
+      <div class="vp-vyroba__step">
+        <div class="vp-vyroba__step-icon-wrap">
+          <img class="vp-vyroba__step-icon" src="/files/310/files/na-zak%C3%A1zku1.svg" alt="" loading="lazy" />
+          <div class="vp-vyroba__step-num">1</div>
+        </div>
+        <h3 class="vp-vyroba__step-title">Konzultácia</h3>
+        <p>Ozvite sa nám so svojou predstavou. Radi s vami všetko preberieme a poradíme.</p>
+      </div>
+      <div class="vp-vyroba__step">
+        <div class="vp-vyroba__step-icon-wrap">
+          <img class="vp-vyroba__step-icon" src="/files/310/files/na-zak%C3%A1zku5.svg" alt="" loading="lazy" />
+          <div class="vp-vyroba__step-num">2</div>
+        </div>
+        <h3 class="vp-vyroba__step-title">Návrh</h3>
+        <p>Vytvoríme grafický návrh ponožiek presne podľa vašich požiadaviek.</p>
+      </div>
+      <div class="vp-vyroba__step">
+        <div class="vp-vyroba__step-icon-wrap">
+          <img class="vp-vyroba__step-icon" src="/files/310/files/na-zak%C3%A1zku6.svg" alt="" loading="lazy" />
+          <div class="vp-vyroba__step-num">3</div>
+        </div>
+        <h3 class="vp-vyroba__step-title">Vzorka</h3>
+        <p>Na požiadanie vyrobíme vzorku, aby ste si overili materiál aj kvalitu.</p>
+      </div>
+      <div class="vp-vyroba__step">
+        <div class="vp-vyroba__step-icon-wrap">
+          <img class="vp-vyroba__step-icon" src="/files/310/files/na-zak%C3%A1zku2.svg" alt="" loading="lazy" />
+          <div class="vp-vyroba__step-num">4</div>
+        </div>
+        <h3 class="vp-vyroba__step-title">Výroba</h3>
+        <p>Po schválení návrhu spúšťame výrobu vrátane kompletizácie a kontroly kvality.</p>
+      </div>
+      <div class="vp-vyroba__step">
+        <div class="vp-vyroba__step-icon-wrap">
+          <img class="vp-vyroba__step-icon" src="/files/310/files/na-zak%C3%A1zku7.svg" alt="" loading="lazy" />
+          <div class="vp-vyroba__step-num">5</div>
+        </div>
+        <h3 class="vp-vyroba__step-title">Doručenie</h3>
+        <p>Hotové ponožky zabalíme a doručíme až k vám.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. PREČO U NÁS (4 ikony + CTA) -->
+  <div class="vp-vyroba__section">
+    <h2 class="vp-vyroba__h2">Prečo si nechať upliesť ponožky práve u nás?</h2>
+    <p class="vp-vyroba__section-intro">Pretože sme priamy výrobca, nie prekupníci. Celý proces máme pevne vo svojich rukách pod jednou strechou — od prvého návrhu až po zabalenie a expedíciu. Čo to pre vás znamená?</p>
+    <div class="vp-vyroba__cols4">
+      <div class="vp-vyroba__feature">
+        <img class="vp-vyroba__feature-icon" src="/files/310/files/na-zak%C3%A1zku8.svg" alt="" loading="lazy" />
+        <h3 class="vp-vyroba__feature-title">Úplná flexibilita</h3>
+        <p>Vyrobíme malé aj veľké objednávky a prispôsobíme sa vašim požiadavkám. Nemáte grafika? Motív navrhneme a vytvoríme za vás.</p>
+      </div>
+      <div class="vp-vyroba__feature">
+        <img class="vp-vyroba__feature-icon" src="/files/310/files/na-zak%C3%A1zku9.svg" alt="" loading="lazy" />
+        <h3 class="vp-vyroba__feature-title">Stopercentná kontrola kvality</h3>
+        <p>Každý pár prechádza dôkladnou kontrolou priamo v našej dielni, kým ho zabalíme a odošleme.</p>
+      </div>
+      <div class="vp-vyroba__feature">
+        <img class="vp-vyroba__feature-icon" src="/files/310/files/na-zak%C3%A1zku10.svg" alt="" loading="lazy" />
+        <h3 class="vp-vyroba__feature-title">Rýchlosť a spoľahlivosť</h3>
+        <p>Nezávisíme od dovozu z druhého konca sveta. Vyrábame lokálne, a tak dodáme rýchlo a spoľahlivo.</p>
+      </div>
+      <div class="vp-vyroba__feature">
+        <img class="vp-vyroba__feature-icon" src="/files/310/files/na-zak%C3%A1zku11.svg" alt="" loading="lazy" />
+        <h3 class="vp-vyroba__feature-title">Udržateľnosť a podpora regiónu</h3>
+        <p>Všetko tvoríme v Čechách. Podporíte lokálne remeslo a zároveň šetríte uhlíkovú stopu.</p>
+      </div>
+    </div>
+    <p class="vp-vyroba__cta">Či už ste veľká korporácia, lokálny športový klub, alebo partia nadšencov, dokážeme vaše predstavy premeniť na skutočnosť. Napíšte nám a poďme spoločne upliesť niečo výnimočné!</p>
+  </div>
+
+  <!-- 4. ČO VŠETKO ZVLÁDNEME (obrázok + checklist) -->
+  <div class="vp-vyroba__can">
+    <div class="vp-vyroba__can-media">
+      <img class="vp-vyroba__can-img" src="/files/310/files/screen.png" alt="Návrh ponožiek na mieru – motívy, farby a výber materiálu" loading="lazy" />
+    </div>
+    <div class="vp-vyroba__can-text">
+      <h2 class="vp-vyroba__h2 vp-vyroba__h2--left vp-vyroba__can-title">Čo všetko zvládneme?</h2>
+      <div class="vp-vyroba__checklist">
+        <div class="vp-vyroba__check-item">Farebné ponožky s logom, ikonami alebo motívom</div>
+        <div class="vp-vyroba__check-item">Výber materiálov: bavlna, športové, bambusové…</div>
+        <div class="vp-vyroba__check-item">Rôzne dĺžky a veľkosti</div>
+        <div class="vp-vyroba__check-item">Minimálna objednávka už od 50 párov</div>
+        <div class="vp-vyroba__check-item">Rýchle termíny a férové ceny</div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

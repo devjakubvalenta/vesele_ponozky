@@ -119,7 +119,7 @@ export const TEXTY = {
     [`"Nakupuji pravidelně, kvalitní materiál, rychlost dodání, spokojenost."`,
      `"Nakupujem pravidelne, kvalitný materiál, rýchlosť dodania, spokojnosť."`],
     [`"Rychle doručeno. Doma fakt radost, když jsme ponožky rozbalili :)"`,
-     `"Rýchlo doručené. Doma fakt radosť, keď sme ponožky rozbalili :)"`],
+     `"Rýchlo doručené. Doma bola fakt radosť, keď sme ponožky rozbalili :)"`],
     [`"Velký výběr, rychlé dodání, skvělá komunikace."`,
      `"Veľký výber, rýchle dodanie, skvelá komunikácia."`],
     [`"Objednala jsem poprvé a velice jsem spokojená, děkuji."`,

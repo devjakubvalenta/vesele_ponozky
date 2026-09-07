@@ -105,7 +105,7 @@
     { text: "Kvalitné pekné ponožky.", name: "Lenka" },
     { text: "Nakupujem pravidelne, kvalitný materiál, rýchlosť dodania, spokojnosť.", name: "Eliška Vostracká" },
     { text: "Rychlost, profesionalita, kvalita.", name: "Roman" },
-    { text: "Rýchlo doručené. Doma fakt radosť, keď sme ponožky rozbalili :)", name: "Šárka" },
+    { text: "Rýchlo doručené. Doma bola fakt radosť, keď sme ponožky rozbalili :)", name: "Šárka" },
     { text: "Veľký výber, rýchle dodanie, skvelá komunikácia.", name: "Marcela" },
     { text: "Objednala som prvýkrát a veľmi som spokojná, ďakujem.", name: "Ilona" },
     { text: "Kvalitné a krásne s úžasnými motívmi.", name: "Alžběta Dixová" },

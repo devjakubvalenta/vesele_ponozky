@@ -1,0 +1,156 @@
+<!--
+  Stránka „Veľkoobchodná spolupráca" (CMS) — SLOVENSKÁ VERZE.
+  Vkládá se do: Administrace SK shopu (28711) → CMS a blog → Velkoobchodní
+  spolupráce (/cms/61606-velkoobchodni-spoluprace; české ID bylo 60945).
+
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor
+  sanitizuje). WYSIWYG by navíc přepsal relativní cesty na absolutní
+  s doménou, na které se zrovna edituje.
+
+  Kontakt = nativní %contact_form% + info blok (stejně jako na české verzi).
+  Styl dodává 60-velkoobchod.css (scope .vp-vo) přes CDN — sdílený s českou
+  verzí, nic se v CSS needituje.
+
+  Proti češtině je jiný jen jazyk: žádné odkazy na CMS stránky ani kategorie
+  tu nejsou, takže se nepřemapovávalo žádné ID. Ceny dopravy ani dopravci se
+  na stránce nevyskytují → žádné {{SK_…}} značky k doplnění nejsou.
+
+  Firemní údaje se ZÁMĚRNĚ nemění: provozovatel je stejná česká společnost
+  (Moda Čapek s.r.o., IČO 02605104), slovenská mutace je jen jazyková.
+  Telefon i e-mail na Davida Čapka proto zůstávají české.
+
+  Média zůstávají na /files/310/ — ID účtu je pro oba shopy stejné, obrázky
+  se znovu nenahrávají. Ikona onas-contact2.svg jede z jsDelivru (známá
+  závislost, řeší se zvlášť — odkaz nechat beze změny).
+-->
+<div class="vp-vo">
+
+  <!-- 1. HERO (checklist + zelené CTA + obrázok) -->
+  <div class="vp-vo__hero">
+    <div class="vp-vo__hero-text">
+      <h1 class="vp-vo__title">VEĽKOOBCHODNÁ <span class="vp-vo__title-accent">SPOLUPRÁCA</span></h1>
+      <p class="vp-vo__lead">Hľadáte spoľahlivého dodávateľa originálnych veselých ponožiek pre váš obchod? Staňte sa naším partnerom a rozšírte sortiment o poctivé české ponožky z mesta Třeboň.</p>
+      <div class="vp-vo__checklist vp-vo__hero-list">
+        <div class="vp-vo__check-item">Veľkoobchodné ceny</div>
+        <div class="vp-vo__check-item">Široký sortiment na sklade</div>
+        <div class="vp-vo__check-item">Rýchle dodanie po celej SR aj ČR</div>
+        <div class="vp-vo__check-item">Možnosť zákazkovej výroby s vaším dizajnom</div>
+        <div class="vp-vo__check-item">Individuálny prístup a podpora</div>
+      </div>
+      <a class="vp-vo__hero-cta" href="#vo-kontakt">Mám záujem o spoluprácu</a>
+    </div>
+    <div class="vp-vo__hero-media">
+      <img class="vp-vo__hero-img" src="/files/310/files/velkoobchod-hero.jpg" alt="Maskot Veselé ponožky s krabicou ponožiek pre veľkoobchod" loading="lazy" />
+    </div>
+  </div>
+
+  <!-- 2. VÝHODY V SKRATKE (5 ikon) -->
+  <div class="vp-vo__section">
+    <h2 class="vp-vo__h2">Výhody spolupráce v skratke</h2>
+    <div class="vp-vo__steps">
+      <div class="vp-vo__step">
+        <div class="vp-vo__step-icon-box">
+          <img class="vp-vo__step-icon" src="/files/310/files/velkoobchod01.png" alt="" loading="lazy" />
+          <div class="vp-vo__step-num">1</div>
+        </div>
+        <h3 class="vp-vo__step-title">Výhodné ceny</h3>
+        <p>Veľkoobchodné ceny prispôsobené objemu objednávky.</p>
+      </div>
+      <div class="vp-vo__step">
+        <div class="vp-vo__step-icon-box">
+          <img class="vp-vo__step-icon" src="/files/310/files/velkoobchod02.png" alt="" loading="lazy" />
+          <div class="vp-vo__step-num">2</div>
+        </div>
+        <h3 class="vp-vo__step-title">Široký výber</h3>
+        <p>Stovky originálnych motívov na sklade, ihneď k dodaniu.</p>
+      </div>
+      <div class="vp-vo__step">
+        <div class="vp-vo__step-icon-box">
+          <img class="vp-vo__step-icon" src="/files/310/files/velkoobchod03.png" alt="" loading="lazy" />
+          <div class="vp-vo__step-num">3</div>
+        </div>
+        <h3 class="vp-vo__step-title">Rýchle dodanie</h3>
+        <p>Tovar expedujeme do 24 hodín.</p>
+      </div>
+      <div class="vp-vo__step">
+        <div class="vp-vo__step-icon-box">
+          <img class="vp-vo__step-icon" src="/files/310/files/velkoobchod04.png" alt="" loading="lazy" />
+          <div class="vp-vo__step-num">4</div>
+        </div>
+        <h3 class="vp-vo__step-title">Zákazková výroba</h3>
+        <p>Ponožky vyrobíme presne podľa vášho želania.</p>
+      </div>
+      <div class="vp-vo__step">
+        <div class="vp-vo__step-icon-box">
+          <img class="vp-vo__step-icon" src="/files/310/files/velkoobchod05.png" alt="" loading="lazy" />
+          <div class="vp-vo__step-num">5</div>
+        </div>
+        <h3 class="vp-vo__step-title">Osobný prístup</h3>
+        <p>Sme tu pre vás – poradíme a nájdeme najlepšie riešenie.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. PREČO SPOLUPRACOVAŤ (4 ikony) -->
+  <div class="vp-vo__section">
+    <h2 class="vp-vo__h2">Prečo spolupracovať práve s nami?</h2>
+    <div class="vp-vo__cols4">
+      <div class="vp-vo__feature">
+        <img class="vp-vo__feature-icon" src="/files/310/files/velkoobchod06.png" alt="" loading="lazy" />
+        <h3 class="vp-vo__feature-title">Nákup priamo od výrobcu</h3>
+        <p>Nie sme prekupníci. Tým, že nakupujete priamo pri zdroji, získavate férové veľkoobchodné marže a istotu stabilných dodávok bez sprostredkovateľov.</p>
+      </div>
+      <div class="vp-vo__feature">
+        <img class="vp-vo__feature-icon" src="/files/310/files/velkoobchod07.png" alt="" loading="lazy" />
+        <h3 class="vp-vo__feature-title">Špičková kvalita, ktorá predáva</h3>
+        <p>Používame prvotriednu bavlnu a precízne technologické postupy. Zákazníci sa pre naše ponožky radi vracajú, čo vám zaistí stabilné opakované predaje.</p>
+      </div>
+      <div class="vp-vo__feature">
+        <img class="vp-vo__feature-icon" src="/files/310/files/velkoobchod08.png" alt="" loading="lazy" />
+        <h3 class="vp-vo__feature-title">Flexibilita a rýchle naskladnenie</h3>
+        <p>Všetky naše stále kolekcie držíme priamo v našom sklade. Objednávky vybavujeme bleskovo – žiadne dlhé týždne čakania na kontajnery zo zámoria.</p>
+      </div>
+      <div class="vp-vo__feature">
+        <img class="vp-vo__feature-icon" src="/files/310/files/velkoobchod09.png" alt="" loading="lazy" />
+        <h3 class="vp-vo__feature-title">Silný príbeh lokálnej značky</h3>
+        <p>Dnešní zákazníci reagujú na český pôvod, rodinnú tradíciu a udržateľnosť. S našimi ponožkami nepredávate len textil, ale aj príbeh poctivého remesla.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. KONTAKT (formulár + info, ako O nás) -->
+  <div class="vp-vo__contact" id="vo-kontakt">
+    <div class="vp-vo__contact-form">
+      <h2 class="vp-vo__h2 vp-vo__h2--left">Máte záujem o spoluprácu?</h2>
+      <p>Vyplňte formulár a my sa vám ozveme s ponukou na mieru.</p>
+      <div class="vp-vo__form-mount">%contact_form%</div>
+    </div>
+    <div class="vp-vo__contact-info">
+      <h3 class="vp-vo__info-h">Kontakt</h3>
+      <div class="vp-vo__info-row">
+        <img class="vp-vo__info-ic" src="/files/310/files/voz%C3%ADk1.svg" alt="" loading="lazy" />
+        <div>
+          <p class="vp-vo__info-label">Pre veľkoobchodnú spoluprácu</p>
+          <p class="vp-vo__info-lines">E-mail: <a href="mailto:david@modacapek.cz">david@modacapek.cz</a><br>Telefón: <a href="tel:+420724061774">+420 724 061 774</a></p>
+        </div>
+      </div>
+
+      <h3 class="vp-vo__info-h">Fakturačné údaje</h3>
+      <div class="vp-vo__info-row">
+        <img class="vp-vo__info-ic" src="/files/310/files/kontakt1.svg" alt="" loading="lazy" />
+        <div><p class="vp-vo__info-lines"><strong>MODA ČAPEK s.r.o.</strong></p></div>
+      </div>
+      <div class="vp-vo__info-row">
+        <img class="vp-vo__info-ic" src="https://cdn.jsdelivr.net/gh/devjakubvalenta/vesele_ponozky@main/assets/onas-contact2.svg" alt="" loading="lazy" />
+        <div><p class="vp-vo__info-lines">Boženy Němcové 1095<br>379 01 Třeboň, Česká republika</p></div>
+      </div>
+      <div class="vp-vo__info-row">
+        <img class="vp-vo__info-ic" src="/files/310/files/kontakt1.svg" alt="" loading="lazy" />
+        <div><p class="vp-vo__info-lines">IČO: 02605104<br>DIČ: CZ02605104</p></div>
+      </div>
+      <p class="vp-vo__info-small">Spoločnosť je zapísaná v obchodnom registri vedenom Krajským súdom v Českých Budějoviciach, oddiel C, vložka 22444.</p>
+    </div>
+  </div>
+
+
+</div>

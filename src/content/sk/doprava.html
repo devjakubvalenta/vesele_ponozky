@@ -1,0 +1,275 @@
+<!--
+  Stránka „Doprava a platba" (CMS) — SLOVENSKÁ VERZE.
+  Vkládá se do: Administrace SK shopu (28711) → CMS a blog → Doprava a platba
+  (/cms/61600-doprava-a-platba; české ID bylo 56955).
+
+  ⚠️⚠️ NENASAZOVAT, DOKUD NEJSOU VYPLNĚNÉ ZNAČKY {{SK_…}} ⚠️⚠️
+  Slovenský ceník dopravy zatím neexistuje, proto jsou VŠECHNA jména dopravců
+  i všechny částky nahrazené značkami. Stránka v tomhle stavu ukazuje zákazníkovi
+  doslovné „{{SK_CENA_1}}" — nevkládat do administrace, dokud se značky nepřepíšou
+  podle skutečně nastavených metod v košíku SK shopu.
+
+  Seznam značek použitých v tomhle souboru:
+    {{SK_DOPRAVA_ZADARMO_OD}}        hranice dopravy zadarmo na výdejní místa (CZ: 999 Kč)
+    {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}  hranice dopravy zadarmo domů (CZ: 1 499 Kč)
+                                     — druhá hranice, česká verze má dvě různé
+    {{SK_DOPRAVCA_1}}                CZ: Zásilkovna (výdejní místa a boxy)
+    {{SK_DOPRAVCA_2}}                CZ: Balíkovna (výdejní místa i doručení domů)
+    {{SK_DOPRAVCA_3}}                CZ: PPL / Alzaboxy (výdejní místa i doručení domů)
+    {{SK_CENA_1}} / _2 / _3          ceny výdejních míst (CZ: 69 / 79 / 79 Kč)
+    {{SK_CENA_4}} / _5               ceny doručení domů (CZ: 119 / 129 Kč)
+                                     — pokračování číselné řady, česká verze má 5 metod
+    {{SK_DOBIRKA}}                   příplatek za dobírku (CZ: 39 Kč)
+
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a>/<p>/<h*>/<span>/<strong>
+  (editor sanitizuje). Styl dodává 85-doprava.css (scope .vp-doprava) přes CDN —
+  sdílený s českou verzí, nic se v CSS needituje.
+
+  IKONY dopravy a plateb zůstávají na cestách z ČESKÉHO shopu
+  (/files/310/media/shipping|payment/<hash>.png). 310 je ID účtu, ne shopu, takže
+  soubory jsou dostupné i na SK. ⚠️ Až budou na SK shopu nastavené vlastní metody,
+  bude potřeba hashe přepsat podle <img> u dané metody v slovenském košíku —
+  jinak stránka ukazuje loga, která v pokladně nejsou.
+
+  COMGATE loga (comgate.svg / visa.svg / mastercard.svg) — nahrát do médií tak,
+  aby seděly cesty /files/310/files/<jméno>.svg (verzovaná kopie v assets/pay/).
+  Blok o platební bráně zůstává i pro SK — Comgate obsluhuje slovenské platby taky.
+
+  Firemní údaje se ZÁMĚRNĚ nemění: provozovatel je stejná česká společnost,
+  slovenská mutace je jen jazyková. Kontakt na Comgate zůstává český.
+-->
+<div class="vp-doprava">
+
+  <!-- 1. HERO (nadpis + benefity + ilustrácia) -->
+  <div class="vp-doprava__hero">
+    <div class="vp-doprava__hero-text">
+      <h1 class="vp-doprava__title">DOPRAVA A PLATBA</h1>
+      <p class="vp-doprava__lead">Na výdajné miesta vám ponožky pošleme zadarmo už pri nákupe nad {{SK_DOPRAVA_ZADARMO_OD}}, domov až ku dverám nad {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}.</p>
+
+      <div class="vp-doprava__info-row">
+        <img class="vp-doprava__info-ic" src="/files/310/files/dopravainfo.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-doprava__info-label">Všetko máme skladom</p>
+          <p class="vp-doprava__info-desc">Vaše obľúbené ponožky máme pripravené a hneď ich odosielame, takže na radosť jednoducho nemusíte dlho čakať.</p>
+        </div>
+      </div>
+
+      <div class="vp-doprava__info-row">
+        <img class="vp-doprava__info-ic" src="/files/310/files/dopravainfo2.png" alt="" loading="lazy" />
+        <div>
+          <p class="vp-doprava__info-label">Doručenie do dvoch dní</p>
+          <p class="vp-doprava__info-desc">Každú objednávku starostlivo zabalíme a čo najrýchlejšie odošleme, aby k vám dorazila v perfektnom stave.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-doprava__hero-media">
+      <img class="vp-doprava__hero-img" src="/files/310/files/doprava-hero.svg" alt="Doprava veselých ponožiek" loading="lazy" />
+    </div>
+  </div>
+
+  <!-- 2. SPÔSOB DOPRAVY -->
+  <div class="vp-doprava__section">
+    <h2 class="vp-doprava__h2">Spôsob dopravy</h2>
+    <div class="vp-doprava__methods">
+
+      <!-- Pořadí skupin: nejdřív LEVNĚJŠÍ (výdejní místa), pak doručení domů.
+           Stejné pořadí má i pokladna, tam ho přesouvá orderShippingGroups()
+           v src/scripts/50-checkout.js. Až budou známé slovenské ceny, ověř,
+           že pořadí od nejlevnější pořád platí — jinak skupiny prohoď. -->
+      <p class="vp-doprava__methods-group">Výdajné miesta a boxy</p>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="/files/310/media/shipping/67dfeadb91360c9b7d4633839713c676.png" alt="{{SK_DOPRAVCA_1}}" loading="lazy" />
+        <div class="vp-doprava__method-name">{{SK_DOPRAVCA_1}} – výdajné miesta a boxy
+          <span class="vp-doprava__method-note">Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD}}</span>
+        </div>
+        <div class="vp-doprava__method-price">{{SK_CENA_1}}</div>
+      </div>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="/files/310/media/shipping/c89b96f146cc61ea11a9d8de1b53cc3d.png" alt="{{SK_DOPRAVCA_2}}" loading="lazy" />
+        <div class="vp-doprava__method-name">{{SK_DOPRAVCA_2}} na výdajné miesta
+          <span class="vp-doprava__method-note">Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD}}</span>
+        </div>
+        <div class="vp-doprava__method-price">{{SK_CENA_2}}</div>
+      </div>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="/files/310/media/shipping/d3787dd5db298cd8ea80ba1f8b8eca86.png" alt="{{SK_DOPRAVCA_3}} výdajné miesta" loading="lazy" />
+        <div class="vp-doprava__method-name">Boxy a výdajné miesta {{SK_DOPRAVCA_3}}
+          <span class="vp-doprava__method-note">Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD}}</span>
+        </div>
+        <div class="vp-doprava__method-price">{{SK_CENA_3}}</div>
+      </div>
+
+      <p class="vp-doprava__methods-group">Doručenie domov</p>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="/files/310/media/shipping/b0ab9d0c976f9595d76f1d2df5786ae3.png" alt="{{SK_DOPRAVCA_2}}" loading="lazy" />
+        <div class="vp-doprava__method-name">{{SK_DOPRAVCA_2}} – doručenie domov
+          <span class="vp-doprava__method-note">Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}</span>
+        </div>
+        <div class="vp-doprava__method-price">{{SK_CENA_4}}</div>
+      </div>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="/files/310/media/shipping/a4072b406c2cfe3a08dd1d385b5af464.png" alt="{{SK_DOPRAVCA_3}}" loading="lazy" />
+        <div class="vp-doprava__method-name">{{SK_DOPRAVCA_3}} – doručenie domov
+          <span class="vp-doprava__method-note">Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}</span>
+        </div>
+        <div class="vp-doprava__method-price">{{SK_CENA_5}}</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 3. SPÔSOB PLATBY -->
+  <div class="vp-doprava__section">
+    <h2 class="vp-doprava__h2">Spôsob platby</h2>
+    <div class="vp-doprava__methods">
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="/files/310/media/payment/26062e0b22fddf633de98642f0029122.png" alt="Platba kartou" loading="lazy" />
+        <div class="vp-doprava__method-name">Platba kartou online</div>
+        <div class="vp-doprava__method-price vp-doprava__method-price--free">Zadarmo</div>
+      </div>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="/files/310/media/payment/clone/c1b0c91dc458f077ccf8f1e948613487.png" alt="Google Pay" loading="lazy" />
+        <div class="vp-doprava__method-name">Google Pay</div>
+        <div class="vp-doprava__method-price vp-doprava__method-price--free">Zadarmo</div>
+      </div>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="/files/310/media/payment/clone/7a14029b229bbf5c3666d479278758a2.png" alt="Apple Pay" loading="lazy" />
+        <div class="vp-doprava__method-name">Apple Pay</div>
+        <div class="vp-doprava__method-price vp-doprava__method-price--free">Zadarmo</div>
+      </div>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="/files/310/media/payment/3e5dcc1722b42dbdadefedcd9270255c.png" alt="QR platba a bankový prevod" loading="lazy" />
+        <div class="vp-doprava__method-name">QR kód / bankový prevod</div>
+        <div class="vp-doprava__method-price vp-doprava__method-price--free">Zadarmo</div>
+      </div>
+      <div class="vp-doprava__method">
+        <img class="vp-doprava__method-logo" src="/files/310/media/payment/a555729991f0ef2893e0173df8e300dd.png" alt="Dobierka" loading="lazy" />
+        <div class="vp-doprava__method-name">Na dobierku</div>
+        <div class="vp-doprava__method-price">{{SK_DOBIRKA}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. PLATOBNÁ BRÁNA COMGATE (údaje o poskytovateľovi — vyžaduje Comgate) -->
+  <div class="vp-doprava__section">
+    <h2 class="vp-doprava__h2">Online platby zabezpečuje Comgate</h2>
+    <div class="vp-doprava__gateway">
+      <div class="vp-doprava__gateway-logos">
+        <a class="vp-doprava__paylogo vp-doprava__paylogo--cg" href="https://www.comgate.eu/cs/platebni-brana" target="_blank" rel="noopener noreferrer">
+          <img src="/files/310/files/comgate.svg" alt="Comgate" loading="lazy" />
+        </a>
+        <span class="vp-doprava__paylogo vp-doprava__paylogo--visa">
+          <img src="/files/310/files/visa.svg" alt="Visa" loading="lazy" />
+        </span>
+        <span class="vp-doprava__paylogo vp-doprava__paylogo--mc">
+          <img src="/files/310/files/mastercard.svg" alt="Mastercard" loading="lazy" />
+        </span>
+      </div>
+      <div class="vp-doprava__gateway-text">
+        <p>Online platby pre nás zabezpečuje <strong>platobná brána Comgate</strong>. Poskytovateľ služby, spoločnosť Comgate, a.s., je licencovaná platobná inštitúcia pôsobiaca pod dohľadom Českej národnej banky. Platby, ktoré prebiehajú cez platobnú bránu, sú plne zabezpečené a všetky informácie sú šifrované.</p>
+        <p>Vaše platobné údaje sa k nám nikdy nedostanú — spracúva ich priamo Comgate, ktorý je držiteľom certifikácie PCI DSS na najvyššej úrovni.</p>
+        <a class="vp-doprava__link" href="https://www.comgate.eu/cs/platebni-brana" target="_blank" rel="noopener noreferrer">Viac o platobnej bráne Comgate</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. AKO PREBIEHA ONLINE PLATBA (karta / bankový prevod) -->
+  <div class="vp-doprava__section">
+    <h2 class="vp-doprava__h2">Ako prebieha online platba</h2>
+    <div class="vp-doprava__flow">
+
+      <div class="vp-doprava__flow-card">
+        <div class="vp-doprava__flow-head">
+          <span class="vp-doprava__flow-ic">
+            <img src="/files/310/media/payment/26062e0b22fddf633de98642f0029122.png" alt="" loading="lazy" />
+          </span>
+          <h3 class="vp-doprava__flow-title">Platba kartou</h3>
+        </div>
+        <div class="vp-doprava__step">
+          <div class="vp-doprava__step-num">1</div>
+          <div>
+            <p class="vp-doprava__step-title">Vyberiete si platbu kartou</p>
+            <p>Po odoslaní objednávky vás presmerujeme do zabezpečenej platobnej brány Comgate.</p>
+          </div>
+        </div>
+        <div class="vp-doprava__step">
+          <div class="vp-doprava__step-num">2</div>
+          <div>
+            <p class="vp-doprava__step-title">Zadáte údaje z karty</p>
+            <p>Číslo karty, dátum platnosti a CVC kód — tri čísla z podpisového prúžku na zadnej strane karty. Prijímame Visa, Visa Electron, Mastercard aj Maestro.</p>
+          </div>
+        </div>
+        <div class="vp-doprava__step">
+          <div class="vp-doprava__step-num">3</div>
+          <div>
+            <p class="vp-doprava__step-title">Potvrdíte platbu v banke</p>
+            <p>Platba je chránená štandardom 3D Secure, banka vás preto zvyčajne požiada o potvrdenie v mobilnej aplikácii alebo o kód z SMS.</p>
+          </div>
+        </div>
+        <div class="vp-doprava__step">
+          <div class="vp-doprava__step-num">4</div>
+          <div>
+            <p class="vp-doprava__step-title">Hotovo, balíme</p>
+            <p>O úspešnej platbe sa dozvieme okamžite a objednávku hneď odovzdávame na zabalenie.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="vp-doprava__flow-card">
+        <div class="vp-doprava__flow-head">
+          <span class="vp-doprava__flow-ic">
+            <img src="/files/310/media/payment/3e5dcc1722b42dbdadefedcd9270255c.png" alt="" loading="lazy" />
+          </span>
+          <h3 class="vp-doprava__flow-title">Bankový prevod a platobné tlačidlá bánk</h3>
+        </div>
+        <div class="vp-doprava__step">
+          <div class="vp-doprava__step-num">1</div>
+          <div>
+            <p class="vp-doprava__step-title">Vyberiete si platbu prevodom</p>
+            <p>V košíku zvolíte QR kód / bankový prevod. Platobná brána Comgate podporuje aj platobné tlačidlá bánk, teda platbu priamo z internetbankingu.</p>
+          </div>
+        </div>
+        <div class="vp-doprava__step">
+          <div class="vp-doprava__step-num">2</div>
+          <div>
+            <p class="vp-doprava__step-title">Potvrdíte predvyplnený príkaz</p>
+            <p>Pri platobnom tlačidle vás brána presmeruje do internetbankingu, kde sa prihlásite ako zvyčajne a len potvrdíte už pripravený príkaz na úhradu. Pri QR platbe stačí kód načítať v mobilnej aplikácii banky — sumu ani číslo účtu nikam neprepisujete.</p>
+          </div>
+        </div>
+        <div class="vp-doprava__step">
+          <div class="vp-doprava__step-num">3</div>
+          <div>
+            <p class="vp-doprava__step-title">Vrátite sa späť do obchodu</p>
+            <p>Po dokončení platby vás brána vráti späť k nám. Pri okamžitých platbách máme potvrdenie hneď, pri bežnom prevode spravidla nasledujúci pracovný deň.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <p class="vp-doprava__note"><strong>Google Pay a Apple Pay:</strong> platbu potvrdíte odtlačkom prsta alebo tvárou priamo v telefóne a údaje z karty nikam neprepisujete. Platbu aj tu spracúva platobná brána Comgate.</p>
+  </div>
+
+  <!-- 6. KONTAKT NA POSKYTOVATEĽA PLATOBNEJ BRÁNY -->
+  <div class="vp-doprava__section">
+    <h2 class="vp-doprava__h2">Otázky a reklamácie k platbám</h2>
+    <div class="vp-doprava__provider">
+      <p>S čímkoľvek okolo objednávky, dopravy alebo tovaru sa ozvite rovno nám. Ak potrebujete riešiť samotnú platbu — nedokončená platba, vrátenie peňazí na kartu alebo reklamácia platby — pomôže vám priamo prevádzkovateľ platobnej brány:</p>
+      <div class="vp-doprava__provider-grid">
+        <div class="vp-doprava__provider-item">
+          <p class="vp-doprava__provider-label">Spoločnosť</p>
+          <p class="vp-doprava__provider-value">Comgate, a.s.<br />Gočárova třída 1754/48b<br />Hradec Králové</p>
+        </div>
+        <div class="vp-doprava__provider-item">
+          <p class="vp-doprava__provider-label">E-mail</p>
+          <p class="vp-doprava__provider-value"><a href="mailto:podpora@comgate.cz">podpora@comgate.cz</a></p>
+        </div>
+        <div class="vp-doprava__provider-item">
+          <p class="vp-doprava__provider-label">Telefón</p>
+          <p class="vp-doprava__provider-value"><a href="tel:+420228224267">+420 228 224 267</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

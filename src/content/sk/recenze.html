@@ -1,0 +1,276 @@
+<!--
+  Stránka „Recenze" (CMS) — SLOVENSKÁ VERZIA.
+  Vkládá se do: Administrace SK shopu (28711) → CMS a blog → Recenze
+  (/cms/61609-recenze; české ID bylo 60954).
+
+  ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor sanitizuje section/form).
+  Nahoře nadpis + statistický panel (customers/rating/trust_badge), pod ním mřížka 17 recenzí
+  (hvězdy + citace + emoji avatar + jméno + „Overený zákazník" + datum), dole blok recenzí
+  z Heureky (nativní placeholder platformy — markup vykresluje platforma, my ho jen stylujeme).
+  Newsletter tu NENÍ — vkládá ho globálně src/scripts/footer.js do patičky.
+  Styl dodává 95-recenze.css (scope .vp-recenze) přes CDN — sdílený s českou verzí,
+  třídy a struktura se proto NEMĚNÍ, přeložený je jen text a alt popisky.
+
+  Média zůstávají na /files/310/ — ID účtu je pro oba shopy stejné, obrázky se
+  znovu nenahrávají (včetně Hv%C4%9Bzdi%C4%8Dky.svg s českým názvem souboru).
+
+  Proti češtině je jinak POUZE jazyk. Čísla (130 000+, 4,9/5, 97 %), jména
+  recenzentů i data zůstávají — jsou to reálné citace českých zákazníků.
+
+  ⚠️ Heureka zůstává ČESKÁ (tak bylo rozhodnuto): nadpis nese název českého
+  certifikátu „Ověřeno zákazníky" a placeholder %heureka_reviews_horizontal%
+  vykreslí české recenze. Až vznikne slovenský profil na Heureke, přepíše se
+  nadpis i zdroj recenzí.
+
+  Uživatel doplňuje: nic — stránka nemá žádné {{SK_*}} značky, ceny ani dopravce.
+-->
+<div class="vp-recenze">
+
+  <!-- 1. HLAVIČKA -->
+  <h1 class="vp-recenze__title">Čo o nás hovoria zákazníci</h1>
+  <p class="vp-recenze__subtitle">Vaša spokojnosť je pre nás na prvom mieste. Prečítajte si overené recenzie od zákazníkov, ktorí u nás už nakúpili.</p>
+
+  <!-- 2. STATISTICKÝ PANEL -->
+  <div class="vp-recenze__stats">
+    <div class="vp-recenze__stat">
+      <img class="vp-recenze__stat-icon" src="/files/310/files/customers.svg" alt="" loading="lazy" />
+      <div class="vp-recenze__stat-text">
+        <span class="vp-recenze__stat-num">130 000+</span>
+        <span class="vp-recenze__stat-label">Spokojných zákazníkov</span>
+      </div>
+    </div>
+    <div class="vp-recenze__stat vp-recenze__stat--rating">
+      <span class="vp-recenze__stat-num vp-recenze__rating-num">4,9/5</span>
+      <div class="vp-recenze__stat-text">
+        <img class="vp-recenze__stat-stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Priemerné hodnotenie 4,9 z 5 hviezd" loading="lazy" />
+        <span class="vp-recenze__stat-label">Priemerné hodnotenie</span>
+      </div>
+    </div>
+    <div class="vp-recenze__stat">
+      <img class="vp-recenze__stat-icon" src="/files/310/files/trust_badge.svg" alt="" loading="lazy" />
+      <div class="vp-recenze__stat-text">
+        <span class="vp-recenze__stat-num">97 %</span>
+        <span class="vp-recenze__stat-label">Odporúča naše ponožky</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. MRIEŽKA RECENZIÍ -->
+  <div class="vp-recenze__cards">
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Všetko v úplnom poriadku. Rýchlosť. Kvalita. Odporúčam."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__reviewer-name">Ondra</span>
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 1. 1. 2026</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Rýchle dodanie, skvelá komunikácia, ochota a ústretovosť."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__reviewer-name">Blanka</span>
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 29. 12. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Ochota pri požiadavke nad rámec štandardných služieb."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 27. 12. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Úplne expresné dodanie tovaru."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 21. 12. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Nakupujem pravidelne, kvalitný materiál, rýchlosť dodania, spokojnosť."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__reviewer-name">Eliška Vostracká</span>
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 21. 12. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Kvalitné pekné ponožky."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__reviewer-name">Lenka</span>
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 20. 12. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Rýchlosť, profesionalita, kvalita."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__reviewer-name">Roman</span>
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 19. 12. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Veľký výber, rýchle dodanie, skvelá komunikácia."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__reviewer-name">Marcela</span>
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 12. 12. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Je to darček pre kolegyne, tak uvidím."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 6. 12. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Objednala som si prvýkrát a som veľmi spokojná, ďakujem."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__reviewer-name">Ilona</span>
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 22. 11. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Prvý nákup a veľká spokojnosť."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 17. 11. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Rýchle, kvalitné, spoľahlivé :-)"</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 14. 11. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Rýchlo doručené. Doma bola fakt radosť, keď sme ponožky rozbalili :)"</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__reviewer-name">Šárka</span>
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 30. 10. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Dodané rýchlo, ponožky sú kvalitné a pekné."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 20. 10. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Kvalitné a krásne s úžasnými motívmi."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__reviewer-name">Alžběta Dixová</span>
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 6. 10. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Ponožky z tohto obchodu sú naozaj veľmi kvalitné, pružné a dobre „sedia". Dodanie tovaru bolo veľmi rýchle, za 2 dni od objednávky."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__reviewer-name">Lenka</span>
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 30. 9. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-recenze__card">
+      <img class="vp-recenze__stars" src="/files/310/files/Hv%C4%9Bzdi%C4%8Dky.svg" alt="Hodnotenie 5 z 5 hviezd" loading="lazy" />
+      <p class="vp-recenze__quote">„Bezproblémový nákup."</p>
+      <div class="vp-recenze__reviewer">
+        <img class="vp-recenze__avatar" src="/files/310/files/emoji_recenze.svg" alt="" loading="lazy" />
+        <div class="vp-recenze__reviewer-meta">
+          <span class="vp-recenze__verified"><span class="vp-recenze__check">✓</span> Overený zákazník <span class="vp-recenze__date">· 2. 1. 2025</span></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 4. RECENZIE Z HEUREKY (nativní placeholder platformy) -->
+  <!--
+    Placeholder vykresluje PLATFORMA, my dodáváme jen obal + styl — stejná
+    konvence jako %vratka% ve vraceni.html nebo %contact_form% v kontakt.html.
+    Podle šablony z něj má být <section class="review-list review-list-horizontal">
+    s kartami .itembox-item (owl carousel), uvnitř .stars + <blockquote> +
+    .review-avatar. Styl: 95-recenze.css, sekce „RECENZE Z HEUREKY".
+    ⚠️ Když se na stránce ukáže doslovný text „%heureka_reviews_horizontal%",
+    placeholder tímhle jménem neexistuje — platforma nerozbalené nechává být.
+    ⚠️ Nadpis je ZÁMĚRNĚ česky — je to název českého certifikátu Heureky
+    („Ověřeno zákazníky") a placeholder pod ním servíruje české recenze.
+    Až bude slovenský profil na Heureke, přeloží se nadpis i alt popisky.
+  -->
+  <h2 class="vp-recenze__heureka-title">Ověřeno zákazníky na Heurece</h2>
+  <div class="vp-recenze__heureka" id="vp-heureka">%heureka_reviews_horizontal%</div>
+
+</div>

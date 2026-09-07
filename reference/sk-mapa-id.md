@@ -36,6 +36,15 @@ neutrální je celý až na dvě slova, která přebíjí položka
 | Vrácení zboží | 60957 | **61618** |
 | GDPR | 60951 | **61621** |
 | Kontakty | 60969 | **61624** |
+| Všeobecné obchodní podmínky | 60960 | **na SK NEEXISTUJE** |
+
+⚠️ Slovenský shop má jen **9 CMS stránek** — stránka s obchodními podmínkami mezi
+nimi vůbec není (ověřeno 2026‑09‑07). Založ ji; pokladna na ni obvykle odkazuje
+a bez ní zákazník nemá kam kliknout.
+
+⚠️ Právní stránky (VOP, GDPR, Vrácení zboží) na SK existují jen jako duplikát
+s **českým textem**. Překlad je po dohodě mimo rozsah — slovenské spotřebitelské
+právo a dozorové orgány jsou jiné, přeložit český text nestačí.
 
 ⚠️ Odkaz bez prefixu shopu (`/cms/60954-recenze`) na SK shopu **končí 404** —
 odejde mimo shop. Proto se musí přemapovat všechny, ne jen ty viditelné.
@@ -88,6 +97,19 @@ stavového kódu, jen podle obsahu.
    že si je necháš udělat zvlášť. Slovenské spotřebitelské právo a dozorové
    orgány jsou jiné než české, překlad českého textu nestačí.
 
+## Co zbývá česky v administraci SK shopu
+
+Tohle náš kód vyřešit nemůže, jsou to data v administraci:
+
+- **Názvy kategorií** — menu ukazuje „Pánské Veselé ponožky“, protože `header.js`
+  bere název z navigace (schválně, aby se neudržoval na dvou místech).
+  Přejmenovat je musíš v administraci.
+- **Parametry produktů** — „Je hlavní produkt / Ano / Motiv / Povolání / Velikost“
+  se na detailu vypisují z katalogu.
+- **Loga dopravců** v `doprava.html` jsou hashe z **českého** košíku
+  (`/files/310/media/shipping/<hash>.png`). Načtou se (310 je ID účtu), ale
+  ukazují metody, které ve slovenské pokladně nejsou — přepiš je spolu s cenami.
+
 ## Jak se to generuje
 
 Skripty se **nepíšou ručně**, generují se z české verze:
@@ -105,4 +127,18 @@ nepřeložené. Komentáře v kódu zůstávají české schválně, jsou to int
 poznámky.
 
 Obsahové stránky v `src/content/sk/` se naopak píšou ručně — je to souvislá
-próza, ne kód.
+próza, ne kód. Kontroluje je samostatný nástroj:
+
+```bash
+node check-sk.mjs
+```
+
+Hlídá tři věci, které se při překladu nejsnáz přehlédnou: zbytky češtiny
+(písmena ě/ř/ů, která slovenština nemá — vlastní jména jako Třeboň má
+na seznamu výjimek), česká ID CMS stránek a kategorií, a nevyplněné značky
+`{{SK_…}}`. Komentáře přeskakuje, ty zůstávají česky schválně.
+
+**Stav k 2026‑09‑07:** 11 souborů, 0 nálezů, 23 nevyplněných značek
+(všechny v `doprava.html`). Struktura sedí 1:1 s češtinou u všech souborů —
+jediná odchylka je na homepage, kde místo dvou odstavců s neexistujícími
+produktovými bloky stojí komentář.
