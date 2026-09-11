@@ -1,0 +1,181 @@
+<!--
+  E-MAIL: POTVRZENÍ OBJEDNÁVKY PRO ZÁKAZNÍKA (česká verze, shop 28056).
+
+  Předmět e-mailu (pole „Předmět emailu"):
+    Děkujeme za objednávku č. %o – Veselé ponožky
+
+  Vkládá se ve ZDROJOVÉM režimu editoru (</>) do šablony e-mailu, který
+  dostává ZÁKAZNÍK. ⚠️ Nepřepsat jím notifikaci pro majitele obchodu —
+  ta má předmět „V Exitshopu byla vytvořena nová objednávka č. %o".
+
+  PROČ JE TO NAPSANÉ TAKHLE
+  • Tabulky a inline styly, žádné <style> ani třídy — e-mailoví klienti
+    (Gmail, Outlook) styly v hlavičce zahazují a flexbox/grid neumí.
+  • Font Arial/Helvetica — Space Grotesk z webu se v e-mailu nenačte.
+  • Logo je TEXTOVÉ: jediné logo, které máme, je SVG a to Gmail ani
+    Outlook nezobrazí. Až bude v médiích PNG verze loga (ideálně 300 px
+    široká, vykreslí se na 150 px), nahraď jím blok s nápisem.
+  • Obrázky a odkazy jsou ABSOLUTNÍ s https://www.veseleponozky.cz —
+    v e-mailu cesta od kořene nefunguje (není stránka, vůči které by se
+    vyhodnotila). Pravidlo „nehardcodovat doménu" z CLAUDE.md chrání web
+    před mícháním dvou domén; e-mail jde vždy zákazníkovi na produkci.
+    Placeholder %u se nepoužívá, protože vrací http:// a neví se, jestli
+    končí lomítkem („%ucms/…" by se mohlo slepit do nefunkční adresy).
+  • „Dobrý den, %n," — ne „Milý/Milá": %n je jméno v 1. pádě a rod
+    zákazníka neznáme, oslovení by vycházelo gramaticky špatně.
+  • %k a %c vracejí POUZE ČÍSLO — měna se proto dopisuje ručně („Kč").
+
+  CO V E-MAILU NENÍ A PROČ
+  • Platební údaje pro převod — šablona NEMÁ placeholder s číslem účtu
+    ani QR kódem (děkovačka je má, e-mail ne). Zákazník s platbou převodem
+    je tedy z tohoto e-mailu nezjistí → ověř, jestli platforma posílá
+    platební instrukce zvlášť.
+  • Poznámka zákazníka %w — editor neumí podmínky, takže u objednávek bez
+    poznámky by zůstal viset prázdný popisek.
+
+  Použité placeholdery (z nápovědy pod editorem):
+    %n jméno a příjmení   %o číslo objednávky   %x datum objednávky
+    %d způsob dopravy     %k celkem vč. dopravy (číslo)
+    %c zboží bez dopravy (číslo)   %t tabulka zboží
+    %a adresa             %e e-mail              %p telefon
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f4f6fb" style="background:#f4f6fb;margin:0;padding:0;">
+  <tr>
+    <td align="center" style="padding:24px 12px;">
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+
+        <!-- HLAVIČKA: textové logo na modré -->
+        <tr>
+          <td bgcolor="#1361cf" align="center" style="background:#1361cf;padding:22px 24px;">
+            <a href="https://www.veseleponozky.cz/" style="text-decoration:none;color:#ffffff;font-size:26px;font-weight:bold;letter-spacing:0.5px;">Veselé&nbsp;<span style="color:#fbbc02;">ponožky</span></a>
+          </td>
+        </tr>
+
+        <!-- PODĚKOVÁNÍ -->
+        <tr>
+          <td align="center" style="padding:32px 24px 8px;">
+            <img src="https://www.veseleponozky.cz/files/310/files/HP6.png" width="76" height="81" alt="Maskot Veselé ponožky" style="display:block;border:0;width:76px;height:81px;margin:0 auto 16px;" />
+            <h1 style="margin:0 0 8px;font-size:26px;line-height:1.25;color:#1361cf;">Děkujeme za objednávku!</h1>
+            <p style="margin:0;font-size:16px;line-height:1.5;color:#475569;">Vaše veselé ponožky už chystáme v&nbsp;Třeboni.</p>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 24px 0;font-size:15px;line-height:1.6;color:#0f172a;">
+            <p style="margin:0 0 12px;">Dobrý den, %n,</p>
+            <p style="margin:0;">objednávku jsme v&nbsp;pořádku přijali. Níže najdete její shrnutí. Jakmile balíček předáme dopravci, pošleme vám další e-mail s&nbsp;odkazem na sledování zásilky.</p>
+          </td>
+        </tr>
+
+        <!-- SHRNUTÍ OBJEDNÁVKY -->
+        <tr>
+          <td style="padding:24px 24px 0;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#eaf1fc" style="background:#eaf1fc;border-radius:12px;">
+              <tr>
+                <td style="padding:18px 20px 6px;font-size:14px;color:#475569;">Číslo objednávky</td>
+                <td align="right" style="padding:18px 20px 6px;font-size:14px;font-weight:bold;color:#0f172a;">%o</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 20px;font-size:14px;color:#475569;">Datum objednávky</td>
+                <td align="right" style="padding:6px 20px;font-size:14px;color:#0f172a;">%x</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 20px;font-size:14px;color:#475569;">Způsob dopravy</td>
+                <td align="right" style="padding:6px 20px;font-size:14px;color:#0f172a;">%d</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 20px;font-size:14px;color:#475569;">Zboží bez dopravy</td>
+                <td align="right" style="padding:6px 20px;font-size:14px;color:#0f172a;">%c&nbsp;Kč</td>
+              </tr>
+              <tr>
+                <td style="padding:12px 20px 18px;font-size:16px;font-weight:bold;color:#0f172a;border-top:1px solid #c9d8f2;">Celkem k&nbsp;úhradě</td>
+                <td align="right" style="padding:12px 20px 18px;font-size:18px;font-weight:bold;color:#1361cf;border-top:1px solid #c9d8f2;">%k&nbsp;Kč</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- ZBOŽÍ (tabulku generuje platforma) -->
+        <tr>
+          <td style="padding:28px 24px 0;">
+            <h2 style="margin:0 0 12px;font-size:18px;color:#0f172a;">Co jste si objednali</h2>
+            <div style="font-size:14px;line-height:1.5;color:#0f172a;">%t</div>
+          </td>
+        </tr>
+
+        <!-- DORUČOVACÍ ÚDAJE -->
+        <tr>
+          <td style="padding:28px 24px 0;">
+            <h2 style="margin:0 0 12px;font-size:18px;color:#0f172a;">Doručovací údaje</h2>
+            <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#0f172a;">%a</p>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:#475569;">E-mail: %e<br />Telefon: %p</p>
+            <p style="margin:12px 0 0;font-size:13px;line-height:1.5;color:#475569;">Něco nesedí? Ozvěte se nám co nejdřív — dokud balíček neodešle, adresu snadno opravíme.</p>
+          </td>
+        </tr>
+
+        <!-- CO BUDE DÁL -->
+        <tr>
+          <td style="padding:28px 24px 0;">
+            <h2 style="margin:0 0 14px;font-size:18px;color:#0f172a;">Co bude dál</h2>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td width="36" valign="top" style="padding:0 0 14px;">
+                  <div style="width:28px;height:28px;line-height:28px;border-radius:14px;background:#fbbc02;color:#0f172a;font-size:14px;font-weight:bold;text-align:center;">1</div>
+                </td>
+                <td valign="top" style="padding:3px 0 14px;font-size:14px;line-height:1.5;color:#0f172a;"><strong>Zabalíme ponožky.</strong> Objednávky přijaté v&nbsp;pracovní den do 12:00 odesíláme ještě týž den, pozdější hned další pracovní den.</td>
+              </tr>
+              <tr>
+                <td width="36" valign="top" style="padding:0 0 14px;">
+                  <div style="width:28px;height:28px;line-height:28px;border-radius:14px;background:#fbbc02;color:#0f172a;font-size:14px;font-weight:bold;text-align:center;">2</div>
+                </td>
+                <td valign="top" style="padding:3px 0 14px;font-size:14px;line-height:1.5;color:#0f172a;"><strong>Předáme balíček dopravci.</strong> Přijde vám e-mail s&nbsp;odkazem na sledování, dopravce vás pak informuje i&nbsp;SMS.</td>
+              </tr>
+              <tr>
+                <td width="36" valign="top" style="padding:0;">
+                  <div style="width:28px;height:28px;line-height:28px;border-radius:14px;background:#fbbc02;color:#0f172a;font-size:14px;font-weight:bold;text-align:center;">3</div>
+                </td>
+                <td valign="top" style="padding:3px 0 0;font-size:14px;line-height:1.5;color:#0f172a;"><strong>Ponožky jsou u vás.</strong> Běžně do 1–2 pracovních dnů od odeslání.</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- VRÁCENÍ -->
+        <tr>
+          <td style="padding:28px 24px 0;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#fdf6e0" style="background:#fdf6e0;border-radius:12px;">
+              <tr>
+                <td style="padding:18px 20px;font-size:14px;line-height:1.5;color:#0f172a;">
+                  <strong>Nesedí velikost?</strong> Nevadí. Nenošené ponožky můžete vyměnit nebo vrátit až do <strong>120 dnů</strong>.
+                  <a href="https://www.veseleponozky.cz/cms/60957-vraceni-zbozi" style="color:#1361cf;font-weight:bold;">Jak na vrácení&nbsp;›</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- KONTAKT -->
+        <tr>
+          <td align="center" style="padding:28px 24px 32px;font-size:14px;line-height:1.6;color:#475569;">
+            Máte dotaz? Rádi pomůžeme.<br />
+            <a href="tel:+420792377714" style="color:#1361cf;font-weight:bold;text-decoration:none;">+420 792 377 714</a>
+            &nbsp;·&nbsp; Po–Pá 9:00–16:00<br />
+            <a href="mailto:ponozky@veseleponozky.cz" style="color:#1361cf;font-weight:bold;text-decoration:none;">ponozky@veseleponozky.cz</a>
+          </td>
+        </tr>
+
+        <!-- PATIČKA -->
+        <tr>
+          <td bgcolor="#0f172a" align="center" style="background:#0f172a;padding:20px 24px;font-size:12px;line-height:1.6;color:#94a3b8;">
+            <span style="color:#fbbc02;font-weight:bold;">Vyrobeno s&nbsp;láskou v&nbsp;Třeboni</span><br />
+            MODA ČAPEK s.r.o. · Boženy Němcové 1095, 379 01 Třeboň · IČ 02605104<br />
+            <a href="https://www.veseleponozky.cz/" style="color:#ffffff;text-decoration:none;">www.veseleponozky.cz</a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>

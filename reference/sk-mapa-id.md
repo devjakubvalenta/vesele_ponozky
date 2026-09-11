@@ -36,11 +36,15 @@ neutrální je celý až na dvě slova, která přebíjí položka
 | Vrácení zboží | 60957 | **61618** |
 | GDPR | 60951 | **61621** |
 | Kontakty | 60969 | **61624** |
-| Všeobecné obchodní podmínky | 60960 | **na SK NEEXISTUJE** |
+| Všeobecné obchodní podmínky | 60960 | **61615** |
 
-⚠️ Slovenský shop má jen **9 CMS stránek** — stránka s obchodními podmínkami mezi
-nimi vůbec není (ověřeno 2026‑09‑07). Založ ji; pokladna na ni obvykle odkazuje
-a bez ní zákazník nemá kam kliknout.
+ℹ️ **Slug v URL nerozhoduje, jen ID.** `/cms/61597-xyz` i `/cms/61597` server sám
+přesměruje na `/cms/61597-o-nas` (ověřeno 2026‑09‑08). Přejmenování stránek
+v administraci — a tím i změna slugu — tedy naše odkazy v obsahu nerozbije.
+
+ℹ️ Pozor při dohledávání ID: **VOP (61615) nejsou prolinkované v navigaci**, takže
+se nenajdou vyčtením odkazů ze stránek. Navigace jich ukazuje 9, ve skutečnosti
+je jich 10 — úplný seznam je v administraci pod „Podstránky".
 
 ⚠️ Právní stránky (VOP, GDPR, Vrácení zboží) na SK existují jen jako duplikát
 s **českým textem**. Překlad je po dohodě mimo rozsah — slovenské spotřebitelské
@@ -96,6 +100,12 @@ stavového kódu, jen podle obsahu.
 5. **Právní stránky** (VOP, GDPR, Vrácení zboží) jsou mimo rozsah — dohodnuto,
    že si je necháš udělat zvlášť. Slovenské spotřebitelské právo a dozorové
    orgány jsou jiné než české, překlad českého textu nestačí.
+
+6. **HTTPS na veseleponozky.sk nefunguje.** Doména už běží (ověřeno 2026‑09‑11:
+   `http://www.veseleponozky.sk/` vrací slovenský shop), ale **certifikát
+   nepokrývá `www.veseleponozky.sk`** — prohlížeč na `https://` ukáže bezpečnostní
+   varování. Dokud to není vyřešené u platformy/registrátora, nepřesměrovávat
+   zákazníky na .sk a nedávat .sk adresu do e-mailů ani reklam.
 
 ## Co zbývá česky v administraci SK shopu
 
