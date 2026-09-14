@@ -285,6 +285,23 @@ header .header-shop-basket-button .customer-form.row {
   width: min(320px, 92vw);
 }
 
+/* Ikona účtu, když ji platforma nevykreslí. Slovenský shop (28711) posílá
+   <a class="customer-button"> PRÁZDNÝ — ověřeno v syrovém HTML: `bi-person`
+   tam není ani jednou, zatímco jiných `bi` ikon je tam 60. Na českém shopu
+   uvnitř odkazu je <div class="bi bi-person">, takže tam se pravidlo NEPOUŽIJE
+   a samo se vypne, jakmile platforma ikonu doplní i na SK.
+
+   :empty by nestačilo — odkaz obsahuje mezeru, tedy textový uzel. Proto
+   :not(:has(*)) = „nemá žádného potomka-element".
+   \f4e1 = .bi-person v bootstrap-icons.min.css šablony Next (kód znaku
+   vyčtený přímo z toho stylopisu, ne odhadnutý — v jiné verzi se liší). */
+header .header-shop-basket-button a.customer-button:not(:has(*))::before {
+  content: "\f4e1";
+  font-family: bootstrap-icons;
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
 header .header-shop-basket-button a.customer-button,
 header .header-shop-basket-button a.shopping-basket {
   display: inline-flex !important;
