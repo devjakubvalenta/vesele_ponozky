@@ -153,6 +153,8 @@ export const DETAIL = [
 
   [`var ALSO_TITLE = "Zákazníci také nakupují";`, `var ALSO_TITLE = "Zákazníci tiež nakupujú";`],
   [`var ALSO_CTA = "Přidat do košíku";`, `var ALSO_CTA = "Pridať do košíka";`],
+  // Náhradní popisek záložky v tabulce velikostí, když položka nemá vlastní název.
+  [`: "Velikosti";`, `: "Veľkosti";`],
   [`var SIZE_LINK_TEXT = "Tabulka velikostí";`, `var SIZE_LINK_TEXT = "Tabuľka veľkostí";`],
   [`var SIZE_MODAL_TITLE = "Tabulka velikostí";`, `var SIZE_MODAL_TITLE = "Tabuľka veľkostí";`],
 

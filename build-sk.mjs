@@ -14,7 +14,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { TEXTY, SDILENE, POVOLENE } from "./i18n/sk-texty.mjs";
+import { TEXTY, SDILENE, POVOLENE, PODEZRELE, POVOLENE_PRESNE } from "./i18n/sk-texty.mjs";
 import { CMS, KATEGORIE } from "./i18n/sk-ids.mjs";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
@@ -23,7 +23,11 @@ const OUT = path.join(SRC, "sk");
 const CHECK = process.argv.includes("--check");
 
 /* Písmena, která má čeština a slovenština ne — spolehlivý detektor zbytků.
-   (ř, ě, ů se ve slovenštině nevyskytují vůbec.) */
+   (ř, ě, ů se ve slovenštině nevyskytují vůbec.)
+
+   ⚠️ Sám o sobě NESTAČÍ: „Kč“, „Velikost“ ani „ZDARMA“ žádné z těch písmen
+   nemají, takže mu roky proplouvaly a na slovenském shopu pak svítilo
+   „10 Kč“ u eurové ceny. Druhé síto je proto PODEZRELE z i18n/sk-texty.mjs. */
 const CESKE = /[ěřůĚŘŮ]/;
 
 /* Skener řetězcových literálů: sleduje stav kódu, takže uvozovky v komentářích
@@ -193,6 +197,34 @@ for (const [jmeno, nahrady] of Object.entries(TEXTY)) {
       console.error(`   ř.${radek(src, r.index)}  ${JSON.stringify(r.text.slice(0, 80))}`);
     }
     if (zbyle.length > 12) console.error(`   … a dalších ${zbyle.length - 12}`);
+  }
+
+  /* Druhé síto: čeština, kterou detektor podle písmen nepozná. Výjimka jen
+     na PŘESNOU shodu celého řetězce — „Kč“ jako symbol měny projde, „ Kč“
+     nalepená na cenu ne. */
+  const podezrela = retezce(src).filter(
+    (r) => PODEZRELE.test(r.text) && !POVOLENE_PRESNE.includes(r.text)
+  );
+  if (podezrela.length) {
+    zbytky += podezrela.length;
+    console.error(`\n✗ ${jmeno}: ${podezrela.length} podezřelých řetězců (čeština bez ě/ř/ů):`);
+    for (const r of podezrela.slice(0, 12)) {
+      console.error(`   ř.${radek(src, r.index)}  ${JSON.stringify(r.text.slice(0, 80))}`);
+    }
+    if (podezrela.length > 12) console.error(`   … a dalších ${podezrela.length - 12}`);
+  }
+
+  /* Náhrady jsou čistě textové splicování, takže špatně useknutý blok
+     komentáře v češtině vyrobí soubor, který se v prohlížeči vůbec
+     nespustí — a navenek to vypadá, že „slovenská verze nic nedělá“.
+     new Function() zdroj jen zkompiluje, nespouští ho. */
+  try {
+    new Function(src);
+  } catch (err) {
+    console.error(`\n✗ ${jmeno}: vygenerovaný soubor není platný JavaScript — ${err.message}`);
+    console.error(`   (nejčastěji špatně ukončený blok komentáře v českém originálu)`);
+    chyby++;
+    continue;
   }
 
   if (!CHECK) fs.writeFileSync(path.join(OUT, jmeno), HLAVICKA(jmeno) + src, "utf8");

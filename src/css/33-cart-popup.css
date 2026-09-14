@@ -9,7 +9,7 @@
    padding 44px, min-width, radius 0): úzký sloupec, tmavé CTA,
    10 doporučených karet přetéká.
 
-   Struktura (ověřeno živě):
+   Struktura BOHATÉ varianty — český shop 28056 (ověřeno živě):
      .row-fluid > h2.added-to-cart-title
      hr
      .row > .col-md-6 (h4 název + img) | .col-md-6 (.remaining-to-free-shipping
@@ -19,9 +19,19 @@
              > .products.row (karty stylují 25-products.css + 30-product-cards.js)
      button.fancybox-close-small
 
+   Struktura JEDNODUCHÉ varianty — slovenský shop 28711 (ověřeno živě):
+     h3 | h4 | img | .remaining-to-free-shipping | hr | a.btn ×2 | křížek
+   Platforma ji servíruje tam, kde není produktový blok „Upsell košík"
+   (%recommend_block_3177%) — pak vynechá progress bar, doporučené
+   produkty i celý bootstrapový grid. 45-cart-popup.js ji dorovná na
+   stejné háčky (.acp-simple, .added-to-cart-title, .acp-product,
+   .pop-up-buttons), takže dál stačí jedno CSS pro obě.
+
    Doplňkový JS: src/scripts/45-cart-popup.js (třídy .acp-*):
    obalí název do .acp-info a doplní „Velikost X · N ks" (.acp-meta)
-   a cenu (.acp-price). Bez JS zůstane nativní jednořádkový název.
+   a cenu (.acp-price). Bez JS zůstane nativní jednořádkový název —
+   a u jednoduché varianty i nativní rozvržení, protože ta bez JS
+   žádný háček nemá.
    ===================================================================== */
 
 /* Tokeny — scopované (konvence repa: nikdy :root), hodnoty = --pl-* */
@@ -99,11 +109,46 @@
   border-radius: 12px;
 }
 
-.added_to_cart_popup .row h4 {
+.added_to_cart_popup .row h4,
+.added_to_cart_popup .acp-product h4 {
   margin: 0;
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--acp-text);
+}
+
+/* ==== Jednoduchá varianta (bez doporučených produktů) ===============
+   Háčky dodává 45-cart-popup.js — viz hlavička souboru. Bez karet
+   nemá okno co roztahovat, proto užší než bohatá varianta. */
+
+.added_to_cart_popup.acp-simple.fancybox-content {
+  width: min(560px, calc(100vw - 44px));
+}
+
+/* Obrázek s textem vedle sebe (nativně stojí samostatně pod nadpisem) */
+.added_to_cart_popup .acp-product {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 1.1rem;
+}
+
+.added_to_cart_popup .acp-product img,
+.added_to_cart_popup > img {          /* > img = než doběhne JS */
+  flex: 0 0 auto;
+  width: 96px;
+  height: 96px !important;            /* nativně .added_to_cart_popup>img 190px */
+  margin: 0 !important;               /* nativně margin: auto */
+  object-fit: contain;
+  padding: 6px;
+  background: var(--acp-surface);
+  border: 1px solid var(--acp-border);
+  border-radius: 12px;
+}
+
+/* Text o dopravě zdarma tu stojí sám (bez progress baru pod ním) */
+.added_to_cart_popup.acp-simple .remaining-to-free-shipping {
+  margin-bottom: 1.1rem;
 }
 
 /* Bloky doplněné JS (45-cart-popup.js) */
@@ -247,9 +292,15 @@
     margin-bottom: 14px;
   }
 
-  .added_to_cart_popup .row .col-md-6 img {
+  .added_to_cart_popup .row .col-md-6 img,
+  .added_to_cart_popup .acp-product img,
+  .added_to_cart_popup > img {
     width: 76px;
     height: 76px !important;
+  }
+
+  .added_to_cart_popup.acp-simple.fancybox-content {
+    width: calc(100vw - 28px);
   }
 
   /* Tlačítka pod sebe, „Dokončit nákup" nahoře */

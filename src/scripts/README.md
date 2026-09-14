@@ -96,6 +96,18 @@ názvy s „ - " se nerozbijí. CSS zároveň omezuje Doporučené produkty na
 4 karty (desktop) a na mobilu je skrývá úplně. Idempotentní; bez JS
 zůstane nativní obsah popupu jen nastylovaný.
 
+> **Platforma renderuje popup ve dvou podobách.** Bohatá (český shop) má
+> `.row > .col-md-6` ×2, progress bar a blok doporučených produktů;
+> **jednoduchá** (slovenský shop) jen `h3 | h4 | img |
+> .remaining-to-free-shipping | hr | a.btn ×2` — bez jediného háčku, na který
+> CSS cílí. Přepíná se podle toho, jestli má shop produktový blok **„Upsell
+> košík"** (`%recommend_block_3177%`); bez něj server pošle tu jednoduchou.
+> `normalizeSimple()` proto jednoduchou variantu dorovná na stejné třídy
+> (`.acp-simple`, `.added-to-cart-title`, `.acp-product`, `.pop-up-buttons`)
+> a dál stačí jedno společné CSS. **Progress bar a doporučené produkty se
+> dodělat nedají** — ty renderuje server a chybí i v datech; patří do
+> administrace daného shopu.
+
 > **Opravuje i chybu platformy: po přidání do košíku ve výpisu přestaly jít
 > vybírat velikosti.** Šablona má na `<body>` delegovaný click handler
 > `.variant-box-selectable`. Popup si ho ale při renderu bloku „Doporučené

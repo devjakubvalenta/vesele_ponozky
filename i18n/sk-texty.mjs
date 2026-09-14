@@ -17,6 +17,21 @@ import { SK_ECOMAIL } from "./sk-ids.mjs";
 import { DETAIL } from "./sk-texty-detail.mjs";
 import { DETAIL_FAQ } from "./sk-texty-faq.mjs";
 
+/* Podezřelá čeština BEZ ě/ř/ů — detektor v build-sk.mjs ji podle písmen
+   nepozná, a přesně tudy se do slovenského shopu dostalo „10 Kč“ místo
+   „9.99 €“ v přeškrtnuté ceně a „Velikost 35-38“ v popupu košíku. */
+export const PODEZRELE = /Kč|korun|Velikost|[Zz]darma|ZDARMA|Souhlas/;
+
+/* Výjimka z kontroly PODEZRELE — platí jen na PŘESNOU shodu celého řetězce,
+   aby „Kč“ jako symbol měny prošla, ale „ Kč“ nalepená na cenu ne. */
+export const POVOLENE_PRESNE = [
+  // 50-checkout.js: currencySymbol() vrací měnu přečtenou z názvu dopravní
+  // metody. Na slovenském shopu tam pořád stojí „ZDARMA NAD 999 Kč“, a tu
+  // korunu musíme zobrazit tak, jak ji admin napsal — přepsat ji na euro
+  // by zákazníkovi tvrdilo jiný limit, než platí v pokladně.
+  "Kč"
+];
+
 /* Řetězce, které česky ZŮSTAT MAJÍ — kontrola v build-sk.mjs je přeskočí.
    Slovenský shop pořád prodává produkty s českými názvy (nejsou přeložené),
    takže prefixy k odřezávání i regulárky musí české tvary poznat dál. */
@@ -58,18 +73,24 @@ export const TEXTY = {
   ],
 
   "45-cart-popup.js": [
-    [`return s + " Kč";`, `return s + " €";`]
+    // Platforma na SK píše „5.79 €“ — tečka, ne čárka.
+    [`var CURRENCY = " Kč";`, `var CURRENCY = " €";`],
+    [`var DECIMAL_SEP = ",";`, `var DECIMAL_SEP = ".";`],
+    [`var SIZE_LABEL = "Velikost ";`, `var SIZE_LABEL = "Veľkosť ";`]
   ],
 
   "50-checkout.js": [
-    // Název metody v administraci píše „- ZDARMA NAD 1499 Kč -“; slovenský
-    // admin bude psát „ZADARMO NAD … €“. Regulárka bere obě měny, ať se
-    // nerozbije, kdyby v názvu zůstala koruna.
-    [`var FREE_RE = /\\s*[-–—]?\\s*zdarma\\s+nad\\s+([0-9][0-9\\s.,]*)\\s*k[čc]\\s*/i;`,
-     `var FREE_RE = /\\s*[-–—]?\\s*zadarmo\\s+nad\\s+([0-9][0-9\\s.,]*)\\s*(?:€|eur|k[čc])\\s*/i;`],
-    // Platforma píše „Súhlasím so zasielaním…“, my z toho děláme opt-out.
-    [`label.textContent.replace(/^\\s*Souhlas/, 'Nesouhlas');`,
-     `label.textContent.replace(/^\\s*S[úu]hlas/, 'Nesúhlas');`]
+    // Eura mají halíře, koruny v košíku nikdy — proto DECIMALS 0 → 2.
+    // Bez toho se z „9.99 €“ stane v přeškrtnuté ceně „10 €“.
+    [`var CURRENCY = ' Kč';`, `var CURRENCY = ' €';`],
+    [`var DECIMALS = 0;`, `var DECIMALS = 2;`],
+    [`var DECIMAL_SEP = ',';`, `var DECIMAL_SEP = '.';`],
+    // Poznámka u dopravy: „Zdarma nad 999 Kč“ → „Zadarmo nad 999 Kč“.
+    // Měnu skript přebírá z názvu metody, tady se mění jen slovo —
+    // FREE_RE i FREE_PRICE_RE umí oba jazyky a zůstávají beze změny.
+    [`var FREE_WORD = 'Zdarma nad';`, `var FREE_WORD = 'Zadarmo nad';`]
+    // Popisek souhlasu se NEPŘEKLÁDÁ: skript lepí „Ne“ před slovo, které
+    // v popisku opravdu našel, takže zvládne „Souhlasím“ i „Súhlasím“.
   ],
 
   "countdown-bar.js": [

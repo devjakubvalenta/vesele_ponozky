@@ -33,6 +33,13 @@
   // Selektor, na který má šablona delegovaný handler výběru velikosti.
   var VARIANT_SELECTOR = ".variant-box-selectable";
 
+  /* Měna a oddělovač desetin — jediné místo, kde se liší slovenská verze
+     (viz i18n/sk-texty.mjs). Platforma píše na SK „5.79 €", proto tam
+     tečka, ne čárka. */
+  var CURRENCY = " €";
+  var DECIMAL_SEP = ".";
+  var SIZE_LABEL = "Veľkosť ";
+
   // Naposledy kliknutá varianta / add tlačítko — zdroj ceny a přesného
   // id "productId-variantId" pro dohledání počtu ks v cookie.
   var lastPick = null; // { id, price, name, label, at }
@@ -132,8 +139,8 @@
   function formatPrice(raw) {
     var n = parseFloat(String(raw).replace(",", ".").replace(/[^\d.]/g, ""));
     if (!isFinite(n) || n <= 0) return null;
-    var s = n % 1 ? n.toFixed(2).replace(".", ",") : String(n);
-    return s + " €";
+    var s = n % 1 ? n.toFixed(2).replace(".", DECIMAL_SEP) : String(n);
+    return s + CURRENCY;
   }
 
   function findPrice(h4text) {
@@ -167,11 +174,66 @@
     return { base: name, variant: null };
   }
 
+  /* == Dvě podoby popupu ================================================
+     Platforma renderuje popup ve DVOU variantách a přepíná mezi nimi podle
+     toho, jestli má co nabídnout jako doporučené produkty (produktový blok
+     „Upsell košík", %recommend_block_3177%):
+
+       BOHATÁ (český shop 28056)
+         .row-fluid > h2.added-to-cart-title | hr
+         .row > .col-md-6 (h4 + img) | .col-md-6 (doprava zdarma + progress
+                 + .pop-up-buttons)
+         hr | .row-fluid > h2 + section.recommend-block
+
+       JEDNODUCHÁ (slovenský shop 28711, kde produktový blok není)
+         h3 | h4 | img | .remaining-to-free-shipping | hr
+         a.btn.btn-light | a.btn.btn-primary        ← holé, bez obalu
+
+     Jednoduchá nemá ani jeden háček, na který 33-cart-popup.css cílí, takže
+     bez téhle úpravy zůstane úplně nenastylovaná (ověřeno živě na 28711).
+     Dorovnáváme ji proto na stejné třídy — titulek, obrázek s textem
+     (.acp-product) a tlačítka (.pop-up-buttons) — a zbytek dodá jedno
+     společné CSS. Bohaté varianty se to nedotkne, pozná se podle `.row`.
+
+     Progress bar ani doporučené produkty se dodělat nedají — ty renderuje
+     server a chybí i v datech. Patří do administrace slovenského shopu. */
+  function normalizeSimple(popup) {
+    if (popup.querySelector(".row")) return;       // bohatá varianta
+    popup.classList.add("acp-simple");
+
+    var title = popup.querySelector("h3, h2");
+    if (title) title.classList.add("added-to-cart-title");
+
+    var h4 = popup.querySelector("h4");
+    var img = popup.querySelector(":scope > img");
+    if (h4 && img) {
+      var product = document.createElement("div");
+      product.className = "acp-product";
+      h4.parentNode.insertBefore(product, h4);
+      product.appendChild(img);                    // obrázek vlevo
+      product.appendChild(h4);
+    }
+
+    /* Tlačítka jsou přímí potomci popupu — querySelectorAll vrací statický
+       seznam, takže je jde přesouvat v cyklu bez kopie. */
+    var btns = popup.querySelectorAll(":scope > a.btn");
+    if (btns.length) {
+      var bar = document.createElement("div");
+      bar.className = "pop-up-buttons";
+      btns[0].parentNode.insertBefore(bar, btns[0]);
+      for (var i = 0; i < btns.length; i++) bar.appendChild(btns[i]);
+    }
+  }
+
   /* == Obohacení popupu ================================================== */
 
   function enhance(popup) {
     if (popup.getAttribute("data-acp-done")) return;
-    var h4 = popup.querySelector(".row h4");
+    normalizeSimple(popup);
+    // V bohaté variantě jen h4 ze záhlaví — obecné `h4` by mohlo chytit
+    // kartu z bloku doporučených produktů.
+    var h4 = popup.querySelector(".row h4") ||
+             (popup.classList.contains("acp-simple") ? popup.querySelector("h4") : null);
     if (!h4) return;
     popup.setAttribute("data-acp-done", "1");
 
@@ -191,7 +253,7 @@
     var meta = document.createElement("div");
     meta.className = "acp-meta";
     meta.textContent = parts.variant
-      ? "Velikost " + parts.variant + " · " + qty + " ks"
+      ? SIZE_LABEL + parts.variant + " · " + qty + " ks"
       : qty + " ks";
     info.appendChild(meta);
 

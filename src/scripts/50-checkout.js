@@ -35,8 +35,38 @@
   if (window.__vpCheckoutLabels) return;
   window.__vpCheckoutLabels = true;
 
-  /* „- ZDARMA NAD 1499 Kč -“ kdekoli v názvu (admin to píše do názvu metody) */
-  var FREE_RE = /\s*[-–—]?\s*zdarma\s+nad\s+([0-9][0-9\s.,]*)\s*k[čc]\s*/i;
+  /* Měna a formát čísla — jediné, co se liší ve slovenské verzi
+     (viz i18n/sk-texty.mjs). SK jede v eurech a platforma tam píše
+     „5.79 €“, tedy dvě desetinná místa a tečka. */
+  var CURRENCY = ' Kč';
+  var DECIMALS = 0;
+  var DECIMAL_SEP = ',';
+
+  /* „- ZDARMA NAD 1499 Kč -“ kdekoli v názvu (admin to píše do názvu metody).
+
+     Bere „zdarma“ i „zadarmo“ a obě měny schválně na OBOU shopech: slovenská
+     administrace je duplikát české, takže tam u dopravy pořád visí česká
+     formulace „ZDARMA NAD 999 Kč“ (ověřeno živě na 28711). Kdyby regulárka
+     uměla jen slovenský tvar, poznámka by se z názvu nevyzobla a zůstala by
+     natvrdo v jednom řádku — přesně to, co tenhle kód řeší.
+
+     Číslo i měna se z názvu PŘEBÍRAJÍ, nepřepisují se — „999 Kč“ na
+     slovenském shopu je chyba v administraci, ne v kódu, a přepsat ji tady
+     na „999 €“ by zákazníkovi tvrdilo něco jiného než pokladna.
+
+     Pozor na koncovku: česky „zdarmA“, slovensky „zadarmO“ — `za?darm[ao]`
+     musí pokrýt obě, jinak se jedna z nich tiše mine. */
+  var FREE_RE = /\s*[-–—]?\s*za?darm[ao]\s+nad\s+([0-9][0-9\s.,]*)\s*(k[čc]|€|eur)\s*/i;
+  var FREE_WORD = 'Zdarma nad';
+
+  /* Platforma píše cenu „ZDARMA“ (CZ) i „ZADARMO“ (SK) — obojí na obou
+     shopech, ze stejného důvodu jako výš. */
+  var FREE_PRICE_RE = /^za?darm[ao]$/i;
+
+  /* Měna z názvu metody na jednotný tvar („kc“/„KČ“ → „Kč“, „EUR“ → „€“) */
+  function currencySymbol(raw) {
+    return /^k/i.test(raw) ? 'Kč' : '€';
+  }
 
   function tidy(s) {
     return s.replace(/\s+/g, ' ').replace(/^[\s\-–—]+/, '').replace(/[\s\-–—]+$/, '').trim();
@@ -63,7 +93,7 @@
     var free = '';
     var m = raw.match(FREE_RE);
     if (m) {
-      free = 'Zdarma nad ' + m[1].trim() + ' Kč';
+      free = FREE_WORD + ' ' + m[1].trim() + ' ' + currencySymbol(m[2]);
       raw = raw.replace(FREE_RE, ' ');
     }
 
@@ -91,7 +121,7 @@
      jako u plateb — hodnota se mění za běhu, proto se to přepočítává. */
   function markFree(box) {
     var price = box.querySelector('.price_span');
-    var isFree = !!price && price.textContent.trim().toUpperCase() === 'ZDARMA';
+    var isFree = !!price && FREE_PRICE_RE.test(price.textContent.trim());
     box.classList.toggle('vp-free', isFree);
   }
 
@@ -105,8 +135,11 @@
      `order` (musely by se párovat dva sourozenci) — přesouváme uzly.
 
      Přesouvá se jen jednou (data-vp-order na sloupci); MutationObserver by
-     jinak po každém překreslení seznamu dopravy pořadí přepočítával. */
-  var PICKUP_RE = /výdejn|box/i;
+     jinak po každém překreslení seznamu dopravy pořadí přepočítával.
+
+     Regulárka bere „výdejní“ (CZ) i „výdajné“ (SK): slovenský shop zdědil
+     české nadpisy, ale až je administrace přeloží, pořadí se nesmí rozbít. */
+  var PICKUP_RE = /v[ýy]d[ea]jn|box/i;
 
   function orderShippingGroups() {
     var col = document.querySelector('.shippings_divided > .col-md-6:not(.payment-select)');
@@ -158,8 +191,17 @@
     if (!label) return;
 
     /* „Souhlasím se zasíláním…" / „Souhlasím se zasláním…" → „Nesouhlasím…"
-       Popisek je čistě textový, odkaz na podmínky je až za ním jako <a>. */
-    label.textContent = label.textContent.replace(/^\s*Souhlas/, 'Nesouhlas');
+       Popisek je čistě textový, odkaz na podmínky je až za ním jako <a>.
+
+       Předponu „Ne" lepíme před SKUTEČNĚ nalezené slovo, ne před napevno
+       napsané — slovenský shop je duplikát českého, takže tam popisek podle
+       stavu překladu v administraci zní „Souhlasím" i „Súhlasím". Tvrdá
+       náhrada by jeden z nich minula a zákazník by viděl odškrtnuté
+       „Souhlasím" u souhlasu, který je ve skutečnosti udělený (ověřeno živě
+       na 28711) — to je horší než neopravený stav. */
+    label.textContent = label.textContent.replace(/^\s*(S(?:ou|ú|u)hlas)/, function (_, slovo) {
+      return 'Ne' + slovo.toLowerCase();
+    });
 
     var proxy = document.createElement('input');
     proxy.type = 'checkbox';
@@ -249,8 +291,12 @@
 
      Zapisuje se jen při skutečné změně textu — observer nad .main-order-form
      by jinak reagoval na vlastní zápis a točil se dokola. */
+  /* Koruny jsou v košíku vždy celé, eura naopak s halíři — zaokrouhlení na celé
+     číslo by ze slovenských „9.99 €“ udělalo „10 €“ a přeškrtnutá cena by
+     nesouhlasila s tou ve výpisu (ověřeno živě na 28711). */
   function fmtPrice(n) {
-    return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' Kč';
+    if (DECIMALS) return n.toFixed(DECIMALS).replace('.', DECIMAL_SEP) + CURRENCY;
+    return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + CURRENCY;
   }
 
   function cartSaving(row) {

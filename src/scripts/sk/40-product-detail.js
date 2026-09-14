@@ -1385,7 +1385,7 @@
       if (!tbl) return;                      // položka bez tabulky nedává smysl
 
       var nameEl = item.querySelector(".pd-size-name") || item.querySelector("h1, h2, h3, h4, strong");
-      var label = nameEl ? (nameEl.textContent || "").trim() : "Velikosti";
+      var label = nameEl ? (nameEl.textContent || "").trim() : "Veľkosti";
       var img = item.querySelector("img");
       var note = item.querySelector(".pd-size-note");
       var i = sizeState.tabs.length;
