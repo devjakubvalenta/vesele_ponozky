@@ -55,3 +55,24 @@ export const CESTY = {
   "/c/1243142-vyprodej-az-90": "/c/1254445-vyprodej-az-90",
   "/c/1243139-darkove-sety": "/c/1254442-darkove-sety"
 };
+
+/* Ecomail — SLOVENSKÝ seznam odběratelů.
+
+   Newsletter na SK shopu musí sbírat adresy do JINÉHO seznamu než český,
+   jinak chodí slovenským zákazníkům české kampaně. Účet zůstává stejný
+   (witsocks), mění se jen formulář: v Ecomailu se založí nový seznam a nad
+   ním nový embed formulář. Jeho ID má tvar "<číslo>-<hash>" a v embed kódu
+   je jako `id` skriptu a zároveň jako mount div `#f-<ID>`.
+
+   ⚠️ Dokud je formId null, nechá build-sk.mjs v SK footeru ČESKÉ ID —
+   slovenské adresy by tedy padaly do českého seznamu. SK newsletter proto
+   nenasazovat dřív, než se sem ID doplní a skript se přegeneruje.
+
+   code = slevový kupón ukázaný po přihlášení. null = zůstane český VESELE15.
+   Když bude SK welcome automatizace posílat jiný kód, dopiš ho sem — musí
+   pak existovat i jako kupón v administraci SK shopu, jinak ho zákazník
+   v košíku neuplatní. */
+export const SK_ECOMAIL = {
+  formId: null,   // např. "7-ab12cd34…"
+  code: null      // např. "VESELE15SK"
+};

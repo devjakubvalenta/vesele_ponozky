@@ -13,6 +13,7 @@
    ⚠️ Ceny: slovenský shop jede v eurech, ale ceník dopravy zatím není —
    na jeho místě jsou placeholdery {{SK_…}}, viz reference/sk-mapa-id.md. */
 
+import { SK_ECOMAIL } from "./sk-ids.mjs";
 import { DETAIL } from "./sk-texty-detail.mjs";
 import { DETAIL_FAQ } from "./sk-texty-faq.mjs";
 
@@ -102,6 +103,13 @@ export const TEXTY = {
   "40-product-detail.js": [...DETAIL, ...DETAIL_FAQ],
 
   "footer.js": [
+    // Ecomail: slovenský seznam se přepíná jediným ID v i18n/sk-ids.mjs.
+    // Když tam ID není, náhrada se vůbec nepřidá a v SK footeru zůstane české.
+    ...(SK_ECOMAIL.formId
+      ? [[`formId: "4-f67e22c6c3dacfc9b77b6b40399abc16",`,
+          `formId: "${SK_ECOMAIL.formId}",`]]
+      : []),
+    ...(SK_ECOMAIL.code ? [[`code: "VESELE15",`, `code: "${SK_ECOMAIL.code}",`]] : []),
     [`'NEZMEŠKEJTE<br>ŽÁDNÉ NOVINKY<br><span class="vp-nl__accent">A ZÍSKEJTE SLEVU 15%!</span>'`,
      `'NEZMEŠKAJTE<br>ŽIADNE NOVINKY<br><span class="vp-nl__accent">A ZÍSKAJTE ZĽAVU 15%!</span>'`],
     [`"Přihlaste se k odběru našeho newsletteru a získejte <br class=\\"vp-nl__br\\">slevu 15 % na váš první nákup veselých ponožek."`,
