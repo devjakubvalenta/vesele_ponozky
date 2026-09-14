@@ -73,6 +73,6 @@ export const CESTY = {
    pak existovat i jako kupón v administraci SK shopu, jinak ho zákazník
    v košíku neuplatní. */
 export const SK_ECOMAIL = {
-  formId: null,   // např. "7-ab12cd34…"
+  formId: "5-ed07fd6b07ff0199fabc8509f995f058",   // seznam „SK", účet witsocks
   code: null      // např. "VESELE15SK"
 };

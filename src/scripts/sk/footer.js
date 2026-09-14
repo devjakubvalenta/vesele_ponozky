@@ -66,7 +66,7 @@
   // Náš brandový obal (modrý blok, maskot, titulek) formulář jen orámuje;
   // vzhled polí widgetu dolaďuje src/css/32-newsletter.css.
   var NEWSLETTER = {
-    formId: "4-f67e22c6c3dacfc9b77b6b40399abc16",
+    formId: "5-ed07fd6b07ff0199fabc8509f995f058",
     account: "witsocks",
     widgetSrc: "https://d70shl7vidtft.cloudfront.net/widget.js",
     // Zalomení je záměrné (3 řádky, třetí celý žlutě) — `<br>` v titulku platí
