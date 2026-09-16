@@ -451,8 +451,9 @@ z `10-force-variant-selection.html` (`variant-selection-required` → bílé chi
 >   na sekci v accordionu; neznámý popisek = sekce navíc na konci.
 >   `TAB_STATIC` v kódu (`careHtml()`, `returnsHtml()` + `shippingHtml()`,
 >   `faqHtml()`) je jen **záložní znění** pro případ, že blok v adminu chybí
->   nebo je rozdělaný — co dorazí z adminu, ho přebije. Dnes je v adminu
->   „Doprava a vrácení", zbytek jede ze záložního znění.
+>   nebo je rozdělaný — co dorazí z adminu, ho přebije. V adminu jsou dnes
+>   **všechny tři**; záložní znění je čistá pojistka a po ověření naostro
+>   se dá z kódu smazat (ušetří ~15 kB skriptu).
 >
 > ⚠️ Ceník dopravy **musí sedět s košíkem** (ověřuje se na `/cart`) a je i v
 > `src/content/doprava.html` — při změně upravit obě místa. Dokud se záložní
@@ -462,7 +463,10 @@ z `10-force-variant-selection.html` (`variant-selection-required` → bílé chi
 >
 > Zdroj je na stránce skrytý (`.pd-acc-src{display:none}` v
 > `24-product-detail.css`) a servíruje ho server v HTML, takže je v DOM dřív
-> než tenhle skript z patičky. Ceník je `<table class="pd-ship">` schválně —
+> než tenhle skript z patičky. Daň za to: text je v DOM **dvakrát** (skrytý
+> zdroj + kopie v accordionu), tedy ~13 kB navíc v HTML každého detailu —
+> stejný kompromis jako u `.pd-size-src`, výměnou za editovatelnost bez gitu.
+> Bonus: obsah je tím pádem v serverovém HTML, ne až po doběhnutí JS. Ceník je `<table class="pd-ship">` schválně —
 > cena se dá v administraci přepsat i v běžném editoru, bez zdrojového režimu;
 > CSS ho cílí strukturně (`td:first-child` / `td:last-child`), takže řádek
 > vložený editorem bez tříd se nerozsype.
