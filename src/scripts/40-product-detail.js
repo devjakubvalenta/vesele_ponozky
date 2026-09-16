@@ -780,6 +780,29 @@
 
      Blok je na stránce skrytý (CSS .pd-acc-src{display:none}) a servíruje ho
      server v HTML, takže v DOM je dřív než tenhle skript z patičky. */
+  /* Emoji z admin pole NEMUSÍ dorazit. Databáze administrace je v 3bajtovém
+     utf8, takže znaky mimo BMP (🧦 📦 🔄 …) se do ní nevejdou a uloží se jako
+     „????" — jeden otazník na bajt (ověřeno na produkci; ⚡ prošel, protože
+     je 3bajtový). V obsahu jsou proto zapsané jako HTML entity (&#x1F9E6;),
+     které databáze vidí jako ASCII. Kdyby je editor přece jen převedl na
+     znaky a databáze je zmršila, tahle pojistka ikonu dopočítá z FAQ podle
+     NÁZVU okruhu — na pořadí nezáleží, okruhy se dají v adminu přeházet.
+     Okruh, který v FAQ není, zůstane bez ikony; „????" je horší než nic. */
+  function fixFaqIcons(root) {
+    Array.prototype.forEach.call(root.querySelectorAll(".pd-faq__group"), function (g) {
+      var ico = g.querySelector(".pd-faq__ico");
+      var title = g.querySelector(".pd-faq__title");
+      if (!ico || !title) return;
+      var txt = ico.textContent || "";
+      if (txt && txt.indexOf("?") === -1) return;     // ikona dorazila v pořádku
+      var name = (title.textContent || "").trim();
+      for (var i = 0; i < FAQ.length; i++) {
+        if (FAQ[i].title === name) { ico.textContent = FAQ[i].ico; return; }
+      }
+      ico.textContent = "";
+    });
+  }
+
   function staticSections() {
     var out = TAB_STATIC.map(function (t) {
       return { label: t.label, html: t.html || "" };
@@ -799,6 +822,7 @@
       var clone = item.cloneNode(true);
       var cloneName = clone.querySelector(".pd-acc-name");
       if (cloneName) cloneName.parentNode.removeChild(cloneName);
+      fixFaqIcons(clone);
       var html = (clone.innerHTML || "").trim();
       if (!html) return;           // sekce bez obsahu → nechat záložní znění
 

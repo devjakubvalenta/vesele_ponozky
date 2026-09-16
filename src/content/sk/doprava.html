@@ -3,23 +3,28 @@
   Vkládá se do: Administrace SK shopu (28711) → CMS a blog → Doprava a platba
   (/cms/61600-doprava-a-platba; české ID bylo 56955).
 
-  ⚠️⚠️ NENASAZOVAT, DOKUD NEJSOU VYPLNĚNÉ ZNAČKY {{SK_…}} ⚠️⚠️
-  Slovenský ceník dopravy zatím neexistuje, proto jsou VŠECHNA jména dopravců
-  i všechny částky nahrazené značkami. Stránka v tomhle stavu ukazuje zákazníkovi
-  doslovné „{{SK_CENA_1}}" — nevkládat do administrace, dokud se značky nepřepíšou
-  podle skutečně nastavených metod v košíku SK shopu.
+  CENÍK JE VYPLNĚNÝ podle skutečnosti — ověřeno 2026-09-16 v košíku SK shopu
+  (28711). Slovenský shop má jediného dopravce, Packetu:
+    • výdajné miesta a boxy  2,99 €   (Packeta prevod / kartou),
+    • doručenie domov        3,99 €,
+    • dobierka je příplatek  +1,69 €  (výdajné miesto 4,68 €, domov 5,68 €).
+  Žádná Balíkovna ani PPL/Alzaboxy — česká verze má pět metod, slovenská dvě.
+  Při změně cen v administraci upravit i tuhle stránku a ceník v sekci
+  accordionu v src/content/sk/product-detail.html.
 
-  Seznam značek použitých v tomhle souboru:
-    {{SK_DOPRAVA_ZADARMO_OD}}        hranice dopravy zadarmo na výdejní místa (CZ: 999 Kč)
-    {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}  hranice dopravy zadarmo domů (CZ: 1 499 Kč)
-                                     — druhá hranice, česká verze má dvě různé
-    {{SK_DOPRAVCA_1}}                CZ: Zásilkovna (výdejní místa a boxy)
-    {{SK_DOPRAVCA_2}}                CZ: Balíkovna (výdejní místa i doručení domů)
-    {{SK_DOPRAVCA_3}}                CZ: PPL / Alzaboxy (výdejní místa i doručení domů)
-    {{SK_CENA_1}} / _2 / _3          ceny výdejních míst (CZ: 69 / 79 / 79 Kč)
-    {{SK_CENA_4}} / _5               ceny doručení domů (CZ: 119 / 129 Kč)
-                                     — pokračování číselné řady, česká verze má 5 metod
-    {{SK_DOBIRKA}}                   příplatek za dobírku (CZ: 39 Kč)
+  ⚠️ HRANICE DOPRAVY ZADARMO se tu SCHVÁLNĚ neuvádí. V administraci SK shopu
+  není nastavená (košík dodnes ukazuje nepřenastavené „Zadarmo nad 999 Kč"),
+  takže jakákoli částka by byla slib, který pokladna nesplní. Až se nastaví,
+  doplnit do leadu a jako <span class="vp-doprava__method-note">Zadarmo nad
+  X €</span> k metodám — a stejnou částku i do sk/product-detail.html.
+
+  ⚠️ ŽÁDNÉ `{{ }}` V OBSAHU. Dřív tu byly značky {{SK_CENA_1}} a spol.;
+  zákazníkovi se vypisovaly doslova a v poli „Produktový detail" (to jede
+  uvnitř Vue) dokonce shodily celou stránku. Nevyplněný údaj radši vynech.
+
+  ⚠️ ŽÁDNÉ EMOJI. Databáze administrace je v 3bajtovém utf8, takže znaky mimo
+  BMP (🧦 📦 …) se uloží jako „????" (ověřeno na produkci). Když je potřeba
+  ikona, zapiš ji jako HTML entitu (&#x1F4E6;) nebo použij obrázek.
 
   ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a>/<p>/<h*>/<span>/<strong>
   (editor sanitizuje). Styl dodává 85-doprava.css (scope .vp-doprava) přes CDN —
@@ -44,7 +49,7 @@
   <div class="vp-doprava__hero">
     <div class="vp-doprava__hero-text">
       <h1 class="vp-doprava__title">DOPRAVA A PLATBA</h1>
-      <p class="vp-doprava__lead">Na výdajné miesta vám ponožky pošleme zadarmo už pri nákupe nad {{SK_DOPRAVA_ZADARMO_OD}}, domov až ku dverám nad {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}.</p>
+      <p class="vp-doprava__lead">Ponožky odosielame do dvoch pracovných dní — na výdajné miesta a boxy Packety alebo kuriérom až ku dverám.</p>
 
       <div class="vp-doprava__info-row">
         <img class="vp-doprava__info-ic" src="/files/310/files/dopravainfo.png" alt="" loading="lazy" />
@@ -79,41 +84,16 @@
            že pořadí od nejlevnější pořád platí — jinak skupiny prohoď. -->
       <p class="vp-doprava__methods-group">Výdajné miesta a boxy</p>
       <div class="vp-doprava__method">
-        <img class="vp-doprava__method-logo" src="/files/310/media/shipping/67dfeadb91360c9b7d4633839713c676.png" alt="{{SK_DOPRAVCA_1}}" loading="lazy" />
-        <div class="vp-doprava__method-name">{{SK_DOPRAVCA_1}} – výdajné miesta a boxy
-          <span class="vp-doprava__method-note">Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD}}</span>
-        </div>
-        <div class="vp-doprava__method-price">{{SK_CENA_1}}</div>
-      </div>
-      <div class="vp-doprava__method">
-        <img class="vp-doprava__method-logo" src="/files/310/media/shipping/c89b96f146cc61ea11a9d8de1b53cc3d.png" alt="{{SK_DOPRAVCA_2}}" loading="lazy" />
-        <div class="vp-doprava__method-name">{{SK_DOPRAVCA_2}} na výdajné miesta
-          <span class="vp-doprava__method-note">Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD}}</span>
-        </div>
-        <div class="vp-doprava__method-price">{{SK_CENA_2}}</div>
-      </div>
-      <div class="vp-doprava__method">
-        <img class="vp-doprava__method-logo" src="/files/310/media/shipping/d3787dd5db298cd8ea80ba1f8b8eca86.png" alt="{{SK_DOPRAVCA_3}} výdajné miesta" loading="lazy" />
-        <div class="vp-doprava__method-name">Boxy a výdajné miesta {{SK_DOPRAVCA_3}}
-          <span class="vp-doprava__method-note">Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD}}</span>
-        </div>
-        <div class="vp-doprava__method-price">{{SK_CENA_3}}</div>
+        <img class="vp-doprava__method-logo" src="/files/310/media/shipping/a4b81f865658260dd2635e161cf7ca4f.png" alt="Packeta" loading="lazy" />
+        <div class="vp-doprava__method-name">Packeta – výdajné miesta a boxy</div>
+        <div class="vp-doprava__method-price">2,99 €</div>
       </div>
 
       <p class="vp-doprava__methods-group">Doručenie domov</p>
       <div class="vp-doprava__method">
-        <img class="vp-doprava__method-logo" src="/files/310/media/shipping/b0ab9d0c976f9595d76f1d2df5786ae3.png" alt="{{SK_DOPRAVCA_2}}" loading="lazy" />
-        <div class="vp-doprava__method-name">{{SK_DOPRAVCA_2}} – doručenie domov
-          <span class="vp-doprava__method-note">Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}</span>
-        </div>
-        <div class="vp-doprava__method-price">{{SK_CENA_4}}</div>
-      </div>
-      <div class="vp-doprava__method">
-        <img class="vp-doprava__method-logo" src="/files/310/media/shipping/a4072b406c2cfe3a08dd1d385b5af464.png" alt="{{SK_DOPRAVCA_3}}" loading="lazy" />
-        <div class="vp-doprava__method-name">{{SK_DOPRAVCA_3}} – doručenie domov
-          <span class="vp-doprava__method-note">Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}</span>
-        </div>
-        <div class="vp-doprava__method-price">{{SK_CENA_5}}</div>
+        <img class="vp-doprava__method-logo" src="/files/310/media/shipping/a4b81f865658260dd2635e161cf7ca4f.png" alt="Packeta" loading="lazy" />
+        <div class="vp-doprava__method-name">Packeta – doručenie domov</div>
+        <div class="vp-doprava__method-price">3,99 €</div>
       </div>
 
     </div>
@@ -146,7 +126,7 @@
       <div class="vp-doprava__method">
         <img class="vp-doprava__method-logo" src="/files/310/media/payment/a555729991f0ef2893e0173df8e300dd.png" alt="Dobierka" loading="lazy" />
         <div class="vp-doprava__method-name">Na dobierku</div>
-        <div class="vp-doprava__method-price">{{SK_DOBIRKA}}</div>
+        <div class="vp-doprava__method-price">1,69 €</div>
       </div>
     </div>
   </div>

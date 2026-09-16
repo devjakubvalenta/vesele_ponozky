@@ -58,6 +58,11 @@ zástupné symboly (`%v`, `%n`, `%c`, `%email`…) pro data objednávky.
 > komentáři jsou složené závorky neškodné (Vue komentáře zahazuje), v CMS
 > stránkách mimo `#app` se jen vypíšou doslova.
 
+> ⚠️ **Do obsahových polí nepiš emoji.** Databáze administrace běží na
+> 3bajtovém `utf8`, takže znaky mimo BMP (🧦 📦 🔄 …) se uloží jako `????` —
+> jeden otazník na bajt. Zapisuj je jako HTML entitu (`&#x1F9E6;`), ta je
+> ASCII a projde. Symboly z BMP (⚡ ✉ ♻) procházejí rovnou.
+
 > ⚠️ **Obsah se vkládá DOSLOVA** (neobaluje se). JavaScript dej do
 > `<script>…</script>`, ale **`<link>`/`<style>` vkládej HOLÉ** — `<link>`
 > uvnitř `<script>` browser ignoruje (CSS se nenačte). Tahle past nás jednou

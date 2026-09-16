@@ -73,6 +73,17 @@ překlad českého textu by nestačil.
 Slovenské **skripty** se na rozdíl od obsahu negenerují ručně — viz
 [src/scripts/sk/README.md](../scripts/sk/README.md).
 
+## Dvě pasti administrace
+
+- **Emoji se neuloží.** Databáze je v 3bajtovém `utf8`, takže znaky mimo BMP
+  (🧦 📦 🔄 …) v ní skončí jako `????`. Piš je jako HTML entitu
+  (`&#x1F9E6;`); symboly z BMP (⚡ ✉ ♻) projdou rovnou. Ikony okruhů FAQ
+  v `product-detail.html` jsou proto entity a `40-product-detail.js` má
+  navíc pojistku, která je dopočítá z `FAQ` podle názvu okruhu.
+- **`{{ }}` v poli uvnitř `#app`** (třeba „Produktový detail") si Vue vyloží
+  jako svoji interpolaci — neznámý název shodí render celé stránky. Detail
+  v [CLAUDE.md](../../CLAUDE.md).
+
 ## Jak nasadit
 
 1. V administraci **CMS a blog → O nás** přepni editor do **zdrojového režimu** (`</>`).

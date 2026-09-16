@@ -12,7 +12,7 @@ sdílejí tentýž `dist/custom.css` z CDN.
 |---|---|
 | `homepage.html` | Nastavení designu → Úvodní stránka |
 | `onas.html` | CMS → O nás (`/cms/61597-o-nas`) |
-| `doprava.html` | CMS → Doprava a platba (`/cms/61600`) ⚠️ **nasazená s nevyplněnými značkami, viz níže** |
+| `doprava.html` | CMS → Doprava a platba (`/cms/61600`) — ceník vyplněný, čeká na vložení |
 | `velkoobchod.html` | CMS → Velkoobchodní spolupráce (`/cms/61606`) |
 | `recenze.html` | CMS → Recenze (`/cms/61609`) |
 | `vyroba.html` | CMS → Výroba na zakázku (`/cms/61603`) |
@@ -34,12 +34,18 @@ sdílejí tentýž `dist/custom.css` z CDN.
   SK shopu). V HTML komentáři jsou neškodné — Vue komentáře zahazuje.
   V CMS stránkách (mimo `#app`) render nespadne, ale zákazník značky vidí
   doslova. Nevyplněný údaj proto raději vynech, než abys ho označkoval.
-- **`doprava.html` obsahuje 23 značek `{{SK_…}}`** místo cen a jmen dopravců
-  a **je nasazená** — na `/cms/61600-doprava-a-platba` dnes svítí 32 značek
-  v textu. Vyplň je podle skutečného ceníku (ověřeno 2026-09-16 v košíku:
-  jediný dopravce **Packeta**, výdajné miesta a boxy **2,99 €**, doručenie
-  domov **3,99 €**, dobierka +1,69 €) — hranice dopravy zadarmo v eurech
-  v administraci nastavená není, takže ji zatím nikde neslibuj.
+- **`doprava.html` už značky nemá** (od 2026-09-16) — nese reálný ceník
+  ověřený v košíku: jediný dopravce **Packeta**, výdajné miesta a boxy
+  **2,99 €**, doručenie domov **3,99 €**, dobierka **+1,69 €**. V administraci
+  je ale pořád nasazená STARÁ verze, ve které zákazník vidí 32× `{{SK_…}}`
+  doslova — vlož novou. Loga dopravy jsou přepsaná na slovenské hashe
+  (`a4b81f86…` = Packeta); česká loga ukazovala metody, které v SK pokladně
+  nejsou.
+- ⚠️ **Emoji se do administrace neuloží** — databáze je v 3bajtovém `utf8`
+  a znaky mimo BMP skončí jako `????`. Piš je jako HTML entitu
+  (`&#x1F9E6;`), viz [../README.md](../README.md).
+- ⚠️ Po vložení `doprava.html` zkontroluj v administraci **meta description**
+  té CMS stránky — na produkci v ní pořád visí `{{SK_…}}` ze staré verze.
 - **`product-detail.html` značky NEMÁ** (od 2026-09-16) — ceník v sekci
   accordionu „Doprava a vrátenie" nese rovnou reálné ceny Packety a otázka
   na dopravu zadarmo je z FAQ vypuštěná. Až se eurová hranice v administraci
