@@ -208,6 +208,13 @@
      ČÍSLOVANÉ SEZNAMY s tučným lead-inem („Materiál a péče"): obal
      <ol class="pd-steps">, uvnitř <li><strong>Titulek</strong><p>Text</p></li>.
 
+     ⚠️ IKONY OKRUHŮ jsou tu zapsané jako HTML entity (&#x1F9E6;), ale do
+     administrace se NEDOSTANOU — editor entitu převede na znak a databáze
+     (3bajtový utf8) z něj udělá „????". Na webu je proto kreslí pojistka
+     fixFaqIcons() ve skriptu, která ikonu dopočítá z FAQ podle názvu okruhu.
+     Důsledek: NOVÝ OKRUH přidaný jen tady zůstane bez ikony, dokud se
+     nedoplní do konstanty FAQ v src/scripts/40-product-detail.js. Text okruhu funguje normálně.
+
      ČASTÉ DOTAZY jsou DRUHÁ úroveň rozklikávání: jeden okruh = jeden
      <details class="pd-faq__group">, v <summary> emoji + název okruhu,
      uvnitř dvojice <p class="pd-faq__q"> otázka + <div class="pd-faq__a">

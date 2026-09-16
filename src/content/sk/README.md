@@ -44,8 +44,10 @@ sdílejí tentýž `dist/custom.css` z CDN.
 - ⚠️ **Emoji se do administrace neuloží** — databáze je v 3bajtovém `utf8`
   a znaky mimo BMP skončí jako `????`. Piš je jako HTML entitu
   (`&#x1F9E6;`), viz [../README.md](../README.md).
-- ⚠️ Po vložení `doprava.html` zkontroluj v administraci **meta description**
-  té CMS stránky — na produkci v ní pořád visí `{{SK_…}}` ze staré verze.
+- ⚠️ **Meta description** CMS stránky „Doprava a platba" je po vložení nového
+  obsahu **prázdná** (značky ze staré verze zmizely, nic je nenahradilo).
+  Doporučené znění je v komentáři v hlavičce `doprava.html` — vlož ho do SEO
+  pole stránky v administraci.
 - **`product-detail.html` značky NEMÁ** (od 2026-09-16) — ceník v sekci
   accordionu „Doprava a vrátenie" nese rovnou reálné ceny Packety a otázka
   na dopravu zadarmo je z FAQ vypuštěná. Až se eurová hranice v administraci

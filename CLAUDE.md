@@ -58,10 +58,14 @@ zástupné symboly (`%v`, `%n`, `%c`, `%email`…) pro data objednávky.
 > komentáři jsou složené závorky neškodné (Vue komentáře zahazuje), v CMS
 > stránkách mimo `#app` se jen vypíšou doslova.
 
-> ⚠️ **Do obsahových polí nepiš emoji.** Databáze administrace běží na
-> 3bajtovém `utf8`, takže znaky mimo BMP (🧦 📦 🔄 …) se uloží jako `????` —
-> jeden otazník na bajt. Zapisuj je jako HTML entitu (`&#x1F9E6;`), ta je
-> ASCII a projde. Symboly z BMP (⚡ ✉ ♻) procházejí rovnou.
+> ⚠️ **Do obsahových polí nepiš emoji — ani jako entitu.** Databáze
+> administrace běží na 3bajtovém `utf8`, takže znaky mimo BMP (🧦 📦 🔄 …)
+> se uloží jako `????` — jeden otazník na bajt. HTML entita (`&#x1F9E6;`)
+> to neobejde: editor ji při uložení převede zpátky na znak a ten databáze
+> zmrší stejně (ověřeno 2026-09-16 na produkci, entity v poli „Produktový
+> detail" nepřežily). Symboly z BMP (⚡ ✉ ♻ ★) procházejí rovnou.
+> Ikonu, která musí být emoji, proto dodej **z kódu** — jako to dělá
+> `fixFaqIcons()` v `40-product-detail.js` pro okruhy FAQ — nebo obrázkem.
 
 > ⚠️ **Obsah se vkládá DOSLOVA** (neobaluje se). JavaScript dej do
 > `<script>…</script>`, ale **`<link>`/`<style>` vkládej HOLÉ** — `<link>`

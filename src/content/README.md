@@ -75,11 +75,15 @@ Slovenské **skripty** se na rozdíl od obsahu negenerují ručně — viz
 
 ## Dvě pasti administrace
 
-- **Emoji se neuloží.** Databáze je v 3bajtovém `utf8`, takže znaky mimo BMP
-  (🧦 📦 🔄 …) v ní skončí jako `????`. Piš je jako HTML entitu
-  (`&#x1F9E6;`); symboly z BMP (⚡ ✉ ♻) projdou rovnou. Ikony okruhů FAQ
-  v `product-detail.html` jsou proto entity a `40-product-detail.js` má
-  navíc pojistku, která je dopočítá z `FAQ` podle názvu okruhu.
+- **Emoji se neuloží — ani jako entita.** Databáze je v 3bajtovém `utf8`,
+  takže znaky mimo BMP (🧦 📦 🔄 …) v ní skončí jako `????`. HTML entita
+  (`&#x1F9E6;`) to neobejde: editor ji při uložení převede na znak a ten
+  databáze zmrší stejně (ověřeno na produkci). Symboly z BMP (⚡ ✉ ♻ ★)
+  projdou rovnou. Ikony okruhů FAQ v `product-detail.html` jsou v repu
+  zapsané jako entity (ať je zdroj čitelný), ale na webu je ve skutečnosti
+  kreslí pojistka `fixFaqIcons()` v `40-product-detail.js`, která je
+  dopočítá z `FAQ` podle názvu okruhu. **Nový okruh FAQ přidaný v adminu
+  proto zůstane bez ikony,** dokud se nedoplní do `FAQ` v kódu.
 - **`{{ }}` v poli uvnitř `#app`** (třeba „Produktový detail") si Vue vyloží
   jako svoji interpolaci — neznámý název shodí render celé stránky. Detail
   v [CLAUDE.md](../../CLAUDE.md).
