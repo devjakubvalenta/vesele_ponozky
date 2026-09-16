@@ -10166,13 +10166,21 @@ body footer section.eshop-footer .vp-foot__attribution a {
               no-repeat;
 }
 
-/* Popisek „ZÍSKEJTE SLEVU" / „DÁREK" / „BONUS" nad kolem. Selektor je
-   ukotvený přes `body` schválně: Koloo ho v obou stylopisech nastavuje
-   s `!important` a jeho vlastní selektor je specifičtější než holé
-   `#koloo-clk span…`, takže bez `body` by na mobilu vyhrálo malé 38×25. */
-body #koloo-clk.koloo-clk-cz span.koloo-clk-discount,
-body #koloo-clk.koloo-clk-cz span.koloo-clk-gift,
-body #koloo-clk.koloo-clk-cz span.koloo-clk-bonus {
+/* Popisek „ZÍSKEJTE SLEVU" / „DÁREK" / „BONUS" nad kolem. Tvar selektoru má
+   dva důvody:
+   • `body` navíc — Koloo popisek v obou stylopisech nastavuje s `!important`
+     a jeho vlastní selektor je specifičtější než holé `#koloo-clk span…`,
+     takže bez `body` by na mobilu vyhrálo malé 38×25;
+   • `[class*="koloo-clk-"]` místo konkrétní `.koloo-clk-cz` — Koloo věší na
+     štítek jazykovou třídu podle mutace (`koloo-clk-cz`, `koloo-clk-sk`, …)
+     a jen přes ni mění obrázek popisku. S natvrdo napsaným `-cz` slovenský
+     shop pravidlo minul: popisek zůstal v základních 55×55 na `top:0` a bez
+     `z-index`, takže ho kolo (v DOM až za ním) překrylo.
+   Atributový selektor má stejnou specificitu jako třída, vůči Koloo se tedy
+   nic nemění. */
+body #koloo-clk[class*="koloo-clk-"] span.koloo-clk-discount,
+body #koloo-clk[class*="koloo-clk-"] span.koloo-clk-gift,
+body #koloo-clk[class*="koloo-clk-"] span.koloo-clk-bonus {
   top: 81px !important;
   width: 82px !important;
   height: 66px !important;
