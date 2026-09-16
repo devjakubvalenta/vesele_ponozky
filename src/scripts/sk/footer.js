@@ -121,7 +121,25 @@
     phone: "+420 792 377 714",
     phoneHref: "+420792377714",
     hours: "(Po–Pi 9:00–16:00 hod.)",
-    mail: "ponozky@veseleponozky.cz"
+    mail: "ponozky@veseleponozky.sk"
+  };
+
+  /* Provozovatel a odkaz na obchodní podmínky (Google Merchant).
+
+     Šablona renderuje odkaz „Obchodní podmínky“ jako href="javascript:;" a
+     větu v právním pásu jako href="#podminky" — obojí jen rozbalí skrytý blok
+     na téže stránce, vlastní URL nemá. Google si podmínky při kontrole nemá
+     kde přečíst. Stránka přitom existuje a je kompletní (CMS 60960), jen na ni
+     nic neodkazuje; opravou je tedy přesměrování, ne psaní textu.
+
+     Identita provozovatele je druhý požadavek — patička má jméno firmy
+     a adresu, ale ne IČ a DIČ. */
+  var LEGAL = {
+    vop: "/cms/61615-vseobecne-obchodni-podminky",
+    vopLabel: "Obchodné podmienky",
+    operator:
+      "Prevádzkovateľom e-shopu veseleponozky.sk je MODA ČAPEK s.r.o., " +
+      "IČO: 02605104, DIČ: CZ02605104, so sídlom Boženy Němcové 1095, 379 01 Třeboň."
   };
 
   var CHECK =
@@ -203,6 +221,74 @@
       '<a class="vp-foot__contact-mail" href="mailto:' + CONTACT.mail + '">' + CONTACT.mail + "</a>" +
       "</div>";
     return c;
+  }
+
+  // ID stránky z cesty — ať je zdroj pravdy jen `LEGAL.vop`. Generátor
+  // slovenské verze přepisuje tvar `/cms/<id>-`, takže se ID přeloží samo
+  // a nemůže se rozejít s cestou.
+  function vopId() {
+    var m = /\/cms\/(\d+)-/.exec(LEGAL.vop);
+    return m ? m[1] : "";
+  }
+
+  /* Obchodní podmínky do patičky — dvě odlišné vady, obě kvůli Googlu.
+
+     a) Věta právního pásu „…souhlasíte s obchodními podmínkami.“ odkazuje na
+        `#podminky`, což je na stránce PRÁZDNÝ <div> — odkaz nevede nikam
+        (ověřeno 2026-09-16 na produkci). Šablona umí i tvar `javascript:;`.
+     b) V menu „Informace“ (ul.cms_menu) položka s podmínkami vůbec není.
+        Menu se plní z CMS stránek, které mají v administraci zapnuté
+        zobrazení v patičce — a stránka VOP (60960) ho zapnuté nemá.
+
+     Google Merchant tak nemá jak se k podmínkám dostat a účet zamítne.
+     Stránka přitom existuje a je kompletní, jen na ni nic neodkazuje.
+
+     Až se zobrazení v administraci u té CMS stránky zapne, položka se
+     objeví nativně a tahle pojistka ji podruhé nepřidá (kontroluje se
+     podle href) — může tedy zůstat.
+
+     Párování odkazů je podle textu, ne jen podle href: `javascript:;` má
+     i „Nastavení cookies“ a ten fungovat musí. Regulárka bere česky
+     i slovensky (podmínk|podmien) — slovenský shop je duplikát a část
+     popisků v něm zůstala česky.
+
+     Uzel se klonuje, aby s ním zmizel i případný posluchač, který místo
+     přechodu rozbaluje skrytý blok. */
+  function ensureTermsLink(footer) {
+    var href = "/cms/" + vopId() + "-";
+
+    var links = footer.querySelectorAll('a[href="javascript:;"], a[href="#podminky"]');
+    Array.prototype.forEach.call(links, function (a) {
+      if (!/podm[íi]nk|podmien/i.test(a.textContent || "")) return;
+      var clone = a.cloneNode(true);
+      clone.setAttribute("href", LEGAL.vop);
+      clone.removeAttribute("onclick");
+      a.parentNode.replaceChild(clone, a);
+    });
+
+    var menu = footer.querySelector("ul.cms_menu");
+    if (!menu || menu.querySelector('a[href*="' + href + '"]')) return;
+
+    var li = document.createElement("li");
+    li.innerHTML =
+      '<a href="' + LEGAL.vop + '" class="cms_link cms' + vopId() + '">' +
+      LEGAL.vopLabel + "</a>";
+
+    // Za poslední CMS položku, ať zůstane u ostatních informačních stránek
+    // a nespadne až pod „Nastavení cookies“.
+    var cms = menu.querySelectorAll("li > a.cms_link");
+    var afterLi = cms.length ? cms[cms.length - 1].parentNode : null;
+    if (afterLi && afterLi.parentNode === menu) menu.insertBefore(li, afterLi.nextSibling);
+    else menu.appendChild(li);
+  }
+
+  // Věta s identitou provozovatele do právního pásu (pod platební loga).
+  function buildOperator() {
+    var d = document.createElement("div");
+    d.className = "vp-foot__operator";
+    d.id = "vp-foot-operator";
+    d.textContent = LEGAL.operator;
+    return d;
   }
 
   // Atribuce webfontu Proxima Soft Cond (onlinewebfonts.com, CC BY 4.0) —
@@ -481,10 +567,15 @@
       legal.insertBefore(buildPayments(), legal.firstChild);
     }
 
+    if (!document.getElementById("vp-foot-operator")) {
+      legal.appendChild(buildOperator());
+    }
+
     if (!document.getElementById("vp-foot-attribution")) {
       legal.appendChild(buildAttribution());
     }
 
+    ensureTermsLink(footer);
     setupAccordion(footer);
   }
 

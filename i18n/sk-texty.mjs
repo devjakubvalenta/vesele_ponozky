@@ -41,7 +41,10 @@ export const POVOLENE = [
   "Dárkový set",
   "Alžběta Dixová",
   // Třeboň je zeměpisné jméno — ve slovenštině se píše se stejným „ř“.
-  "Třeboni"
+  "Třeboni",
+  // Sídlo firmy v identitě provozovatele: ulice i město jsou vlastní jména
+  // a v adrese se nepřekládají. Stačí jeden úsek — kontrola bere podřetězec.
+  "Boženy Němcové"
 ];
 
 /* Náhrady zkoušené ve všech souborech; když se netrefí, nic se neděje. */
@@ -136,6 +139,16 @@ export const TEXTY = {
     [`"Přihlaste se k odběru našeho newsletteru a získejte <br class=\\"vp-nl__br\\">slevu 15 % na váš první nákup veselých ponožek."`,
      `"Prihláste sa na odber nášho newslettera a získajte <br class=\\"vp-nl__br\\">zľavu 15 % na váš prvý nákup veselých ponožiek."`],
     [`"Přihlásit se"`, `"Prihlásiť sa"`],
+    // Kontaktní e-mail: slovenský shop má vlastní schránku na doméně .sk.
+    [`mail: "ponozky@veseleponozky.cz"`, `mail: "ponozky@veseleponozky.sk"`],
+    // Popisek položky, kterou si patička doplňuje do menu „Informace“.
+    [`vopLabel: "Obchodní podmínky",`, `vopLabel: "Obchodné podmienky",`],
+    // Identita provozovatele v právním pásu. Firma je táž (český subjekt),
+    // mění se jen doména e-shopu a jazyk věty. Adresa zůstává česky.
+    [`"Provozovatelem e-shopu veseleponozky.cz je MODA ČAPEK s.r.o., "`,
+     `"Prevádzkovateľom e-shopu veseleponozky.sk je MODA ČAPEK s.r.o., "`],
+    [`"IČ: 02605104, DIČ: CZ02605104, se sídlem Boženy Němcové 1095, 379 01 Třeboň."`,
+     `"IČO: 02605104, DIČ: CZ02605104, so sídlom Boženy Němcové 1095, 379 01 Třeboň."`],
     [`"Váš slevový kód na 15 %:"`, `"Váš zľavový kód na 15 %:"`],
     [`"Zkopírovat kód"`, `"Skopírovať kód"`],
     [`"Zkopírováno"`, `"Skopírované"`],

@@ -14,6 +14,7 @@ export const CMS = {
   "60948": "61612", // Výroba
   "60957": "61618", // Vrácení zboží
   "60951": "61621", // GDPR
+  "60960": "61615", // Všeobecné obchodní podmínky (odkaz z patičky, footer.js)
   "60969": "61624"  // Kontakty
 };
 

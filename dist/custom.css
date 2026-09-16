@@ -8704,6 +8704,19 @@ body footer section.eshop-footer .vp-foot__attribution {
   margin: 0.35rem auto 0 !important;
 }
 
+/* Identita provozovatele v právním pásu. Google Merchant chce u e-shopu
+   dohledatelného provozovatele včetně IČ; patička sama nese jen jméno firmy
+   a adresu. Vkládá buildOperator() ve footer.js. O stupínek výraznější než
+   atribuce fontu pod ní — je to právní údaj, ne poznámka pod čarou. */
+body footer section.eshop-footer .vp-foot__operator {
+  text-align: center !important;
+  font-size: 0.75rem !important;
+  line-height: 1.6 !important;
+  color: var(--hdr-muted, #94a3b8) !important;
+  max-width: 62ch !important;
+  margin: 0.75rem auto 0 !important;
+}
+
 body footer section.eshop-footer .vp-foot__attribution a {
   color: inherit !important;
   font-weight: 400 !important;
