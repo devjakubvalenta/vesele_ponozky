@@ -17,6 +17,11 @@
   ⚠️ Vkládat ve ZDROJOVÉM režimu (</>). WYSIWYG editor jinak přepíše
   relativní cesty na absolutní s doménou, na které se zrovna edituje.
 
+  ⚠️ ŽÁDNÉ `{{ }}` V OBSAHU TOHOHLE POLE. Renderuje se uvnitř Vue aplikace,
+  která si složené závorky vyloží jako svoji interpolaci — nevyplněná značka
+  shodí render celého produktového detailu (ověřeno 2026-09-16 naostro;
+  v HTML komentáři jsou neškodné).
+
   ⚠️ Karta „Zvýhodnené balenie" tady NENÍ — jede z nativních „Doplňkových
   služeb", které se páruje u každého produktu zvlášť v administraci.
 -->
@@ -167,41 +172,50 @@
      SEKCIE ACCORDIONU — text rozklikávacích sekcií pod galériou na detaile
      produktu.
 
-     ⚠️⚠️ NENASAZOVAT, DOKUD NEJSOU VYPLNĚNÉ ZNAČKY {{SK_…}} ⚠️⚠️
-     Stejné značky jako v src/content/sk/doprava.html — vyplňte je stejně,
-     ať ceník na detailu a na CMS stránce „Doprava a platba" sedí:
-       {{SK_DOPRAVA_ZADARMO_OD}}        hranice dopravy zadarmo na výdejní místa (CZ: 999 Kč)
-       {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}  hranice dopravy zadarmo domů (CZ: 1 499 Kč)
-       {{SK_DOPRAVCA_1}}                CZ: Zásilkovna (výdejní místa a boxy)
-       {{SK_DOPRAVCA_2}}                CZ: Balíkovna (výdejní místa i doručení domů)
-       {{SK_DOPRAVCA_3}}                CZ: PPL / Alzaboxy
-       {{SK_CENA_1}} / _2 / _3          ceny výdejních míst (CZ: 69 / 79 / 79 Kč)
-       {{SK_CENA_4}} / _5               ceny doručení domů (CZ: 119 / 129 Kč)
+     ⚠️⚠️ ŽÁDNÉ ZNAČKY VE SLOŽENÝCH ZÁVORKÁCH `{{ }}` V OBSAHU ⚠️⚠️
+     Tohle pole se renderuje UVNITŘ Vue aplikace (#app.product-detail) a Vue
+     si `{{ COKOLI }}` vyloží jako svoji interpolaci. Neznámý název skončí
+     `ReferenceError`em a spadne render CELÉHO produktového detailu — stránka
+     zůstane prázdná. Ověřeno 2026-09-16 na ostrém SK shopu: nevyplněné
+     `{{SK_DOPRAVCA_1}}` v ceníku dopravy shodilo detail všech produktů.
+     Nevyplněný údaj proto raději vynech, než abys ho označkoval.
+     (V HTML komentáři jsou složené závorky neškodné — Vue komentáře zahazuje,
+     ověřeno protipokusem. Fatální jsou jen v obsahu.)
 
-     Na stránce je blok SKRYTÝ (CSS .pd-acc-src{display:none}), obsah si z něj
-     zkopíruje src/scripts/sk/40-product-detail.js. Dokud tenhle blok
-     v administraci SK shopu není, jede záložní znění z kódu — a to má
-     v ceníku dopravy pořád značky {{SK_…}}, takže tenhle blok je pro SK shop
-     ten rychlejší způsob, jak tam dostat skutečné ceny.
+     Na stránce je tenhle blok SKRYTÝ (CSS .pd-acc-src{display:none}).
+     src/scripts/sk/40-product-detail.js si z něj obsah zkopíruje do
+     accordionu. Když blok chybí nebo je rozdělaný, skript použije záložní
+     znění ze svého kódu — sekce tedy nikdy nezmizí.
 
      JAK TO UPRAVIT:
        • jeden blok <div class="pd-acc-item"> = jedna sekcia accordionu,
        • <h3 class="pd-acc-name"> = názov sekcie. MUSÍ SEDIEŤ na název sekce
          v accordionu („Materiál a starostlivosť", „Doprava a vrátenie",
          „Časté otázky") — podle něj se text páruje,
-       • zbytek bloku = obsah sekce; nový řádek ceníku = zkopírovaný <tr>.
+       • zbytek bloku = obsah sekce (běžné <p>, <ul>, <table>, <strong>).
 
-     ČÍSLOVANÉ SEZNAMY s tučným lead-inem („Materiál a péče"): obal
-     <ol class="pd-steps">, uvnitř <li><strong>Titulek</strong><p>Text</p></li>.
+     CENÍK DOPRAVY — ověřeno 2026-09-16 v košíku SK shopu (28711): jediný
+     dopravce je Packeta, výdajné miesta a boxy 2,99 €, doručenie domov
+     3,99 € (dobierka +1,69 €). Žádná Balíkovna ani PPL/Alzabox, proto jen
+     dva řádky. Musí sedět s tím, co zákazník uvidí v košíku.
 
-     ČASTÉ DOTAZY jsou DRUHÁ úroveň rozklikávání: jeden okruh = jeden
+     ⚠️ Poznámka o dopravě zadarmo tu SCHVÁLNĚ NENÍ a ve „Časté otázky"
+     chybí i otázka „Od akej sumy mám dopravu zadarmo?". Eurová hranice
+     v administraci SK shopu nastavená není — košík dnes ukazuje
+     nepřenastavené „Zadarmo nad 999 Kč". Až se nastaví, přidej do prvního
+     sloupce řádku <span>Zadarmo nad X €</span> (stejně jako v české verzi)
+     a stejnou částku doplň i do src/content/sk/doprava.html.
+
+     ČÍSLOVANÉ SEZNAMY s tučným lead-inem („Materiál a starostlivosť"): obal
+     <ol class="pd-steps">, uvnitř <li><strong>Titulok</strong><p>Text</p></li>.
+
+     ČASTÉ OTÁZKY jsou DRUHÁ úroveň rozklikávání: jeden okruh = jeden
      <details class="pd-faq__group">, v <summary> emoji + název okruhu,
      uvnitř dvojice <p class="pd-faq__q"> otázka + <div class="pd-faq__a">
-     odpověď. Nový okruh = zkopírovaný <details>.
-     ⚠️ Okruhy raději upravuj ve zdrojovém režimu (</>) — <details> je prvek,
+     odpověď. Okruhy upravuj ve zdrojovém režimu (</>) — <details> je prvek,
      se kterým si WYSIWYG editory obvykle neporadí.
 
-     Sekce „Složení" tady NENÍ a nepatří sem — to je popis produktu
+     Sekcia „Zloženie" tady NENÍ a nepatří sem — to je popis produktu
      z administrace, per produkt (nativní tab „Popis", jen přejmenovaný).
      Na pořadí bloků tady nezáleží, pořadí sekcí řídí TAB_ORDER ve skriptu.
      ===================================================================== -->
@@ -245,11 +259,8 @@
     <p class="pd-subhead">Možnosti dopravy</p>
     <table class="pd-ship">
       <tbody>
-        <tr><td>{{SK_DOPRAVCA_1}} – výdajné miesta a boxy<span>Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD}}</span></td><td>{{SK_CENA_1}}</td></tr>
-        <tr><td>{{SK_DOPRAVCA_2}} na výdajné miesta<span>Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD}}</span></td><td>{{SK_CENA_2}}</td></tr>
-        <tr><td>Boxy a výdajné miesta {{SK_DOPRAVCA_3}}<span>Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD}}</span></td><td>{{SK_CENA_3}}</td></tr>
-        <tr><td>{{SK_DOPRAVCA_2}} – doručenie domov<span>Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}</span></td><td>{{SK_CENA_4}}</td></tr>
-        <tr><td>{{SK_DOPRAVCA_3}} – doručenie domov<span>Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}</span></td><td>{{SK_CENA_5}}</td></tr>
+        <tr><td>Packeta – výdajné miesta a boxy</td><td>2,99 €</td></tr>
+        <tr><td>Packeta – doručenie domov</td><td>3,99 €</td></tr>
       </tbody>
     </table>
   </div>
@@ -294,8 +305,6 @@
         <div class="pd-faq__body">
           <p class="pd-faq__q">Aké ponúkate možnosti dopravy a ako rýchlo balík dorazí?</p>
           <div class="pd-faq__a"><p>Odosielame bleskovo! Zásielky odovzdávame dopravcovi spravidla do 24 hodín. Využiť môžete výdajné miesta, samoobslužné boxy aj doručenie kuriérom priamo na adresu. Bežná doba doručenia je 1–2 pracovné dni.</p></div>
-          <p class="pd-faq__q">Od akej sumy mám dopravu zadarmo?</p>
-          <div class="pd-faq__a"><p>Dopravu zadarmo od nás získate pri nákupe nad {{SK_DOPRAVA_ZADARMO_OD}}.</p></div>
           <p class="pd-faq__q">Aké spôsoby platby podporujete?</p>
           <div class="pd-faq__a"><p>Zaplatiť môžete pohodlne kartou online, rýchlym bankovým prevodom, cez Apple Pay / Google Pay alebo na dobierku pri prevzatí.</p></div>
         </div>

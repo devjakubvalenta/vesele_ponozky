@@ -50,6 +50,14 @@ stránkách" / „Pouze produktový detail" / …), přepínač **„Umístit v 
 (jinak patička; Head řeší **FOUC** u CDN `<link>`). Na konverzní stránce jsou
 zástupné symboly (`%v`, `%n`, `%c`, `%email`…) pro data objednávky.
 
+> ⚠️ **Do obsahových polí uvnitř `#app` nepiš `{{ }}`.** Produktový detail
+> (i další obsah uvnitř Vue aplikace) se kompiluje jako Vue šablona, takže
+> `{{ COKOLI }}` je pro ni interpolace — neznámý název = `ReferenceError`
+> a **spadne render celé stránky**. Takhle jednou zmizel produktový detail
+> celého SK shopu kvůli nevyplněné značce `{{SK_DOPRAVCA_1}}`. V HTML
+> komentáři jsou složené závorky neškodné (Vue komentáře zahazuje), v CMS
+> stránkách mimo `#app` se jen vypíšou doslova.
+
 > ⚠️ **Obsah se vkládá DOSLOVA** (neobaluje se). JavaScript dej do
 > `<script>…</script>`, ale **`<link>`/`<style>` vkládej HOLÉ** — `<link>`
 > uvnitř `<script>` browser ignoruje (CSS se nenačte). Tahle past nás jednou

@@ -48,14 +48,22 @@ export const DETAIL = [
   [`var TAB_HIDE = ["Parametry"];`, `var TAB_HIDE = ["Parametre", "Parametry"];`],
   [`var TAB_OPEN = "Složení";`, `var TAB_OPEN = "Zloženie";`],
 
+  /* Slovenský ceník dopravy. Ověřeno 2026-09-16 v košíku SK shopu (28711):
+     jediný dopravce je Packeta — výdajné miesta a boxy 2,99 €, doručenie domov
+     3,99 € (dobierka +1,69 €). Žádná Balíkovna ani PPL/Alzabox, proto se pět
+     českých metod mapuje na dvě slovenské.
+
+     `note` je prázdné SCHVÁLNĚ: eurová hranice dopravy zadarmo v administraci
+     SK shopu nastavená není (košík ukazuje nepřenastavené „Zadarmo nad 999 Kč").
+     Až se nastaví, doplnit sem „Zadarmo nad X €" — a stejně tak do
+     src/content/sk/product-detail.html a src/content/sk/doprava.html. */
   [`    { name: "Balíkovna na výdejní místa", note: "Zdarma nad 999 Kč", price: "79 Kč" },
     { name: "Zásilkovna – výdejní místa a boxy", note: "Zdarma nad 999 Kč", price: "69 Kč" },
     { name: "Alzaboxy a výdejní místa PPL", note: "Zdarma nad 999 Kč", price: "79 Kč" },
     { name: "Balíkovna – doručení domů", note: "Zdarma nad 1 499 Kč", price: "119 Kč" },
     { name: "PPL – doručení domů", note: "Zdarma nad 1 499 Kč", price: "129 Kč" }`,
-   `    { name: "{{SK_DOPRAVCA_1}}", note: "{{SK_ZADARMO_1}}", price: "{{SK_CENA_1}}" },
-    { name: "{{SK_DOPRAVCA_2}}", note: "{{SK_ZADARMO_2}}", price: "{{SK_CENA_2}}" },
-    { name: "{{SK_DOPRAVCA_3}}", note: "{{SK_ZADARMO_3}}", price: "{{SK_CENA_3}}" }`],
+   `    { name: "Packeta – výdajné miesta a boxy", note: "", price: "2,99 €" },
+    { name: "Packeta – doručenie domov", note: "", price: "3,99 €" }`],
 
   [`      '<p class="pd-callout__title">Vrácení zboží do 120 dní</p>' +
       "<p>Chceme, abyste byli s nákupem 100% spokojeni. Proto u nás máte na " +

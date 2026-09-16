@@ -8,9 +8,8 @@
    Věcné rozdíly proti češtině (ne jen jazyk):
    • otázka „Doručujete i na Slovensko?" se obrací na „Doručujete aj do Česka?"
      a odkazuje na veseleponozky.cz,
-   • hranice dopravy zdarma je placeholder {{SK_DOPRAVA_ZADARMO_OD}},
-   • jména dopravců zůstávají v placeholderech, protože slovenské přepravce
-     zatím neznáme. */
+   • otázka na hranici dopravy zdarma ve slovenské verzi CHYBÍ — eurová hranice
+     v administraci SK shopu není nastavená (viz komentář u pravidla níž). */
 
 export const DETAIL_FAQ = [
   [`      title: "Produkt a péče o ponožky",`, `      title: "Produkt a starostlivosť o ponožky",`],
@@ -106,10 +105,15 @@ export const DETAIL_FAQ = [
           "Odosielame bleskovo! Zásielky odovzdávame dopravcovi spravidla do 24 hodín. Využiť " +
           "môžete výdajné miesta, samoobslužné boxy aj doručenie kuriérom priamo na adresu. " +
           "Bežná doba doručenia je 1–2 pracovné dni."`],
-  [`          "Od jaké částky mám dopravu zdarma?",
-          "Dopravu zadarmo od nás získáte při nákupu nad 999 Kč."`,
-   `          "Od akej sumy mám dopravu zadarmo?",
-          "Dopravu zadarmo od nás získate pri nákupe nad {{SK_DOPRAVA_ZADARMO_OD}}."`],
+  /* Otázka „Od jaké částky mám dopravu zdarma?" se ze slovenského FAQ VYPOUŠTÍ
+     (nahrazuje se prázdnem i s obalem pole a čárkou). Eurová hranice dopravy
+     zadarmo v administraci SK shopu nastavená není, takže jakákoli částka by
+     byla slib, který košík nesplní. Až se nastaví, vrátit sem překlad. */
+  [`        [
+          "Od jaké částky mám dopravu zdarma?",
+          "Dopravu zadarmo od nás získáte při nákupu nad 999 Kč."
+        ],
+`, ``],
   [`          "Jaké způsoby platby podporujete?",
           "Zaplatit můžete pohodlně kartou online, rychlým bankovním převodem, přes " +
           "Apple Pay / Google Pay nebo na dobírku při převzetí."`,

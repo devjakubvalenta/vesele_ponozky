@@ -425,9 +425,8 @@
   // uvidí v košíku (ověřeno na /cart). PŘI ZMĚNĚ V ADMINISTRACI UPRAVIT I TADY
   // (a taky v src/content/doprava.html, kde je stejný seznam).
   var SHIPPING = [
-    { name: "{{SK_DOPRAVCA_1}}", note: "{{SK_ZADARMO_1}}", price: "{{SK_CENA_1}}" },
-    { name: "{{SK_DOPRAVCA_2}}", note: "{{SK_ZADARMO_2}}", price: "{{SK_CENA_2}}" },
-    { name: "{{SK_DOPRAVCA_3}}", note: "{{SK_ZADARMO_3}}", price: "{{SK_CENA_3}}" }
+    { name: "Packeta – výdajné miesta a boxy", note: "", price: "2,99 €" },
+    { name: "Packeta – doručenie domov", note: "", price: "3,99 €" }
   ];
 
   function shippingHtml() {
@@ -615,10 +614,6 @@
           "Odosielame bleskovo! Zásielky odovzdávame dopravcovi spravidla do 24 hodín. Využiť " +
           "môžete výdajné miesta, samoobslužné boxy aj doručenie kuriérom priamo na adresu. " +
           "Bežná doba doručenia je 1–2 pracovné dni."
-        ],
-        [
-          "Od akej sumy mám dopravu zadarmo?",
-          "Dopravu zadarmo od nás získate pri nákupe nad {{SK_DOPRAVA_ZADARMO_OD}}."
         ],
         [
           "Aké spôsoby platby podporujete?",
