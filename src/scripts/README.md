@@ -23,7 +23,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 | `header.js` | Hlavička (Heureka + zákaznická linka + cart ikona) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/header.js">` — **pin hashem**; styl `src/css/20-header.css`. Telefon/e-mail v lince se čtou z pole „Doplňující informace" (nemazat ho) |
 | `40-product-detail.js` | Produktový detail (recenze, slevový pill, množství) | **Pouze produktový detail** | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/40-product-detail.js">` — **pin hashem**; styl `src/css/24-product-detail.css` + `src/css/24-size-chart.css`; obsah admin pole „Produktový detail" (benefity + skrytý zdroj tabulky velikostí) = `src/content/product-detail.html` |
 | `45-cart-popup.js` | Popup přidáno do košíku | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/45-cart-popup.js">` — **pin hashem**; styl `src/css/33-cart-popup.css`; texty cookie lišty se nastavují v administraci (styl `src/css/34-cookies.css` je čisté CSS) |
-| `50-checkout.js` | Pokladna (dopravy a platby) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/50-checkout.js">` — **pin hashem**; styl `src/css/10-checkout.css` (`.vp-lbl*`, `.vp-save*`, `.vp-optout*`) |
+| `50-checkout.js` | Pokladna (dopravy a platby) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/50-checkout.js">` — **pin hashem**; styl `src/css/10-checkout.css` (`.vp-lbl*`, `.vp-save*`, `.vp-optout*`) + `src/css/11-cart-upsell.css` (`.vp-cu-*` — pilulky velikostí v upsell bloku) |
 | `35-listing-sort.js` | Řazení ve výpisech (klikací odkazy) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/35-listing-sort.js">` — **pin hashem**; styl `src/css/26-listing-sort.css` |
 | `36-filter.js` | Výpis kategorie — filtr + podkategorie (mobil) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/36-filter.js">` — **pin hashem**; styl `src/css/27-filter.css` + `src/css/26-subcategories.css`. *(Položka se dřív jmenovala „Filtr — výchozí sbalený na mobilu"; přejmenovat, přibylo sbalení podkategorií.)* |
 | `koloo-wheel.html` | Koloo (kolo štěstí) | Na všech stránkách | ne (patička) | ⏳ vlož obsah `<script>` DOSLOVA (3rd-party async loader, kLicense `UNI-FB75BE3A-1714`). Vzhled/texty/kupóny/trigger se řeší v adminu Koloo (my.koloo.net), ne v kódu; z naší strany jen pozice sbaleného štítku — `src/css/37-koloo.css` |
@@ -130,7 +130,7 @@ zůstane nativní obsah popupu jen nastylovaný.
 
 ## Co dělá `50-checkout.js`
 
-Pět věcí v košíku/pokladně. Vše je idempotentní a jede přes jeden
+Sedm věcí v košíku/pokladně. Vše je idempotentní a jede přes jeden
 `MutationObserver` nad `.main-order-form`, takže to přežije i překreslení
 seznamu dopravy nebo změnu množství.
 
@@ -192,6 +192,25 @@ obrátilo. Řádek bez ceny jde na konec. **Musí být no-op, když už pořadí
 observer sleduje `childList` právě nad `.main-order-form`, takže zbytečný
 `insertBefore` by ho spustil znovu a zacyklil; guard `data-vp-*` se nehodí,
 po smazání položky se pořadí musí přepočítat.
+
+**7) Varianty v upsell bloku jako pilulky** — blok „Něco navíc za zvýhodněnou
+cenu" (`.cart-upsell`) je **nativní feature platformy** (markup i inline JS
+posílá server, styluje ho `/assets3/shared/css/styles_cart.css`) a variantu
+v něm vybírá `<select>`. Ve zbytku eshopu se velikost vybírá chipy, takže
+skript ze `<option>` postaví řádek tlačítek (`.vp-cu-sizes` / `.vp-cu-size`,
+styl `src/css/11-cart-upsell.css`) a select **schová, ale nechá v DOM** jako
+zdroj pravdy. Klik na pilulku jen přepne `select.value` a vystřelí na něm
+**bublající `change`** — obrázek, cenu, starou cenu i `data-variant-id`
+a `data-quantity` na tlačítku si dodělá inline skript platformy, který na
+`change` poslouchá delegovaně až na `.cart-upsell`. Žádná jeho logika se
+nepřepisuje, mění se jen ovladač. Dvě pasti: pilulky **musí mít
+`type="button"`** (košík je `<form class="main-order-form">`, takže bez typu
+by klik na velikost odeslal objednávku) a samotný atribut `hidden` select
+neschová — bootstrapí `.form-control` mu dává `display: block` a autorský styl
+přebíjí UA pravidlo pro `[hidden]`, dorovnává to CSS. Zboží s víc než
+`UPSELL_MAX_PILLS` (8) variantami si nechá nativní select — pilulky by se
+zalámaly a kvůli equal-height gridu natáhly i ostatní karty. Bez skriptu
+zůstane select, který má vlastní brandový styl → není to degradace.
 
 ## Co dělá `35-listing-sort.js`
 

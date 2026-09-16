@@ -2,13 +2,14 @@
  * Položka v admin „Skripty": Pokladna (dopravy a platby) — Na všech stránkách, patička.
  * Styl dodává src/css/10-checkout.css (.vp-lbl*, .vp-optout, .vp-save*).
  *
- * Skript dělá šest věcí; každá má svůj komentář níž:
+ * Skript dělá sedm věcí; každá má svůj komentář níž:
  *   1. řádky dopravy a platby (název vlevo, cena vpravo)          — labels
  *   2. skupina „výdejní místa a boxy" jako první                  — orderShippingGroups
  *   3. souhlasy novinky/dotazník překlopené na „Nesouhlasím"      — optOutConsents
  *   4. zapamatování doplňkových služeb (Dýško) přes refresh       — services
  *   5. sleva u položky i na mobilu (úspora + procenta)            — cartSavings
  *   6. položky košíku seřazené od nejlevnější (cena za kus)       — sortCartByPrice
+ *   7. varianty v upsell bloku jako pilulky místo dropdownu       — upsellVariantPills
  *
  * ---------------------------------------------------------------------------
  * 1) ŘÁDKY DOPRAVY A PLATBY
@@ -398,6 +399,92 @@
     }
   }
 
+  /* ---------------------------------------------------------------------------
+   * 7) VARIANTY V UPSELL BLOKU JAKO PILULKY
+   *
+   * Blok „Něco navíc za zvýhodněnou cenu" (.cart-upsell) je NATIVNÍ feature
+   * platformy a variantu v něm vybírá <select>. Ve zbytku eshopu se ale
+   * velikost vybírá chipy (výpis: .variant-box, detail: .variant-row) —
+   * dropdown je cizorodý a na mobilu navíc otevírá systémové kolo.
+   *
+   * <option> se nastylovat nedá, takže vedle selectu postavíme řádek tlačítek
+   * a select SCHOVÁME (zůstává v DOM a je dál zdrojem pravdy). Klik na pilulku
+   * jen přepne jeho hodnotu a vystřelí na něm BUBLAJÍCÍ `change` — zbytek
+   * (obrázek, cena, stará cena, data-variant-id i data-quantity na tlačítku)
+   * si dodělá inline skript platformy, který na `change` poslouchá delegovaně
+   * až na .cart-upsell. Nepřepisujeme tedy žádnou jeho logiku, jen ovladač.
+   * (Jeho druhý posluchač, na klik, si hlídá `closest('.cart-upsell-add')`,
+   * takže mu klik na pilulku nevadí.)
+   *
+   * Bez JS — a u zboží s hromadou variant — zůstane nativní select, který má
+   * vlastní brandový styl v 11-cart-upsell.css. Není to tedy degradace.
+   *
+   * Idempotentní přes data-vp-pills.
+   */
+
+  /* Nad tenhle počet se pilulky nevyplácí: zalámaly by se do několika řádků a
+     kvůli equal-height gridu by natáhly i ostatní karty v bloku. Upsell se
+     skládá v administraci, tohle je pojistka pro případ, že tam někdo dá
+     zboží s desítkami velikostí (adventní kalendář jich má 17). */
+  var UPSELL_MAX_PILLS = 8;
+
+  function upsellVariantPills(root) {
+    var upsell = (root || document).querySelector('.cart-upsell');
+    if (!upsell) return;
+
+    var selects = upsell.querySelectorAll('select.cart-upsell-variant');
+    for (var i = 0; i < selects.length; i++) buildPills(selects[i]);
+  }
+
+  function buildPills(select) {
+    if (select.dataset.vpPills) return;
+
+    var opts = select.options;
+    if (!opts.length || opts.length > UPSELL_MAX_PILLS) return;
+    select.dataset.vpPills = '1';
+
+    var row = document.createElement('div');
+    row.className = 'vp-cu-sizes';
+    row.setAttribute('role', 'group');
+    /* Šablona dává selectu aria-label s názvem produktu — bez něj by skupina
+       pilulek byla pro odečítač jen „XS S M L XL" bez kontextu. */
+    var label = select.getAttribute('aria-label');
+    if (label) row.setAttribute('aria-label', label);
+
+    for (var i = 0; i < opts.length; i++) {
+      var pill = document.createElement('button');
+      /* MUSÍ být type="button": celý košík je <form class="main-order-form">
+         a <button> bez typu je submit → klik na velikost by odeslal objednávku. */
+      pill.type = 'button';
+      pill.className = 'vp-cu-size';
+      pill.textContent = (opts[i].text || '').trim();
+      pill.setAttribute('data-value', opts[i].value);
+      pill.setAttribute('aria-pressed', i === select.selectedIndex ? 'true' : 'false');
+      row.appendChild(pill);
+    }
+
+    row.addEventListener('click', function (e) {
+      var pill = e.target.closest('.vp-cu-size');
+      if (!pill || pill.getAttribute('aria-pressed') === 'true') return;
+
+      select.value = pill.getAttribute('data-value');
+      /* bubbles: true je podmínka funkčnosti — platforma posluchač nemá na
+         selectu, ale delegovaně na .cart-upsell. */
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+
+      var pills = row.querySelectorAll('.vp-cu-size');
+      for (var j = 0; j < pills.length; j++) {
+        pills[j].setAttribute('aria-pressed', pills[j] === pill ? 'true' : 'false');
+      }
+    });
+
+    select.parentNode.insertBefore(row, select);
+    /* Pozor: samotný atribut `hidden` select neschová — bootstrapí .form-control
+       mu dává `display: block` a autorský styl přebíjí UA pravidlo pro [hidden].
+       Dorovnává to 11-cart-upsell.css (.cart-upsell-variant[hidden]). */
+    select.hidden = true;
+  }
+
   function run(root) {
     var boxes = (root || document).querySelectorAll('.shipping-tab .label-shipping-text');
     for (var i = 0; i < boxes.length; i++) {
@@ -408,6 +495,7 @@
     optOutConsents();
     sortCartByPrice();
     cartSavings(root);
+    upsellVariantPills(root);
   }
 
   function init() {

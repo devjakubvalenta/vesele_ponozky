@@ -1346,6 +1346,403 @@ body.body-cart .discount-strip.discount-percentage {
   margin: 0 !important;
 }
 
+/* ==== 11-cart-upsell.css ==== */
+
+/* =====================================================================
+   KOŠÍK — „Něco navíc za zvýhodněnou cenu" (.cart-upsell)
+
+   NATIVNÍ blok platformy, ne náš skript. Základ styluje šablona v
+   /assets3/shared/css/styles_cart.css jedním vnořeným pravidlem:
+
+     .cart-upsell { --cart-upsell-gap:.75rem; container-type: inline-size;
+       & .cart-upsell-track  { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)) }
+       & .cart-upsell-card   { border:1px solid rgba(0,0,0,.125); border-radius:.25rem }
+       & .cart-upsell-image  { aspect-ratio:4/3; object-fit:contain }
+       & .cart-upsell-name   { min-height:2.6em }
+       & .cart-upsell-old-price { text-decoration:line-through }
+       @media (max-width:767px) { …track přepne na scroll-snap karusel, slide 42cqi… } }
+
+   Vnořené `& .x` má specificitu 2 tříd — proto tady všude prefix
+   `.main-order-form .cart-upsell` (3 třídy), ať pravidla vyhrají bez
+   ohledu na pořadí stylopisů.
+
+   ⚠️ NEPŘESTAVUJEME layout — grid i scroll-snap karusel platformy jsou
+   v pořádku, měníme jen skin (a karusel roztahujeme i na tablet, kde by
+   5 sloupců vyšlo na ~130 px). Markup ani JS platformy neřešíme.
+
+   Tokeny: --cx-* dědíme z `.container .content` (10-checkout.css),
+   zelená je vlastní --cu-* (hodnoty shodné s --pl-green v 25-products.css,
+   ty jsou scopované do .products a sem nedosáhnou).
+   ===================================================================== */
+
+.main-order-form .cart-upsell {
+  --cu-green: #2e9e44;           /* CTA + cena — shodné s --pl-green */
+  --cu-green-dark: #23843a;      /* hover CTA */
+  --cu-pad: 1.25rem;             /* vnitřní odsazení panelu (sdílí ho bleed karuselu) */
+
+  /* Panel: blok není krok objednávky (nemá číslo jako „1 Košík", „2 Doprava"),
+     tak ho odsadíme jako nabídku navíc — světlá plocha, bílé karty na ní. */
+  background: var(--cx-bg-soft);
+  border: 1px solid var(--cx-border);
+  border-radius: 16px;
+  padding: var(--cu-pad);
+  /* Bootstrapí `my-4` je !important → margin se jinak přebít nedá. */
+  margin: 2rem 0 !important;
+}
+
+/* ==== Nadpis ========================================================= */
+
+/* Šablona: 1.6rem, barva #495057. Sjednotit s ostatními nadpisy košíku
+   (h2.cart-section-h) a odlišit ikonou místo číselného badge. */
+.main-order-form .cart-upsell .cart-upsell-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--cx-text);
+  margin: 0 0 1rem;
+}
+
+/* Ikona dárku. Inline data-URI schválně: `url()` v našem CSS se
+   vyhodnocuje vůči jsDelivr (viz CLAUDE.md), takže by cesta do /files/
+   skončila 404; a nový soubor v assets/ kvůli jedné ikoně je zbytečný. */
+.main-order-form .cart-upsell .cart-upsell-title::before {
+  content: "";
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231361cf' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3e%3crect x='2.5' y='9.5' width='19' height='11.5' rx='2'/%3e%3cpath d='M2.5 14h19M12 9.5V21'/%3e%3cpath d='M12 9.5S10.2 3 7.6 3a2.6 2.6 0 0 0 0 6.5H12z'/%3e%3cpath d='M12 9.5S13.8 3 16.4 3a2.6 2.6 0 0 1 0 6.5H12z'/%3e%3c/svg%3e") center / contain no-repeat;
+}
+
+/* ==== Karta ========================================================== */
+
+.main-order-form .cart-upsell .cart-upsell-card {
+  background: #fff;
+  border: 1px solid var(--cx-border);       /* šablona: rgba(0,0,0,.125) */
+  border-radius: var(--cx-radius);          /* šablona: .25rem */
+  box-shadow: var(--cx-shadow-sm);
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+
+/* Hover jen tam, kde dává smysl — na dotyku by zůstal „zaseknutý" po tapu. */
+@media (hover: hover) {
+  .main-order-form .cart-upsell .cart-upsell-slide:hover .cart-upsell-card {
+    border-color: var(--cx-border-strong);
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.main-order-form .cart-upsell .cart-upsell-card .card-body {
+  padding: 0.85rem 0.9rem 0.9rem;
+}
+
+/* Obrázek: overflow:hidden ze šablony ho zaoblí s kartou, jen ať se
+   motiv nelepí na hranu. */
+.main-order-form .cart-upsell .cart-upsell-image {
+  box-sizing: border-box;
+  padding: 0.55rem 0.55rem 0;
+  background: #fff;
+}
+
+/* ==== Název ========================================================== */
+
+/* Šablona drží min-height 2.6em (= 2 řádky), delší názvy klidně přetečou
+   na třetí — grid kartu stejně natáhne a `mt-auto` na cenách srovná CTA
+   u dna. Nezkracujeme: v názvu je kód produktu (ALT, DK, TPV…). */
+.main-order-form .cart-upsell .cart-upsell-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--cx-text);
+  margin-bottom: 0.6rem !important;
+}
+
+/* ==== Výběr varianty ================================================= */
+
+/* Šablona už dává appearance:none + vlastní šipku (data-URI, #343a40).
+   Přebarvit do brandové modré a sladit tvar s ostatními poli v pokladně. */
+.main-order-form .cart-upsell .cart-upsell-variant {
+  height: auto;
+  padding: 0.45rem 2rem 0.45rem 0.7rem;
+  border: 1px solid var(--cx-border-strong);
+  border-radius: var(--cx-radius-sm);
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%231361cf' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-position: right 0.65rem center;
+  background-size: 13px;
+  background-repeat: no-repeat;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cx-text);
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  margin-bottom: 0.7rem !important;
+}
+
+.main-order-form .cart-upsell .cart-upsell-variant:hover {
+  border-color: var(--cx-accent);
+}
+
+.main-order-form .cart-upsell .cart-upsell-variant:focus,
+.main-order-form .cart-upsell .cart-upsell-variant:focus-visible {
+  border-color: var(--cx-accent);
+  box-shadow: 0 0 0 3px var(--cx-accent-soft);
+  outline: none;
+}
+
+/* ==== Pilulky velikostí (místo dropdownu) ============================ */
+
+/* Staví je 50-checkout.js (funkce 7) ze <option> nativního selectu, select
+   pak schová a nechá si ho jako zdroj pravdy pro JS platformy. Vizuál je
+   schválně 1:1 s chipy ve výpisu (25-products.css → .variant-box), aby
+   velikost vypadala všude v eshopu stejně: 28 px, radius 8 px, .78rem/600,
+   šedá → modrý outline na hoveru → plná modrá při výběru. */
+.main-order-form .cart-upsell .vp-cu-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 0.7rem;
+}
+
+.main-order-form .cart-upsell .vp-cu-size {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* min-height, ne height: varianta nemusí být jen „39-42" — u doplňků to
+     bývá celý popis („rozměr 22x16x6,5cm"). Na úzké kartě se pak zalomí
+     a pilulka povyroste, místo aby text přetekl ven. */
+  min-height: 28px;
+  max-width: 100%;
+  padding: 0.2rem 0.5rem;
+  background: #fff;
+  border: 1px solid var(--cx-border-strong);
+  border-radius: 8px;             /* = --pl-radius-chip ve výpisu */
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--cx-text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+@media (hover: hover) {
+  .main-order-form .cart-upsell .vp-cu-size:hover {
+    border-color: var(--cx-accent);
+    color: var(--cx-accent);
+  }
+}
+
+.main-order-form .cart-upsell .vp-cu-size[aria-pressed="true"] {
+  background: var(--cx-accent);
+  border-color: var(--cx-accent);
+  color: #fff;
+}
+
+.main-order-form .cart-upsell .vp-cu-size:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--cx-accent-soft);
+}
+
+/* Skrytí nativního selectu, jakmile pilulky stojí. Samotný atribut `hidden`
+   nestačí — bootstrapí .form-control mu dává `display: block` a autorský
+   styl přebíjí UA pravidlo pro [hidden]. */
+.main-order-form .cart-upsell .cart-upsell-variant[hidden] {
+  display: none !important;
+}
+
+/* ==== Ceny =========================================================== */
+
+/* Stará cena (.cart-upsell-old-price) se v HTML objeví jen u zlevněných
+   kusů a nová cena má `d-block` → bez tohohle by se řadily pod sebe.
+   Flex + baseline je srovná vedle sebe jako na produktové kartě. */
+.main-order-form .cart-upsell .cart-upsell-prices {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.7rem !important;
+}
+
+.main-order-form .cart-upsell .cart-upsell-price {
+  display: inline !important;    /* šablona: d-block */
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--cu-green);
+  font-variant-numeric: tabular-nums;
+}
+
+.main-order-form .cart-upsell .cart-upsell-old-price {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cx-danger);
+  text-decoration: line-through;
+  font-variant-numeric: tabular-nums;
+  order: -1;                      /* stará cena vždy vlevo od nové */
+}
+
+/* ==== Tlačítko ======================================================= */
+
+/* Šablona: btn-primary = bootstrapí zelená #28a745, hranatá, 16px, normal.
+   Brand: zelená pilulka s kapitálkami a ikonou košíku (= jako CTA ve výpisu). */
+.main-order-form .cart-upsell .cart-upsell-add.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background-color: var(--cu-green) !important;
+  color: #fff !important;         /* šablona: #eaecef */
+  border: 0;
+  border-radius: 999px !important;
+  padding: 0.55rem 1rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.main-order-form .cart-upsell .cart-upsell-add.btn:hover,
+.main-order-form .cart-upsell .cart-upsell-add.btn:focus,
+.main-order-form .cart-upsell .cart-upsell-add.btn:active {
+  background-color: var(--cu-green-dark) !important;
+  color: #fff !important;
+}
+
+.main-order-form .cart-upsell .cart-upsell-add.btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(46, 158, 68, 0.3);
+  outline: none;
+}
+
+/* JS platformy tlačítka po dobu přidávání disabluje */
+.main-order-form .cart-upsell .cart-upsell-add.btn:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+.main-order-form .cart-upsell .cart-upsell-add.btn::before {
+  content: "";
+  flex: 0 0 17px;
+  width: 17px;
+  height: 16px;
+  background: url("../assets/media/button_cart.svg") center / contain no-repeat;
+}
+
+/* ==== Karusel na tabletu ============================================= */
+
+/* Šablona přepíná na karusel až pod 768 px, takže na tabletu zůstane
+   5 sloupců — při ~720px obsahu vyjde karta na ~130 px (nečitelný název,
+   rozsypané CTA). Roztahujeme proto karusel až do 991.98 px; pravidla
+   pod 768 px se jen zopakují (idempotentní), šířku slidu ladíme zvlášť.
+   `cqi` funguje díky container-type:inline-size na .cart-upsell. */
+@media (max-width: 991.98px) {
+  .main-order-form .cart-upsell .cart-upsell-track {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    /* Chrome od 121 dá přednost standardním vlastnostem a ::-webkit-scrollbar
+       pravidla níž pak ignoruje — barvu proto i tady. */
+    scrollbar-color: var(--cx-border-strong) transparent;
+    /* Track krajem panelu „vyteče", ať poslední karta nekončí v prázdnu
+       a další jen vykukuje — scroll-padding drží snap na odsazení panelu. */
+    margin-inline: calc(-1 * var(--cu-pad));
+    padding-inline: var(--cu-pad);
+    scroll-padding-inline: var(--cu-pad);
+    padding-bottom: 0.6rem;
+  }
+
+  /* Šířku karty držíme kolem 200 px (= jako ve výpisu). Samotné `cqi`
+     by na užším konci rozsahu dalo nečitelných ~130 px a na širším zase
+     zbytečně naducané karty, proto clamp. */
+  .main-order-form .cart-upsell .cart-upsell-slide {
+    flex: 0 0 clamp(190px, 30cqi, 240px);
+    max-width: clamp(190px, 30cqi, 240px);
+    scroll-snap-align: start;
+  }
+
+  .main-order-form .cart-upsell .cart-upsell-image {
+    aspect-ratio: 1 / 1;
+  }
+
+  .main-order-form .cart-upsell .cart-upsell-name {
+    min-height: 2.7em;            /* šablona pod 768 px ruší na 0 → karty by skákaly */
+    font-size: 0.85rem;
+  }
+}
+
+/* ==== Mobil ========================================================== */
+
+@media (max-width: 767.98px) {
+  .main-order-form .cart-upsell {
+    --cu-pad: 0.9rem;
+    border-radius: 14px;
+    margin: 1.5rem 0 !important;
+  }
+
+  .main-order-form .cart-upsell .cart-upsell-title {
+    font-size: 1.15rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .main-order-form .cart-upsell .cart-upsell-title::before {
+    flex-basis: 22px;
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Šablona tu má 42cqi → na 390px displeji karta 134 px: název na čtyři
+     řádky, název varianty uříznutý, CTA zalomené. ~200 px karta se vejde
+     celá a z další vykoukne tolik, aby bylo poznat, že se dá scrollovat. */
+  .main-order-form .cart-upsell .cart-upsell-slide {
+    flex-basis: clamp(180px, 62cqi, 220px);
+    max-width: clamp(180px, 62cqi, 220px);
+  }
+
+  .main-order-form .cart-upsell .cart-upsell-card .card-body {
+    padding: 0.7rem 0.75rem 0.75rem;
+  }
+
+  .main-order-form .cart-upsell .cart-upsell-price {
+    font-size: 1.1rem;
+  }
+
+  /* Na dotyku je 28px chip malý cíl — o něco vyšší a širší, výběr velikosti
+     je tu poslední krok před přidáním do košíku. */
+  .main-order-form .cart-upsell .vp-cu-size {
+    min-height: 32px;
+    padding: 0.2rem 0.6rem;
+  }
+
+  .main-order-form .cart-upsell .cart-upsell-add.btn {
+    padding: 0.5rem 0.6rem !important;
+    font-size: 0.78rem !important;
+    gap: 0.35rem;
+  }
+}
+
+/* Decentní scrollbar karuselu (WebKit; Firefox řeší scrollbar-width výše) */
+.main-order-form .cart-upsell .cart-upsell-track::-webkit-scrollbar {
+  height: 6px;
+}
+.main-order-form .cart-upsell .cart-upsell-track::-webkit-scrollbar-track {
+  background: transparent;
+}
+.main-order-form .cart-upsell .cart-upsell-track::-webkit-scrollbar-thumb {
+  background: var(--cx-border-strong);
+  border-radius: 999px;
+}
+
 /* ==== 12-dekovacka.css ==== */
 
 /* Děkovačka (potvrzovací stránka po objednávce) — brandový vzhled.
