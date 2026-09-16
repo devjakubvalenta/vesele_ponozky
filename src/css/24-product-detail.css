@@ -1141,10 +1141,58 @@ body.body-product #app.product-detail .additional-images .col-md-12 a img {
 /* Poslední prvek nesmí přidávat mezeru k paddingu obsahu (0 .25rem 1.15rem) */
 #app.product-detail .pd-accordion__content > :last-child { margin-bottom: 0; }
 
-/* Seznam dopravy v sekci „Doprava a vrácení" (markup staví 40-product-detail.js
-   z pole SHIPPING). Stejný jazyk jako seznam metod na stránce Doprava a platba
-   (85-doprava.css): název vlevo, pod ním modrá hranice dopravy zdarma,
-   cena vpravo. */
+/* ==== Zdroj sekcí accordionu z administrace =========================
+   Pole „Produktový detail" (Obsah → Produktový detail) nese skrytý blok
+   .pd-acc-src, ze kterého si 40-product-detail.js bere text sekcí (Doprava
+   a vrácení…). Na stránce se NESMÍ ukázat — jinak se pod benefity mihne
+   holý text dřív, než ho skript přesune do accordionu.
+   Bez prefixu #app: blok visí v .content-product-detail, tedy mimo #app
+   (stejně jako .pd-size-src v 24-size-chart.css). */
+.pd-acc-src { display: none !important; }
+
+/* Seznam dopravy v sekci „Doprava a vrácení". DVA markupy, jeden vzhled:
+   • <table class="pd-ship"> — zdroj z administrace (.pd-acc-src). Tabulka
+     proto, aby se cena dala přepsat i ve WYSIWYG, bez zdrojového režimu.
+     Pravidla cílí STRUKTURNĚ (td:first-child / td:last-child), takže přežijí,
+     i když editor u nově vloženého řádku třídy nedoplní.
+   • .pd-ship__row — záložní znění z 40-product-detail.js (pole SHIPPING),
+     které se použije, jen když admin blok chybí.
+   Stejný jazyk jako seznam metod na stránce Doprava a platba (85-doprava.css):
+   název vlevo, pod ním modrá hranice dopravy zdarma, cena vpravo. */
+#app.product-detail .pd-accordion__content table.pd-ship {
+  width: 100%;
+  border-collapse: collapse;
+}
+#app.product-detail .pd-accordion__content .pd-ship td {
+  padding: .6rem 0;
+  border-top: 1px solid var(--pd-border);
+  border-bottom: 0;                       /* přebít obecné pravidlo pro table td níž */
+  vertical-align: middle;
+}
+#app.product-detail .pd-accordion__content .pd-ship tr:first-child td {
+  border-top: 0;
+  padding-top: 0;
+}
+#app.product-detail .pd-accordion__content .pd-ship td:first-child {
+  font-weight: 600;
+  color: var(--pd-text);
+}
+/* Poznámka („Zdarma nad 999 Kč") je uvnitř buňky na vlastním řádku — ve WYSIWYG
+   se edituje jako běžný text, na třídě .pd-ship__note nezáleží. */
+#app.product-detail .pd-accordion__content .pd-ship td:first-child span {
+  display: block;
+  font-size: .8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--pd-blue);
+}
+#app.product-detail .pd-accordion__content .pd-ship td:last-child {
+  width: 1%;                              /* sloupec s cenou jen na svou šířku */
+  white-space: nowrap;
+  text-align: right;
+  font-weight: 800;
+  color: var(--pd-text);
+}
 #app.product-detail .pd-ship__row {
   display: flex;
   align-items: center;

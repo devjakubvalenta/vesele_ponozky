@@ -3,7 +3,8 @@
   Vkládá se do: Administrace SK shopu (28711) → Obsah → Produktový detail
   → „Na detailu produktu". Vkládá se CELÝ tento soubor.
 
-  Jsou v něm DVĚ věci: pás benefitů a skrytý zdroj dat pro tabulku velikostí.
+  Jsou v něm TŘI věci: pás benefitů, skrytý zdroj dat pro tabulku velikostí
+  a skrytý zdroj textu pro sekce accordionu (zatím „Doprava a vrátenie").
 
   Odkazy v benefitech míří na SLOVENSKÁ CMS ID (61609 Recenze, 61612 Výroba,
   61618 Vrácení zboží, 61600 Doprava a platba) — česká ID by na SK shopu
@@ -157,6 +158,57 @@
       </tbody>
     </table>
     <p class="pd-size-note">Obvod je v centimetroch.</p>
+  </div>
+
+</div>
+
+<!-- =====================================================================
+     SEKCIE ACCORDIONU „Doprava a vrátenie" — text pre rozklikávacie sekcie
+     pod galériou na detaile produktu.
+
+     ⚠️⚠️ NENASAZOVAT, DOKUD NEJSOU VYPLNĚNÉ ZNAČKY {{SK_…}} ⚠️⚠️
+     Stejné značky jako v src/content/sk/doprava.html — vyplňte je stejně,
+     ať ceník na detailu a na CMS stránce „Doprava a platba" sedí:
+       {{SK_DOPRAVA_ZADARMO_OD}}        hranice dopravy zadarmo na výdejní místa (CZ: 999 Kč)
+       {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}  hranice dopravy zadarmo domů (CZ: 1 499 Kč)
+       {{SK_DOPRAVCA_1}}                CZ: Zásilkovna (výdejní místa a boxy)
+       {{SK_DOPRAVCA_2}}                CZ: Balíkovna (výdejní místa i doručení domů)
+       {{SK_DOPRAVCA_3}}                CZ: PPL / Alzaboxy
+       {{SK_CENA_1}} / _2 / _3          ceny výdejních míst (CZ: 69 / 79 / 79 Kč)
+       {{SK_CENA_4}} / _5               ceny doručení domů (CZ: 119 / 129 Kč)
+
+     Na stránce je blok SKRYTÝ (CSS .pd-acc-src{display:none}), obsah si z něj
+     zkopíruje src/scripts/sk/40-product-detail.js. Dokud tenhle blok
+     v administraci SK shopu není, jede záložní znění z kódu — a to má
+     v ceníku dopravy pořád značky {{SK_…}}, takže tenhle blok je pro SK shop
+     ten rychlejší způsob, jak tam dostat skutečné ceny.
+
+     JAK TO UPRAVIT:
+       • jeden blok <div class="pd-acc-item"> = jedna sekcia accordionu,
+       • <h3 class="pd-acc-name"> = názov sekcie. MUSÍ SEDIEŤ na název sekce
+         v accordionu („Doprava a vrátenie") — podle něj se text páruje,
+       • zbytek bloku = obsah sekce; nový řádek ceníku = zkopírovaný <tr>.
+     ===================================================================== -->
+<div class="pd-acc-src">
+
+  <div class="pd-acc-item">
+    <h3 class="pd-acc-name">Doprava a vrátenie</h3>
+
+    <div class="pd-callout">
+      <p class="pd-callout__title">Vrátenie tovaru do 120 dní</p>
+      <p>Chceme, aby ste boli s nákupom 100% spokojní. Preto u nás máte na vrátenie tovaru až 120 dní od jeho prevzatia. Bez starostí a zbytočných otázok.</p>
+    </div>
+
+    <p class="pd-subhead">Možnosti dopravy</p>
+    <table class="pd-ship">
+      <tbody>
+        <tr><td>{{SK_DOPRAVCA_1}} – výdajné miesta a boxy<span>Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD}}</span></td><td>{{SK_CENA_1}}</td></tr>
+        <tr><td>{{SK_DOPRAVCA_2}} na výdajné miesta<span>Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD}}</span></td><td>{{SK_CENA_2}}</td></tr>
+        <tr><td>Boxy a výdajné miesta {{SK_DOPRAVCA_3}}<span>Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD}}</span></td><td>{{SK_CENA_3}}</td></tr>
+        <tr><td>{{SK_DOPRAVCA_2}} – doručenie domov<span>Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}</span></td><td>{{SK_CENA_4}}</td></tr>
+        <tr><td>{{SK_DOPRAVCA_3}} – doručenie domov<span>Zadarmo nad {{SK_DOPRAVA_ZADARMO_OD_DOMOV}}</span></td><td>{{SK_CENA_5}}</td></tr>
+      </tbody>
+    </table>
   </div>
 
 </div>

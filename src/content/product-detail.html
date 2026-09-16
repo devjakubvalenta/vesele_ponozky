@@ -3,7 +3,8 @@
   detail → „Na detailu produktu"). Vkládá se CELÝ tento soubor (bez tohoto
   komentáře, pokud editor komentáře nebere — jinak nevadí).
 
-  Jsou v něm DVĚ věci: pás benefitů a skrytý zdroj dat pro tabulku velikostí.
+  Jsou v něm TŘI věci: pás benefitů, skrytý zdroj dat pro tabulku velikostí
+  a skrytý zdroj textu pro sekce accordionu (zatím „Doprava a vrácení").
 
   Renderuje se na detailu jako .content-product-detail > ul (platforma může
   třídu ul přepsat na „benefits" — CSS v 24-product-detail.css proto cílí
@@ -176,6 +177,53 @@
       </tbody>
     </table>
     <p class="pd-size-note">Obvod je v centimetrech.</p>
+  </div>
+
+</div>
+
+<!-- =====================================================================
+     SEKCE ACCORDIONU „Doprava a vrácení" — text pro rozklikávací sekce
+     pod galerií na produktovém detailu.
+
+     Na stránce je tenhle blok SKRYTÝ (CSS .pd-acc-src{display:none}).
+     40-product-detail.js si z něj obsah zkopíruje do accordionu. Když blok
+     chybí nebo je rozdělaný, skript použije záložní znění ze svého kódu —
+     sekce tedy nikdy nezmizí.
+
+     JAK TO UPRAVIT:
+       • jeden blok <div class="pd-acc-item"> = jedna sekce accordionu,
+       • <h3 class="pd-acc-name"> = název sekce. MUSÍ SEDĚT na název sekce
+         v accordionu („Doprava a vrácení", „Materiál a péče", „Časté
+         dotazy") — podle něj se text páruje. Jiný název = nová sekce navíc,
+       • zbytek bloku = obsah sekce (běžné <p>, <ul>, <table>, <strong>).
+
+     CENÍK DOPRAVY se mění nejčastěji, proto je tabulka: cenu přepíšeš
+     i v běžném editoru, bez zdrojového režimu. Musí sedět s tím, co
+     zákazník uvidí v košíku (ověřuje se na /cart) — a s CMS stránkou
+     „Doprava a platba", kde je stejný seznam.
+     První sloupec = název metody + poznámka o dopravě zdarma na druhém
+     řádku, druhý sloupec = cena. Nový řádek uděláš zkopírováním celého <tr>.
+     ===================================================================== -->
+<div class="pd-acc-src">
+
+  <div class="pd-acc-item">
+    <h3 class="pd-acc-name">Doprava a vrácení</h3>
+
+    <div class="pd-callout">
+      <p class="pd-callout__title">Vrácení zboží do 120 dní</p>
+      <p>Chceme, abyste byli s nákupem 100% spokojeni. Proto u nás máte na vrácení zboží až 120 dní od jeho převzetí. Bez starostí a zbytečných otázek.</p>
+    </div>
+
+    <p class="pd-subhead">Možnosti dopravy</p>
+    <table class="pd-ship">
+      <tbody>
+        <tr><td>Balíkovna na výdejní místa<span>Zdarma nad 999 Kč</span></td><td>79 Kč</td></tr>
+        <tr><td>Zásilkovna – výdejní místa a boxy<span>Zdarma nad 999 Kč</span></td><td>69 Kč</td></tr>
+        <tr><td>Alzaboxy a výdejní místa PPL<span>Zdarma nad 999 Kč</span></td><td>79 Kč</td></tr>
+        <tr><td>Balíkovna – doručení domů<span>Zdarma nad 1 499 Kč</span></td><td>119 Kč</td></tr>
+        <tr><td>PPL – doručení domů<span>Zdarma nad 1 499 Kč</span></td><td>129 Kč</td></tr>
+      </tbody>
+    </table>
   </div>
 
 </div>

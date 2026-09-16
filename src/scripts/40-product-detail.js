@@ -8,9 +8,12 @@
        nativního „Ponožky budou u vás"; + pojistka zvýraznění data,
     5. plovoucí „Přidat do košíku" na mobilu,
     6. taby → accordion pod galerií v levém sloupci (klasický: jedna otevřená
-       naráz, po načtení `TAB_OPEN` = Složení) + statické sekce z `TAB_STATIC`
-       (Materiál a péče, Doprava a vrácení, Časté dotazy) — TEXTY SE DOPLŇUJÍ
-       TAM, pořadí řídí `TAB_ORDER`, `TAB_HIDE` schová nechtěná nativní ouška,
+       naráz, po načtení `TAB_OPEN` = Složení) + statické sekce (Materiál
+       a péče, Doprava a vrácení, Časté dotazy) — jejich TEXT SE BERE
+       Z ADMINISTRACE (skrytý blok .pd-acc-src v poli „Produktový detail",
+       verzovaná kopie src/content/product-detail.html); `TAB_STATIC` je
+       jen záložní znění pro případ, že blok v adminu chybí. Pořadí řídí
+       `TAB_ORDER`, `TAB_HIDE` schová nechtěná nativní ouška,
     7. YouTube preview → tmavá karta s vlastním play tlačítkem (facade;
        skutečný iframe až po kliknutí),
     8. sticky offset pravého sloupce — negativní `top` (CSS proměnná
@@ -745,11 +748,12 @@
     return '<div class="pd-faq">' + groups.join("") + "</div>";
   }
 
-  // Statické sekce accordionu — stejné u všech produktů.
+  // Statické sekce accordionu — stejné u všech produktů. ZÁLOŽNÍ ZNĚNÍ:
+  // co přijde z administrace (blok .pd-acc-src, viz staticSections níž),
+  // tenhle text přebije. Tady zůstává proto, aby sekce existovala i ve chvíli,
+  // kdy je admin pole rozdělané nebo ho někdo smaže.
   // Prázdné `html` = sekce se vykreslí a jde rozkliknout, jen zatím nemá obsah
   // (JS jí přidá třídu `is-empty`, na kterou ale žádné CSS nevisí).
-  // AŽ DORAZÍ TEXTY, stačí je vepsat sem (HTML: <p>, <ul>, <strong>…)
-  // a bumpnout hash skriptu v admin položce „Produktový detail".
   // „Doprava a vrácení" nese dvě témata, proto mezi ně patří mezinadpis —
   // bez něj ceník splývá s blokem o vrácení.
   var TAB_STATIC = [
@@ -762,6 +766,50 @@
     },
     { label: "Časté dotazy", html: faqHtml() }
   ];
+
+  /* Statické sekce Z ADMINISTRACE ====================================
+     Pole „Produktový detail" (Obsah → Produktový detail; verzovaná kopie
+     src/content/product-detail.html) může nést skrytý blok .pd-acc-src.
+     Jedna sekce = jeden .pd-acc-item, popisek v .pd-acc-name, zbytek bloku
+     je obsah sekce. Stejně pojmenovaná sekce z TAB_STATIC se PŘEBIJE, nová
+     se přidá na konec (pořadí pak řeší TAB_ORDER jako u nativních tabů).
+
+     Proč to tak je: ceník dopravy se musí shodovat s košíkem a mění se
+     nezávisle na kódu — takhle jde opravit v administraci, bez gitu, buildu
+     a bumpu hashe. Stejný vzor už jede u tabulky velikostí (bod 12).
+
+     Blok je na stránce skrytý (CSS .pd-acc-src{display:none}) a servíruje ho
+     server v HTML, takže v DOM je dřív než tenhle skript z patičky. */
+  function staticSections() {
+    var out = TAB_STATIC.map(function (t) {
+      return { label: t.label, html: t.html || "" };
+    });
+
+    var src = document.querySelector(".pd-acc-src");
+    if (!src) return out;          // admin blok nemá → záložní znění z TAB_STATIC
+
+    Array.prototype.forEach.call(src.querySelectorAll(".pd-acc-item"), function (item) {
+      var nameEl = item.querySelector(".pd-acc-name");
+      var label = nameEl ? (nameEl.textContent || "").trim() : "";
+      if (!label) return;          // blok bez popisku = rozdělaná editace, radši nechat být
+
+      /* Klonujeme (a z klonu popisek zahodíme — v accordionu ho nese hlavička
+         sekce). Zdroj zůstává netknutý: je to childList mutace uvnitř stromu,
+         který pozorujeme, takže přesun by probudil observer — viz bod 12. */
+      var clone = item.cloneNode(true);
+      var cloneName = clone.querySelector(".pd-acc-name");
+      if (cloneName) cloneName.parentNode.removeChild(cloneName);
+      var html = (clone.innerHTML || "").trim();
+      if (!html) return;           // sekce bez obsahu → nechat záložní znění
+
+      for (var i = 0; i < out.length; i++) {
+        if (out[i].label === label) { out[i].html = html; return; }
+      }
+      out.push({ label: label, html: html });
+    });
+
+    return out;
+  }
 
   // Pořadí sekcí. Co v seznamu není (třeba nový nativní tab z administrace),
   // se zařadí na konec v původním pořadí — nic se nikdy neztratí.
@@ -793,7 +841,7 @@
         if (TAB_HIDE.indexOf(label) !== -1) return;                     // ouško, které do accordionu nechceme
         sections.push({ label: TAB_RENAME[label] || label, html: pane.innerHTML });
       });
-      TAB_STATIC.forEach(function (t) {
+      staticSections().forEach(function (t) {
         // statická sekce se vykreslí i prázdná (čeká na text), ale ne dvakrát,
         // kdyby stejně pojmenovaný tab přibyl i v administraci
         if (sections.some(function (s) { return s.label === t.label; })) return;

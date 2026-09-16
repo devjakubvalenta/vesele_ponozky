@@ -21,7 +21,7 @@ zde = **jedna položka**. Obsah se vkládá **včetně tagů** (`<script>…</sc
 | `30-product-cards.js` | Produktové karty (název, datum, Zobrazit vše) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…/src/scripts/30-product-cards.js">`; mapa „Zobrazit vše" (SHOW_ALL) a prefixy názvů jsou v souboru |
 | `hp-categories.js` | Kategorie na HP (přesun + barevné dlaždice) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/hp-categories.js">` — **pin hashem** jako u CSS linku, bump jen při změně souboru; styl `src/css/28-hp-kategorie.css` |
 | `header.js` | Hlavička (Heureka + zákaznická linka + cart ikona) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/header.js">` — **pin hashem**; styl `src/css/20-header.css`. Telefon/e-mail v lince se čtou z pole „Doplňující informace" (nemazat ho) |
-| `40-product-detail.js` | Produktový detail (recenze, slevový pill, množství) | **Pouze produktový detail** | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/40-product-detail.js">` — **pin hashem**; styl `src/css/24-product-detail.css` + `src/css/24-size-chart.css`; obsah admin pole „Produktový detail" (benefity + skrytý zdroj tabulky velikostí) = `src/content/product-detail.html` |
+| `40-product-detail.js` | Produktový detail (recenze, slevový pill, množství) | **Pouze produktový detail** | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/40-product-detail.js">` — **pin hashem**; styl `src/css/24-product-detail.css` + `src/css/24-size-chart.css`; obsah admin pole „Produktový detail" (benefity + skrytý zdroj tabulky velikostí + skrytý zdroj textu sekcí accordionu) = `src/content/product-detail.html` |
 | `45-cart-popup.js` | Popup přidáno do košíku | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/45-cart-popup.js">` — **pin hashem**; styl `src/css/33-cart-popup.css`; texty cookie lišty se nastavují v administraci (styl `src/css/34-cookies.css` je čisté CSS) |
 | `50-checkout.js` | Pokladna (dopravy a platby) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/50-checkout.js">` — **pin hashem**; styl `src/css/10-checkout.css` (`.vp-lbl*`, `.vp-save*`, `.vp-optout*`) + `src/css/11-cart-upsell.css` (`.vp-cu-*` — pilulky velikostí v upsell bloku) |
 | `35-listing-sort.js` | Řazení ve výpisech (klikací odkazy) | Na všech stránkách | ne (patička) | ⏳ vlož 1× jako `<script src="…jsDelivr…@<hash>/src/scripts/35-listing-sort.js">` — **pin hashem**; styl `src/css/26-listing-sort.css` |
@@ -442,15 +442,30 @@ z `10-force-variant-selection.html` (`variant-selection-required` → bílé chi
 > - **„Složení"** = nativní tab „Popis" (jen přejmenovaný přes `TAB_RENAME`),
 >   tedy **popis produktu z administrace — per produkt**. V JS se needituje.
 >   Nativní tab „Parametry" je skrytý (`TAB_HIDE`).
-> - **„Materiál a péče", „Doprava a vrácení", „Časté dotazy"** = `TAB_STATIC`,
->   tedy **natvrdo v tomhle souboru** (stejné u všech produktů; platforma pro
->   ně žádné pole nemá). Skládají je funkce `careHtml()`, `returnsHtml()` +
->   `shippingHtml()` a `faqHtml()`. Prázdné `html` = sekce se vykreslí, jen
->   nemá obsah (dostane informativní třídu `is-empty`, na kterou nic nevisí).
+> - **„Materiál a péče", „Doprava a vrácení", „Časté dotazy"** = stejné
+>   u všech produktů; platforma pro ně žádný tab nemá. Text se bere
+>   **z administrace** — pole *Obsah → Produktový detail* může nést skrytý
+>   blok `.pd-acc-src` (verzovaná kopie `src/content/product-detail.html`).
+>   Jedna `.pd-acc-item` = jedna sekce, `h3.pd-acc-name` je její popisek,
+>   zbytek bloku obsah. **Páruje se podle popisku**, takže název musí sedět
+>   na sekci v accordionu; neznámý popisek = sekce navíc na konci.
+>   `TAB_STATIC` v kódu (`careHtml()`, `returnsHtml()` + `shippingHtml()`,
+>   `faqHtml()`) je jen **záložní znění** pro případ, že blok v adminu chybí
+>   nebo je rozdělaný — co dorazí z adminu, ho přebije. Dnes je v adminu
+>   „Doprava a vrácení", zbytek jede ze záložního znění.
 >
-> ⚠️ Ceník v `SHIPPING` **musí sedět s košíkem** a je i v
-> `src/content/doprava.html` — při změně upravit obě místa. Text o vrácení do
-> 120 dní je shodný s leadem CMS stránky `src/content/vraceni.html`.
+> ⚠️ Ceník dopravy **musí sedět s košíkem** (ověřuje se na `/cart`) a je i v
+> `src/content/doprava.html` — při změně upravit obě místa. Dokud se záložní
+> `SHIPPING` v kódu nesmaže, je to místo třetí: **opravuje se admin blok,
+> záložní znění je jen pojistka**. Text o vrácení do 120 dní je shodný
+> s leadem CMS stránky `src/content/vraceni.html`.
+>
+> Zdroj je na stránce skrytý (`.pd-acc-src{display:none}` v
+> `24-product-detail.css`) a servíruje ho server v HTML, takže je v DOM dřív
+> než tenhle skript z patičky. Ceník je `<table class="pd-ship">` schválně —
+> cena se dá v administraci přepsat i v běžném editoru, bez zdrojového režimu;
+> CSS ho cílí strukturně (`td:first-child` / `td:last-child`), takže řádek
+> vložený editorem bez tříd se nerozsype.
 >
 > **Časté dotazy mají druhou úroveň rozklikávání** — 7 okruhů jako nativní
 > `<details>`/`<summary>`. Nativní element je tu záměr: obsah sekce se vkládá
