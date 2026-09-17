@@ -25,7 +25,7 @@ const DIR = path.join(ROOT, "src/content/sk");
 /* Vlastní jména, která se nepřekládají a „česká" písmena v nich jsou správně. */
 const VLASTNI_JMENA = [
   "Třeboň", "Třeboni", "Třeboně", "Třeboňsk",
-  "Boženy Němcové", "Němcové",
+  "Boženy Němcové", "Němcové", "Němcovej",   // slovenský sklon českého názvu ulice (VOP)
   "Českých Budějovicích", "Budějovic",
   "Čapek", "ČAPEK",
   "Alžběta",

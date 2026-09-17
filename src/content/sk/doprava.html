@@ -12,18 +12,20 @@
   Při změně cen v administraci upravit i tuhle stránku a ceník v sekci
   accordionu v src/content/sk/product-detail.html.
 
-  ⚠️ HRANICE DOPRAVY ZADARMO se tu SCHVÁLNĚ neuvádí. V administraci SK shopu
-  není nastavená (košík dodnes ukazuje nepřenastavené „Zadarmo nad 999 Kč"),
-  takže jakákoli částka by byla slib, který pokladna nesplní. Až se nastaví,
-  doplnit do leadu a jako <span class="vp-doprava__method-note">Zadarmo nad
-  X €</span> k metodám — a stejnou částku i do sk/product-detail.html.
+  HRANICE DOPRAVY ZADARMO je 39,99 € — jeden plochý limit na OBĚ metody
+  (potvrzeno uživatelem 2026-09-17). Je v leadu i jako
+  <span class="vp-doprava__method-note">Zadarmo od 39,99 €</span> u obou metod.
+
+  ⚠️ Košík SK shopu pod názvem metody pořád hlásí „Zadarmo nad 999 Kč" —
+  číslo i měnu si bere z NÁZVU metody v administraci a skript je jen přebírá.
+  Dokud se název neopraví tam, slíbí tahle stránka něco jiného než pokladna.
 
   META DESCRIPTION té CMS stránky je v administraci PRÁZDNÁ (ověřeno
   2026-09-16 — stará verze v ní měla značky {{SK_…}}, po vložení nového
   obsahu se vyprázdnila). Doporučené znění do SEO pole stránky:
-    Packeta na výdajné miesta a boxy za 2,99 €, doručenie domov za 3,99 €.
-    Odosielame do dvoch pracovných dní. Platba kartou, Google Pay, Apple Pay
-    aj na dobierku.
+    Doprava zadarmo od 39,99 €. Packeta na výdajné miesta za 2,99 €, domov za
+    3,99 €. Odosielame do dvoch pracovných dní. Platba kartou, Google Pay
+    aj dobierka.
   (159 znaků — vejde se do výpisu Google.) Při změně cen upravit i tady.
 
   ⚠️ ŽÁDNÉ `{{ }}` V OBSAHU. Dřív tu byly značky {{SK_CENA_1}} a spol.;
@@ -57,7 +59,7 @@
   <div class="vp-doprava__hero">
     <div class="vp-doprava__hero-text">
       <h1 class="vp-doprava__title">DOPRAVA A PLATBA</h1>
-      <p class="vp-doprava__lead">Ponožky odosielame do dvoch pracovných dní — na výdajné miesta a boxy Packety alebo kuriérom až ku dverám.</p>
+      <p class="vp-doprava__lead">Pri nákupe od 39,99 € vám ponožky pošleme zadarmo — na výdajné miesta a boxy Packety aj kuriérom až ku dverám. Odosielame do dvoch pracovných dní.</p>
 
       <div class="vp-doprava__info-row">
         <img class="vp-doprava__info-ic" src="/files/310/files/dopravainfo.png" alt="" loading="lazy" />
@@ -93,14 +95,18 @@
       <p class="vp-doprava__methods-group">Výdajné miesta a boxy</p>
       <div class="vp-doprava__method">
         <img class="vp-doprava__method-logo" src="/files/310/media/shipping/a4b81f865658260dd2635e161cf7ca4f.png" alt="Packeta" loading="lazy" />
-        <div class="vp-doprava__method-name">Packeta – výdajné miesta a boxy</div>
+        <div class="vp-doprava__method-name">Packeta – výdajné miesta a boxy
+          <span class="vp-doprava__method-note">Zadarmo od 39,99 €</span>
+        </div>
         <div class="vp-doprava__method-price">2,99 €</div>
       </div>
 
       <p class="vp-doprava__methods-group">Doručenie domov</p>
       <div class="vp-doprava__method">
         <img class="vp-doprava__method-logo" src="/files/310/media/shipping/a4b81f865658260dd2635e161cf7ca4f.png" alt="Packeta" loading="lazy" />
-        <div class="vp-doprava__method-name">Packeta – doručenie domov</div>
+        <div class="vp-doprava__method-name">Packeta – doručenie domov
+          <span class="vp-doprava__method-note">Zadarmo od 39,99 €</span>
+        </div>
         <div class="vp-doprava__method-price">3,99 €</div>
       </div>
 

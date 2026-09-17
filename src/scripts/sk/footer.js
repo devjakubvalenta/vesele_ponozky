@@ -21,7 +21,7 @@
   var ASSET = {
     sockDesktop: MEDIA + "Pati%C4%8Dka_desktop.svg",
     sockMobile: MEDIA + "Pati%C4%8Dka_mobil.svg",
-    logo: MEDIA + "vesel%C3%A9pono%C5%BEky_logo.svg",
+    logo: MEDIA + "logosk.png",
     customers: MEDIA + "customers.svg",
     rating: MEDIA + "rating.svg",
     trust: MEDIA + "trust_badge.svg",

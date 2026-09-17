@@ -41,6 +41,12 @@ export const DETAIL = [
   [`'<button type="button" class="pd-sticky-cta__btn">Přidat do košíku</button>';`,
    `'<button type="button" class="pd-sticky-cta__btn">Pridať do košíka</button>';`],
 
+  /* Odznak Heureka vedle ceny — týž soubor jako v hlavičce (header.js).
+     Poměr stran nového obrázku (2,560) odpovídá starému (2,566), takže
+     width/height u <img> v injectHeureka() sedí dál. */
+  [`  var HEUREKA = FILES + "heureka_banner.png";`,
+   `  var HEUREKA = FILES + "skheureka.png";`],
+
   /* Nativní ouška tabů. Slovenská platforma posílá „Popis“ (stejné slovo)
      a „Parametre“; české tvary necháváme v seznamu taky, kdyby se někde
      objevil obsah ještě z české mutace. */
@@ -53,17 +59,18 @@ export const DETAIL = [
      3,99 € (dobierka +1,69 €). Žádná Balíkovna ani PPL/Alzabox, proto se pět
      českých metod mapuje na dvě slovenské.
 
-     `note` je prázdné SCHVÁLNĚ: eurová hranice dopravy zadarmo v administraci
-     SK shopu nastavená není (košík ukazuje nepřenastavené „Zadarmo nad 999 Kč").
-     Až se nastaví, doplnit sem „Zadarmo nad X €" — a stejně tak do
-     src/content/sk/product-detail.html a src/content/sk/doprava.html. */
+     `note` je „Zadarmo od 39,99 €" u OBOU metod — jeden plochý limit, potvrzeno
+     uživatelem 2026-09-17. Stejná částka musí být i v
+     src/content/sk/product-detail.html, src/content/sk/doprava.html,
+     v USP blocich (sk/homepage.html + sk/product-detail.html)
+     a v i18n/sk-texty-faq.mjs. */
   [`    { name: "Balíkovna na výdejní místa", note: "Zdarma nad 999 Kč", price: "79 Kč" },
     { name: "Zásilkovna – výdejní místa a boxy", note: "Zdarma nad 999 Kč", price: "69 Kč" },
     { name: "Alzaboxy a výdejní místa PPL", note: "Zdarma nad 999 Kč", price: "79 Kč" },
     { name: "Balíkovna – doručení domů", note: "Zdarma nad 1 499 Kč", price: "119 Kč" },
     { name: "PPL – doručení domů", note: "Zdarma nad 1 499 Kč", price: "129 Kč" }`,
-   `    { name: "Packeta – výdajné miesta a boxy", note: "", price: "2,99 €" },
-    { name: "Packeta – doručenie domov", note: "", price: "3,99 €" }`],
+   `    { name: "Packeta – výdajné miesta a boxy", note: "Zadarmo od 39,99 €", price: "2,99 €" },
+    { name: "Packeta – doručenie domov", note: "Zadarmo od 39,99 €", price: "3,99 €" }`],
 
   [`      '<p class="pd-callout__title">Vrácení zboží do 120 dní</p>' +
       "<p>Chceme, abyste byli s nákupem 100% spokojeni. Proto u nás máte na " +

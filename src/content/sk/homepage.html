@@ -13,13 +13,14 @@
      Média zůstávají na /files/310/ — ID účtu je pro oba shopy stejné,
      obrázky se znovu nenahrávají (včetně názvů s procentním kódováním).
 
-     CO MUSÍ UŽIVATEL DOPLNIT: místo českých nativních produktových bloků
-     recommend_block_3224 a recommend_block_3236 (schválně bez znaků %, aby
-     se v komentáři nerozbalily — expanze zástupných symbolů je prostá textová
-     substituce a HTML komentář ji nezastaví) jsou tu značky {{SK_BLOK_AKCE}}
-     a {{SK_BLOK_SETY}} — na SK shopu je potřeba založit vlastní doporučené
-     bloky a jejich placeholdery sem dosadit. Dokud SK bloky neexistují, oba
-     odstavce raději smazat, ať se zákazníkovi na HP nezobrazí text {{…}}.
+     PRODUKTOVÉ BLOKY: SK shop má vlastní čísla, česká se nedají použít.
+     recommend_block_5254 = „To najlepšie práve v akcii" (česky 3224),
+     recommend_block_5266 = „Darčekové sety" (česky 3236). Pro úplnost:
+     5251 = upsell v košíku a v popupu „pridané do košíka" (česky 3177),
+     ten se ale nevkládá do obsahu — páruje se v nastavení košíku.
+     (Čísla píšu schválně bez znaků %, aby se v komentáři nerozbalila —
+     expanze zástupných symbolů je prostá textová substituce a HTML komentář
+     ji nezastaví.)
 
      Recenze = marquee: track se DVĚMA identickými sadami 10 karet (druhá je
      aria-hidden kopie kvůli bezešvému loopu animace) — při úpravě recenzí
@@ -39,7 +40,7 @@
     <li><a href="/cms/61609-recenze"><span><img src="/files/310/files/ikony1.svg" class="img-responsive-editor" alt=""></span><span><strong>97 % zákazníkov odporúča</strong><small>Spokojnosť zákazníkov je pre nás najlepšia vizitka.</small></span></a></li>
     <li><a href="/cms/61612-vyroba"><span><img src="/files/310/files/ikony2.svg" class="img-responsive-editor" alt=""></span><span><strong>Výroba v Třeboni</strong><small>Kvalita je u nás na prvom mieste.</small></span></a></li>
     <li><a href="/cms/61618-vraceni-zbozi"><span><img src="/files/310/files/ikony3.svg" class="img-responsive-editor" alt=""></span><span><strong>Vrátenie do 120 dní</strong><small>Bez obáv, keď nesadne veľkosť.</small></span></a></li>
-    <li><a href="/cms/61600-doprava-a-platba"><span><img src="/files/310/files/ikony4.svg" class="img-responsive-editor" alt=""></span><span><strong>Doprava zadarmo</strong><small>Doručenie druhý pracovný deň.</small></span></a></li>
+    <li><a href="/cms/61600-doprava-a-platba"><span><img src="/files/310/files/ikony4.svg" class="img-responsive-editor" alt=""></span><span><strong>Doprava zadarmo od 39,99 €</strong><small>Doručenie druhý pracovný deň.</small></span></a></li>
 </ul>
 <div class="vp-recenze vp-recenze--hp">
     <h2 class="vp-recenze__heading">Čo hovoria naši <span class="vp-accent">zákazníci?</span></h2>
@@ -296,13 +297,14 @@
         </div>
     </div>
 </div>
-<!-- ⚠️ SLOVENSKÉ PRODUKTOVÉ BLOKY ZATÍM NEEXISTUJÍ.
-     Na české homepage tu jsou %recommend_block_3224% („To nejlepší právě
-     v akci") a %recommend_block_3236% („Dárkové sety"). Až je založíš
-     v administraci SK shopu, nahraď tento komentář dvěma odstavci
-     s příslušnými %recommend_block_<ID>%.
-     Značky {{…}} tu schválně NEJSOU — platforma je nerozbaluje a zákazník
-     by je viděl doslova. -->
+<!-- Slovenské nativní produktové bloky (založeny 2026-09-17, ověřeno živě):
+       5254 = „To najlepšie práve v akcii"  (český protějšek 3224)
+       5266 = „Darčekové sety"             (český protějšek 3236)
+     ID se NEPŘEKLÁDAJÍ — každý shop má vlastní. Česká čísla jsou v komentáři
+     v hlavičce souboru, schválně BEZ znaků % (expanze zástupných symbolů je
+     prostá textová substituce a HTML komentář ji nezastaví). -->
+<p>%recommend_block_5254%</p>
+<p>%recommend_block_5266%</p>
 <div class="vp-hpvyr">
     <div class="vp-hpvyr__grid">
         <div class="vp-hpvyr__left">

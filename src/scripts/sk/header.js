@@ -22,7 +22,7 @@
   // i test exitshop.cz) → bez domény, ať se nic neváže na testovací web.
   var MEDIA = "/files/310/files/";
   var ASSET = {
-    heureka: MEDIA + "heureka_banner.png",
+    heureka: MEDIA + "skheureka.png",
     cart: MEDIA + "cart.svg",
     // Kulatý avatar do zákaznické linky (455×455, bílý kruhový podklad).
     // Dřív se tu recyklovala kontakt.svg (354×496 na výšku) — do kolečka

@@ -66,7 +66,7 @@
   var AVATAR = FILES + "emoji_recenze.svg";
   // Stejný odznak jako v hlavičce (header.js). Obrázek je 698×272,
   // tedy poměr 2,566 — viz width/height u <img> v injectHeureka().
-  var HEUREKA = FILES + "heureka_banner.png";
+  var HEUREKA = FILES + "skheureka.png";
 
   var TITLE = "Vyše 130 000 spokojných zákazníkov";
   var REVIEWS = [
@@ -425,8 +425,8 @@
   // uvidí v košíku (ověřeno na /cart). PŘI ZMĚNĚ V ADMINISTRACI UPRAVIT I TADY
   // (a taky v src/content/doprava.html, kde je stejný seznam).
   var SHIPPING = [
-    { name: "Packeta – výdajné miesta a boxy", note: "", price: "2,99 €" },
-    { name: "Packeta – doručenie domov", note: "", price: "3,99 €" }
+    { name: "Packeta – výdajné miesta a boxy", note: "Zadarmo od 39,99 €", price: "2,99 €" },
+    { name: "Packeta – doručenie domov", note: "Zadarmo od 39,99 €", price: "3,99 €" }
   ];
 
   function shippingHtml() {
@@ -614,6 +614,10 @@
           "Odosielame bleskovo! Zásielky odovzdávame dopravcovi spravidla do 24 hodín. Využiť " +
           "môžete výdajné miesta, samoobslužné boxy aj doručenie kuriérom priamo na adresu. " +
           "Bežná doba doručenia je 1–2 pracovné dni."
+        ],
+        [
+          "Od akej sumy mám dopravu zadarmo?",
+          "Dopravu zadarmo od nás získate pri nákupe od 39,99 €."
         ],
         [
           "Aké spôsoby platby podporujete?",

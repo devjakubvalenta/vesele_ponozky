@@ -3,7 +3,8 @@
 Slovenský shop: **28711** (`https://www.exitshop.cz/shops/28711/`, cílová doména
 `veseleponozky.sk`). Český shop: 28056 (`veseleponozky.cz`).
 
-Zjištěno čtením obou shopů 2026‑09‑02.
+Zjištěno čtením obou shopů 2026‑09‑02, **stav otevřených bodů přeověřen
+živě 2026‑09‑16** na produkční doméně `www.veseleponozky.sk`.
 
 ## Co se NEMĚNÍ
 
@@ -12,7 +13,12 @@ shopy jedou pod stejným účtem. Všech 195 odkazů na obrázky v obsahu i ve
 skriptech funguje na SK beze změny a **89 souborů se nemusí znovu nahrávat.**
 
 **Firemní údaje** — provozovatel je stejná česká společnost (Moda Čapek s.r.o.,
-IČ 02605104), takže adresa, telefon i e-maily zůstávají české.
+IČ 02605104), takže adresa i telefon zůstávají české.
+
+> ⚠️ **Výjimka: zákaznický e-mail.** SK shop má vlastní schránku
+> `ponozky@veseleponozky.sk` (potvrzeno 2026‑09‑16). `src/content/sk/kontakt.html`
+> ji už používá, ale **hlavička SK shopu pořád ukazuje `ponozky@veseleponozky.cz`** —
+> to je nastavení administrace. B2B kontakt (`david@modacapek.cz`) zůstává český.
 
 **Newsletter** — stejný Ecomail seznam (formulář 4, účet witsocks) i stejný
 slevový kód `VESELE15`.
@@ -71,51 +77,170 @@ stavového kódu, jen podle obsahu.
 
 ## Otevřené body — bez nich se SK verze nedá nasadit
 
-1. **Koloo hází návštěvníkům chybový `alert()`.** Licence `UNI-FB75BE3A-1714`
-   není povolená pro doménu slovenského shopu:
-   *„Doména www.exitshop.cz není na seznamu povolených domén pro tuto kampaň.“*
-   Vyskočí hned po načtení každé stránky. Buď doplnit doménu do kampaně na
-   my.koloo.net, nebo položku Koloo na SK shopu odstranit.
+Stav ověřen živě **2026‑09‑16** na produkční doméně `www.veseleponozky.sk`
+(ne jen na technické adrese — ta se v některých bodech chová jinak).
 
-2. **Čtyři barevné kategorie z HP na SK neexistují.** České 1243445 MultiPACK,
-   1243460 Zdravotnictví, 1243463 Káva a 1243517 Adventní kalendáře duplikace
-   nepřenesla — slovenský strom je má jen jako podkategorie pod Pánské, Dámské
-   a Dětské. Dokud nevzniknou, míří mobilní menu na čtyři hlavní kategorie
-   (viz `i18n/sk-ids.mjs` → `SIDE_CATEGORIES_SK`). Až je založíš, přepiš ID
-   v `i18n/sk-texty.mjs` a spusť `node build-sk.mjs`.
-   **Dlaždice kategorií na HP** míří v nastavení SK shopu pořád na česká ID —
-   to je nastavení administrace, ne náš kód, oprav ho tam.
+### 1. ⛔ Tři bannery na homepage vedou do prázdna a jsou česky
 
-3. **Produktové bloky na HP neexistují.** `%recommend_block_3224%` (To nejlepší
-   právě v akci) a `%recommend_block_3236%` (Dárkové sety) jsou česká ID.
-   Založ je v SK administraci a pošli mi ID — do té doby jsou v obsahu
-   placeholdery `{{SK_BLOK_AKCE}}` a `{{SK_BLOK_SETY}}`.
+`.slideshow-slides` + `.side-banners` jsou NATIVNÍ bannery z administrace
+a duplikace v nich nechala české texty i **česká ID kategorií**:
 
-4. **Ceník dopravy v eurech.** V `src/scripts/sk/40-product-detail.js` jsou
-   placeholdery `{{SK_DOPRAVCA_1..3}}`, `{{SK_ZADARMO_1..3}}`, `{{SK_CENA_1..3}}`
-   a `{{SK_DOPRAVA_ZADARMO_OD}}`. **Zákazník je uvidí na stránce, dokud je
-   nevyplníš** — nenasazovat dřív. Stejný seznam je i v obsahové stránce
-   Doprava a platba.
+| banner | odkaz | má být |
+|---|---|---|
+| „DÁRKOVÝ SET / JÍT NAKUPOVAT“ | `/c/1243139-darkove-sety` | **1254442** Darčekové sety |
+| „LIMITOVANÉ EDICE / PROHLÉDNOUT“ | `/c/1243142-vyprodej-az-90` | **1254445** Výpredaj až ‑90% |
+| „HOKEJ JE ŽIVOT / PROHLÉDNOUT“ | `/c/1243142-vyprodej-az-90` | **1254445** Výpredaj až ‑90% |
 
-5. **Právní stránky** (VOP, GDPR, Vrácení zboží) jsou mimo rozsah — dohodnuto,
-   že si je necháš udělat zvlášť. Slovenské spotřebitelské právo a dozorové
-   orgány jsou jiné než české, překlad českého textu nestačí.
+Ověřeno fetchem: obě česká ID na `.sk` **přesměrují na homepage** (žádný `<h1>`,
+553 produktů = celý katalog). Správná ID vracejí 24 produktů a správný `<h1>`.
+Jsou to tři největší CTA na stránce a nefunguje ani jedno.
 
-6. **HTTPS na veseleponozky.sk nefunguje.** Doména už běží (ověřeno 2026‑09‑11:
-   `http://www.veseleponozky.sk/` vrací slovenský shop), ale **certifikát
-   nepokrývá `www.veseleponozky.sk`** — prohlížeč na `https://` ukáže bezpečnostní
-   varování. Dokud to není vyřešené u platformy/registrátora, nepřesměrovávat
-   zákazníky na .sk a nedávat .sk adresu do e-mailů ani reklam.
+### 2. ⛔ Celá platformní vrstva renderuje česky
+
+`<html lang="sk">` je nastavené správně, a přesto jsou platformní řetězce české.
+Důkaz, že nejde o naše texty ani o obsah: **404 stránka** hlásí „Je nám líto, ale
+požadovaná stránka nebyla nalezena.“ — to nikdo needituje.
+
+Odsud pochází naráz: breadcrumb „Domů“, cookie lišta („Tento web používá soubory
+cookie… DALŠÍ VOLBY / PŘIJMOUT“), placeholder hledání „Hledat: Zdravotnictví,
+káva, hokej…“, „Přidat do košíku“ na kartách i hlavní tlačítko na detailu,
+„Zákazníci také nakupují“, a v košíku „ZBOŽÍ / Celkem / Mám slevový kupón /
+Dodací adresa: / Jméno a příjmení / Mobilní telefon / Souhlasím s… / « Zpět do
+obchodu“.
+
+Řešit **jedním nastavením jazyka shopu** (případně dotazem na podporu
+exitshop.cz), ne patchováním jednotlivých řetězců v JS. Náš kód umí oba jazyky
+schválně — je to pojistka, ne řešení.
+
+### 3. ⛔ Pokladna slibuje dopravu zdarma v korunách
+
+Metoda se jmenuje `Zásilkovna - výdejní místa a boxy — Zadarmo nad 999 Kč —
+2.99 €`. Eurový shop, korunový limit. Správně má být **zadarmo od 39,99 €** —
+jeden plochý limit na OBĚ metody (potvrzeno uživatelem 2026‑09‑17). Skript slovo
+„ZDARMA“ přeloží, ale číslo a měnu jen přebírá z názvu metody — opravit se to
+musí v administraci.
+
+✅ **Obsahová strana je hotová** (2026‑09‑17): částka 39,99 € je v USP blocich na
+homepage i produktovém detailu, v ceníku a FAQ detailu a na stránce Doprava
+a platba. Zbývá už jen název metody v administraci — do té doby slíbí web
+39,99 € a pokladna 999 Kč.
+
+### 4. ⛔ Stránka Doprava a platba neodpovídá pokladně
+
+CMS 61600 slibuje: Packeta výdajné miesta 2,99 €, Packeta **doručenie domov
+3,99 €**, **Platba kartou online zadarmo** (+ celá sekce „Ako prebieha online
+platba“ s Comgate a 3D Secure).
+
+Pokladna reálně nabízí dopravu pod jménem „Zásilkovna“ (ne Packeta) a platby
+jen `bank_transfer` (QR kód/Bankovní převod), `clone_4171` (Google Pay),
+`clone_4174` (Apple Pay) a `cash_on_delivery` (Na dobírku 1.69 €).
+**Platba kartou v pokladně chybí úplně** — žádný `comgate`. Buď doplnit kartu
+a doručení domů do pokladny, nebo srovnat CMS stránku s realitou.
+
+ℹ️ `src/scripts/sk/00-css-sk-override.html` stylizuje `label[for="comgate"]`,
+který na SK zatím neexistuje — až kartu založíš, override začne platit sám.
+
+### 5. ✅ Produktové bloky na HP — HOTOVO (2026‑09‑17)
+
+Založeny a ověřeny živě. **ID se mezi shopy nepřekládají**, každý má vlastní:
+
+| blok | CZ | SK |
+|---|---|---|
+| To nejlepší právě v akci / To najlepšie práve v akcii | 3224 | **5254** |
+| Dárkové sety / Darčekové sety | 3236 | **5266** |
+| Upsell košík | 3177 | **5251** |
+
+5254 a 5266 jsou v `src/content/sk/homepage.html` jako `%recommend_block_<ID>%`.
+5251 se do obsahu **nevkládá** — páruje se v nastavení košíku; na `/cart` už se
+`.cart-upsell` renderuje.
+
+⚠️ **Oba HP bloky ukazují STEJNÉ čtyři produkty** (Zdravotníctvo nízke biele,
+Zdravotníctvo biele, podkolienky, Mačky magenta) — u „Darčekové sety" to nesedí.
+Nadpisy jsou správně, ale výběr produktů v bloku 5266 je potřeba doplnit
+v administraci.
+
+<details><summary>Původní znění bodu</summary>
+
+Český shop má „To nejlepší právě v akci“ (`3224`) a „Dárkové sety“ (`3236`),
+slovenský ani jeden (`recommend-block-*` v HTML 28711 = 0). Důsledky:
+
+- na homepage chybí dvě produktové řady — v obsahu jsou zatím značky
+  `{{SK_BLOK_AKCE}}` a `{{SK_BLOK_SETY}}` **uvnitř HTML komentáře**, takže je
+  zákazník nevidí a nic nerozbíjejí,
+- popup „pridané do košíka“ jede v ochuzené variantě bez progress baru —
+  platforma nemá co vykreslit (viz `45-cart-popup.js`).
+
+Založ je v SK administraci a ID dosaď do `src/content/sk/homepage.html`.
+
+</details>
+
+### 6. ⛔ Identita ukazuje na `.cz`
+
+- **Logo je pořád české.** Soubor `/files/310/media/other/MX1l38A4BIgAgFSRuferpr9hl6wIMR6V.svg`
+  vykresluje „Veselé ponožky**.cz**“ — `alt` už je správně „Veseléponožky.sk“,
+  ale obrázek ne. Stejné logo je i na banneru s tričkem.
+- **E-mail v hlavičce je `ponozky@veseleponozky.cz`**, i když SK schránka
+  `ponozky@veseleponozky.sk` existuje (potvrzeno 2026‑09‑16) a `kontakt.html`
+  ji už používá.
+- **Meta description homepage** končí „…produktov Veseleponozky**.cz**“.
+
+### 7. ⚠️ Náš kód: SK jede zastaralou pokladnu
+
+`50-checkout.js` je na SK pinnutý na `@2cf01b4` a chybí mu commit `9f5e41b`
+(upsell blok: pilulky místo dropdownu, +89 řádků). CZ už na něm jede. Oprava je
+bump hashe v administraci, nic se negeneruje. Ostatní SK skripty i CSS jsou
+aktuální (ověřeno `git diff` proti pinnutým hashům).
+
+### 8. ⚠️ Právní stránky jsou česky
+
+VOP (61615), GDPR (61621) a Vrátenie tovaru (61618) jsou duplikáty s **českým
+textem**. Dohodnuto jako mimo rozsah — slovenské spotřebitelské právo a dozorové
+orgány jsou jiné, překlad českého textu nestačí.
+
+### 9. ⚠️ Čtyři barevné kategorie z HP na SK neexistují
+
+České 1243445 MultiPACK, 1243460 Zdravotnictví, 1243463 Káva a 1243517 Adventní
+kalendáře duplikace nepřenesla — slovenský strom je má jen jako podkategorie pod
+Pánske, Dámske a Detské. Dokud nevzniknou, míří mobilní menu na čtyři hlavní
+kategorie (viz `i18n/sk-ids.mjs` → `SIDE_CATEGORIES_SK`). Až je založíš, přepiš
+ID v `i18n/sk-texty.mjs` a spusť `node build-sk.mjs`.
+
+## ✅ Vyřešeno (dřív tu bylo jako blokující)
+
+- **HTTPS na `www.veseleponozky.sk` funguje.** Certifikát doménu pokrývá,
+  prohlížeč nehlásí varování (ověřeno 2026‑09‑16). Dřívější poznámka
+  „nepřesměrovávat zákazníky na .sk“ už neplatí.
+- **Koloo zákazníky neobtěžuje.** Kampaň je slovenská („ZÍSKAJTE ZĽAVU“) a na
+  `.sk` běží bez chyby. Chybový `alert()` o nepovolené doméně vyskakuje **jen na
+  technické adrese `exitshop.cz`**, která ve whitelistu kampaně není. Pro
+  zákazníky je to neviditelné; při testování přes technickou adresu to ale
+  otravuje — pokud vadí, doplň `www.exitshop.cz` do kampaně na my.koloo.net.
+- **Dlaždice kategorií na HP** už na česká ID nemíří. Jediné české ID na
+  homepage zbyla v těch třech bannerech (bod 1).
+- **Ceník dopravy v produktovém detailu je vyplněný** — značky
+  `{{SK_DOPRAVCA_*}}`, `{{SK_ZADARMO_*}}`, `{{SK_CENA_*}}` a
+  `{{SK_DOPRAVA_ZADARMO_OD}}` už v `i18n/` hodnoty mají. `node check-sk.mjs`
+  hlásí 13 souborů / 0 nálezů / 0 nevyplněných značek.
 
 ## Co zbývá česky v administraci SK shopu
 
-Tohle náš kód vyřešit nemůže, jsou to data v administraci:
+Tohle náš kód vyřešit nemůže, jsou to data a nastavení v administraci.
+Co z toho spadne pod jedno nastavení jazyka, je v bodu 2 výš — tady je zbytek:
 
-- **Názvy kategorií** — menu ukazuje „Pánské Veselé ponožky“, protože `header.js`
-  bere název z navigace (schválně, aby se neudržoval na dvou místech).
-  Přejmenovat je musíš v administraci.
-- **Parametry produktů** — „Je hlavní produkt / Ano / Motiv / Povolání / Velikost“
-  se na detailu vypisují z katalogu.
+- **Oznamovací lišta** — „VESELÉ PONOŽKY SE SLEVOU AŽ 90%“. Text bere
+  `countdown-bar.js` z `#notification-bar-text`, což je obsah lišty
+  z administrace (Marketing a slevy).
+- **Nadpisy sloupců v patičce** — „KATEGORIE / INFORMACE / SÍDLO FIRMY /
+  ADRESA SKLADU“. Jsou to nativní `.footer-column`, `footer.js` jim jen přidává
+  třídu `vp-foot__acc-head` kvůli akordeonu na mobilu.
+- **Nadpis nad tabulkou variant** — „Vyberte velikost“ (`.choose-variant-title`)
+  přichází ze šablony, ne z naší položky.
+- **Názvy kategorií** — menu ukazuje název z navigace schválně, aby se
+  neudržoval na dvou místech. Přejmenovat je musíš v administraci.
+- **Parametry produktů** — „Velikost VP / Velikosti / Je hlavní produkt / Ano /
+  Motiv / Povolání“ se na detailu vypisují z katalogu.
+- **Děkovná hláška newsletteru** — „Děkujeme!“ je text ecomailového formuláře
+  (`.ec-v-form-text`), mění se v Ecomailu, ne u nás.
 - **Loga dopravců** v `doprava.html` jsou hashe z **českého** košíku
   (`/files/310/media/shipping/<hash>.png`). Načtou se (310 je ID účtu), ale
   ukazují metody, které ve slovenské pokladně nejsou — přepiš je spolu s cenami.

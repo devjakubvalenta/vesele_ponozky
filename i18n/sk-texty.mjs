@@ -88,10 +88,11 @@ export const TEXTY = {
     [`var CURRENCY = ' Kč';`, `var CURRENCY = ' €';`],
     [`var DECIMALS = 0;`, `var DECIMALS = 2;`],
     [`var DECIMAL_SEP = ',';`, `var DECIMAL_SEP = '.';`],
-    // Poznámka u dopravy: „Zdarma nad 999 Kč“ → „Zadarmo nad 999 Kč“.
-    // Měnu skript přebírá z názvu metody, tady se mění jen slovo —
-    // FREE_RE i FREE_PRICE_RE umí oba jazyky a zůstávají beze změny.
-    [`var FREE_WORD = 'Zdarma nad';`, `var FREE_WORD = 'Zadarmo nad';`]
+    // Poznámka u dopravy: „Zdarma nad 999 Kč“ → „Zadarmo od 39,99 €“.
+    // Mění se tu jen SLOVO. Měnu, číslo I PŘEDLOŽKU („nad“ / „od“) skript
+    // přebírá z názvu metody v administraci, takže zvládne českou i slovenskou
+    // formulaci bez dalšího zásahu — FREE_RE i FREE_PRICE_RE umí oba jazyky.
+    [`var FREE_WORD = 'Zdarma';`, `var FREE_WORD = 'Zadarmo';`]
     // Popisek souhlasu se NEPŘEKLÁDÁ: skript lepí „Ne“ před slovo, které
     // v popisku opravdu našel, takže zvládne „Souhlasím“ i „Súhlasím“.
   ],
@@ -105,6 +106,11 @@ export const TEXTY = {
   ],
 
   "header.js": [
+    /* Odznak Heureka ve slovenské verzi. Starý 698×272 (poměr 2,566),
+       nový 233×91 (2,560) — poměr sedí, CSS ho škáluje na `height: 46px`
+       (mobil 30px), takže se nic nedeformuje. */
+    [`    heureka: MEDIA + "heureka_banner.png",`,
+     `    heureka: MEDIA + "skheureka.png",`],
     // Čtyři barevné kategorie v mobilním menu. České kategorie 1243445/60/63/
     // 1243517 na slovenském shopu neexistují (duplikace je nepřenesla), proto
     // míříme na hlavní slovenské kategorie — viz i18n/sk-ids.mjs.
@@ -127,6 +133,12 @@ export const TEXTY = {
   "40-product-detail.js": [...DETAIL, ...DETAIL_FAQ],
 
   "footer.js": [
+    /* Logo v patičce. České je SVG 442×107 (poměr 4,13), slovenské PNG
+       839×164 (5,12) — CSS dává `width: clamp(190px, 38vw, 270px)` a
+       `height: auto`, takže slovenské vyjde o něco nižší. Alt se překládá
+       níž („Veseléponožky.cz" → „.sk"). */
+    [`    logo: MEDIA + "vesel%C3%A9pono%C5%BEky_logo.svg",`,
+     `    logo: MEDIA + "logosk.png",`],
     // Ecomail: slovenský seznam se přepíná jediným ID v i18n/sk-ids.mjs.
     // Když tam ID není, náhrada se vůbec nepřidá a v SK footeru zůstane české.
     ...(SK_ECOMAIL.formId

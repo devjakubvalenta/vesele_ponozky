@@ -29,7 +29,7 @@
   <li><a href="/cms/61609-recenze"><span><img src="/files/310/files/ikony1.svg" class="img-responsive-editor" alt=""></span><span><strong>97 % zákazníkov odporúča</strong><small>Spokojnosť zákazníkov je pre nás najlepšia vizitka.</small></span></a></li>
   <li><a href="/cms/61612-vyroba"><span><img src="/files/310/files/ikony2.svg" class="img-responsive-editor" alt=""></span><span><strong>Výroba v Třeboni</strong><small>Kvalita je u nás na prvom mieste.</small></span></a></li>
   <li><a href="/cms/61618-vraceni-zbozi"><span><img src="/files/310/files/ikony3.svg" class="img-responsive-editor" alt=""></span><span><strong>Vrátenie do 120 dní</strong><small>Bez obáv, keď nesadne veľkosť.</small></span></a></li>
-  <li><a href="/cms/61600-doprava-a-platba"><span><img src="/files/310/files/ikony4.svg" class="img-responsive-editor" alt=""></span><span><strong>Doprava zadarmo</strong><small>Doručenie druhý pracovný deň.</small></span></a></li>
+  <li><a href="/cms/61600-doprava-a-platba"><span><img src="/files/310/files/ikony4.svg" class="img-responsive-editor" alt=""></span><span><strong>Doprava zadarmo od 39,99 €</strong><small>Doručenie druhý pracovný deň.</small></span></a></li>
 </ul>
 
 <!-- =====================================================================
@@ -199,12 +199,16 @@
      3,99 € (dobierka +1,69 €). Žádná Balíkovna ani PPL/Alzabox, proto jen
      dva řádky. Musí sedět s tím, co zákazník uvidí v košíku.
 
-     ⚠️ Poznámka o dopravě zadarmo tu SCHVÁLNĚ NENÍ a ve „Časté otázky"
-     chybí i otázka „Od akej sumy mám dopravu zadarmo?". Eurová hranice
-     v administraci SK shopu nastavená není — košík dnes ukazuje
-     nepřenastavené „Zadarmo nad 999 Kč". Až se nastaví, přidej do prvního
-     sloupce řádku <span>Zadarmo nad X €</span> (stejně jako v české verzi)
-     a stejnou částku doplň i do src/content/sk/doprava.html.
+     HRANICE DOPRAVY ZADARMO je 39,99 € — jeden plochy limit na OBĚ metody
+     (potvrzeno uživatelem 2026-09-17). Je v prvním sloupci obou řádků jako
+     <span>Zadarmo od 39,99 €</span>, ve „Častých otázkách" jako samostatná otázka
+     a stejná částka je i v src/content/sk/doprava.html, v USP blocich
+     (homepage i tady) a v i18n/sk-texty-detail.mjs + sk-texty-faq.mjs.
+
+     ⚠️ Až se limit změní, projdi VŠECH šest míst — a hlavně názvy metod
+     v administraci SK shopu, odkud je bere košík. Ten dnes pod názvem
+     metody pořád hlásí „Zadarmo nad 999 Kč"; dokud se to neopraví tam,
+     slíbí stránka něco jiného než pokladna.
 
      ČÍSLOVANÉ SEZNAMY s tučným lead-inem („Materiál a starostlivosť"): obal
      <ol class="pd-steps">, uvnitř <li><strong>Titulok</strong><p>Text</p></li>.
@@ -266,8 +270,8 @@
     <p class="pd-subhead">Možnosti dopravy</p>
     <table class="pd-ship">
       <tbody>
-        <tr><td>Packeta – výdajné miesta a boxy</td><td>2,99 €</td></tr>
-        <tr><td>Packeta – doručenie domov</td><td>3,99 €</td></tr>
+        <tr><td>Packeta – výdajné miesta a boxy<span>Zadarmo od 39,99 €</span></td><td>2,99 €</td></tr>
+        <tr><td>Packeta – doručenie domov<span>Zadarmo od 39,99 €</span></td><td>3,99 €</td></tr>
       </tbody>
     </table>
   </div>
@@ -312,6 +316,8 @@
         <div class="pd-faq__body">
           <p class="pd-faq__q">Aké ponúkate možnosti dopravy a ako rýchlo balík dorazí?</p>
           <div class="pd-faq__a"><p>Odosielame bleskovo! Zásielky odovzdávame dopravcovi spravidla do 24 hodín. Využiť môžete výdajné miesta, samoobslužné boxy aj doručenie kuriérom priamo na adresu. Bežná doba doručenia je 1–2 pracovné dni.</p></div>
+          <p class="pd-faq__q">Od akej sumy mám dopravu zadarmo?</p>
+          <div class="pd-faq__a"><p>Dopravu zadarmo od nás získate pri nákupe od 39,99 €.</p></div>
           <p class="pd-faq__q">Aké spôsoby platby podporujete?</p>
           <div class="pd-faq__a"><p>Zaplatiť môžete pohodlne kartou online, rýchlym bankovým prevodom, cez Apple Pay / Google Pay alebo na dobierku pri prevzatí.</p></div>
         </div>

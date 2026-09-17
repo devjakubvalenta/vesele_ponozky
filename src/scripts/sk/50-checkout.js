@@ -59,9 +59,15 @@
      na „999 €“ by zákazníkovi tvrdilo něco jiného než pokladna.
 
      Pozor na koncovku: česky „zdarmA“, slovensky „zadarmO“ — `za?darm[ao]`
-     musí pokrýt obě, jinak se jedna z nich tiše mine. */
-  var FREE_RE = /\s*[-–—]?\s*za?darm[ao]\s+nad\s+([0-9][0-9\s.,]*)\s*(k[čc]|€|eur)\s*/i;
-  var FREE_WORD = 'Zadarmo nad';
+     musí pokrýt obě, jinak se jedna z nich tiše mine.
+
+     PŘEDLOŽKA se také CHYTÁ a přebírá z názvu — české metody používají
+     „ZDARMA NAD 999 Kč“, slovenské mají mít „ZADARMO OD 39,99 €“ (ověřeno
+     2026-09-17: zbytek webu už říká „od“). Kdyby tu bylo natvrdo „nad“,
+     slovenský název by se nevyzobl a poznámka by zůstala slepená v jednom
+     řádku — přesně to, co tenhle kód řeší. */
+  var FREE_RE = /\s*[-–—]?\s*za?darm[ao]\s+(nad|od)\s+([0-9][0-9\s.,]*)\s*(k[čc]|€|eur)\s*/i;
+  var FREE_WORD = 'Zadarmo';
 
   /* Platforma píše cenu „ZDARMA“ (CZ) i „ZADARMO“ (SK) — obojí na obou
      shopech, ze stejného důvodu jako výš. */
@@ -97,7 +103,7 @@
     var free = '';
     var m = raw.match(FREE_RE);
     if (m) {
-      free = FREE_WORD + ' ' + m[1].trim() + ' ' + currencySymbol(m[2]);
+      free = FREE_WORD + ' ' + m[1].toLowerCase() + ' ' + m[2].trim() + ' ' + currencySymbol(m[3]);
       raw = raw.replace(FREE_RE, ' ');
     }
 

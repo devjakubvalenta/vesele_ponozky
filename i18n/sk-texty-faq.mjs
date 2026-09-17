@@ -105,15 +105,15 @@ export const DETAIL_FAQ = [
           "Odosielame bleskovo! Zásielky odovzdávame dopravcovi spravidla do 24 hodín. Využiť " +
           "môžete výdajné miesta, samoobslužné boxy aj doručenie kuriérom priamo na adresu. " +
           "Bežná doba doručenia je 1–2 pracovné dni."`],
-  /* Otázka „Od jaké částky mám dopravu zdarma?" se ze slovenského FAQ VYPOUŠTÍ
-     (nahrazuje se prázdnem i s obalem pole a čárkou). Eurová hranice dopravy
-     zadarmo v administraci SK shopu nastavená není, takže jakákoli částka by
-     byla slib, který košík nesplní. Až se nastaví, vrátit sem překlad. */
-  [`        [
-          "Od jaké částky mám dopravu zdarma?",
-          "Dopravu zadarmo od nás získáte při nákupu nad 999 Kč."
-        ],
-`, ``],
+  /* Hranice dopravy zadarmo je 39,99 € — jeden plochý limit na obě metody
+     (potvrzeno uživatelem 2026-09-17). DŘÍV se tahle otázka ze slovenského FAQ
+     vypouštěla, protože částka nebyla známá; teď se normálně překládá.
+     ⚠️ Košík pořád hlásí „Zadarmo nad 999 Kč" — bere to z názvu metody
+     v administraci. Dokud se název neopraví tam, FAQ slíbí něco jiného. */
+  [`          "Od jaké částky mám dopravu zdarma?",
+          "Dopravu zadarmo od nás získáte při nákupu nad 999 Kč."`,
+   `          "Od akej sumy mám dopravu zadarmo?",
+          "Dopravu zadarmo od nás získate pri nákupe od 39,99 €."`],
   [`          "Jaké způsoby platby podporujete?",
           "Zaplatit můžete pohodlně kartou online, rychlým bankovním převodem, přes " +
           "Apple Pay / Google Pay nebo na dobírku při převzetí."`,

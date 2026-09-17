@@ -93,12 +93,48 @@
     } catch (e) { return null; }
   }
 
-  function cacheWrite(end, ended) {
+  function cacheWrite(end, ended, label) {
     try {
       sessionStorage.setItem(CACHE_KEY, JSON.stringify({
-        e: end || 0, t: ended || "", x: Date.now() + CACHE_TTL
+        e: end || 0, t: ended || "", l: label || "", x: Date.now() + CACHE_TTL
       }));
     } catch (e) { /* private mode — jen se nekešuje */ }
+  }
+
+  /* TEXT LIŠTY z nastavení odpočtu (`data-text` na `.es-countdown`, pole
+     „Textová zpráva zobrazena vedle odpočítávání“ v administraci).
+
+     Proč to řešíme: text v liště je JINÉ nastavení než odpočet — je to obsah
+     označovací lišty (`#notification-bar-text`). Na slovenském shopu tam po
+     duplikaci zůstala čeština („VESELÉ PONOŽKY SE SLEVOU AŽ 90%“), zašímco
+     u odpočtu už slovenský text je. Když je `data-text` vyplněný, bereme ho
+     jako zdroj pravdy a obsah lišty přepíšeme.
+
+     ⚠️ Děje se to JEN když je neprázdný. Český shop má `data-text=""`
+     (ověřeno 2026-09-17), takže se ho změna netýká a lišta si drží svůj
+     vlastní obsah i s případným formátováním. */
+  function label(raw) {
+    var t = (raw || "").trim();
+    if (!t) return "";
+    if (/[<&]/.test(t)) {
+      var tmp = document.createElement("div");
+      tmp.innerHTML = t;
+      t = (tmp.textContent || "").trim();
+    }
+    return t;
+  }
+
+  /* Přepisuje obsah lišty, ale náš `.vp-cd` nechává žít — běží v něm
+     interval a nový span by znamenal druhý časovač nad osiřelým uzlem. */
+  function applyLabel(textSpan, text) {
+    if (!text) return;
+    var cd = textSpan.querySelector(".vp-cd");
+    Array.prototype.slice.call(textSpan.childNodes).forEach(function (n) {
+      if (n !== cd) textSpan.removeChild(n);
+    });
+    var p = document.createElement("p");
+    p.textContent = text;
+    textSpan.insertBefore(p, cd || null);
   }
 
   function tick(cd, target, endedText) {
@@ -143,7 +179,8 @@
         var m = /data-endtime\s*=\s*["']([^"']+)["']/i.exec(html);
         if (!m) { done(null); return; }
         var t = /data-end-event-text-content\s*=\s*["']([^"']*)["']/i.exec(html);
-        done({ end: parseEnd(m[1]), ended: plainText(t && t[1]) });
+        var x = /\sdata-text\s*=\s*["']([^"']*)["']/i.exec(html);
+        done({ end: parseEnd(m[1]), ended: plainText(t && t[1]), label: label(x && x[1]) });
       })
       .catch(function () { done(null); });
   }
@@ -163,7 +200,9 @@
     if (el) {
       var end = parseEnd(el.getAttribute("data-endtime"));
       var ended = plainText(el.getAttribute("data-end-event-text-content"));
-      cacheWrite(end, ended);
+      var txt = label(el.getAttribute("data-text"));
+      cacheWrite(end, ended, txt);
+      applyLabel(textSpan, txt);
       render(textSpan, end, ended);
       return;
     }
@@ -171,6 +210,7 @@
     // 2) keš z předchozí stránky (včetně negativní — ať se nestahuje na každé)
     var c = cacheRead();
     if (c) {
+      applyLabel(textSpan, c.l);
       if (c.e) render(textSpan, c.e, c.t || ENDED_FALLBACK);
       return;
     }
@@ -178,14 +218,15 @@
     // 3) homepage
     fromHomepage(function (data) {
       if (!data || !data.end || isNaN(data.end)) {
-        cacheWrite(0, "");
+        cacheWrite(0, "", "");
         if (window.console) {
           console.info("[vp] Odpočet v lište: koniec akcie sa nepodarilo načítať " +
             "z administrácie — %countdown% nie je ani na tejto stránke, ani na homepage.");
         }
         return;
       }
-      cacheWrite(data.end, data.ended);
+      cacheWrite(data.end, data.ended, data.label);
+      applyLabel(textSpan, data.label);
       render(textSpan, data.end, data.ended);
     });
   }
