@@ -643,9 +643,15 @@
 .main-order-form #block-service-21721 .info-warapper::before {
   background-image: url("../assets/media/balne.png");
 }
-.main-order-form #block-service-20783 .info-warapper::before,
-.main-order-form #block-service-21724 .info-warapper::before {
+.main-order-form #block-service-20783 .info-warapper::before {
   background-image: url("../assets/media/dysko.png");
+}
+/* Slovenská varianta má v srdíčku EURO — český dysko.png má „Kč" vypálené
+   v grafice, což na eurovém shopu slíbilo koruny. Zdroj je menší (125×92 proti
+   730×801), v boxu 92×92 s `contain` vyjde 92×68 — velikostní rozdíl proti
+   české ikoně je zanedbatelný, na 2× displeji bude jen o chlup měkčí. */
+.main-order-form #block-service-21724 .info-warapper::before {
+  background-image: url("../assets/media/dyskoSK.png");
 }
 /* popis hned pod titulkem, zarovnaný vedle ikony (přebíjí globální odsazení panelu) */
 .main-order-form #block-service-20780 .card-body,
