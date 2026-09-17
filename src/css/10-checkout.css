@@ -556,15 +556,23 @@
 
 /* Ikony u vybraných doplňkových služeb (nativní panely).
    Balné = #block-service-20780, Dýško = #block-service-20783 — oba přes stabilní id panelu (service ID).
+   ⚠️ SLOVENSKÝ SHOP MÁ VLASTNÍ ID: Balné = 21721, Prepitné = 21724 (ověřeno živě 2026-09-17).
+   Služby jsou produkty a duplikace jim dala nová čísla, takže česká id sama o sobě minou
+   a ikony se vůbec nenakreslí. Každý selektor níž proto nese OBE dvojice. Při založení
+   další služby (nebo další jazykové mutace) je nutné id dopsat i sem.
    „Produkt číslo 2" (#block-service-20843) záměrně BEZ ikony (placeholder) → žádné pravidlo. */
 .main-order-form #block-service-20780 .info-warapper > .content,
-.main-order-form #block-service-20783 .info-warapper > .content {
+.main-order-form #block-service-21721 .info-warapper > .content,
+.main-order-form #block-service-20783 .info-warapper > .content,
+.main-order-form #block-service-21724 .info-warapper > .content {
   display: flex !important;
   align-items: center !important;
   gap: 0.75rem;
 }
 .main-order-form #block-service-20780 .info-warapper > .content > .card-title:not(.add-service-price),
-.main-order-form #block-service-20783 .info-warapper > .content > .card-title:not(.add-service-price) {
+.main-order-form #block-service-21721 .info-warapper > .content > .card-title:not(.add-service-price),
+.main-order-form #block-service-20783 .info-warapper > .content > .card-title:not(.add-service-price),
+.main-order-form #block-service-21724 .info-warapper > .content > .card-title:not(.add-service-price) {
   display: flex !important;
   align-items: center;
   gap: 0.4rem;
@@ -572,12 +580,16 @@
   min-width: 0;
 }
 .main-order-form #block-service-20780 .info-warapper > .content > .add-service-price,
-.main-order-form #block-service-20783 .info-warapper > .content > .add-service-price {
+.main-order-form #block-service-21721 .info-warapper > .content > .add-service-price,
+.main-order-form #block-service-20783 .info-warapper > .content > .add-service-price,
+.main-order-form #block-service-21724 .info-warapper > .content > .add-service-price {
   margin-left: auto;
   flex: 0 0 auto;
 }
 .main-order-form #block-service-20780 .info-warapper > .content > .clearfix,
-.main-order-form #block-service-20783 .info-warapper > .content > .clearfix {
+.main-order-form #block-service-21721 .info-warapper > .content > .clearfix,
+.main-order-form #block-service-20783 .info-warapper > .content > .clearfix,
+.main-order-form #block-service-21724 .info-warapper > .content > .clearfix {
   display: none !important;
 }
 /* šedé pozadí titulku ze šablony (.content { background:#f5f5f5a1 }) — pryč u všech služeb */
@@ -602,7 +614,9 @@
 
 /* velká ikona vlevo přes celou výšku panelu (vlastní CSS background) */
 .main-order-form #block-service-20780 .info-warapper,
-.main-order-form #block-service-20783 .info-warapper {
+.main-order-form #block-service-21721 .info-warapper,
+.main-order-form #block-service-20783 .info-warapper,
+.main-order-form #block-service-21724 .info-warapper {
   position: relative;
   padding: 0.9rem 1rem 0.9rem calc(92px + 2rem) !important;
   min-height: calc(92px + 1.4rem);
@@ -611,7 +625,9 @@
   justify-content: center;
 }
 .main-order-form #block-service-20780 .info-warapper::before,
-.main-order-form #block-service-20783 .info-warapper::before {
+.main-order-form #block-service-21721 .info-warapper::before,
+.main-order-form #block-service-20783 .info-warapper::before,
+.main-order-form #block-service-21724 .info-warapper::before {
   content: "";
   position: absolute;
   left: 0.9rem;
@@ -623,24 +639,29 @@
   background-position: center;
   background-size: contain;
 }
-.main-order-form #block-service-20780 .info-warapper::before {
+.main-order-form #block-service-20780 .info-warapper::before,
+.main-order-form #block-service-21721 .info-warapper::before {
   background-image: url("../assets/media/balne.png");
 }
-.main-order-form #block-service-20783 .info-warapper::before {
+.main-order-form #block-service-20783 .info-warapper::before,
+.main-order-form #block-service-21724 .info-warapper::before {
   background-image: url("../assets/media/dysko.png");
 }
 /* popis hned pod titulkem, zarovnaný vedle ikony (přebíjí globální odsazení panelu) */
 .main-order-form #block-service-20780 .card-body,
-.main-order-form #block-service-20783 .card-body {
+.main-order-form #block-service-21721 .card-body,
+.main-order-form #block-service-20783 .card-body,
+.main-order-form #block-service-21724 .card-body {
   padding: 0.25rem 0 0 !important;
   border-top: none !important;
   margin-top: 0.1rem !important;
 }
 
 /* Vybraná služba → modrý outline + světle modré pozadí.
-   Balné (#block-service-20780) je povinné → zvýrazněné trvale. */
+   Balné (CZ #block-service-20780, SK #block-service-21721) je povinné → zvýrazněné trvale. */
 .main-order-form .additional-service-panel:has(input.additional_service:checked),
-.main-order-form #block-service-20780 {
+.main-order-form #block-service-20780,
+.main-order-form #block-service-21721 {
   border-color: var(--cx-accent) !important;
   border-width: 1px !important;
   box-shadow: 0 0 0 1px var(--cx-accent) !important;
@@ -648,10 +669,12 @@
 }
 /* Balné: dekorativní „zaškrtnutí" (reálný checkbox skrývá platforma) + neklikat na label,
    ať skrytý checkbox nejde omylem přepnout */
-.main-order-form #block-service-20780 .card-title label {
+.main-order-form #block-service-20780 .card-title label,
+.main-order-form #block-service-21721 .card-title label {
   pointer-events: none;
 }
-.main-order-form #block-service-20780 .card-title label::before {
+.main-order-form #block-service-20780 .card-title label::before,
+.main-order-form #block-service-21721 .card-title label::before {
   content: "✓";
   display: inline-flex;
   align-items: center;
@@ -670,12 +693,16 @@
 
 @media (max-width: 575.98px) {
   .main-order-form #block-service-20780 .info-warapper,
-  .main-order-form #block-service-20783 .info-warapper {
+  .main-order-form #block-service-21721 .info-warapper,
+  .main-order-form #block-service-20783 .info-warapper,
+  .main-order-form #block-service-21724 .info-warapper {
     padding-left: calc(64px + 1.6rem) !important;
     min-height: calc(64px + 1.2rem);
   }
   .main-order-form #block-service-20780 .info-warapper::before,
-  .main-order-form #block-service-20783 .info-warapper::before {
+  .main-order-form #block-service-21721 .info-warapper::before,
+  .main-order-form #block-service-20783 .info-warapper::before,
+  .main-order-form #block-service-21724 .info-warapper::before {
     width: 64px;
     height: 64px;
     left: 0.75rem;
