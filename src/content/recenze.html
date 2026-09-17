@@ -2,7 +2,9 @@
   Stránka „Recenze" (CMS) — vkládá se do: Administrace → CMS a blog → Recenze (cms/60954-recenze)
   ⚠️ ZDROJOVÝ režim editoru (</>), ne WYSIWYG. Jen <div>/<img>/<a> (editor sanitizuje section/form).
   Nahoře nadpis + statistický panel (customers/rating/trust_badge), pod ním mřížka 17 recenzí
-  (hvězdy + citace + emoji avatar + jméno + „Ověřený zákazník" + datum). Newsletter = kopie z O nás.
+  (hvězdy + citace + emoji avatar + jméno + „Ověřený zákazník" + datum), dole blok recenzí
+  z Heureky (nativní placeholder platformy — markup vykresluje platforma, my ho jen stylujeme).
+  Newsletter tu NENÍ — vkládá ho globálně src/scripts/footer.js do patičky.
   Styl dodává 95-recenze.css (scope .vp-recenze) přes CDN.
 -->
 <div class="vp-recenze">
@@ -238,5 +240,17 @@
 
   </div>
 
+  <!-- 4. RECENZE Z HEUREKY (nativní placeholder platformy) -->
+  <!--
+    Placeholder vykresluje PLATFORMA, my dodáváme jen obal + styl — stejná
+    konvence jako %vratka% ve vraceni.html nebo %contact_form% v kontakt.html.
+    Podle šablony z něj má být <section class="review-list review-list-horizontal">
+    s kartami .itembox-item (owl carousel), uvnitř .stars + <blockquote> +
+    .review-avatar. Styl: 95-recenze.css, sekce „RECENZE Z HEUREKY".
+    ⚠️ Když se na stránce ukáže doslovný text „%heureka_reviews_horizontal%",
+    placeholder tímhle jménem neexistuje — platforma nerozbalené nechává být.
+  -->
+  <h2 class="vp-recenze__heureka-title">Ověřeno zákazníky na Heurece</h2>
+  <div class="vp-recenze__heureka" id="vp-heureka">%heureka_reviews_horizontal%</div>
 
 </div>

@@ -1,0 +1,118 @@
+<!--
+  E-MAIL: POTVRZENÍ PŘIHLÁŠENÍ K ODBĚRU NOVINEK (česká verze, shop 28056).
+
+  Kam: Administrace → nastavení newsletteru → zaškrtnuté „Odeslat uživateli
+  email po přihlášení k odběru novinek" → pole „Text emailu", ZDROJOVÝ
+  režim editoru (</>).
+
+  Předmět e-mailu (pole „Předmět emailu" nad editorem):
+    Vítejte! Tady je váš slevový kód na 15 %
+
+  ⚠️ POZOR NA DVA E-MAILY. Formulář v patičce webu NENÍ tenhle platformní
+  formulář — je to Ecomail embed widget (formulář 4, účet witsocks), který
+  mountuje src/scripts/footer.js. Pokud má Ecomail zapnutou welcome
+  automatizaci, pošle svůj vlastní uvítací e-mail. Tahle šablona se odešle
+  jen tam, kde se použije NATIVNÍ newsletterové pole platformy. Než to
+  zapneš, ověř, že zákazník nedostane oba e-maily naráz — jinak jeden
+  z nich vypni.
+
+  ⚠️ KÓD MUSÍ SEDĚT NA TŘECH MÍSTECH, jinak ho zákazník v košíku neuplatní:
+    1. tady (a v Ecomailu, pokud welcome e-mail posílá on),
+    2. v src/scripts/footer.js → NEWSLETTER.code (zobrazení hned po odeslání),
+    3. v administraci eshopu jako skutečný slevový kupón.
+  Teď je to všude VESELE15.
+
+  ⚠️ PODMÍNKY KUPÓNU. V e-mailu záměrně nestojí žádná omezení (minimální
+  útrata, platnost, jen první nákup), protože je neznáme. Pokud je kupón
+  v administraci má, DOPIŠ je do řádku pod kódem — jinak zákazníkovi
+  v košíku neprojde a je z toho reklamace.
+
+  Proč tabulky a inline styly: e-mailoví klienti (Gmail, Outlook) zahazují
+  <style> v hlavičce a neumí flexbox/grid. Font Arial/Helvetica, protože
+  Space Grotesk z webu se v e-mailu nenačte. Odkazy a obrázky jsou
+  ABSOLUTNÍ s https://www.veseleponozky.cz — v e-mailu není stránka, vůči
+  které by se cesta od kořene vyhodnotila.
+
+  Odhlašovací odkaz doplňuje platforma/Ecomail sama. Jestli ho odeslaný
+  e-mail neobsahuje, musí se doplnit ručně — bez něj je rozesílka
+  v rozporu s pravidly pro obchodní sdělení.
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f4f6fb" style="background:#f4f6fb;margin:0;padding:0;">
+  <tbody>
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+          <tbody>
+
+            <!-- HLAVIČKA: textové logo na modré -->
+            <tr>
+              <td bgcolor="#1361cf" align="center" style="background:#1361cf;padding:22px 24px;">
+                <a href="https://www.veseleponozky.cz/" style="text-decoration:none;color:#ffffff;font-size:26px;font-weight:bold;letter-spacing:0.5px;">Veselé&nbsp;<span style="color:#fbbc02;">ponožky</span></a>
+              </td>
+            </tr>
+
+            <!-- UVÍTÁNÍ -->
+            <tr>
+              <td align="center" style="padding:32px 32px 8px;">
+                <img src="https://www.veseleponozky.cz/files/310/files/HP6.png" width="76" height="81" alt="Maskot Veselé ponožky" style="display:block;border:0;width:76px;height:81px;margin:0 auto 16px;">
+                <h1 style="margin:0 0 8px;font-size:26px;line-height:1.25;color:#1361cf;">Vítejte mezi námi!</h1>
+                <p style="margin:0;font-size:16px;line-height:1.5;color:#475569;">Díky, že jste se přihlásili k&nbsp;odběru novinek.</p>
+              </td>
+            </tr>
+
+            <!-- SLEVOVÝ KÓD -->
+            <tr>
+              <td style="padding:24px 32px 0;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#fdf6e0" style="background:#fdf6e0;border-radius:12px;">
+                  <tbody>
+                    <tr>
+                      <td align="center" style="padding:24px 20px;">
+                        <p style="margin:0 0 10px;font-size:15px;line-height:1.5;color:#475569;">Váš slevový kód na <strong style="color:#0f172a;">15&nbsp;%</strong></p>
+                        <p style="margin:0 0 10px;font-size:28px;line-height:1.2;font-weight:bold;letter-spacing:2px;color:#1361cf;">VESELE15</p>
+                        <p style="margin:0;font-size:13px;line-height:1.5;color:#475569;">Zadejte ho v&nbsp;košíku do pole pro slevový kód.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <!-- TLAČÍTKO -->
+            <tr>
+              <td align="center" style="padding:24px 32px 0;">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                  <tbody>
+                    <tr>
+                      <td bgcolor="#1361cf" style="background:#1361cf;border-radius:8px;">
+                        <a href="https://www.veseleponozky.cz/" style="display:inline-block;padding:14px 28px;font-size:16px;font-weight:bold;color:#ffffff;text-decoration:none;">Vybrat si ponožky</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <!-- CO BUDE CHODIT -->
+            <tr>
+              <td align="center" style="padding:24px 32px 32px;font-size:14px;line-height:1.6;color:#475569;">
+                Posílat vám budeme jen to podstatné — nové motivy, tipy na dárky a&nbsp;akce. Žádné spamování.
+              </td>
+            </tr>
+
+            <!-- PATIČKA -->
+            <tr>
+              <td bgcolor="#0f172a" align="center" style="background:#0f172a;padding:20px 24px;font-size:12px;line-height:1.6;color:#94a3b8;">
+                <span style="color:#fbbc02;font-weight:bold;">Vyrobeno s&nbsp;láskou v&nbsp;Třeboni</span><br>
+                MODA ČAPEK s.r.o. · Boženy Němcové 1095, 379 01 Třeboň · IČ 02605104<br>
+                <a href="https://www.veseleponozky.cz/" style="color:#ffffff;text-decoration:none;">www.veseleponozky.cz</a>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </td>
+    </tr>
+  </tbody>
+</table>

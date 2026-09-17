@@ -1,0 +1,126 @@
+<!--
+  E-MAIL: POTVRDENIE PRIHLÁSENIA NA ODBER NOVINIEK — SLOVENSKÁ VERZE (28711).
+
+  Kam: Administrace SK shopu → nastavení newsletteru → zaškrtnuté „Odeslat
+  uživateli email po přihlášení k odběru novinek" → pole „Text emailu",
+  ZDROJOVÝ režim editoru (</>).
+
+  Předmět e-mailu (pole „Předmět emailu" nad editorem):
+    Vitajte! Tu je váš zľavový kód na 15 %
+
+  Zdroj pravdy je čeština: src/content/email-newsletter-potvrzeni.html.
+  Struktura i barvy jsou shodné — liší se jen text a doména v odkazech.
+
+  ⚠️ SLEVOVÝ KÓD ZŮSTÁVÁ ČESKÝ — VESELE15. Tak to má i i18n/sk-ids.mjs
+  (SK_ECOMAIL.code = null). Když se pro SK zavede vlastní kupón, změň ho
+  SOUČASNĚ na čtyřech místech, jinak ho zákazník v košíku neuplatní:
+    1. tady, 2. v i18n/sk-ids.mjs → SK_ECOMAIL.code (a přegeneruj SK skripty
+    přes node build-sk.mjs), 3. v administraci SK shopu jako skutečný kupón,
+    4. v Ecomailu, pokud welcome e-mail posílá on.
+
+  ⚠️ POZOR NA DVA E-MAILY. Formulář v patičce webu NENÍ tenhle platformní
+  formulář — je to Ecomail embed widget, který mountuje footer.js. Pokud má
+  Ecomail zapnutou welcome automatizaci, pošle svůj vlastní uvítací e-mail.
+  Než tohle zapneš, ověř, že zákazník nedostane oba naráz.
+  Navíc: SK seznam v Ecomailu je jiný než český (formulář
+  5-ed07fd6b07ff0199fabc8509f995f058) — welcome automatizace se na něm musí
+  nastavit zvlášť, česká se na slovenské adresy nespustí.
+
+  ⚠️ PODMÍNKY KUPÓNU. V e-mailu záměrně nestojí žádná omezení (minimální
+  útrata, platnost, jen první nákup), protože je neznáme. Pokud je kupón
+  v administraci má, DOPIŠ je do řádku pod kódem.
+
+  ⚠️ DOMÉNA V ODKAZECH. Míří na technickou adresu
+  https://www.exitshop.cz/shops/28711/, protože certifikát nepokrývá
+  www.veseleponozky.sk (reference/sk-mapa-id.md, bod 6). Až bude HTTPS
+  na .sk fungovat, je to jediné hledej & nahraď:
+      https://www.exitshop.cz/shops/28711/  →  https://www.veseleponozky.sk/
+  Obrázek zůstává na veseleponozky.cz — /files/310/ je ID ÚČTU, média jsou
+  sdílená a ta doména má platný certifikát. Zákazník ji nevidí.
+  V patičce je z téhož důvodu popisek „Navštíviť e-shop", ne vypsaná
+  adresa: viditelný text ve tvaru URL, který míří jinam, je pro spamové
+  filtry phishing signál. Až se prefix přepne na .sk, klidně tam vrať
+  www.veseleponozky.sk.
+
+  Odhlašovací odkaz doplňuje platforma/Ecomail sama. Jestli ho odeslaný
+  e-mail neobsahuje, musí se doplnit ručně.
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f4f6fb" style="background:#f4f6fb;margin:0;padding:0;">
+  <tbody>
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+          <tbody>
+
+            <!-- HLAVIČKA: textové logo na modré -->
+            <tr>
+              <td bgcolor="#1361cf" align="center" style="background:#1361cf;padding:22px 24px;">
+                <a href="https://www.exitshop.cz/shops/28711/" style="text-decoration:none;color:#ffffff;font-size:26px;font-weight:bold;letter-spacing:0.5px;">Veselé&nbsp;<span style="color:#fbbc02;">ponožky</span></a>
+              </td>
+            </tr>
+
+            <!-- PRIVÍTANIE -->
+            <tr>
+              <td align="center" style="padding:32px 32px 8px;">
+                <img src="https://www.veseleponozky.cz/files/310/files/HP6.png" width="76" height="81" alt="Maskot Veselé ponožky" style="display:block;border:0;width:76px;height:81px;margin:0 auto 16px;">
+                <h1 style="margin:0 0 8px;font-size:26px;line-height:1.25;color:#1361cf;">Vitajte medzi nami!</h1>
+                <p style="margin:0;font-size:16px;line-height:1.5;color:#475569;">Ďakujeme, že ste sa prihlásili na odber noviniek.</p>
+              </td>
+            </tr>
+
+            <!-- ZĽAVOVÝ KÓD -->
+            <tr>
+              <td style="padding:24px 32px 0;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#fdf6e0" style="background:#fdf6e0;border-radius:12px;">
+                  <tbody>
+                    <tr>
+                      <td align="center" style="padding:24px 20px;">
+                        <p style="margin:0 0 10px;font-size:15px;line-height:1.5;color:#475569;">Váš zľavový kód na <strong style="color:#0f172a;">15&nbsp;%</strong></p>
+                        <p style="margin:0 0 10px;font-size:28px;line-height:1.2;font-weight:bold;letter-spacing:2px;color:#1361cf;">VESELE15</p>
+                        <p style="margin:0;font-size:13px;line-height:1.5;color:#475569;">Zadajte ho v&nbsp;košíku do poľa pre zľavový kód.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <!-- TLAČIDLO -->
+            <tr>
+              <td align="center" style="padding:24px 32px 0;">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                  <tbody>
+                    <tr>
+                      <td bgcolor="#1361cf" style="background:#1361cf;border-radius:8px;">
+                        <a href="https://www.exitshop.cz/shops/28711/" style="display:inline-block;padding:14px 28px;font-size:16px;font-weight:bold;color:#ffffff;text-decoration:none;">Vybrať si ponožky</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ČO BUDE CHODIŤ -->
+            <tr>
+              <td align="center" style="padding:24px 32px 32px;font-size:14px;line-height:1.6;color:#475569;">
+                Posielať vám budeme len to podstatné — nové motívy, tipy na darčeky a&nbsp;akcie. Žiadne spamovanie.
+              </td>
+            </tr>
+
+            <!-- PÄTIČKA -->
+            <tr>
+              <td bgcolor="#0f172a" align="center" style="background:#0f172a;padding:20px 24px;font-size:12px;line-height:1.6;color:#94a3b8;">
+                <span style="color:#fbbc02;font-weight:bold;">Vyrobené s&nbsp;láskou v&nbsp;Třeboni</span><br>
+                MODA ČAPEK s.r.o. · Boženy Němcové 1095, 379 01 Třeboň · IČO 02605104<br>
+                <a href="https://www.exitshop.cz/shops/28711/" style="color:#ffffff;text-decoration:none;">Navštíviť e-shop</a>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -239,6 +239,95 @@
 }
 
 /* ================= Responsivita (BS4 breakpointy) ================= */
+/* ==== RECENZE Z HEUREKY =============================================
+   Nativní placeholder platformy (markup vkládá src/content/recenze.html,
+   vykresluje ho server). My dodáváme nadpis, obal a přebití šablonových
+   tříd, ať blok sedí se zbytkem stránky.
+
+   Co šablona renderuje (ověřeno v živém stylopisu /css/style.css i
+   v reference/template.css ř. 3198–3204):
+     section.review-list.review-list-horizontal
+       └ .itembox › .itembox-content (owl carousel)
+           └ .owl-item › .itembox-item.review
+               ├ span.stars.stars5      (PNG sprite 55×10 px)
+               ├ blockquote             (kurzíva + obří uvozovky přes :before/:after)
+               ├ .review-left / .review-right   (floaty)
+               └ .review-avatar         (šedý čtverec 32×32 s iniciálami)
+
+   ⚠️ Pravidla níž jsou psaná podle TĚCHTO tříd, ale samotný widget zatím
+   nebyl vidět naživo (na stránce ještě není). Po prvním nasazení projít
+   reálný DOM a doladit — hlavně carousel a hvězdy. Rules, které nic
+   netrefí, jsou neškodné.
+   =================================================================== */
+
+.vp-recenze__heureka-title {
+  margin: var(--rec-section) 0 0.4rem !important;
+  color: var(--rec-blue) !important;
+  font-size: clamp(1.3rem, 3vw, 1.9rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+}
+/* Mount drží pozici v layoutu; obsah do něj sype platforma.
+   overflow-x: auto je nutné kvůli `overflow-x: clip` na kořeni .vp-recenze
+   (ř. 20) — bez toho by se vodorovný carousel oříznul místo aby scrolloval. */
+.vp-recenze__heureka {
+  margin: 0 auto;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+/* .vp-recenze p { margin: 0 } (ř. 32–34) sundá odsazení i odstavcům widgetu */
+.vp-recenze__heureka p { margin: 0 0 0.5rem; }
+
+/* ---- Přebití šablonových tříd ---- */
+/* Floaty ze šablony nahradit mřížkou v rytmu .vp-recenze__cards */
+.vp-recenze__heureka .review-list-horizontal .review-left,
+.vp-recenze__heureka .review-list-horizontal .review-right {
+  float: none !important;
+}
+/* Karta = stejný jazyk jako .vp-recenze__card (rádius 14px, ne --rec-radius) */
+.vp-recenze__heureka .itembox-item,
+.vp-recenze__heureka .review {
+  height: auto !important;      /* owl na téhle platformě sype pevnou výšku */
+  padding: 1.15rem 1.3rem 1.3rem;
+  background: #fff;
+  border: 1px solid var(--rec-border);
+  border-radius: 14px;
+  box-shadow: var(--rec-shadow);
+  text-align: left !important;
+}
+/* Citace sjednotit s .vp-recenze__quote */
+.vp-recenze__heureka blockquote {
+  margin: 0 0 0.9rem;
+  padding: 0;
+  border: 0;
+  color: var(--rec-text);
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.55;
+}
+/* Šablona sází kolem citace uvozovky ve 40px Arialu (`content: open-quote`)
+   — vedle našich karet je to cizí těleso. Text si uvozovky nese sám. */
+.vp-recenze__heureka blockquote::before,
+.vp-recenze__heureka blockquote::after {
+  content: none !important;
+}
+/* Avatar: ze šedého čtverce kolečko v barvách webu (jako .vp-recenze__avatar) */
+.vp-recenze__heureka .review-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: var(--rec-pill);
+  background-color: var(--rec-blue) !important;
+  font-size: 14px !important;
+}
+/* Hvězdy jsou PNG sprite 55×10 px, hodnocení kóduje background-position —
+   obrázek proto nejde vyměnit za náš žlutý SVG, jde jen zvětšit. */
+.vp-recenze__heureka .stars {
+  transform: scale(1.35);
+  transform-origin: left center;
+  margin-bottom: 0.75rem;
+}
+
 @media (max-width: 991.98px) {
   .vp-recenze__cards {
     grid-template-columns: repeat(2, 1fr);

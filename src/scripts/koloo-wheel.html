@@ -1,0 +1,30 @@
+<!--
+  Koloo — „kolo štěstí" (kolo pro vytočení slevy + sběr e-mailu).
+  Vkládá se do: Administrace → Skripty → NOVÁ položka (nepřepisovat stávající)
+     • Název položky:        Koloo (kolo štěstí)
+     • Zobrazit na stránkách: Na všech stránkách
+     • Umístit v Head:        ne (patička) — loader je async a self-inserting,
+                              nemá cenu blokovat render; do Head jen když by měl
+                              trigger nastartovat co nejdřív (u exit-intent/timeru
+                              nehraje roli).
+
+  Licenční klíč (kLicense) je vázaný na účet Koloo — 'UNI-FB75BE3A-1714'.
+  Vzhled kola, texty, slevové kupóny a trigger (po X s / exit-intent) se
+  konfigurují v administraci Koloo (hd.koloo.net), NE v tomto kódu.
+
+  ⚠️ Sekce „Skripty" vkládá obsah DOSLOVA (neobaluje). Tady je to JavaScript,
+  takže MUSÍ zůstat v <script>…</script> (viz níže). Zkopíruj CELÝ obsah
+  <script> tagu do pole položky.
+-->
+<script type="text/javascript">
+  var _koloo = _koloo || [];
+  _koloo['kLicense'] = 'UNI-FB75BE3A-1714';
+  (function() {
+    var kolooscr = document.createElement('script');
+    var proto = (document.location.protocol=='https:' ? 'https' : 'http');
+    var scins = document.getElementsByTagName('script')[0];
+    kolooscr.type = 'text/javascript'; kolooscr.async=true;
+    kolooscr.src = proto + '://hd.koloo.net/oo.js';
+    scins.parentNode.insertBefore(kolooscr, scins);
+  })();
+</script>

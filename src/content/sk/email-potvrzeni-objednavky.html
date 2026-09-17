@@ -1,0 +1,222 @@
+<!--
+  E-MAIL: POTVRDENIE OBJEDNÁVKY PRE ZÁKAZNÍKA — SLOVENSKÁ VERZE (shop 28711).
+
+  Předmět e-mailu (pole „Předmět emailu“ v SK administraci):
+    Ďakujeme za objednávku č. %o – Veselé ponožky
+
+  Vkládá se ve ZDROJOVÉM režimu editoru (</>) do šablony e-mailu, který
+  dostává ZÁKAZNÍK. ⚠️ Nepřepsat jím notifikaci pro majitele obchodu.
+
+  Zdroj pravdy je čeština: src/content/email-potvrzeni-objednavky.html.
+  Struktura, barvy i placeholdery jsou shodné — liší se jen text, měna,
+  ID stránky a doména v odkazech. Když se změní čeština, přepiš i tohle.
+
+  ⚠️ DOMÉNA V ODKAZECH — ČTI, NEŽ NASADÍŠ
+  Odkazy míří na TECHNICKOU adresu https://www.exitshop.cz/shops/28711/,
+  ne na veseleponozky.sk. Důvod je v reference/sk-mapa-id.md (bod 6):
+  certifikát nepokrývá www.veseleponozky.sk, takže https:// tam ukáže
+  bezpečnostní varování. Technická adresa přes https funguje a zákazníka
+  dovede na správný slovenský shop.
+  AŽ BUDE HTTPS NA .SK FUNGOVAT, je to jediné hledej & nahraď:
+      https://www.exitshop.cz/shops/28711/  →  https://www.veseleponozky.sk/
+  Cesty za prefixem (cms/61618-…) se nemění, tvar sedí na obě domény.
+  Obrázek zůstává na veseleponozky.cz — /files/310/ je ID ÚČTU, média
+  jsou sdílená a ta doména má platný certifikát. Zákazník ji nevidí.
+  V patičce je z téhož důvodu popisek „Navštíviť e-shop", ne vypsaná
+  adresa: viditelný text ve tvaru URL, který míří jinam, je pro spamové
+  filtry phishing signál. Až se prefix přepne na .sk, klidně tam vrať
+  www.veseleponozky.sk.
+
+  DALŠÍ ODCHYLKY OD ČEŠTINY
+  • Měna je €, ne Kč. %k a %c vracejí POUZE ČÍSLO, značka se dopisuje ručně.
+  • Vrácení zboží = CMS 61618 (česká 60957 by na SK shopu skončila 404).
+  • Doba doručení „1–2 pracovné dni“ odpovídá slovenskému FAQ (doručení
+    po SR), ne českému — je to stejné číslo, ale jiné tvrzení.
+  • Firemní údaje, telefon i e-mail zůstávají české: provozovatel je
+    MODA ČAPEK s.r.o. a slovenská mutace je jen jazyková. E-mail je
+    ponozky@veseleponozky.sk — stejný jako na SK stránce Kontakty.
+  • &nbsp; u jednopísmenných předložek (v, s, k, a, i, o, u, z) je záměr —
+    editor je při uložení překlopí na znak U+00A0, chovají se stejně.
+
+  ⚠️ OTEVŘENÉ BODY
+  • Stránka Vrátenie tovaru (61618) existuje na SK zatím jen jako
+    duplikát s ČESKÝM textem — odkaz funguje, ale zákazníka pošle na
+    češtinu. Právní stránky jsou po dohodě mimo rozsah.
+  • Závěrečný odstavec slibuje DALŠÍ e-mail s tipy na péči. Tahle šablona
+    ho neposílá — musí vzniknout jako automatizace navázaná na doručení.
+    Dokud neexistuje, je to nesplněný slib: buď ji založ, nebo odstavec smaž.
+
+  Použité placeholdery (stejné jako na CZ):
+    %n jméno a příjmení   %o číslo objednávky   %x datum objednávky
+    %d způsob dopravy     %k celkem vč. dopravy (číslo)
+    %c zboží bez dopravy (číslo)   %t tabulka zboží
+    %a adresa             %e e-mail              %p telefon
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f4f6fb" style="background:#f4f6fb;margin:0;padding:0;">
+  <tbody>
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+          <tbody>
+
+            <!-- HLAVIČKA: textové logo na modré -->
+            <tr>
+              <td bgcolor="#1361cf" align="center" style="background:#1361cf;padding:22px 24px;">
+                <a href="https://www.exitshop.cz/shops/28711/" style="text-decoration:none;color:#ffffff;font-size:26px;font-weight:bold;letter-spacing:0.5px;">Veselé&nbsp;<span style="color:#fbbc02;">ponožky</span></a>
+              </td>
+            </tr>
+
+            <!-- POĎAKOVANIE -->
+            <tr>
+              <td align="center" style="padding:32px 32px 8px;">
+                <img src="https://www.veseleponozky.cz/files/310/files/HP6.png" width="76" height="81" alt="Maskot Veselé ponožky" style="display:block;border:0;width:76px;height:81px;margin:0 auto 16px;">
+                <h1 style="margin:0 0 8px;font-size:26px;line-height:1.25;color:#1361cf;">Ďakujeme za objednávku!</h1>
+                <p style="margin:0;font-size:16px;line-height:1.5;color:#475569;">Vaše veselé ponožky už chystáme v&nbsp;Třeboni.</p>
+              </td>
+            </tr>
+
+            <!-- ÚVOD -->
+            <tr>
+              <td style="padding:24px 32px 0;font-size:15px;line-height:1.6;color:#0f172a;">
+                <p style="margin:0 0 12px;">Dobrý deň, %n,</p>
+                <p style="margin:0 0 12px;">máme radosť, že ste si vybrali práve u&nbsp;nás. Vašu objednávku sme v&nbsp;poriadku prijali a&nbsp;už sa pomaly chystá na cestu k&nbsp;vám.</p>
+                <p style="margin:0;">Nižšie nájdete jej kompletné zhrnutie. Hneď ako balík odovzdáme dopravcovi, pošleme vám ďalší e-mail s&nbsp;odkazom na sledovanie zásielky.</p>
+              </td>
+            </tr>
+
+            <!-- ZHRNUTIE OBJEDNÁVKY -->
+            <tr>
+              <td style="padding:24px 32px 0;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#eaf1fc" style="background:#eaf1fc;border-radius:12px;">
+                  <tbody>
+                    <tr>
+                      <td style="padding:18px 20px 6px;font-size:14px;color:#475569;">Číslo objednávky</td>
+                      <td align="right" style="padding:18px 20px 6px;font-size:14px;font-weight:bold;color:#0f172a;">%o</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:6px 20px;font-size:14px;color:#475569;">Dátum objednávky</td>
+                      <td align="right" style="padding:6px 20px;font-size:14px;color:#0f172a;">%x</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:6px 20px;font-size:14px;color:#475569;">Spôsob dopravy</td>
+                      <td align="right" style="padding:6px 20px;font-size:14px;color:#0f172a;">%d</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:6px 20px;font-size:14px;color:#475569;">Tovar bez dopravy</td>
+                      <td align="right" style="padding:6px 20px;font-size:14px;color:#0f172a;">%c&nbsp;€</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:12px 20px 18px;font-size:16px;font-weight:bold;color:#0f172a;border-top:1px solid #c9d8f2;">Celkom na úhradu</td>
+                      <td align="right" style="padding:12px 20px 18px;font-size:18px;font-weight:bold;color:#1361cf;border-top:1px solid #c9d8f2;">%k&nbsp;€</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <!-- TOVAR (tabuľku generuje platforma) -->
+            <tr>
+              <td style="padding:28px 32px 0;">
+                <h2 style="margin:0 0 12px;font-size:18px;color:#0f172a;">Čo ste si objednali</h2>
+                <div style="font-size:14px;line-height:1.5;color:#0f172a;">%t</div>
+              </td>
+            </tr>
+
+            <!-- DORUČOVACIE ÚDAJE -->
+            <tr>
+              <td style="padding:28px 32px 0;">
+                <h2 style="margin:0 0 12px;font-size:18px;color:#0f172a;">Doručovacie údaje</h2>
+                <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#0f172a;">%a</p>
+                <p style="margin:0;font-size:14px;line-height:1.6;color:#475569;">E-mail: %e<br>Telefón: %p</p>
+                <p style="margin:12px 0 0;font-size:13px;line-height:1.5;color:#475569;">Niečo nesedí? Ozvite sa nám čo najskôr — kým balík neodošleme, adresu ľahko opravíme.</p>
+              </td>
+            </tr>
+
+            <!-- ČO BUDE ĎALEJ -->
+            <tr>
+              <td style="padding:28px 32px 0;">
+                <h2 style="margin:0 0 14px;font-size:18px;color:#0f172a;">Čo bude ďalej</h2>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tbody>
+                    <tr>
+                      <td width="36" valign="top" style="padding:0 0 14px;">
+                        <div style="width:28px;height:28px;line-height:28px;border-radius:14px;background:#fbbc02;color:#0f172a;font-size:14px;font-weight:bold;text-align:center;">1</div>
+                      </td>
+                      <td valign="top" style="padding:3px 0 14px;font-size:14px;line-height:1.5;color:#0f172a;"><strong>Zabalíme ju.</strong> Objednávky prijaté v&nbsp;pracovný deň do 12:00 odosielame ešte v&nbsp;ten istý deň, neskoršie hneď nasledujúci pracovný deň.</td>
+                    </tr>
+                    <tr>
+                      <td width="36" valign="top" style="padding:0 0 14px;">
+                        <div style="width:28px;height:28px;line-height:28px;border-radius:14px;background:#fbbc02;color:#0f172a;font-size:14px;font-weight:bold;text-align:center;">2</div>
+                      </td>
+                      <td valign="top" style="padding:3px 0 14px;font-size:14px;line-height:1.5;color:#0f172a;"><strong>Odovzdáme ju dopravcovi.</strong> Príde vám e-mail s&nbsp;odkazom na sledovanie, dopravca vás potom informuje aj&nbsp;SMS.</td>
+                    </tr>
+                    <tr>
+                      <td width="36" valign="top" style="padding:0;">
+                        <div style="width:28px;height:28px;line-height:28px;border-radius:14px;background:#fbbc02;color:#0f172a;font-size:14px;font-weight:bold;text-align:center;">3</div>
+                      </td>
+                      <td valign="top" style="padding:3px 0 0;font-size:14px;line-height:1.5;color:#0f172a;"><strong>Ponožky sú u vás.</strong> Bežne do 1–2 pracovných dní od odoslania.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <!-- VRÁTENIE -->
+            <tr>
+              <td style="padding:28px 32px 0;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#fdf6e0" style="background:#fdf6e0;border-radius:12px;">
+                  <tbody>
+                    <tr>
+                      <td style="padding:18px 20px;font-size:14px;line-height:1.5;color:#0f172a;">
+                        <strong>Nesedí veľkosť?</strong> Nevadí. Nenosené ponožky môžete vymeniť alebo vrátiť až do <strong>120 dní</strong>.
+                        <a href="https://www.exitshop.cz/shops/28711/cms/61618-vratenie-tovaru" style="color:#1361cf;font-weight:bold;">Ako na vrátenie&nbsp;›</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <!-- KONTAKT -->
+            <tr>
+              <td align="center" style="padding:28px 32px 0;font-size:14px;line-height:1.6;color:#475569;">
+                Máte otázku? Radi pomôžeme.<br>
+                <a href="tel:+420792377714" style="color:#1361cf;font-weight:bold;text-decoration:none;">+420 792 377 714</a>
+                &nbsp;·&nbsp; Po–Pi 9:00–16:00<br>
+                <a href="mailto:ponozky@veseleponozky.sk" style="color:#1361cf;font-weight:bold;text-decoration:none;">ponozky@veseleponozky.sk</a>
+              </td>
+            </tr>
+
+            <!-- ROZLÚČENIE A PODPIS -->
+            <tr>
+              <td style="padding:28px 32px 32px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tbody>
+                    <tr>
+                      <td style="padding:24px 0 0;border-top:1px solid #e2e8f0;font-size:14px;line-height:1.6;color:#475569;">
+                        <p style="margin:0 0 14px;">A&nbsp;tým sa naša ponožková misia nekončí. Keď vám balík dorazí, ozveme sa ešte s&nbsp;pár tipmi, ako sa o&nbsp;ponožky starať, aby vám robili radosť čo najdlhšie.</p>
+                        <p style="margin:0;font-size:15px;font-weight:bold;color:#1361cf;">Tím Veselé ponožky</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <!-- PÄTIČKA -->
+            <tr>
+              <td bgcolor="#0f172a" align="center" style="background:#0f172a;padding:20px 24px;font-size:12px;line-height:1.6;color:#94a3b8;">
+                <span style="color:#fbbc02;font-weight:bold;">Vyrobené s&nbsp;láskou v&nbsp;Třeboni</span><br>
+                MODA ČAPEK s.r.o. · Boženy Němcové 1095, 379 01 Třeboň · IČO 02605104<br>
+                <a href="https://www.exitshop.cz/shops/28711/" style="color:#ffffff;text-decoration:none;">Navštíviť e-shop</a>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
