@@ -4315,7 +4315,12 @@ body > header > [id^="is-sticky-placeholder"] {
   --sg-border: #e5e9f0;
   --sg-text: #0f172a;
   --sg-muted: #64748b;
-  --sg-accent: #1361cf;
+  /* Cena jede brandovou ZELENOU jako ve výpisech (--pl-green #2e9e44),
+     ale o odstín tmavší. Samotná #2e9e44 má na bílé jen 3,45:1 a cena
+     je 0,9rem = 14,4 px, tedy běžný text s požadavkem 4,5:1. #23843a dá
+     4,74:1 a je to týž pár, který 25-products.css používá jako
+     --pl-green-dark právě „pro kontrast malého textu“. */
+  --sg-accent: #23843a;
   --sg-hover: rgba(19, 97, 207, 0.07);
 
   background: #fff !important;
