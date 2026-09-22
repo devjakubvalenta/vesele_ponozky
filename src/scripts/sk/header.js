@@ -34,6 +34,12 @@
   // Heureka profil obchodu (odkaz na odznaku). Prázdné = odznak bez odkazu.
   var HEUREKA_URL = "";
 
+  // Vypínač Heureka odznaku. Stejný je v 40-product-detail.js (odznak u ceny).
+  // Na SK shopu je DOČASNĚ vypnutý (2026-09-22) — přepíná ho slovník
+  // i18n/sk-texty.mjs (HEUREKA_VYPNUTO), tady v češtině nech true.
+  // CSS se nemění: bez elementu se nic nevykreslí, logo drží místo samo.
+  var SHOW_HEUREKA = false;
+
   // Barevné kategorie na začátku mobilního menu — SHODNÉ s dlaždicemi na HP
   // (src/css/28-hp-kategorie.css). Výběr „které 4" je uložený jen v HP adminu
   // („Titulek a kategorie na homepage") a mimo HP v DOM není — proto si ho
@@ -62,6 +68,7 @@
   var CMS_EXTRA = [{ id: "61624", name: "Kontakty" }];
 
   function insertHeureka(middleRow, logo) {
+    if (!SHOW_HEUREKA) return;
     if (document.getElementById("vp-hdr-heureka")) return;
     var tag = HEUREKA_URL ? "a" : "span";
     var el = document.createElement(tag);

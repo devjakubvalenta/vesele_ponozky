@@ -64,6 +64,9 @@
   // Stejný odznak jako v hlavičce (header.js). Obrázek je 698×272,
   // tedy poměr 2,566 — viz width/height u <img> v injectHeureka().
   var HEUREKA = FILES + "heureka_banner.png";
+  // Vypínač odznaku (stejný je v header.js). Na SK shopu DOČASNĚ vypnutý
+  // (2026-09-22) přes slovník i18n/sk-texty.mjs — tady v češtině nech true.
+  var SHOW_HEUREKA = true;
 
   var TITLE = "Přes 130 000 spokojených zákazníků";
   var REVIEWS = [
@@ -194,6 +197,7 @@
      runAll() z MutationObserveru v init(), guard hlídá, ať se to nezacyklí. */
 
   function injectHeureka(root) {
+    if (!SHOW_HEUREKA) return;
     var price = root.querySelector(".wrapper-product-price");
     if (!price) return;
     var row = price.parentElement;

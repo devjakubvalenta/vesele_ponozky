@@ -58,6 +58,11 @@ export const SDILENE = [
   ["Hodnocení 4,9 z 5", "Hodnotenie 4,9 z 5"]
 ];
 
+/* Heureka odznak (hlavička + u ceny na detailu) je na SK DOČASNĚ VYPNUTÝ
+   (2026-09-22), český shop ho ukazuje dál. Zapnout zpět = odebrat
+   HEUREKA_VYPNUTO z obou seznamů níže a spustit node build-sk.mjs. */
+const HEUREKA_VYPNUTO = [`var SHOW_HEUREKA = true;`, `var SHOW_HEUREKA = false;`];
+
 export const TEXTY = {
   "30-product-cards.js": [
     // Prefixy názvů produktů, které se z karet odřezávají. Slovenské názvy
@@ -106,6 +111,7 @@ export const TEXTY = {
   ],
 
   "header.js": [
+    HEUREKA_VYPNUTO,
     /* Odznak Heureka ve slovenské verzi. Starý 698×272 (poměr 2,566),
        nový 233×91 (2,560) — poměr sedí, CSS ho škáluje na `height: 46px`
        (mobil 30px), takže se nic nedeformuje. */
@@ -130,7 +136,7 @@ export const TEXTY = {
 
   // Detail produktu nese víc textu než všechny ostatní skripty dohromady,
   // proto je jeho slovník ve dvou samostatných souborech.
-  "40-product-detail.js": [...DETAIL, ...DETAIL_FAQ],
+  "40-product-detail.js": [...DETAIL, ...DETAIL_FAQ, HEUREKA_VYPNUTO],
 
   "footer.js": [
     /* Logo v patičce. České je SVG 442×107 (poměr 4,13), slovenské PNG
