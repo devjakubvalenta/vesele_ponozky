@@ -177,7 +177,7 @@
   /* == Dvě podoby popupu ================================================
      Platforma renderuje popup ve DVOU variantách a přepíná mezi nimi podle
      toho, jestli má co nabídnout jako doporučené produkty (produktový blok
-     „Upsell košík", %recommend_block_3177%):
+     „Upsell košík", %recommend_block_5251%):
 
        BOHATÁ (český shop 28056)
          .row-fluid > h2.added-to-cart-title | hr

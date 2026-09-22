@@ -15,7 +15,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { TEXTY, SDILENE, POVOLENE, PODEZRELE, POVOLENE_PRESNE } from "./i18n/sk-texty.mjs";
-import { CMS, KATEGORIE } from "./i18n/sk-ids.mjs";
+import { CMS, KATEGORIE, BLOKY } from "./i18n/sk-ids.mjs";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const SRC = path.join(ROOT, "src/scripts");
@@ -132,7 +132,9 @@ function useky(src) {
 }
 
 /* Náhrady ID: cesty /cms/<id>- a /c/<id>- kdekoli ve zdroji (i v komentářích,
-   ať dokumentace v SK souboru nemate). */
+   ať dokumentace v SK souboru nemate).
+   Produktové bloky jen v přesných tvarech ("3224", recommend_block_3224,
+   recommend-block-3224) — holé číslo by mohlo trefit cokoli jiného. */
 function prepisId(src) {
   let out = src;
   for (const [cz, sk] of Object.entries(CMS)) {
@@ -140,6 +142,13 @@ function prepisId(src) {
   }
   for (const [cz, sk] of Object.entries(KATEGORIE)) {
     out = out.split("/c/" + cz + "-").join("/c/" + sk + "-");
+  }
+  for (const [cz, sk] of Object.entries(BLOKY)) {
+    if (!sk) continue;
+    for (const tvar of ['"', "recommend_block_", "recommend-block-"]) {
+      const konec = tvar === '"' ? '"' : "";
+      out = out.split(tvar + cz + konec).join(tvar + sk + konec);
+    }
   }
   return out;
 }

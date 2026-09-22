@@ -43,12 +43,15 @@ export const SIDE_CATEGORIES_SK = [
   { id: "1254442", color: "c4", name: "Darčekové sety" }
 ];
 
-/* Produktové bloky (%recommend_block_<ID>%). Na SK zatím neexistují — uživatel
-   je musí v administraci založit a ID sem doplnit. Do té doby zůstávají
-   v obsahu placeholdery {{SK_BLOK_AKCE}} a {{SK_BLOK_SETY}}. */
+/* Produktové bloky (%recommend_block_<ID>% / section.recommend-block-<ID>).
+   Založené v SK administraci 2026-09-17 — ID se mezi shopy nepřekládají,
+   každý shop má vlastní. build-sk.mjs podle toho přepisuje klíče mapy
+   SHOW_ALL v 30-product-cards.js; bez toho SK bloky nedostanou tlačítko
+   „Zobraziť všetko" (skript hledá česká ID, která na SK nejsou). */
 export const BLOKY = {
-  "3224": null, // „To nejlepší právě v akci“
-  "3236": null  // „Dárkové sety“
+  "3224": "5254", // „To nejlepší právě v akci“ → „To najlepšie práve v akcii“
+  "3236": "5266", // „Dárkové sety“ → „Darčekové sety“
+  "3177": "5251"  // „Upsell košík“ (jen zmínka v komentáři 45-cart-popup.js)
 };
 
 /* Cesty ke kategoriím používané v kódu (SHOW_ALL, HP_ALL_PATH, PRICE_FIRST). */

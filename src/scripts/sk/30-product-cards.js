@@ -51,8 +51,8 @@
   // podle Povolání. Kategorie Výprodej (1243142) obsahuje přesně ty zlevněné
   // kusy, které blok ukazuje, a má správné filtry Motiv → Velikost → Cena.
   var SHOW_ALL = {
-    "3224": "/c/1254445-vyprodej-az-90",  // To nejlepší právě v akci
-    "3236": "/c/1254442-darkove-sety"     // Dárkové sety
+    "5254": "/c/1254445-vyprodej-az-90",  // To nejlepší právě v akci
+    "5266": "/c/1254442-darkove-sety"     // Dárkové sety
   };
   var SHOW_ALL_LABEL = "Zobraziť všetko";
 
