@@ -31,10 +31,10 @@
   // Heureka profil obchodu (odkaz na odznaku). Prázdné = odznak bez odkazu.
   var HEUREKA_URL = "";
 
-  // Vypínač Heureka odznaku. Stejný je v 40-product-detail.js (odznak u ceny).
-  // Na SK shopu je DOČASNĚ vypnutý (2026-09-22) — přepíná ho slovník
-  // i18n/sk-texty.mjs (HEUREKA_VYPNUTO), tady v češtině nech true.
-  // CSS se nemění: bez elementu se nic nevykreslí, logo drží místo samo.
+  // Vypínač Heureka odznaku (stejný je v 40-product-detail.js u ceny).
+  // false = odznak se vůbec nevloží; CSS se nemění, logo drží místo samo.
+  // Vypnout ho jen pro jeden shop jde dvojicí ve slovníku i18n/sk-texty.mjs —
+  // tak byl na SK vypnutý od 22. 9. do 14. 10. 2026.
   var SHOW_HEUREKA = true;
 
   // Barevné kategorie na začátku mobilního menu — SHODNÉ s dlaždicemi na HP

@@ -67,9 +67,9 @@
   // Stejný odznak jako v hlavičce (header.js). Obrázek je 698×272,
   // tedy poměr 2,566 — viz width/height u <img> v injectHeureka().
   var HEUREKA = FILES + "skheureka.png";
-  // Vypínač odznaku (stejný je v header.js). Na SK shopu DOČASNĚ vypnutý
-  // (2026-09-22) přes slovník i18n/sk-texty.mjs — tady v češtině nech true.
-  var SHOW_HEUREKA = false;
+  // Vypínač odznaku (stejný je v header.js). false = odznak se nevloží,
+  // vypnout jen pro jeden shop jde dvojicí ve slovníku i18n/sk-texty.mjs.
+  var SHOW_HEUREKA = true;
 
   var TITLE = "Vyše 130 000 spokojných zákazníkov";
   var REVIEWS = [
